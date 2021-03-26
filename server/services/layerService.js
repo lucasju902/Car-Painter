@@ -1,4 +1,4 @@
-const Layer = require("../models/Layer.model");
+const Layer = require("../models/layer.model");
 
 class LayerService {
   static async getList() {
