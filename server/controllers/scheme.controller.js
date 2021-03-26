@@ -65,6 +65,7 @@ class SchemeController {
             layer_order: layer_index++,
             layer_locked: 0,
             time_modified: 0,
+            confirm: "",
           })
         );
       }

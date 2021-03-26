@@ -1,3 +1,4 @@
+const mdb = require("knex-mariadb");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -6,7 +7,7 @@ module.exports = {
   baseURL: process.env.BASE_URL,
   port: process.env.PORT || 8080,
   database: {
-    client: process.env.DB_CLIENT,
+    client: process.env.DB_CLIENT === "mysql" ? process.env.DB_CLIENT : mdb,
     connection: {
       host: process.env.DB_HOST || "127.0.0.1",
       port: process.env.DB_PORT || "3306",

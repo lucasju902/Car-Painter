@@ -100,6 +100,7 @@ export const createLayersFromBasePaint = (schemeID, base, order) => async (
         layer_locked: 0,
         layer_order: layer_order++,
         time_modified: 0,
+        confirm: "",
       });
       dispatch(insertToList(layer));
     }
@@ -138,6 +139,7 @@ export const createLayerFromShape = (
       layer_locked: 0,
       layer_order: order,
       time_modified: 0,
+      confirm: "",
     });
     dispatch(insertToList(layer));
   } catch (err) {
@@ -171,6 +173,7 @@ export const createLayerFromLogo = (schemeID, logo, order, frameSize) => async (
       layer_locked: 0,
       layer_order: order,
       time_modified: 0,
+      confirm: "",
     });
     dispatch(insertToList(layer));
   } catch (err) {
@@ -207,6 +210,7 @@ export const createLayerFromUpload = (
       layer_locked: 0,
       layer_order: order,
       time_modified: 0,
+      confirm: "",
     });
     dispatch(insertToList(layer));
   } catch (err) {
@@ -235,6 +239,7 @@ export const createTextLayer = (schemeID, textObj, order, frameSize) => async (
       layer_locked: 0,
       layer_order: order,
       time_modified: 0,
+      confirm: "",
     });
     dispatch(insertToList(layer));
   } catch (err) {
