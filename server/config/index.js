@@ -5,7 +5,7 @@ dotenv.config();
 
 module.exports = {
   baseURL: process.env.BASE_URL,
-  port: process.env.PORT || 8080,
+  port: process.env.PORT || 3000,
   database: {
     client: process.env.DB_CLIENT === "mysql" ? process.env.DB_CLIENT : mdb,
     connection: {
