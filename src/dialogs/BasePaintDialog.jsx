@@ -31,6 +31,12 @@ const CustomGridList = styled(GridList)`
 const CustomGridListTile = styled(GridListTile)`
   cursor: pointer;
 `;
+const CustomImg = styled.img`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  object-fit: contain;
+`;
 
 const BasePaintDialog = (props) => {
   const step = 15;
@@ -58,7 +64,7 @@ const BasePaintDialog = (props) => {
                 cols={1}
                 onClick={() => onOpenBase(basepaint)}
               >
-                <img
+                <CustomImg
                   src={`${config.assetsURL}/bases/${basepaint.id}/preview.jpg`}
                   alt={basepaint.base_description}
                 />

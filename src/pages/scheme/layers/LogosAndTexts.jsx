@@ -32,6 +32,7 @@ const LogosAndTexts = (props) => {
           if (layer.layer_type !== LayerTypes.TEXT) {
             return (
               <URLImage
+                name={layer.id.toString()}
                 src={`${config.assetsURL}/${layer.layer_data.source_file}`}
                 key={layer.id}
                 x={parseFloat(layer.layer_data.left)}
@@ -53,6 +54,7 @@ const LogosAndTexts = (props) => {
             : {};
           return (
             <TextNode
+              name={layer.id.toString()}
               text={layer.layer_data.text}
               fontFamily={font.font_name}
               fontFile={

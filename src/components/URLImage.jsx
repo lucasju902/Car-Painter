@@ -1,6 +1,7 @@
+// import Canvg, { presets } from "canvg";
 import React, { useRef, useState, useEffect } from "react";
 
-import { Image, Transformer } from "react-konva";
+import { Image } from "react-konva";
 
 const URLImage = ({
   src,
@@ -11,7 +12,6 @@ const URLImage = ({
   ...props
 }) => {
   const imageRef = useRef(null);
-  const trRef = useRef();
   const shapeRef = useRef();
   const [image, setImage] = useState(null);
 
@@ -24,27 +24,34 @@ const URLImage = ({
     };
   }, []);
 
-  useEffect(() => {
-    loadImage();
-  }, [props.src]);
-  useEffect(() => {
-    if (isSelected && props.listening !== false) {
-      // we need to attach transformer manually
-      trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
-    }
-  }, [isSelected, props.listening]);
-
-  const handleLoad = () => {
-    setImage(imageRef.current);
+  const handleLoad = async () => {
     if (tellSize) {
       tellSize({
-        width: props.width || imageRef.current.width,
-        height: props.height || imageRef.current.height,
+        width: props.width || imageRef.current.width || 100,
+        height: props.height || imageRef.current.height || 100,
       });
     }
+    if (onChange && !props.width && !props.height) {
+      onChange({
+        width: imageRef.current.width,
+        height: imageRef.current.height,
+      });
+    }
+    // if (src.toLowerCase().includes(".svg")) {
+    //   const canvas = new OffscreenCanvas(
+    //     props.width || imageRef.current.width || 100,
+    //     props.height || imageRef.current.height || 100
+    //   );
+    //   const ctx = canvas.getContext("2d");
+    //   const v = await Canvg.from(ctx, src);
+    //   await v.render();
+    //   const blob = await canvas.convertToBlob();
+    //   const pngUrl = URL.createObjectURL(blob);
+    //   imageRef.current = pngUrl;
+    // }
+    setImage(imageRef.current);
   };
-  const loadImage = () => {
+  const loadImage = async () => {
     const img = new window.Image();
     img.src = src;
     img.crossOrigin = "Anonymous";
@@ -85,24 +92,17 @@ const URLImage = ({
   };
 
   return (
-    <>
-      <Image
-        {...props}
-        image={image}
-        onClick={onSelect}
-        onTap={onSelect}
-        ref={shapeRef}
-        draggable={onChange}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onTransformEnd={handleTransformEnd}
-      />
-      {isSelected && props.listening !== false && onChange ? (
-        <Transformer ref={trRef} keepRatio={false} centeredScaling={true} />
-      ) : (
-        <></>
-      )}
-    </>
+    <Image
+      {...props}
+      image={image}
+      onClick={onSelect}
+      onTap={onSelect}
+      ref={shapeRef}
+      draggable={onChange}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onTransformEnd={handleTransformEnd}
+    />
   );
 };
 

@@ -41,6 +41,12 @@ const CustomGridListTile = styled(GridListTile)`
 const CustomDialogContent = styled(DialogContent)`
   width: 600px;
 `;
+const CustomImg = styled.img`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  object-fit: contain;
+`;
 
 const StyledTabs = withStyles({
   indicator: {
@@ -160,7 +166,7 @@ const LogoDialog = (props) => {
                     cols={1}
                     onClick={() => onOpenLogo(logo)}
                   >
-                    <img
+                    <CustomImg
                       src={`${config.assetsURL}/${logo.preview_file}`}
                       alt={logo.name}
                     />
@@ -187,7 +193,7 @@ const LogoDialog = (props) => {
                     cols={1}
                     onClick={() => onOpenLogo(logo)}
                   >
-                    <img
+                    <CustomImg
                       src={`${config.assetsURL}/${logo.preview_file}`}
                       alt={logo.name}
                     />

@@ -36,6 +36,12 @@ const CustomGridListTile = styled(GridListTile)`
 const CustomDialogContent = styled(DialogContent)`
   width: 600px;
 `;
+const CustomImg = styled.img`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  object-fit: contain;
+`;
 
 const ShapeDialog = (props) => {
   const step = 15;
@@ -75,7 +81,7 @@ const ShapeDialog = (props) => {
                   cols={1}
                   onClick={() => onOpenShape(shape)}
                 >
-                  <img
+                  <CustomImg
                     src={`${config.assetsURL}/${shape.overlay_thumb}`}
                     alt={shape.name}
                   />

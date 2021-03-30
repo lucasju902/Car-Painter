@@ -38,6 +38,12 @@ const CustomGridListTile = styled(GridListTile)`
 const CustomDialogContent = styled(DialogContent)`
   width: 600px;
 `;
+const CustomImg = styled.img`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  object-fit: contain;
+`;
 
 const UploadDialog = (props) => {
   const step = 15;
@@ -110,7 +116,7 @@ const UploadDialog = (props) => {
                   cols={1}
                   onClick={() => onOpenUpload(uploadItem)}
                 >
-                  <img
+                  <CustomImg
                     src={`${config.assetsURL}/${uploadItem.file_name}`}
                     alt={getNameFromFileName(uploadItem.file_name)}
                   />

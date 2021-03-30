@@ -11,6 +11,7 @@ import CarParts from "./layers/CarParts";
 import BasePaints from "./layers/BasePaints";
 import Overlays from "./layers/Overlays";
 import LogosAndTexts from "./layers/LogosAndTexts";
+import TransformerComponent from "components/TransformerComponent";
 
 import { setFrameSizeToMax, setZoom } from "redux/reducers/boardReducer";
 import { insertToLoadedList as insertToLoadedFontList } from "redux/reducers/fontReducer";
@@ -174,6 +175,8 @@ const Board = () => {
             handleImageSize={handleImageSize}
             frameSize={frameSize}
           />
+
+          <TransformerComponent selectedLayer={currentLayer} />
         </Layer>
       </Stage>
     </Box>

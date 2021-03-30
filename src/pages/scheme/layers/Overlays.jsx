@@ -26,6 +26,7 @@ const Overlays = (props) => {
         .sort((a, b) => Helper.sortBy(a, b, "layer_order"))
         .map((layer) => (
           <URLImage
+            name={layer.id.toString()}
             src={`${config.assetsURL}/${layer.layer_data.source_file}`}
             key={layer.id}
             x={parseFloat(layer.layer_data.left)}
