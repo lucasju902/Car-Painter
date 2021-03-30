@@ -54,7 +54,10 @@ const UploadDialog = (props) => {
     setLimit(limit + step);
   };
   const getNameFromFileName = (file_name) => {
-    return file_name.match(/(?<=uploads\/)(.*)(?=\.)/g)[0];
+    return file_name.substring(
+      file_name.lastIndexOf("uploads/") + "uploads/".length,
+      file_name.lastIndexOf(".")
+    );
   };
   const handleDropZoneChange = (files_up) => {
     setFiles(files_up);

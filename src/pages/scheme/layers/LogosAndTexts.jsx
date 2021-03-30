@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import URLImage from "components/URLImage";
 import TextNode from "components/TextNode";
@@ -9,15 +9,13 @@ import config from "config";
 const LogosAndTexts = (props) => {
   const {
     layers,
+    loadedFontList,
     fonts,
-    handleImageSize,
-    frameSize,
     currentLayer,
     setCurrentLayer,
     onChange,
+    onFontLoad,
   } = props;
-
-  useEffect(() => {}, []);
 
   return (
     <>
@@ -30,33 +28,40 @@ const LogosAndTexts = (props) => {
             item.layer_visible
         )
         .sort((a, b) => Helper.sortBy(a, b, "layer_order"))
-        .map((layer) =>
-          layer.layer_type !== LayerTypes.TEXT ? (
-            <URLImage
-              src={`${config.assetsURL}/${layer.layer_data.source_file}`}
-              tellSize={handleImageSize}
-              key={layer.id}
-              x={parseFloat(layer.layer_data.left)}
-              y={parseFloat(layer.layer_data.top)}
-              width={layer.layer_data.width}
-              height={layer.layer_data.height}
-              rotation={layer.layer_data.rotation}
-              scaleX={layer.layer_data.flop === 0 ? 1 : -1}
-              scaleY={layer.layer_data.flip === 0 ? 1 : -1}
-              onSelect={() => setCurrentLayer(layer)}
-              isSelected={currentLayer && currentLayer.id === layer.id}
-              listening={!layer.layer_locked}
-              onChange={(values) => onChange(layer, values)}
-            />
-          ) : (
+        .map((layer) => {
+          if (layer.layer_type !== LayerTypes.TEXT) {
+            return (
+              <URLImage
+                src={`${config.assetsURL}/${layer.layer_data.source_file}`}
+                key={layer.id}
+                x={parseFloat(layer.layer_data.left)}
+                y={parseFloat(layer.layer_data.top)}
+                width={layer.layer_data.width}
+                height={layer.layer_data.height}
+                rotation={layer.layer_data.rotation}
+                scaleX={layer.layer_data.flop === 0 ? 1 : -1}
+                scaleY={layer.layer_data.flip === 0 ? 1 : -1}
+                onSelect={() => setCurrentLayer(layer)}
+                isSelected={currentLayer && currentLayer.id === layer.id}
+                listening={!layer.layer_locked}
+                onChange={(values) => onChange(layer, values)}
+              />
+            );
+          }
+          let font = fonts.length
+            ? fonts.find((item) => item.id === layer.layer_data.font)
+            : {};
+          return (
             <TextNode
               text={layer.layer_data.text}
-              fontFamily={
-                fonts.length
-                  ? fonts.find((font) => font.id === layer.layer_data.font)
-                      .font_name
+              fontFamily={font.font_name}
+              fontFile={
+                font.font_file
+                  ? `url(${config.assetsURL}/${font.font_file}`
                   : null
               }
+              loadedFontList={loadedFontList}
+              onFontLoad={onFontLoad}
               fontSize={layer.layer_data.size}
               fill={layer.layer_data.color}
               strokeWidth={layer.layer_data.stroke}
@@ -77,8 +82,8 @@ const LogosAndTexts = (props) => {
               listening={!layer.layer_locked}
               onChange={(values) => onChange(layer, values)}
             />
-          )
-        )}
+          );
+        })}
     </>
   );
 };

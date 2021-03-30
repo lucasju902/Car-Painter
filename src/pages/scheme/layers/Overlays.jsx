@@ -27,7 +27,6 @@ const Overlays = (props) => {
         .map((layer) => (
           <URLImage
             src={`${config.assetsURL}/${layer.layer_data.source_file}`}
-            tellSize={handleImageSize}
             key={layer.id}
             x={parseFloat(layer.layer_data.left)}
             y={parseFloat(layer.layer_data.top)}

@@ -8,7 +8,7 @@ import config from "config";
 const PaintingGuideTop = (props) => {
   const gridPadding = 10;
   const { paintingGuides, currentCarMake, handleImageSize, frameSize } = props;
-
+  console.log(paintingGuides);
   return (
     <>
       {paintingGuides.includes(PaintingGuides.CARMASK) ? (

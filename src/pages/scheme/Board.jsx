@@ -13,6 +13,7 @@ import Overlays from "./layers/Overlays";
 import LogosAndTexts from "./layers/LogosAndTexts";
 
 import { setFrameSizeToMax, setZoom } from "redux/reducers/boardReducer";
+import { insertToLoadedList as insertToLoadedFontList } from "redux/reducers/fontReducer";
 import {
   setCurrent as setCurrentLayer,
   updateLayer,
@@ -31,6 +32,7 @@ const Board = () => {
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const layerList = useSelector((state) => state.layerReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
+  const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
   const currentLayer = useSelector((state) => state.layerReducer.current);
 
   const scaleBy = 1.2;
@@ -92,6 +94,9 @@ const Board = () => {
   };
   const handleLayerSelect = (layer) => {
     dispatch(setCurrentLayer(layer));
+  };
+  const handleAddFont = (fontFamily) => {
+    dispatch(insertToLoadedFontList(fontFamily));
   };
 
   return (
@@ -156,11 +161,11 @@ const Board = () => {
           <LogosAndTexts
             layers={layerList}
             fonts={fontList}
-            handleImageSize={handleImageSize}
-            frameSize={frameSize}
+            loadedFontList={loadedFontList}
             currentLayer={currentLayer}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
+            onFontLoad={handleAddFont}
           />
 
           <PaintingGuideTop

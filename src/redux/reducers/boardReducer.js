@@ -26,7 +26,7 @@ export const slice = createSlice({
     },
 
     setPaintingGuides: (state, action) => {
-      state.paintingGuides = action.payload;
+      state.paintingGuides = [...action.payload];
     },
     setZoom: (state, action) => {
       state.zoom = action.payload;

@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import styled from "styled-components/macro";
 
-import { Box, IconButton, Typography } from "@material-ui/core";
+import { Box, Grid, IconButton, Typography } from "@material-ui/core";
 import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
@@ -37,7 +37,6 @@ const PartItem = (props) => {
       p={2}
       mb={1}
       display="flex"
-      justifyContent="space-between"
       width="100%"
       border={1}
       borderColor="grey.700"
@@ -45,21 +44,29 @@ const PartItem = (props) => {
       onClick={onClick}
       className={clsx(selected && "activeItem")}
     >
-      <Box display="flex" alignItems="center">
-        <IconButton onClick={() => toggleVisible()} size="small">
-          {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-        </IconButton>
-        <Typography>{text}</Typography>
-      </Box>
-      {!disableLock ? (
-        <Box display="flex" alignItems="center">
-          <IconButton onClick={() => toggleLocked()} size="small">
-            {layer_locked ? <LockIcon /> : <LockOpenIcon />}
-          </IconButton>
-        </Box>
-      ) : (
-        <></>
-      )}
+      <Grid container justify="space-between" alignItems="center" spacing={2}>
+        <Grid item xs={10}>
+          <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+            <Grid item xs={2}>
+              <IconButton onClick={() => toggleVisible()} size="small">
+                {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </IconButton>
+            </Grid>
+            <Grid item xs={10}>
+              <Typography noWrap>{text}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        {!disableLock ? (
+          <Grid item xs={2}>
+            <IconButton onClick={() => toggleLocked()} size="small">
+              {layer_locked ? <LockIcon /> : <LockOpenIcon />}
+            </IconButton>
+          </Grid>
+        ) : (
+          <></>
+        )}
+      </Grid>
     </Wrapper>
   );
 };

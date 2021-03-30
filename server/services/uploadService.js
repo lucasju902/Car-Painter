@@ -55,6 +55,9 @@ class UploadService {
         s3: s3,
         bucket: config.bucketURL,
         acl: "public-read",
+        contentType: function (req, file, cb) {
+          cb(null, file.mimetype);
+        },
         key: function (req, file, cb) {
           let { userID } = req.body;
           cb(null, `uploads/${userID}_${file.originalname}`);

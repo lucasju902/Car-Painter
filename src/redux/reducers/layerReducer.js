@@ -197,7 +197,10 @@ export const createLayerFromUpload = (
       upload_id: 0,
       layer_data: JSON.stringify({
         id: upload.id,
-        name: upload.file_name.match(/(?<=uploads\/)(.*)(?=\.)/g)[0],
+        name: upload.file_name.substring(
+          upload.file_name.lastIndexOf("uploads/") + "uploads/".length,
+          upload.file_name.lastIndexOf(".")
+        ),
         rotation: 0,
         flip: 0,
         flop: 0,
@@ -269,6 +272,9 @@ export const deleteLayer = (layer) => async (dispatch) => {
   try {
     dispatch(deleteListItem(layer));
     await LayerService.deleteLayer(layer.id);
+    dispatch(
+      setMessage({ message: "Deleted Layer successfully!", type: "success" })
+    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

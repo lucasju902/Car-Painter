@@ -4,6 +4,7 @@ import FontService from "services/fontService";
 
 const initialState = {
   list: [],
+  loadedList: [],
   current: null,
   loading: false,
 };
@@ -23,6 +24,12 @@ export const slice = createSlice({
     },
     concatList: (state, action) => {
       state.list = state.list.concat(action.payload);
+    },
+    setLoadedList: (state, action) => {
+      state.loadedList = action.payload;
+    },
+    insertToLoadedList: (state, action) => {
+      state.loadedList = state.loadedList.concat(action.payload);
     },
     updateListItem: (state, action) => {
       let overlayList = [...state.list];
@@ -47,6 +54,8 @@ export const {
   insertToList,
   concatList,
   updateListItem,
+  setLoadedList,
+  insertToLoadedList,
 } = slice.actions;
 
 export default slice.reducer;

@@ -37,10 +37,12 @@ const URLImage = ({
 
   const handleLoad = () => {
     setImage(imageRef.current);
-    tellSize({
-      width: props.width || imageRef.current.width,
-      height: props.height || imageRef.current.height,
-    });
+    if (tellSize) {
+      tellSize({
+        width: props.width || imageRef.current.width,
+        height: props.height || imageRef.current.height,
+      });
+    }
   };
   const loadImage = () => {
     const img = new window.Image();

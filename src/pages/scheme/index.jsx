@@ -6,7 +6,6 @@ import { useParams } from "react-router";
 
 import { Box } from "@material-ui/core";
 
-import config from "config";
 import { LayerTypes } from "../../constants";
 import ScreenLoader from "components/ScreenLoader";
 import Toolbar from "./Toolbar";
@@ -71,26 +70,6 @@ const Scheme = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-  useEffect(() => {
-    if (fontList && fontList.length) {
-      for (let font of fontList) {
-        let fontObject = new FontFace(
-          font.font_name,
-          `url(${config.assetsURL}/${font.font_file}`
-        );
-        fontObject
-          .load()
-          .then(function (loaded_face) {
-            document.fonts.add(loaded_face);
-          })
-          .catch(function (error) {
-            // error occurred
-            console.log(error, font.id, font.font_name);
-          });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fontList]);
 
   return (
     <>

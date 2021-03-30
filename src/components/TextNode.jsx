@@ -2,10 +2,26 @@ import React, { useRef, useState, useEffect } from "react";
 
 import { Text, Transformer } from "react-konva";
 
-const TextNode = ({ isSelected, onSelect, onChange, ...props }) => {
+const TextNode = ({
+  fontFamily,
+  fontFile,
+  loadedFontList,
+  loadedList,
+  isSelected,
+  onSelect,
+  onChange,
+  onFontLoad,
+  ...props
+}) => {
+  const [loadedFontFamily, setLoadedFontFamily] = useState(null);
   const trRef = useRef();
   const shapeRef = useRef();
 
+  useEffect(() => {
+    if (fontFamily && fontFile && !loadedFontList.includes(fontFamily)) {
+      loadFont();
+    }
+  }, [fontFamily, fontFile]);
   useEffect(() => {
     if (isSelected && props.listening !== false) {
       // we need to attach transformer manually
@@ -13,6 +29,21 @@ const TextNode = ({ isSelected, onSelect, onChange, ...props }) => {
       trRef.current.getLayer().batchDraw();
     }
   }, [isSelected, props.listening]);
+
+  const loadFont = () => {
+    let fontObject = new FontFace(fontFamily, fontFile);
+    fontObject
+      .load()
+      .then(function (loaded_face) {
+        document.fonts.add(loaded_face);
+        onFontLoad(fontFamily);
+        setLoadedFontFamily(fontFamily);
+      })
+      .catch(function (error) {
+        // error occurred
+        console.warn(error, fontFamily);
+      });
+  };
 
   const handleDragStart = (e) => {
     onSelect();
@@ -49,6 +80,7 @@ const TextNode = ({ isSelected, onSelect, onChange, ...props }) => {
     <>
       <Text
         {...props}
+        fontFamily={loadedFontFamily}
         onClick={onSelect}
         onTap={onSelect}
         ref={shapeRef}
