@@ -15,7 +15,7 @@ const TransformerComponent = ({ selectedLayer }) => {
       }
 
       if (selectedNode) {
-        trRef.current.attachTo(selectedNode);
+        trRef.current.nodes([selectedNode]);
       } else {
         trRef.current.detach();
       }

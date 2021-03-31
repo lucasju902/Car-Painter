@@ -72,7 +72,7 @@ const PartGroup = (props) => {
     disableLock,
     disableDnd,
   } = props;
-  const sortedList = _.sortBy(layerList, ["layer_order"]);
+  const sortedList = _.orderBy(layerList, ["layer_order"], ["asc"]);
 
   const handleExpandClick = () => {
     setExpanded((preValue) => !preValue);

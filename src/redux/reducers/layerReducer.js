@@ -130,7 +130,7 @@ export const createLayerFromShape = (
         flip: 0,
         flop: 0,
         color: shape.color,
-        left: 0,
+        left: frameSize.width / 2,
         top: frameSize.height / 2,
         source_file: shape.overlay_file,
         preview_file: shape.overlay_thumb,
@@ -164,7 +164,7 @@ export const createLayerFromLogo = (schemeID, logo, order, frameSize) => async (
         rotation: 0,
         flip: 0,
         flop: 0,
-        left: 0,
+        left: frameSize.width / 2,
         top: frameSize.height / 2,
         source_file: logo.source_file,
         preview_file: logo.preview_file,
@@ -204,7 +204,7 @@ export const createLayerFromUpload = (
         rotation: 0,
         flip: 0,
         flop: 0,
-        left: 0,
+        left: frameSize.width / 2,
         top: frameSize.height / 2,
         source_file: upload.file_name,
         preview_file: upload.file_name,
@@ -260,6 +260,7 @@ export const updateLayer = (layer) => async (dispatch) => {
       ...layer,
       layer_data: JSON.stringify(layer.layer_data),
     });
+    dispatch(setCurrent(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

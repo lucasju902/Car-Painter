@@ -1,4 +1,4 @@
-// import Canvg, { presets } from "canvg";
+import Canvg from "canvg";
 import React, { useRef, useState, useEffect } from "react";
 
 import { Image } from "react-konva";
@@ -25,31 +25,40 @@ const URLImage = ({
   }, []);
 
   const handleLoad = async () => {
-    if (tellSize) {
-      tellSize({
-        width: props.width || imageRef.current.width || 100,
-        height: props.height || imageRef.current.height || 100,
+    let width = props.width || imageRef.current.width;
+    let height = props.height || imageRef.current.height;
+    if (
+      src.toLowerCase().includes(".svg") &&
+      (!imageRef.current.width || !imageRef.current.height)
+    ) {
+      let canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const v = await Canvg.from(ctx, src, {
+        enableRedraw: true,
       });
+      console.log(v);
+      width = width || v.documentElement.node.width.baseVal.value || 200;
+      height = height || v.documentElement.node.height.baseVal.value || 200;
+      v.resize(width, height, "none");
+      await v.render();
+      setImage(canvas);
+    } else {
+      setImage(imageRef.current);
     }
     if (onChange && !props.width && !props.height) {
       onChange({
-        width: imageRef.current.width,
-        height: imageRef.current.height,
+        left: props.x - width / 2,
+        top: props.y - height / 2,
+        width: width,
+        height: height,
       });
     }
-    // if (src.toLowerCase().includes(".svg")) {
-    //   const canvas = new OffscreenCanvas(
-    //     props.width || imageRef.current.width || 100,
-    //     props.height || imageRef.current.height || 100
-    //   );
-    //   const ctx = canvas.getContext("2d");
-    //   const v = await Canvg.from(ctx, src);
-    //   await v.render();
-    //   const blob = await canvas.convertToBlob();
-    //   const pngUrl = URL.createObjectURL(blob);
-    //   imageRef.current = pngUrl;
-    // }
-    setImage(imageRef.current);
+    if (tellSize) {
+      tellSize({
+        width: width,
+        height: height,
+      });
+    }
   };
   const loadImage = async () => {
     const img = new window.Image();

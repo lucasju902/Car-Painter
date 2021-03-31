@@ -11,6 +11,7 @@ import ScreenLoader from "components/ScreenLoader";
 import Toolbar from "./Toolbar";
 import Board from "./Board";
 import Sidebar from "./sideBar";
+// import PropertyBar from "./propertyBar";
 import ConfirmDialog from "dialogs/ConfirmDialog";
 
 import { getScheme } from "redux/reducers/schemeReducer";
@@ -90,6 +91,7 @@ const Scheme = () => {
             >
               <Board />
             </Wrapper>
+            {/* <PropertyBar /> */}
           </Box>
           <Toolbar />
         </Box>

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import _ from "lodash";
 
 import styled from "styled-components/macro";
 import { spacing } from "@material-ui/system";
 import {
-  Box,
   Button as MuiButton,
   Dialog,
   DialogTitle,
@@ -12,7 +12,6 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import Helper from "helper";
 
 const Button = styled(MuiButton)(spacing);
 
@@ -20,9 +19,11 @@ const ProjectSelectDialog = (props) => {
   const [carMake, setCarMake] = useState(null);
   const { onContinue, onCancel, open, carMakeList } = props;
 
-  let sortedCarMakesList = [...carMakeList]
-    .sort((a, b) => Helper.sortBy(a, b, "name"))
-    .sort((a, b) => Helper.sortBy(a, b, "car_type"));
+  let sortedCarMakesList = _.orderBy(
+    [...carMakeList],
+    ["name", "car_type"],
+    ["asc", "asc"]
+  );
   return (
     <Dialog aria-labelledby="project-select-title" open={open}>
       <DialogTitle id="project-select-title">Create a new paint</DialogTitle>

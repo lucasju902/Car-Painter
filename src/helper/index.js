@@ -15,19 +15,7 @@ const getDifferenceFromToday = (past_date) => {
   const difference_In_Day = difference_In_Hour / 24;
   return `${Math.round(difference_In_Day)} days ago`;
 };
-const sortBy = (a, b, attribute, inc = true) => {
-  if (a[attribute] > b[attribute]) {
-    if (inc) return -1;
-    return 1;
-  }
-  if (b[attribute] < a[attribute]) {
-    if (inc) return 1;
-    return -1;
-  }
-  return 0;
-};
 
 export default {
   getDifferenceFromToday,
-  sortBy,
 };

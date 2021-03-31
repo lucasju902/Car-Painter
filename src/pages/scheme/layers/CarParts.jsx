@@ -1,8 +1,8 @@
 import React from "react";
+import _ from "lodash";
 
 import URLImage from "components/URLImage";
 import { LayerTypes } from "../../../constants";
-import Helper from "helper";
 import config from "config";
 
 const CarParts = (props) => {
@@ -10,24 +10,25 @@ const CarParts = (props) => {
 
   return (
     <>
-      {layers
-        .filter(
+      {_.orderBy(
+        layers.filter(
           (item) => item.layer_type === LayerTypes.CAR && item.layer_visible
-        )
-        .sort((a, b) => Helper.sortBy(a, b, "layer_order"))
-        .map((layer) => (
-          <URLImage
-            src={
-              config.assetsURL +
-              "/templates/" +
-              currentCarMake.folder_directory.replace(" ", "_") +
-              `/${layer.layer_data.img}`
-            }
-            tellSize={handleImageSize}
-            key={layer.id}
-            listening={false}
-          />
-        ))}
+        ),
+        ["layer_order"],
+        ["desc"]
+      ).map((layer) => (
+        <URLImage
+          src={
+            config.assetsURL +
+            "/templates/" +
+            currentCarMake.folder_directory.replace(" ", "_") +
+            `/${layer.layer_data.img}`
+          }
+          tellSize={handleImageSize}
+          key={layer.id}
+          listening={false}
+        />
+      ))}
     </>
   );
 };
