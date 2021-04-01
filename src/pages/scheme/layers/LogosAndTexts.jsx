@@ -3,7 +3,7 @@ import _ from "lodash";
 
 import URLImage from "components/URLImage";
 import TextNode from "components/TextNode";
-import { LayerTypes } from "../../../constants";
+import { LayerTypes } from "constant";
 import config from "config";
 
 const LogosAndTexts = (props) => {
@@ -38,8 +38,8 @@ const LogosAndTexts = (props) => {
               width={layer.layer_data.width}
               height={layer.layer_data.height}
               rotation={layer.layer_data.rotation}
-              scaleX={layer.layer_data.flop === 0 ? 1 : -1}
-              scaleY={layer.layer_data.flip === 0 ? 1 : -1}
+              scaleX={layer.layer_data.flop === 1 ? -1 : 1}
+              scaleY={layer.layer_data.flip === 1 ? -1 : 1}
               onSelect={() => setCurrentLayer(layer)}
               isSelected={currentLayer && currentLayer.id === layer.id}
               listening={!layer.layer_locked}
@@ -75,8 +75,12 @@ const LogosAndTexts = (props) => {
             width={layer.layer_data.width}
             height={layer.layer_data.height}
             rotation={layer.layer_data.rotation}
-            scaleX={layer.layer_data.scaleX}
-            scaleY={layer.layer_data.scaleY}
+            scaleX={
+              layer.layer_data.scaleX * (layer.layer_data.flop === 1 ? -1 : 1)
+            }
+            scaleY={
+              layer.layer_data.scaleY * (layer.layer_data.flip === 1 ? -1 : 1)
+            }
             onSelect={() => setCurrentLayer(layer)}
             isSelected={currentLayer && currentLayer.id === layer.id}
             listening={!layer.layer_locked}

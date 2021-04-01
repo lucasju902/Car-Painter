@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
-import { Palette, DialogTypes, LayerTypes } from "../../../constants";
+import { Palette, DialogTypes, LayerTypes } from "constant";
 
 import { Box, TextField } from "@material-ui/core";
 import { ColorPicker } from "material-ui-color";

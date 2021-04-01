@@ -62,8 +62,10 @@ const TextNode = ({
         width: Math.max(5, node.width()),
         height: Math.max(5, node.height()),
         rotation: node.rotation(),
-        scaleX: scaleX,
-        scaleY: scaleY,
+        scaleX: Math.abs(scaleX),
+        scaleY: Math.abs(scaleY),
+        flop: scaleX > 0 ? 0 : 1,
+        flip: scaleY > 0 ? 0 : 1,
       });
     }
   };

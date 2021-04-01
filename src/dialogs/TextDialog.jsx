@@ -23,7 +23,7 @@ import {
   Grid,
 } from "@material-ui/core";
 import SliderInput from "components/SliderInput";
-import { Palette } from "../constants";
+import { Palette } from "constant";
 
 const Button = styled(MuiButton)(spacing);
 const TextField = styled(MuiTextField)(spacing);
@@ -239,12 +239,12 @@ const TextDialog = (props) => {
               <InnerForm {...formProps} fontList={fontList} />
             </DialogContent>
             <DialogActions>
-              <Button onClick={onCancel} color="primary">
+              <Button onClick={onCancel} color="secondary">
                 Cancel
               </Button>
               <Button
                 type="submit"
-                color="default"
+                color="primary"
                 variant="outlined"
                 disabled={formProps.isSubmitting}
               >

@@ -1,6 +1,6 @@
 import React from "react";
 import { Line } from "react-konva";
-import { PaintingGuides } from "../../../constants";
+import { PaintingGuides } from "constant";
 
 import URLImage from "components/URLImage";
 import config from "config";

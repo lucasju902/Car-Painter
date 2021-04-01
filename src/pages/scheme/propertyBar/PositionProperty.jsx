@@ -15,7 +15,7 @@ const CustomeTextField = styled(TextField)`
   }
 `;
 
-const SizeProperty = (props) => {
+const PositionProperty = (props) => {
   const {
     errors,
     handleBlur,
@@ -26,24 +26,24 @@ const SizeProperty = (props) => {
   } = props;
   return (
     <Box display="flex" flexDirection="column">
-      <TitleTypograhpy>Size</TitleTypograhpy>
+      <TitleTypograhpy>Position</TitleTypograhpy>
       <CustomeTextField
-        name="layer_data.width"
-        label="Width"
+        name="layer_data.left"
+        label="Left"
         variant="outlined"
         type="number"
-        value={values.layer_data.width}
+        value={values.layer_data.left}
         error={Boolean(
           touched.layer_data &&
-            touched.layer_data.width &&
+            touched.layer_data.left &&
             errors.layer_data &&
-            errors.layer_data.width
+            errors.layer_data.left
         )}
         helperText={
           touched.layer_data &&
-          touched.layer_data.width &&
+          touched.layer_data.left &&
           errors.layer_data &&
-          errors.layer_data.width
+          errors.layer_data.left
         }
         onBlur={handleBlur}
         onChange={handleChange}
@@ -55,22 +55,22 @@ const SizeProperty = (props) => {
         }}
       />
       <CustomeTextField
-        name="layer_data.height"
-        label="Height"
+        name="layer_data.top"
+        label="Top"
         variant="outlined"
         type="number"
-        value={values.layer_data.height}
+        value={values.layer_data.top}
         error={Boolean(
           touched.layer_data &&
-            touched.layer_data.height &&
+            touched.layer_data.top &&
             errors.layer_data &&
-            errors.layer_data.height
+            errors.layer_data.top
         )}
         helperText={
           touched.layer_data &&
-          touched.layer_data.height &&
+          touched.layer_data.top &&
           errors.layer_data &&
-          errors.layer_data.height
+          errors.layer_data.top
         }
         onBlur={handleBlur}
         onChange={handleChange}
@@ -85,4 +85,4 @@ const SizeProperty = (props) => {
   );
 };
 
-export default SizeProperty;
+export default PositionProperty;

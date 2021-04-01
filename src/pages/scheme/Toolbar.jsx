@@ -17,7 +17,7 @@ import {
   ToggleButtonGroup,
 } from "@material-ui/lab";
 import { ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "react-feather";
-import { PaintingGuides } from "../../constants";
+import { PaintingGuides } from "constant";
 
 const Typography = styled(MuiTypography)(spacing);
 const ToggleButton = styled(MuiToggleButton)(spacing);

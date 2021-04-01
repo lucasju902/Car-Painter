@@ -60,6 +60,7 @@ const SliderInput = (props) => {
         <CustomInput
           value={value}
           margin="dense"
+          type="number"
           onChange={(event) =>
             setValue(
               event.target.value === "" ? min || 0 : Number(event.target.value)
@@ -67,10 +68,8 @@ const SliderInput = (props) => {
           }
           onBlur={handleBlur}
           inputProps={{
-            step: 1,
             min: min,
             max: max,
-            type: "number",
             "aria-labelledby": "input-slider",
           }}
         />

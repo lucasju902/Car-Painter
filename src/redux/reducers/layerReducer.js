@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { setMessage } from "./messageReducer";
 import LayerService from "services/layerService";
 import _ from "lodash";
-import { LayerTypes } from "../../constants";
+import { LayerTypes } from "constant";
 
 const initialState = {
   list: [],
@@ -256,11 +256,11 @@ export const updateLayer = (layer) => async (dispatch) => {
 
   try {
     dispatch(updateListItem(layer));
+    dispatch(setCurrent(layer));
     await LayerService.updateLayer(layer.id, {
       ...layer,
       layer_data: JSON.stringify(layer.layer_data),
     });
-    dispatch(setCurrent(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

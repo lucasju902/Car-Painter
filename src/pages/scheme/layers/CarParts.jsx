@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
-import { LayerTypes } from "../../../constants";
+import { LayerTypes } from "constant";
 import config from "config";
 
 const CarParts = (props) => {

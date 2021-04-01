@@ -1,6 +1,6 @@
 import merge from "deepmerge";
 import { green, grey, indigo, red } from "@material-ui/core/colors";
-import { THEMES } from "../constants";
+import { THEMES } from "constant";
 
 const customBlue = {
   50: "#e9f0fb",
@@ -79,7 +79,11 @@ const darkVariant = merge(defaultVariant, {
   palette: {
     type: "dark",
     primary: {
-      main: customBlue[600],
+      main: customBlue[200],
+      contrastText: "#FFF",
+    },
+    error: {
+      main: red[300],
       contrastText: "#FFF",
     },
     background: {

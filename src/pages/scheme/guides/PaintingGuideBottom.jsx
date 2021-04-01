@@ -1,5 +1,5 @@
 import React from "react";
-import { PaintingGuides } from "../../../constants";
+import { PaintingGuides } from "constant";
 
 import URLImage from "components/URLImage";
 import config from "config";

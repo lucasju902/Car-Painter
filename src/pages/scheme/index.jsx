@@ -6,12 +6,12 @@ import { useParams } from "react-router";
 
 import { Box } from "@material-ui/core";
 
-import { LayerTypes } from "../../constants";
+import { LayerTypes } from "constant";
 import ScreenLoader from "components/ScreenLoader";
 import Toolbar from "./Toolbar";
 import Board from "./Board";
 import Sidebar from "./sideBar";
-// import PropertyBar from "./propertyBar";
+import PropertyBar from "./propertyBar";
 import ConfirmDialog from "dialogs/ConfirmDialog";
 
 import { getScheme } from "redux/reducers/schemeReducer";
@@ -91,7 +91,7 @@ const Scheme = () => {
             >
               <Board />
             </Wrapper>
-            {/* <PropertyBar /> */}
+            <PropertyBar />
           </Box>
           <Toolbar />
         </Box>

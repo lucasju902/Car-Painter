@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
-import { LayerTypes } from "../../../constants";
+import { LayerTypes } from "constant";
 import config from "config";
 
 const Overlays = (props) => {
@@ -26,8 +26,8 @@ const Overlays = (props) => {
           width={layer.layer_data.width}
           height={layer.layer_data.height}
           rotation={layer.layer_data.rotation}
-          scaleX={layer.layer_data.flop === 0 ? 1 : -1}
-          scaleY={layer.layer_data.flip === 0 ? 1 : -1}
+          scaleX={layer.layer_data.flop === 1 ? -1 : 1}
+          scaleY={layer.layer_data.flip === 1 ? -1 : 1}
           onSelect={() => setCurrentLayer(layer)}
           isSelected={currentLayer && currentLayer.id === layer.id}
           listening={!layer.layer_locked}
