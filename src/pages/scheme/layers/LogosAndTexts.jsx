@@ -57,7 +57,7 @@ const LogosAndTexts = (props) => {
             fontFamily={font.font_name}
             fontFile={
               font.font_file
-                ? `url(${config.assetsURL}/${font.font_file}`
+                ? `url(${config.assetsURL}/${font.font_file})`
                 : null
             }
             loadedFontList={loadedFontList}
