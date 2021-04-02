@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 import { LayerTypes } from "constant";
+import { AllowedLayerProps } from "constant";
 
 import { Box, TextField, Typography } from "@material-ui/core";
 
@@ -25,36 +26,45 @@ const GeneralProperty = (props) => {
     touched,
     values,
   } = props;
+  if (
+    !AllowedLayerProps[values.layer_type].includes("name") &&
+    !AllowedLayerProps[values.layer_type].includes("text")
+  )
+    return <></>;
   return (
     <Box display="flex" flexDirection="column">
       <TitleTypograhpy>General</TitleTypograhpy>
-      <CustomeTextField
-        name="layer_data.name"
-        label="Name"
-        variant="outlined"
-        value={values.layer_data.name}
-        error={Boolean(
-          touched.layer_data &&
+      {AllowedLayerProps[values.layer_type].includes("name") ? (
+        <CustomeTextField
+          name="layer_data.name"
+          label="Name"
+          variant="outlined"
+          value={values.layer_data.name}
+          error={Boolean(
+            touched.layer_data &&
+              touched.layer_data.name &&
+              errors.layer_data &&
+              errors.layer_data.name
+          )}
+          helperText={
+            touched.layer_data &&
             touched.layer_data.name &&
             errors.layer_data &&
             errors.layer_data.name
-        )}
-        helperText={
-          touched.layer_data &&
-          touched.layer_data.name &&
-          errors.layer_data &&
-          errors.layer_data.name
-        }
-        onBlur={handleBlur}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-        mb={4}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-      {values.layer_type === LayerTypes.TEXT ? (
+          }
+          onBlur={handleBlur}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          mb={4}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      ) : (
+        <></>
+      )}
+      {AllowedLayerProps[values.layer_type].includes("text") ? (
         <CustomeTextField
           name="layer_data.text"
           label="Text"

@@ -29,7 +29,7 @@ const PartItem = (props) => {
     toggleLocked,
     selected,
     disableLock,
-    onClick,
+    onSelect,
   } = props;
 
   return (
@@ -41,7 +41,7 @@ const PartItem = (props) => {
       border={1}
       borderColor="grey.700"
       borderRadius={5}
-      onClick={onClick}
+      onClick={onSelect}
       className={clsx(selected && "activeItem")}
     >
       <Grid container justify="space-between" alignItems="center" spacing={2}>

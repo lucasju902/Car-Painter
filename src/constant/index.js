@@ -18,6 +18,54 @@ export const LayerTypes = {
   CAR: 6,
 };
 
+export const AllowedLayerProps = {
+  [LayerTypes.TEXT]: [
+    "name",
+    "text",
+    "width",
+    "height",
+    "left",
+    "top",
+    "scaleX",
+    "scaleY",
+    "rotation",
+    "flop",
+    "flip",
+  ],
+  [LayerTypes.LOGO]: [
+    "name",
+    "width",
+    "height",
+    "left",
+    "top",
+    "rotation",
+    "flop",
+    "flip",
+  ],
+  [LayerTypes.OVERLAY]: [
+    "name",
+    "width",
+    "height",
+    "left",
+    "top",
+    "rotation",
+    "flop",
+    "flip",
+  ],
+  [LayerTypes.UPLOAD]: [
+    "name",
+    "width",
+    "height",
+    "left",
+    "top",
+    "rotation",
+    "flop",
+    "flip",
+  ],
+  [LayerTypes.BASE]: ["name"],
+  [LayerTypes.CAR]: ["name"],
+};
+
 export const PaintingGuides = {
   CARMASK: "car-mask",
   WIREFRAME: "wireframe",

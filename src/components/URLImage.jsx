@@ -2,6 +2,7 @@ import Canvg from "canvg";
 import React, { useRef, useState, useEffect } from "react";
 
 import { Image } from "react-konva";
+import Helper from "helper";
 
 const URLImage = ({
   src,
@@ -47,10 +48,10 @@ const URLImage = ({
     }
     if (onChange && !props.width && !props.height) {
       onChange({
-        left: props.x - width / 2,
-        top: props.y - height / 2,
-        width: width,
-        height: height,
+        left: Helper.mathRound2(props.x - width / 2),
+        top: Helper.mathRound2(props.y - height / 2),
+        width: Helper.mathRound2(width),
+        height: Helper.mathRound2(height),
       });
     }
     if (tellSize) {
@@ -73,8 +74,8 @@ const URLImage = ({
   const handleDragEnd = (e) => {
     if (onChange) {
       onChange({
-        left: e.target.x(),
-        top: e.target.y(),
+        left: Helper.mathRound2(e.target.x()),
+        top: Helper.mathRound2(e.target.y()),
       });
     }
   };
@@ -88,11 +89,13 @@ const URLImage = ({
       node.scaleX(scaleX > 0 ? 1 : -1);
       node.scaleY(scaleY > 0 ? 1 : -1);
       onChange({
-        left: node.x(),
-        top: node.y(),
+        left: Helper.mathRound2(node.x()),
+        top: Helper.mathRound2(node.y()),
         // set minimal value
-        width: Math.max(5, node.width() * Math.abs(scaleX)),
-        height: Math.max(5, node.height() * Math.abs(scaleY)),
+        width: Helper.mathRound2(Math.max(5, node.width() * Math.abs(scaleX))),
+        height: Helper.mathRound2(
+          Math.max(5, node.height() * Math.abs(scaleY))
+        ),
         rotation: node.rotation(),
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,

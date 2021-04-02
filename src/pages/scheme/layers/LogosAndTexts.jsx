@@ -76,10 +76,12 @@ const LogosAndTexts = (props) => {
             height={layer.layer_data.height}
             rotation={layer.layer_data.rotation}
             scaleX={
-              layer.layer_data.scaleX * (layer.layer_data.flop === 1 ? -1 : 1)
+              (layer.layer_data.scaleX || 1) *
+              (layer.layer_data.flop === 1 ? -1 : 1)
             }
             scaleY={
-              layer.layer_data.scaleY * (layer.layer_data.flip === 1 ? -1 : 1)
+              (layer.layer_data.scaleY | 1) *
+              (layer.layer_data.flip === 1 ? -1 : 1)
             }
             onSelect={() => setCurrentLayer(layer)}
             isSelected={currentLayer && currentLayer.id === layer.id}

@@ -251,12 +251,15 @@ export const createTextLayer = (schemeID, textObj, order, frameSize) => async (
   dispatch(setLoading(false));
 };
 
-export const updateLayer = (layer) => async (dispatch) => {
+export const updateLayer = (layer) => async (dispatch, getState) => {
   // dispatch(setLoading(true));
 
   try {
     dispatch(updateListItem(layer));
-    dispatch(setCurrent(layer));
+    const currentLayer = getState().layerReducer.current;
+    if (currentLayer.id === layer.id) {
+      dispatch(setCurrent(layer));
+    }
     await LayerService.updateLayer(layer.id, {
       ...layer,
       layer_data: JSON.stringify(layer.layer_data),

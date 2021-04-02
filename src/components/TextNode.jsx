@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 
 import { Text } from "react-konva";
+import Helper from "helper";
 
 const TextNode = ({
   fontFamily,
@@ -15,12 +16,26 @@ const TextNode = ({
 }) => {
   const [loadedFontFamily, setLoadedFontFamily] = useState(null);
   const shapeRef = useRef();
-
   useEffect(() => {
     if (fontFamily && fontFile && !loadedFontList.includes(fontFamily)) {
       loadFont();
     }
   }, [fontFamily, fontFile]);
+
+  useEffect(() => {
+    const node = shapeRef.current;
+    if (
+      node &&
+      (node.width() !== props.width || node.height() !== props.height)
+    ) {
+      if (onChange) {
+        onChange({
+          width: Helper.mathRound2(node.width()),
+          height: Helper.mathRound2(node.height()),
+        });
+      }
+    }
+  }, [shapeRef.current]);
 
   const loadFont = () => {
     let fontObject = new FontFace(fontFamily, fontFile);
@@ -43,8 +58,8 @@ const TextNode = ({
   const handleDragEnd = (e) => {
     if (onChange) {
       onChange({
-        left: e.target.x(),
-        top: e.target.y(),
+        left: Helper.mathRound2(e.target.x()),
+        top: Helper.mathRound2(e.target.y()),
       });
     }
   };
@@ -53,17 +68,16 @@ const TextNode = ({
       const node = shapeRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
-      console.log("scaleX, scaleY: ", scaleX, scaleY);
       // we will reset it back
       onChange({
-        left: node.x(),
-        top: node.y(),
+        left: Helper.mathRound2(node.x()),
+        top: Helper.mathRound2(node.y()),
         // set minimal value
-        width: Math.max(5, node.width()),
-        height: Math.max(5, node.height()),
-        rotation: node.rotation(),
-        scaleX: Math.abs(scaleX),
-        scaleY: Math.abs(scaleY),
+        width: Helper.mathRound2(Math.max(5, node.width())),
+        height: Helper.mathRound2(Math.max(5, node.height())),
+        rotation: Helper.mathRound2(node.rotation()),
+        scaleX: Helper.mathRound2(Math.abs(scaleX)),
+        scaleY: Helper.mathRound2(Math.abs(scaleY)),
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
       });

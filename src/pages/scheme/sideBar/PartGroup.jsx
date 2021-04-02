@@ -143,6 +143,8 @@ const PartGroup = (props) => {
               list={sortedList}
               setList={handleChangeLayer}
               animation={150}
+              onChoose={(evt) => console.log(evt)}
+              onSelect={(evt) => console.log(evt)}
               sort={!disableDnd}
             >
               {sortedList.map((item) => (
@@ -154,7 +156,7 @@ const PartGroup = (props) => {
                   toggleVisible={() => toggleField(item.id, "layer_visible")}
                   toggleLocked={() => toggleField(item.id, "layer_locked")}
                   selected={currentLayer && currentLayer.id === item.id}
-                  onClick={() => selectLayer(item)}
+                  onSelect={() => selectLayer(item)}
                   disableLock={disableLock}
                 />
               ))}
