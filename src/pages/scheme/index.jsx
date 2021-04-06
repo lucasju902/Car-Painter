@@ -18,7 +18,10 @@ import { getScheme } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
 import { getFontList } from "redux/reducers/fontReducer";
 import { getLogoList } from "redux/reducers/logoReducer";
-import { deleteLayer } from "redux/reducers/layerReducer";
+import {
+  deleteLayer,
+  setCurrent as setCurrentLayer,
+} from "redux/reducers/layerReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 
 const Wrapper = styled(Box)`
@@ -55,6 +58,9 @@ const Scheme = () => {
       setConfirmMessage(
         `Are you sure to delete "${currentLayer.layer_data.name}"?`
       );
+    }
+    if (key === "esc" && event.target.tagName !== "INPUT" && currentLayer) {
+      dispatch(setCurrentLayer(null));
     }
   };
   const handleConfirm = () => {
