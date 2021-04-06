@@ -47,7 +47,7 @@ const Scheme = () => {
     // Delete Selected Layer
     console.log("KeyEvent: ", key, event);
     if (
-      key === "del" &&
+      (key === "del" || key === "backspace") &&
       event.target.tagName !== "INPUT" &&
       currentLayer &&
       currentLayer.layer_type !== LayerTypes.CAR

@@ -28,7 +28,9 @@ const SizeProperty = (props) => {
   } = props;
   if (
     !AllowedLayerProps[values.layer_type].includes("width") &&
-    !AllowedLayerProps[values.layer_type].includes("height")
+    !AllowedLayerProps[values.layer_type].includes("height") &&
+    !AllowedLayerProps[values.layer_type].includes("scaleX") &&
+    !AllowedLayerProps[values.layer_type].includes("scaleY")
   )
     return <></>;
   return (
@@ -83,6 +85,68 @@ const SizeProperty = (props) => {
             touched.layer_data.height &&
             errors.layer_data &&
             errors.layer_data.height
+          }
+          onBlur={handleBlur}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          mb={4}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      ) : (
+        <></>
+      )}
+      {AllowedLayerProps[values.layer_type].includes("scaleX") ? (
+        <CustomeTextField
+          name="layer_data.scaleX"
+          label="ScaleX"
+          variant="outlined"
+          type="number"
+          value={Helper.mathRound2(values.layer_data.scaleX)}
+          error={Boolean(
+            touched.layer_data &&
+              touched.layer_data.scaleX &&
+              errors.layer_data &&
+              errors.layer_data.scaleX
+          )}
+          helperText={
+            touched.layer_data &&
+            touched.layer_data.scaleX &&
+            errors.layer_data &&
+            errors.layer_data.scaleX
+          }
+          onBlur={handleBlur}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          mb={4}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      ) : (
+        <></>
+      )}
+      {AllowedLayerProps[values.layer_type].includes("scaleY") ? (
+        <CustomeTextField
+          name="layer_data.scaleY"
+          label="ScaleY"
+          variant="outlined"
+          type="number"
+          value={Helper.mathRound2(values.layer_data.scaleY)}
+          error={Boolean(
+            touched.layer_data &&
+              touched.layer_data.scaleY &&
+              errors.layer_data &&
+              errors.layer_data.scaleY
+          )}
+          helperText={
+            touched.layer_data &&
+            touched.layer_data.scaleY &&
+            errors.layer_data &&
+            errors.layer_data.scaleY
           }
           onBlur={handleBlur}
           onChange={handleChange}

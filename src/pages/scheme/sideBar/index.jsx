@@ -64,48 +64,23 @@ const Sidebar = () => {
   const basePaints = useSelector((state) => state.basePaintReducer.list);
 
   const handleOpenBase = (base) => {
-    const count = layerList.filter(
-      (item) => LayerTypes.BASE === item.layer_type
-    ).length;
-    dispatch(createLayersFromBasePaint(currentScheme.id, base, count + 1));
+    dispatch(createLayersFromBasePaint(currentScheme.id, base));
     setDialog(null);
   };
   const handleOpenShape = (shape) => {
-    const count = layerList.filter(
-      (item) => LayerTypes.OVERLAY === item.layer_type
-    ).length;
-    dispatch(
-      createLayerFromShape(currentScheme.id, shape, count + 1, frameSize)
-    );
+    dispatch(createLayerFromShape(currentScheme.id, shape, frameSize));
     setDialog(null);
   };
   const handleOpenLogo = (logo) => {
-    const count = layerList.filter((item) =>
-      [LayerTypes.LOGO, LayerTypes.UPLOAD, LayerTypes.TEXT].includes(
-        item.layer_type
-      )
-    ).length;
-    dispatch(createLayerFromLogo(currentScheme.id, logo, count + 1, frameSize));
+    dispatch(createLayerFromLogo(currentScheme.id, logo, frameSize));
     setDialog(null);
   };
   const handleOpenUpload = (upload) => {
-    const count = layerList.filter((item) =>
-      [LayerTypes.LOGO, LayerTypes.UPLOAD, LayerTypes.TEXT].includes(
-        item.layer_type
-      )
-    ).length;
-    dispatch(
-      createLayerFromUpload(currentScheme.id, upload, count + 1, frameSize)
-    );
+    dispatch(createLayerFromUpload(currentScheme.id, upload, frameSize));
     setDialog(null);
   };
   const handleCreateText = (values) => {
-    const count = layerList.filter((item) =>
-      [LayerTypes.LOGO, LayerTypes.UPLOAD, LayerTypes.TEXT].includes(
-        item.layer_type
-      )
-    ).length;
-    dispatch(createTextLayer(currentScheme.id, values, count + 1, frameSize));
+    dispatch(createTextLayer(currentScheme.id, values, frameSize));
     setDialog(null);
   };
 

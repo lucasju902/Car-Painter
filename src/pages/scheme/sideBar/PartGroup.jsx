@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
@@ -73,6 +73,19 @@ const PartGroup = (props) => {
     disableDnd,
   } = props;
   const sortedList = _.orderBy(layerList, ["layer_order"], ["asc"]);
+
+  useEffect(() => {
+    for (let index in sortedList) {
+      if (sortedList[index].layer_order !== parseInt(index) + 1) {
+        dispatch(
+          updateLayer({
+            ...sortedList[index],
+            layer_order: parseInt(index) + 1,
+          })
+        );
+      }
+    }
+  }, [layerList.length]);
 
   const handleExpandClick = () => {
     setExpanded((preValue) => !preValue);

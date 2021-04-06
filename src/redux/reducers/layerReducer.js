@@ -63,7 +63,11 @@ export const slice = createSlice({
       }
     },
     setCurrent: (state, action) => {
-      state.current = action.payload;
+      let layer = action.payload;
+      if (layer && typeof layer.layer_data === "string") {
+        layer.layer_data = JSON.parse(layer.layer_data);
+      }
+      state.current = layer;
     },
   },
 });
@@ -80,13 +84,13 @@ export const {
 
 export default slice.reducer;
 
-export const createLayersFromBasePaint = (schemeID, base, order) => async (
+export const createLayersFromBasePaint = (schemeID, base) => async (
   dispatch
 ) => {
   dispatch(setLoading(true));
 
   try {
-    let layer_order = order;
+    // let layer_order = order;
     for (let base_item of base.base_data) {
       const layer = await LayerService.createLayer({
         layer_type: LayerTypes.BASE,
@@ -98,11 +102,12 @@ export const createLayersFromBasePaint = (schemeID, base, order) => async (
         }),
         layer_visible: 1,
         layer_locked: 0,
-        layer_order: layer_order++,
+        layer_order: 0,
         time_modified: 0,
         confirm: "",
       });
       dispatch(insertToList(layer));
+      dispatch(setCurrent(layer));
     }
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
@@ -110,12 +115,9 @@ export const createLayersFromBasePaint = (schemeID, base, order) => async (
   dispatch(setLoading(false));
 };
 
-export const createLayerFromShape = (
-  schemeID,
-  shape,
-  order,
-  frameSize
-) => async (dispatch) => {
+export const createLayerFromShape = (schemeID, shape, frameSize) => async (
+  dispatch
+) => {
   dispatch(setLoading(true));
 
   try {
@@ -137,18 +139,19 @@ export const createLayerFromShape = (
       }),
       layer_visible: 1,
       layer_locked: 0,
-      layer_order: order,
+      layer_order: 0,
       time_modified: 0,
       confirm: "",
     });
     dispatch(insertToList(layer));
+    dispatch(setCurrent(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
   dispatch(setLoading(false));
 };
 
-export const createLayerFromLogo = (schemeID, logo, order, frameSize) => async (
+export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
   dispatch
 ) => {
   dispatch(setLoading(true));
@@ -171,23 +174,21 @@ export const createLayerFromLogo = (schemeID, logo, order, frameSize) => async (
       }),
       layer_visible: 1,
       layer_locked: 0,
-      layer_order: order,
+      layer_order: 0,
       time_modified: 0,
       confirm: "",
     });
     dispatch(insertToList(layer));
+    dispatch(setCurrent(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
   dispatch(setLoading(false));
 };
 
-export const createLayerFromUpload = (
-  schemeID,
-  upload,
-  order,
-  frameSize
-) => async (dispatch) => {
+export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
+  dispatch
+) => {
   dispatch(setLoading(true));
 
   try {
@@ -211,18 +212,19 @@ export const createLayerFromUpload = (
       }),
       layer_visible: 1,
       layer_locked: 0,
-      layer_order: order,
+      layer_order: 0,
       time_modified: 0,
       confirm: "",
     });
     dispatch(insertToList(layer));
+    dispatch(setCurrent(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
   dispatch(setLoading(false));
 };
 
-export const createTextLayer = (schemeID, textObj, order, frameSize) => async (
+export const createTextLayer = (schemeID, textObj, frameSize) => async (
   dispatch
 ) => {
   dispatch(setLoading(true));
@@ -240,11 +242,12 @@ export const createTextLayer = (schemeID, textObj, order, frameSize) => async (
       }),
       layer_visible: 1,
       layer_locked: 0,
-      layer_order: order,
+      layer_order: 0,
       time_modified: 0,
       confirm: "",
     });
     dispatch(insertToList(layer));
+    dispatch(setCurrent(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -253,16 +256,19 @@ export const createTextLayer = (schemeID, textObj, order, frameSize) => async (
 
 export const updateLayer = (layer) => async (dispatch, getState) => {
   // dispatch(setLoading(true));
-
+  let configuredLayer = {
+    ...layer,
+    layer_order: layer.layer_order || 1,
+  };
   try {
-    dispatch(updateListItem(layer));
+    dispatch(updateListItem(configuredLayer));
     const currentLayer = getState().layerReducer.current;
-    if (currentLayer && currentLayer.id === layer.id) {
-      dispatch(setCurrent(layer));
+    if (currentLayer && currentLayer.id === configuredLayer.id) {
+      dispatch(setCurrent(configuredLayer));
     }
-    await LayerService.updateLayer(layer.id, {
-      ...layer,
-      layer_data: JSON.stringify(layer.layer_data),
+    await LayerService.updateLayer(configuredLayer.id, {
+      ...configuredLayer,
+      layer_data: JSON.stringify(configuredLayer.layer_data),
     });
   } catch (err) {
     dispatch(setMessage({ message: err.message }));

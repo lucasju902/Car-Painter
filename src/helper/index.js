@@ -16,7 +16,7 @@ const getDifferenceFromToday = (past_date) => {
   return `${Math.round(difference_In_Day)} days ago`;
 };
 
-const mathRound2 = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
+const mathRound2 = (num) => Math.ceil((num + Number.EPSILON) * 100) / 100;
 
 export default {
   getDifferenceFromToday,

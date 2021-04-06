@@ -39,7 +39,7 @@ const Board = () => {
   const scaleBy = 1.2;
 
   const handleMouseDown = (e) => {
-    console.log("Mouse Down");
+    // console.log("Mouse Down");
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty && currentLayer) {
       dispatch(setCurrentLayer(null));
@@ -49,7 +49,7 @@ const Board = () => {
     // console.log("Mouse Move");
   };
   const handleMouseUp = (e) => {
-    console.log("Mouse Up");
+    // console.log("Mouse Up");
   };
   const handleZoomStage = (event) => {
     event.evt.preventDefault();
