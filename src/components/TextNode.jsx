@@ -17,8 +17,12 @@ const TextNode = ({
   const [loadedFontFamily, setLoadedFontFamily] = useState(null);
   const shapeRef = useRef();
   useEffect(() => {
-    if (fontFamily && fontFile && !loadedFontList.includes(fontFamily)) {
-      loadFont();
+    if (fontFamily && fontFile) {
+      if (!loadedFontList.includes(fontFamily)) {
+        loadFont();
+      } else {
+        setLoadedFontFamily(fontFamily);
+      }
     }
   }, [fontFamily, fontFile]);
 
@@ -26,7 +30,8 @@ const TextNode = ({
     const node = shapeRef.current;
     if (
       node &&
-      (node.width() !== props.width || node.height() !== props.height)
+      (node.width() !== props.width || node.height() !== props.height) &&
+      loadedFontFamily
     ) {
       if (onChange) {
         onChange({
@@ -63,12 +68,23 @@ const TextNode = ({
       });
     }
   };
+  const handleTransform = (e) => {
+    const node = shapeRef.current;
+    const scaleX = node.scaleX();
+    const scaleY = node.scaleY();
+    const width = node.width();
+    const height = node.height();
+    // we will reset it back
+    node.width(Helper.mathRound2(Math.max(5, width * Math.abs(scaleX))));
+    node.height(Helper.mathRound2(Math.max(5, height * Math.abs(scaleY))));
+    node.scaleX(scaleX > 0 ? 1 : -1);
+    node.scaleY(scaleY > 0 ? 1 : -1);
+  };
   const handleTransformEnd = (e) => {
     if (onChange) {
       const node = shapeRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
-      // we will reset it back
       onChange({
         left: Helper.mathRound2(node.x()),
         top: Helper.mathRound2(node.y()),
@@ -76,8 +92,6 @@ const TextNode = ({
         width: Helper.mathRound2(Math.max(5, node.width())),
         height: Helper.mathRound2(Math.max(5, node.height())),
         rotation: Helper.mathRound2(node.rotation()),
-        scaleX: Helper.mathRound2(Math.abs(scaleX)),
-        scaleY: Helper.mathRound2(Math.abs(scaleY)),
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
       });
@@ -95,6 +109,7 @@ const TextNode = ({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}
+      onTransform={handleTransform}
     />
   );
 };

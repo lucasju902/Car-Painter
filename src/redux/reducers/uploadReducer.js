@@ -6,6 +6,7 @@ const initialState = {
   list: [],
   current: null,
   loading: false,
+  initialized: false,
 };
 
 export const slice = createSlice({
@@ -17,6 +18,7 @@ export const slice = createSlice({
     },
     setList: (state, action) => {
       state.list = action.payload;
+      state.initialized = true;
     },
     insertToList: (state, action) => {
       state.list.push(action.payload);

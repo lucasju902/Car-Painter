@@ -257,7 +257,7 @@ export const updateLayer = (layer) => async (dispatch, getState) => {
   try {
     dispatch(updateListItem(layer));
     const currentLayer = getState().layerReducer.current;
-    if (currentLayer.id === layer.id) {
+    if (currentLayer && currentLayer.id === layer.id) {
       dispatch(setCurrent(layer));
     }
     await LayerService.updateLayer(layer.id, {
@@ -267,7 +267,7 @@ export const updateLayer = (layer) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  // dispatch(setLoading(false));
+  dispatch(setLoading(false));
 };
 
 export const deleteLayer = (layer) => async (dispatch) => {
@@ -275,6 +275,7 @@ export const deleteLayer = (layer) => async (dispatch) => {
 
   try {
     dispatch(deleteListItem(layer));
+    dispatch(setCurrent(null));
     await LayerService.deleteLayer(layer.id);
     dispatch(
       setMessage({ message: "Deleted Layer successfully!", type: "success" })

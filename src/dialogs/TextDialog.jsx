@@ -116,7 +116,7 @@ const InnerForm = (props) => {
             label="Font Size"
             width={80}
             min={6}
-            max={72}
+            max={320}
             value={values.size}
             setValue={(value) => setFieldValue("size", value)}
           />

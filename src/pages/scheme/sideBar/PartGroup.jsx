@@ -79,8 +79,8 @@ const PartGroup = (props) => {
   };
   const handleChangeLayer = (list) => {
     for (let index in list) {
-      const layer = layerList.find((item) => item.id === list[index].id);
-      if (layer.layer_order !== parseInt(index) + 1) {
+      const layer = layerList.find((item) => item.id == list[index].id);
+      if (layer && layer.layer_order !== parseInt(index) + 1) {
         dispatch(
           updateLayer({
             ...layer,

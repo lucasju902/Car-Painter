@@ -39,6 +39,9 @@ const Scheme = () => {
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
   const fontLoading = useSelector((state) => state.fontReducer.loading);
+  const uploadsInitialized = useSelector(
+    (state) => state.uploadReducer.initialized
+  );
 
   const handleKeyEvent = (key, event) => {
     // Delete Selected Layer
@@ -60,9 +63,11 @@ const Scheme = () => {
   };
 
   useEffect(() => {
-    if (user && params.id) {
+    if (user && user.id && params.id) {
       if (!currentScheme) {
         dispatch(getScheme(params.id));
+      }
+      if (!uploadsInitialized) {
         dispatch(getUploadListByUserID(user.id));
       }
       if (!overlayList.length) dispatch(getOverlayList());
