@@ -27,14 +27,14 @@ const PositionProperty = (props) => {
     values,
   } = props;
   if (
-    !AllowedLayerProps[values.layer_type].includes("left") &&
-    !AllowedLayerProps[values.layer_type].includes("top")
+    !AllowedLayerProps[values.layer_type].includes("layer_data.left") &&
+    !AllowedLayerProps[values.layer_type].includes("layer_data.top")
   )
     return <></>;
   return (
     <Box display="flex" flexDirection="column">
       <TitleTypograhpy>Position</TitleTypograhpy>
-      {AllowedLayerProps[values.layer_type].includes("left") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.left") ? (
         <CustomeTextField
           name="layer_data.left"
           label="Left"
@@ -65,7 +65,7 @@ const PositionProperty = (props) => {
       ) : (
         <></>
       )}
-      {AllowedLayerProps[values.layer_type].includes("top") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.top") ? (
         <CustomeTextField
           name="layer_data.top"
           label="Top"

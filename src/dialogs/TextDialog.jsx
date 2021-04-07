@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import * as Yup from "yup";
-import config from "config";
 import { Formik, Form } from "formik";
 
 import styled from "styled-components/macro";
 
 import { spacing } from "@material-ui/system";
-import { ColorPicker } from "material-ui-color";
 import {
   Box,
   Button as MuiButton,
@@ -15,38 +13,22 @@ import {
   DialogContent,
   DialogActions,
   TextField as MuiTextField,
-  Select as MuiSelect,
-  MenuItem,
   FormControl,
   InputLabel,
   Typography as MuiTypography,
   Grid,
 } from "@material-ui/core";
 import SliderInput from "components/SliderInput";
-import { Palette } from "constant";
+import FontSelect from "components/FontSelect";
+import ColorPickerInput from "components/ColorPickerInput";
 
 const Button = styled(MuiButton)(spacing);
 const TextField = styled(MuiTextField)(spacing);
-const Select = styled(MuiSelect)(spacing);
 const Typography = styled(MuiTypography)(spacing);
 const CustomeTextField = styled(TextField)`
   .MuiInputBase-input {
     height: 2rem;
   }
-`;
-const FontImage = styled.img`
-  width: 506px;
-  filter: invert(1);
-`;
-const FontSelect = styled(Select)`
-  .MuiSelect-selectMenu {
-    display: flex;
-    align-items: center;
-    height: 2rem;
-  }
-`;
-const ColorInputField = styled(TextField)`
-  width: 80px;
 `;
 
 const InnerForm = (props) => {
@@ -81,34 +63,10 @@ const InnerForm = (props) => {
       <FormControl variant="outlined">
         <InputLabel id="font-select-label">Font</InputLabel>
         <FontSelect
-          labelId="font-select-label"
-          id="font-select-outlined"
           value={values.font}
           onChange={(e) => setFieldValue("font", e.target.value)}
-          label="Font"
-          mb={4}
-          renderValue={(id) => {
-            const font = fontList.find((item) => item.id === id);
-            if (!font) {
-              return <>Select Font</>;
-            }
-            return (
-              <FontImage
-                src={`${config.assetsURL}/${font.font_preview}`}
-                alt={font.font_name}
-              />
-            );
-          }}
-        >
-          {fontList.map((font) => (
-            <MenuItem value={font.id} key={font.id}>
-              <FontImage
-                src={`${config.assetsURL}/${font.font_preview}`}
-                alt={font.font_name}
-              />
-            </MenuItem>
-          ))}
-        </FontSelect>
+          fontList={fontList}
+        />
       </FormControl>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
@@ -131,21 +89,10 @@ const InnerForm = (props) => {
             <Typography variant="body1" color="textSecondary" mr={2}>
               Font Color
             </Typography>
-            <Box display="flex" alignItems="center">
-              <ColorPicker
-                value={values.color}
-                onChange={(color) =>
-                  setFieldValue("color", color.css.backgroundColor)
-                }
-                palette={Palette}
-                deferred
-                hideTextfield
-              />
-              <ColorInputField
-                value={values.color}
-                onChange={(event) => setFieldValue("color", event.target.value)}
-              />
-            </Box>
+            <ColorPickerInput
+              value={values.color}
+              onChange={(color) => setFieldValue("color", color)}
+            />
           </Box>
         </Grid>
       </Grid>
@@ -171,23 +118,10 @@ const InnerForm = (props) => {
             <Typography variant="body1" color="textSecondary" mr={2}>
               Stroke Color
             </Typography>
-            <Box display="flex" alignItems="center">
-              <ColorPicker
-                value={values.scolor}
-                onChange={(color) =>
-                  setFieldValue("scolor", color.css.backgroundColor)
-                }
-                palette={Palette}
-                deferred
-                hideTextfield
-              />
-              <ColorInputField
-                value={values.scolor}
-                onChange={(event) =>
-                  setFieldValue("scolor", event.target.value)
-                }
-              />
-            </Box>
+            <ColorPickerInput
+              value={values.scolor}
+              onChange={(color) => setFieldValue("scolor", color)}
+            />
           </Box>
         </Grid>
       </Grid>

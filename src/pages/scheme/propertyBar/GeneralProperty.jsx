@@ -1,9 +1,14 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { LayerTypes } from "constant";
 import { AllowedLayerProps } from "constant";
 
-import { Box, TextField, Typography } from "@material-ui/core";
+import { Box, TextField, Typography, IconButton } from "@material-ui/core";
+import {
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+  Lock as LockIcon,
+  LockOpen as LockOpenIcon,
+} from "@material-ui/icons";
 
 const TitleTypograhpy = styled(Typography)`
   margin-top: 5px;
@@ -26,15 +31,16 @@ const GeneralProperty = (props) => {
     touched,
     values,
   } = props;
+
   if (
-    !AllowedLayerProps[values.layer_type].includes("name") &&
-    !AllowedLayerProps[values.layer_type].includes("text")
+    !AllowedLayerProps[values.layer_type].includes("layer_data.name") &&
+    !AllowedLayerProps[values.layer_type].includes("layer_data.text")
   )
     return <></>;
   return (
     <Box display="flex" flexDirection="column">
       <TitleTypograhpy>General</TitleTypograhpy>
-      {AllowedLayerProps[values.layer_type].includes("name") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.name") ? (
         <CustomeTextField
           name="layer_data.name"
           label="Name"
@@ -64,7 +70,7 @@ const GeneralProperty = (props) => {
       ) : (
         <></>
       )}
-      {AllowedLayerProps[values.layer_type].includes("text") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.text") ? (
         <CustomeTextField
           name="layer_data.text"
           label="Text"
@@ -91,6 +97,50 @@ const GeneralProperty = (props) => {
             shrink: true,
           }}
         />
+      ) : (
+        <></>
+      )}
+      {AllowedLayerProps[values.layer_type].includes("layer_visible") ? (
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-between"
+        >
+          <Typography variant="body1" color="textSecondary" mr={2}>
+            Visibility
+          </Typography>
+          <IconButton
+            onClick={() =>
+              setFieldValue("layer_visible", 1 - values.layer_visible)
+            }
+            size="small"
+          >
+            {values.layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+          </IconButton>
+        </Box>
+      ) : (
+        <></>
+      )}
+      {AllowedLayerProps[values.layer_type].includes("layer_locked") ? (
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-between"
+        >
+          <Typography variant="body1" color="textSecondary" mr={2}>
+            Locking
+          </Typography>
+          <IconButton
+            onClick={() =>
+              setFieldValue("layer_locked", 1 - values.layer_locked)
+            }
+            size="small"
+          >
+            {values.layer_locked ? <LockIcon /> : <LockOpenIcon />}
+          </IconButton>
+        </Box>
       ) : (
         <></>
       )}

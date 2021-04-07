@@ -108,7 +108,7 @@ const PartGroup = (props) => {
     dispatch(
       updateLayer({
         ...layer,
-        [field]: layer[field] ? false : true,
+        [field]: layer[field] ? 0 : 1,
       })
     );
   };

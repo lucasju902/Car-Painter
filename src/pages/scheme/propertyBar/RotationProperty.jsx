@@ -29,15 +29,15 @@ const RotationProperty = (props) => {
     values,
   } = props;
   if (
-    !AllowedLayerProps[values.layer_type].includes("rotation") &&
-    !AllowedLayerProps[values.layer_type].includes("flip") &&
-    !AllowedLayerProps[values.layer_type].includes("flop")
+    !AllowedLayerProps[values.layer_type].includes("layer_data.rotation") &&
+    !AllowedLayerProps[values.layer_type].includes("layer_data.flip") &&
+    !AllowedLayerProps[values.layer_type].includes("layer_data.flop")
   )
     return <></>;
   return (
     <Box display="flex" flexDirection="column">
       <TitleTypograhpy>Rotation</TitleTypograhpy>
-      {AllowedLayerProps[values.layer_type].includes("rotation") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.rotation") ? (
         <SliderInput
           label="Rotation"
           width={80}
@@ -50,7 +50,7 @@ const RotationProperty = (props) => {
         <></>
       )}
       <Box display="flex" justifyContent="space-around">
-        {AllowedLayerProps[values.layer_type].includes("flop") ? (
+        {AllowedLayerProps[values.layer_type].includes("layer_data.flop") ? (
           <FormControl component="fieldset">
             <FormControlLabel
               control={
@@ -72,7 +72,7 @@ const RotationProperty = (props) => {
         ) : (
           <></>
         )}
-        {AllowedLayerProps[values.layer_type].includes("flip") ? (
+        {AllowedLayerProps[values.layer_type].includes("layer_data.flip") ? (
           <FormControl component="fieldset">
             <FormControlLabel
               control={

@@ -32,6 +32,18 @@ const PartItem = (props) => {
     onSelect,
   } = props;
 
+  const handleToggleVisible = (e) => {
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    toggleVisible();
+  };
+
+  const handleToggleLock = (e) => {
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    toggleLocked();
+  };
+
   return (
     <Wrapper
       p={2}
@@ -48,7 +60,7 @@ const PartItem = (props) => {
         <Grid item xs={10}>
           <Grid container wrap="nowrap" alignItems="center" spacing={2}>
             <Grid item xs={2}>
-              <IconButton onClick={() => toggleVisible()} size="small">
+              <IconButton onClick={handleToggleVisible} size="small">
                 {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </IconButton>
             </Grid>
@@ -59,7 +71,7 @@ const PartItem = (props) => {
         </Grid>
         {!disableLock ? (
           <Grid item xs={2}>
-            <IconButton onClick={() => toggleLocked()} size="small">
+            <IconButton onClick={handleToggleLock} size="small">
               {layer_locked ? <LockIcon /> : <LockOpenIcon />}
             </IconButton>
           </Grid>

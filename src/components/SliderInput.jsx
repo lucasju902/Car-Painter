@@ -7,6 +7,7 @@ import {
   Box,
   Typography as MuiTypography,
   Input,
+  Grid,
 } from "@material-ui/core";
 const Typography = styled(MuiTypography)(spacing);
 const CustomInput = styled(Input)`
@@ -33,48 +34,54 @@ const SliderInput = (props) => {
     }
   };
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center">
-      <Typography variant="body1" color="textSecondary" mr={2}>
-        {label}
-      </Typography>
-      <Box display="flex" alignItems="center">
-        <SliderWrapper>
-          <Slider
-            min={min}
-            max={max}
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <Typography variant="body1" color="textSecondary" mr={2}>
+          {label}
+        </Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Box display="flex" alignItems="center">
+          <SliderWrapper>
+            <Slider
+              min={min}
+              max={max}
+              value={value}
+              onChange={(event, value) => setValue(value)}
+              aria-labelledby="shape-size"
+              ValueLabelComponent={(props) => (
+                <Tooltip
+                  open={props.open}
+                  enterTouchDelay={0}
+                  placement="top"
+                  title={props.value}
+                >
+                  {props.children}
+                </Tooltip>
+              )}
+            />
+          </SliderWrapper>
+          <CustomInput
             value={value}
-            onChange={(event, value) => setValue(value)}
-            aria-labelledby="shape-size"
-            ValueLabelComponent={(props) => (
-              <Tooltip
-                open={props.open}
-                enterTouchDelay={0}
-                placement="top"
-                title={props.value}
-              >
-                {props.children}
-              </Tooltip>
-            )}
+            margin="dense"
+            type="number"
+            onChange={(event) =>
+              setValue(
+                event.target.value === ""
+                  ? min || 0
+                  : Number(event.target.value)
+              )
+            }
+            onBlur={handleBlur}
+            inputProps={{
+              min: min,
+              max: max,
+              "aria-labelledby": "input-slider",
+            }}
           />
-        </SliderWrapper>
-        <CustomInput
-          value={value}
-          margin="dense"
-          type="number"
-          onChange={(event) =>
-            setValue(
-              event.target.value === "" ? min || 0 : Number(event.target.value)
-            )
-          }
-          onBlur={handleBlur}
-          inputProps={{
-            min: min,
-            max: max,
-            "aria-labelledby": "input-slider",
-          }}
-        />
-      </Box>
-    </Box>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 

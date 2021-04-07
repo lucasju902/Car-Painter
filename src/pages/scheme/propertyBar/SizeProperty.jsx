@@ -27,16 +27,16 @@ const SizeProperty = (props) => {
     values,
   } = props;
   if (
-    !AllowedLayerProps[values.layer_type].includes("width") &&
-    !AllowedLayerProps[values.layer_type].includes("height") &&
-    !AllowedLayerProps[values.layer_type].includes("scaleX") &&
-    !AllowedLayerProps[values.layer_type].includes("scaleY")
+    !AllowedLayerProps[values.layer_type].includes("layer_data.width") &&
+    !AllowedLayerProps[values.layer_type].includes("layer_data.height") &&
+    !AllowedLayerProps[values.layer_type].includes("layer_data.scaleX") &&
+    !AllowedLayerProps[values.layer_type].includes("layer_data.scaleY")
   )
     return <></>;
   return (
     <Box display="flex" flexDirection="column">
       <TitleTypograhpy>Size</TitleTypograhpy>
-      {AllowedLayerProps[values.layer_type].includes("width") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.width") ? (
         <CustomeTextField
           name="layer_data.width"
           label="Width"
@@ -67,7 +67,7 @@ const SizeProperty = (props) => {
       ) : (
         <></>
       )}
-      {AllowedLayerProps[values.layer_type].includes("height") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.height") ? (
         <CustomeTextField
           name="layer_data.height"
           label="Height"
@@ -98,7 +98,7 @@ const SizeProperty = (props) => {
       ) : (
         <></>
       )}
-      {AllowedLayerProps[values.layer_type].includes("scaleX") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.scaleX") ? (
         <CustomeTextField
           name="layer_data.scaleX"
           label="ScaleX"
@@ -129,7 +129,7 @@ const SizeProperty = (props) => {
       ) : (
         <></>
       )}
-      {AllowedLayerProps[values.layer_type].includes("scaleY") ? (
+      {AllowedLayerProps[values.layer_type].includes("layer_data.scaleY") ? (
         <CustomeTextField
           name="layer_data.scaleY"
           label="ScaleY"
