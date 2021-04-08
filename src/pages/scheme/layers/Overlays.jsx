@@ -26,6 +26,7 @@ const Overlays = (props) => {
           width={layer.layer_data.width}
           height={layer.layer_data.height}
           rotation={layer.layer_data.rotation}
+          opacity={layer.layer_data.opacity}
           scaleX={layer.layer_data.flop === 1 ? -1 : 1}
           scaleY={layer.layer_data.flip === 1 ? -1 : 1}
           onSelect={() => setCurrentLayer(layer)}

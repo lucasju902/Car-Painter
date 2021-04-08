@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { AllowedLayerProps } from "constant";
+import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
@@ -15,7 +15,7 @@ import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import ColorPickerInput from "components/ColorPickerInput";
 import SliderInput from "components/SliderInput";
 
-const StrokeProperty = (props) => {
+const ColorProperty = (props) => {
   const {
     errors,
     handleBlur,
@@ -27,32 +27,29 @@ const StrokeProperty = (props) => {
   const [expanded, setExpanded] = useState(true);
 
   if (
-    !AllowedLayerProps[values.layer_type].includes("layer_data.stroke") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.scolor")
+    !AllowedLayerProps[values.layer_type].includes("layer_data.color") &&
+    !AllowedLayerProps[values.layer_type].includes("layer_data.opacity")
   )
     return <></>;
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Stroke</Typography>
+        <Typography>Color/Opacity</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.scolor"
-          ) ? (
+          {AllowedLayerProps[values.layer_type].includes("layer_data.color") &&
+          values.layer_type !== LayerTypes.TEXT ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Typography variant="body1" color="textSecondary" mr={2}>
-                  Stroke Color
+                  Color
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <ColorPickerInput
-                  value={values.layer_data.scolor}
-                  onChange={(color) =>
-                    setFieldValue("layer_data.scolor", color)
-                  }
+                  value={values.layer_data.color}
+                  onChange={(color) => setFieldValue("layer_data.color", color)}
                 />
               </Grid>
             </Grid>
@@ -60,14 +57,15 @@ const StrokeProperty = (props) => {
             <></>
           )}
           {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.stroke"
+            "layer_data.opacity"
           ) ? (
             <SliderInput
-              label="Stroke Width"
+              label="Opacity"
               min={0}
-              max={10}
-              value={values.layer_data.stroke}
-              setValue={(value) => setFieldValue("layer_data.stroke", value)}
+              max={1}
+              step={0.01}
+              value={values.layer_data.opacity}
+              setValue={(value) => setFieldValue("layer_data.opacity", value)}
             />
           ) : (
             <></>
@@ -78,4 +76,4 @@ const StrokeProperty = (props) => {
   );
 };
 
-export default StrokeProperty;
+export default ColorProperty;

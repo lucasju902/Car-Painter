@@ -26,21 +26,21 @@ const TextNode = ({
     }
   }, [fontFamily, fontFile]);
 
-  useEffect(() => {
-    const node = shapeRef.current;
-    if (
-      node &&
-      (node.width() !== props.width || node.height() !== props.height) &&
-      loadedFontFamily
-    ) {
-      if (onChange) {
-        onChange({
-          width: Helper.mathRound2(node.width()),
-          height: Helper.mathRound2(node.height()),
-        });
-      }
-    }
-  }, [shapeRef.current, loadedFontFamily]);
+  // useEffect(() => {
+  //   const node = shapeRef.current;
+  //   if (
+  //     node &&
+  //     (node.width() !== props.width || node.height() !== props.height) &&
+  //     loadedFontFamily
+  //   ) {
+  //     if (onChange) {
+  //       onChange({
+  //         width: Helper.mathRound2(node.width()),
+  //         height: Helper.mathRound2(node.height()),
+  //       });
+  //     }
+  //   }
+  // }, [shapeRef.current, loadedFontFamily]);
 
   const loadFont = () => {
     let fontObject = new FontFace(fontFamily, fontFile);
@@ -77,8 +77,8 @@ const TextNode = ({
         left: Helper.mathRound2(node.x()),
         top: Helper.mathRound2(node.y()),
         // set minimal value
-        width: Helper.mathRound2(Math.max(5, node.width())),
-        height: Helper.mathRound2(Math.max(5, node.height())),
+        // width: Helper.mathRound2(Math.max(5, node.width())),
+        // height: Helper.mathRound2(Math.max(5, node.height())),
         rotation: Helper.mathRound2(node.rotation()),
         scaleX: Helper.mathRound2(Math.max(0.01, scaleX)),
         scaleY: Helper.mathRound2(Math.max(0.01, scaleY)),

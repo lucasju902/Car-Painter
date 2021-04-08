@@ -164,6 +164,31 @@ const overrides = {
       borderBottom: "none",
     },
   },
+  MuiAccordion: {
+    rounded: {
+      borderRadius: "6px",
+    },
+    root: {
+      "&:before": {
+        display: "none",
+      },
+      margin: "4px 0 !important",
+    },
+  },
+  MuiAccordionSummary: {
+    root: {
+      minHeight: "50px !important",
+      padding: "0 12px",
+    },
+    content: {
+      margin: "8px 0 !important",
+    },
+  },
+  MuiAccordionDetails: {
+    root: {
+      padding: "4px 12px 12px",
+    },
+  },
 };
 
 export default overrides;

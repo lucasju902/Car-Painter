@@ -25,8 +25,8 @@ export const AllowedLayerProps = {
     "layer_data",
     "layer_data.name",
     "layer_data.text",
-    "layer_data.width",
-    "layer_data.height",
+    // "layer_data.width",
+    // "layer_data.height",
     "layer_data.left",
     "layer_data.top",
     "layer_data.scaleX",
@@ -39,6 +39,7 @@ export const AllowedLayerProps = {
     "layer_data.size",
     "layer_data.stroke",
     "layer_data.scolor",
+    "layer_data.opacity",
   ],
   [LayerTypes.LOGO]: [
     "layer_visible",
@@ -52,6 +53,7 @@ export const AllowedLayerProps = {
     "layer_data.rotation",
     "layer_data.flop",
     "layer_data.flip",
+    "layer_data.opacity",
   ],
   [LayerTypes.OVERLAY]: [
     "layer_visible",
@@ -65,6 +67,7 @@ export const AllowedLayerProps = {
     "layer_data.rotation",
     "layer_data.flop",
     "layer_data.flip",
+    "layer_data.opacity",
   ],
   [LayerTypes.UPLOAD]: [
     "layer_visible",
@@ -78,8 +81,14 @@ export const AllowedLayerProps = {
     "layer_data.rotation",
     "layer_data.flop",
     "layer_data.flip",
+    "layer_data.opacity",
   ],
-  [LayerTypes.BASE]: ["layer_data.name", "layer_visible", "layer_data"],
+  [LayerTypes.BASE]: [
+    "layer_data.name",
+    "layer_visible",
+    "layer_data",
+    "layer_data.opacity",
+  ],
   [LayerTypes.CAR]: ["layer_data.name", "layer_visible", "layer_data"],
 };
 

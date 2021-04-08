@@ -72,7 +72,6 @@ const InnerForm = (props) => {
         <Grid item xs={12} sm={6}>
           <SliderInput
             label="Font Size"
-            width={80}
             min={6}
             max={72}
             value={values.size}
@@ -101,7 +100,6 @@ const InnerForm = (props) => {
         <Grid item xs={12} sm={6}>
           <SliderInput
             label="Stroke Width"
-            width={80}
             min={0}
             max={10}
             value={values.stroke}
@@ -130,7 +128,6 @@ const InnerForm = (props) => {
         <Grid item xs={12} sm={6}>
           <SliderInput
             label="Rotation"
-            width={80}
             min={-179}
             max={179}
             value={values.rotation}

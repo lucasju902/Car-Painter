@@ -25,7 +25,7 @@ const SliderWrapper = styled(Box)`
 `;
 
 const SliderInput = (props) => {
-  const { label, min, max, value, setValue, width } = props;
+  const { label, min, max, value, setValue, step } = props;
   const handleBlur = () => {
     if (value < min) {
       setValue(min);
@@ -46,6 +46,7 @@ const SliderInput = (props) => {
             <Slider
               min={min}
               max={max}
+              step={step}
               value={value}
               onChange={(event, value) => setValue(value)}
               aria-labelledby="shape-size"

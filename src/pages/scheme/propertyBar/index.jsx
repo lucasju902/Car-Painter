@@ -5,16 +5,17 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import _ from "lodash";
 
+import { updateLayer } from "redux/reducers/layerReducer";
+import { AllowedLayerProps, LayerTypes } from "constant";
+
 import { Box, Typography, Button } from "@material-ui/core";
 import GeneralProperty from "./GeneralProperty";
 import SizeProperty from "./SizeProperty";
 import PositionProperty from "./PositionProperty";
 import FontProperty from "./FontProperty";
 import StrokeProperty from "./StrokeProperty";
-
-import { updateLayer } from "redux/reducers/layerReducer";
+import ColorProperty from "./ColorProperty";
 import RotationProperty from "./RotationProperty";
-import { AllowedLayerProps } from "constant";
 
 const Wrapper = styled(Box)`
   width: 350px;
@@ -70,8 +71,9 @@ const PropertyBar = () => {
             stroke: 0,
             font: 0,
             size: 0,
-            scolor: "#ffffff",
-            color: "#ffffff",
+            scolor: "#000000",
+            color: "#000000",
+            opacity: 1,
           },
           AllowedLayerProps[currentLayer.layer_type]
             .filter((item) => item.includes("layer_data."))
@@ -82,7 +84,7 @@ const PropertyBar = () => {
         (item) => !item.includes("layer_data.")
       )
     );
-    console.log("defaultValues: ", defaultValues);
+
     return (
       <Wrapper py={5} px={3}>
         <Formik
@@ -95,26 +97,75 @@ const PropertyBar = () => {
             },
           }}
           validationSchema={Yup.object({
+            layer_order: Yup.number(),
             layer_visible: Yup.number(),
             layer_locked: Yup.number(),
             layer_data: Yup.object({
               name: Yup.string().required("Required"),
+              text: Yup.string().test(
+                "text-validation",
+                "Required",
+                (value) =>
+                  (value && value.length) ||
+                  currentLayer.layer_type !== LayerTypes.TEXT
+              ),
               width: Yup.number()
-                .required("Required")
-                .moreThan(0, "Must be greater than 0"),
+                .moreThan(0, "Must be greater than 0")
+                .test(
+                  "width-validation",
+                  "Required",
+                  (value) =>
+                    value ||
+                    currentLayer.layer_type === LayerTypes.CAR ||
+                    currentLayer.layer_type === LayerTypes.BASE
+                ),
               height: Yup.number()
-                .required("Required")
-                .moreThan(0, "Must be greater than 0"),
-              left: Yup.number().required("Required"),
-              top: Yup.number().required("Required"),
+                .moreThan(0, "Must be greater than 0")
+                .test(
+                  "height-validation",
+                  "Required",
+                  (value) =>
+                    value ||
+                    currentLayer.layer_type === LayerTypes.CAR ||
+                    currentLayer.layer_type === LayerTypes.BASE
+                ),
+              left: Yup.number().test(
+                "left-validation",
+                "Required",
+                (value) =>
+                  value ||
+                  currentLayer.layer_type === LayerTypes.CAR ||
+                  currentLayer.layer_type === LayerTypes.BASE
+              ),
+              top: Yup.number().test(
+                "top-validation",
+                "Required",
+                (value) =>
+                  value ||
+                  currentLayer.layer_type === LayerTypes.CAR ||
+                  currentLayer.layer_type === LayerTypes.BASE
+              ),
               rotation: Yup.number()
-                .required("Required")
                 .moreThan(-180, "Must be greater than -180")
-                .lessThan(180, "Must be less than 180"),
+                .lessThan(180, "Must be less than 180")
+                .test(
+                  "top-validation",
+                  "Required",
+                  (value) =>
+                    value ||
+                    currentLayer.layer_type === LayerTypes.CAR ||
+                    currentLayer.layer_type === LayerTypes.BASE
+                ),
               flop: Yup.number(),
               flip: Yup.number(),
               scaleX: Yup.number().moreThan(0, "Must be greater than 0"),
               scaleY: Yup.number().moreThan(0, "Must be greater than 0"),
+              color: Yup.string(),
+              size: Yup.number(),
+              scolor: Yup.string(),
+              stroke: Yup.number(),
+              font: Yup.number(),
+              opacity: Yup.number(),
             }),
           })}
           enableReinitialize
@@ -125,7 +176,7 @@ const PropertyBar = () => {
           onSubmit={handleApply}
         >
           {(formProps) => (
-            <Form onSubmit={formProps.handleSubmit}>
+            <Form onSubmit={formProps.handleSubmit} noValidate>
               <Box
                 display="flex"
                 flexDirection="row"
@@ -146,6 +197,7 @@ const PropertyBar = () => {
               </Box>
               <GeneralProperty {...formProps} />
               <FontProperty {...formProps} fontList={fontList} />
+              <ColorProperty {...formProps} />
               <StrokeProperty {...formProps} />
               <SizeProperty {...formProps} />
               <PositionProperty {...formProps} />
