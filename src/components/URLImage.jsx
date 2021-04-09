@@ -21,6 +21,27 @@ const URLImage = ({
   if (filterColor) {
     filters.push(Konva.Filters.RGBA);
   }
+  const getPixelRatio = (node) => {
+    if (node.width() < 2.5 || node.height() < 2.5) {
+      return 15;
+    }
+    if (node.width() < 5 || node.height() < 5) {
+      return 10;
+    }
+    if (node.width() < 10 || node.height() < 10) {
+      return 7;
+    }
+    if (node.width() < 30 || node.height() < 30) {
+      return 4;
+    }
+    if (node.width() < 50 || node.height() < 50) {
+      return 2;
+    }
+    if (node.width() < 200 || node.height() < 200) {
+      return 1;
+    }
+    return 0.7;
+  };
 
   useEffect(() => {
     loadImage();
@@ -30,6 +51,20 @@ const URLImage = ({
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (shapeRef.current) {
+      if (filterColor) {
+        shapeRef.current.cache({
+          pixelRatio: getPixelRatio(shapeRef.current),
+          imageSmoothingEnabled: true,
+        });
+        // shapeRef.current.getLayer().batchDraw();
+      } else {
+        shapeRef.current.clearCache();
+      }
+    }
+  }, [filterColor]);
 
   const handleLoad = async () => {
     let width = props.width || imageRef.current.width;
@@ -53,9 +88,6 @@ const URLImage = ({
       setImage(imageRef.current);
     }
 
-    shapeRef.current.cache({ pixelRatio: 1 });
-    shapeRef.current.getLayer().batchDraw();
-
     if (onChange && !props.width && !props.height) {
       onChange({
         left: Helper.mathRound2(props.x - width / 2),
@@ -63,6 +95,14 @@ const URLImage = ({
         width: Helper.mathRound2(width),
         height: Helper.mathRound2(height),
       });
+    }
+
+    if (filterColor) {
+      shapeRef.current.cache({
+        pixelRatio: getPixelRatio(shapeRef.current),
+        imageSmoothingEnabled: true,
+      });
+      // shapeRef.current.getLayer().batchDraw();
     }
     if (tellSize) {
       tellSize({
@@ -102,16 +142,23 @@ const URLImage = ({
         left: Helper.mathRound2(node.x()),
         top: Helper.mathRound2(node.y()),
         // set minimal value
-        width: Helper.mathRound2(Math.max(5, node.width() * Math.abs(scaleX))),
+        width: Helper.mathRound2(Math.max(1, node.width() * Math.abs(scaleX))),
         height: Helper.mathRound2(
-          Math.max(5, node.height() * Math.abs(scaleY))
+          Math.max(1, node.height() * Math.abs(scaleY))
         ),
         rotation: node.rotation(),
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
       });
-      node.cache({ pixelRatio: 1 });
-      node.getLayer().batchDraw();
+      if (filterColor) {
+        node.cache({
+          pixelRatio: getPixelRatio(shapeRef.current),
+          imageSmoothingEnabled: true,
+        });
+        // node.getLayer().batchDraw();
+      } else {
+        node.clearCache();
+      }
     }
   };
 
