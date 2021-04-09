@@ -110,6 +110,8 @@ const URLImage = ({
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
       });
+      node.cache({ pixelRatio: 1 });
+      node.getLayer().batchDraw();
     }
   };
 
