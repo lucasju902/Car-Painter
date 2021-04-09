@@ -59,7 +59,6 @@ class SchemeController {
             layer_data: JSON.stringify({
               img: layer.img,
               name: layer.name,
-              color: layer.color,
             }),
             layer_visible: layer.visible,
             layer_order: layer_index++,

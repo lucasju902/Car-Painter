@@ -72,7 +72,7 @@ const PropertyBar = () => {
             font: 0,
             size: 0,
             scolor: "#000000",
-            color: "#000000",
+            color: null,
             opacity: 1,
           },
           AllowedLayerProps[currentLayer.layer_type]
@@ -116,6 +116,7 @@ const PropertyBar = () => {
                   "Required",
                   (value) =>
                     value ||
+                    currentLayer.layer_type === LayerTypes.TEXT ||
                     currentLayer.layer_type === LayerTypes.CAR ||
                     currentLayer.layer_type === LayerTypes.BASE
                 ),
@@ -126,36 +127,15 @@ const PropertyBar = () => {
                   "Required",
                   (value) =>
                     value ||
+                    currentLayer.layer_type === LayerTypes.TEXT ||
                     currentLayer.layer_type === LayerTypes.CAR ||
                     currentLayer.layer_type === LayerTypes.BASE
                 ),
-              left: Yup.number().test(
-                "left-validation",
-                "Required",
-                (value) =>
-                  value ||
-                  currentLayer.layer_type === LayerTypes.CAR ||
-                  currentLayer.layer_type === LayerTypes.BASE
-              ),
-              top: Yup.number().test(
-                "top-validation",
-                "Required",
-                (value) =>
-                  value ||
-                  currentLayer.layer_type === LayerTypes.CAR ||
-                  currentLayer.layer_type === LayerTypes.BASE
-              ),
+              left: Yup.number(),
+              top: Yup.number(),
               rotation: Yup.number()
                 .moreThan(-180, "Must be greater than -180")
-                .lessThan(180, "Must be less than 180")
-                .test(
-                  "top-validation",
-                  "Required",
-                  (value) =>
-                    value ||
-                    currentLayer.layer_type === LayerTypes.CAR ||
-                    currentLayer.layer_type === LayerTypes.BASE
-                ),
+                .lessThan(180, "Must be less than 180"),
               flop: Yup.number(),
               flip: Yup.number(),
               scaleX: Yup.number().moreThan(0, "Must be greater than 0"),

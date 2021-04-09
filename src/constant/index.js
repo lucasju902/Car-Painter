@@ -68,6 +68,7 @@ export const AllowedLayerProps = {
     "layer_data.flop",
     "layer_data.flip",
     "layer_data.opacity",
+    "layer_data.color",
   ],
   [LayerTypes.UPLOAD]: [
     "layer_visible",
@@ -88,8 +89,14 @@ export const AllowedLayerProps = {
     "layer_visible",
     "layer_data",
     "layer_data.opacity",
+    "layer_data.color",
   ],
-  [LayerTypes.CAR]: ["layer_data.name", "layer_visible", "layer_data"],
+  [LayerTypes.CAR]: [
+    "layer_data.name",
+    "layer_visible",
+    "layer_data",
+    "layer_data.color",
+  ],
 };
 
 export const PaintingGuides = {

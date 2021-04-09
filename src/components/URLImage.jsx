@@ -1,8 +1,8 @@
 import Canvg from "canvg";
 import React, { useRef, useState, useEffect } from "react";
-
-import { Image } from "react-konva";
+import Konva from "konva";
 import Helper from "helper";
+import { Image } from "react-konva";
 
 const URLImage = ({
   src,
@@ -10,11 +10,17 @@ const URLImage = ({
   isSelected,
   onSelect,
   onChange,
+  filterColor,
   ...props
 }) => {
   const imageRef = useRef(null);
   const shapeRef = useRef();
   const [image, setImage] = useState(null);
+  const filters = [];
+
+  if (filterColor) {
+    filters.push(Konva.Filters.RGBA);
+  }
 
   useEffect(() => {
     loadImage();
@@ -46,6 +52,10 @@ const URLImage = ({
     } else {
       setImage(imageRef.current);
     }
+
+    shapeRef.current.cache({ pixelRatio: 1 });
+    shapeRef.current.getLayer().batchDraw();
+
     if (onChange && !props.width && !props.height) {
       onChange({
         left: Helper.mathRound2(props.x - width / 2),
@@ -111,6 +121,11 @@ const URLImage = ({
       onTap={onSelect}
       ref={shapeRef}
       draggable={onChange}
+      filters={filters.length ? filters : null}
+      red={filterColor ? Helper.hexToRgba(filterColor).r : null}
+      green={filterColor ? Helper.hexToRgba(filterColor).g : null}
+      blue={filterColor ? Helper.hexToRgba(filterColor).b : null}
+      alpha={filterColor ? Helper.hexToRgba(filterColor).a / 255 : null}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}

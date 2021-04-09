@@ -14,14 +14,14 @@ const ColorPickerInput = (props) => {
   return (
     <Box display="flex" alignItems="center">
       <ColorPicker
-        value={value}
+        value={value || ""}
         onChange={(color) => onChange(color.css.backgroundColor)}
         palette={Palette}
         deferred
         hideTextfield
       />
       <ColorInputField
-        value={value}
+        value={value || ""}
         onChange={(event) => onChange(event.target.value)}
       />
     </Box>

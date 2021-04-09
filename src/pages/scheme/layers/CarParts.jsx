@@ -25,6 +25,7 @@ const CarParts = (props) => {
             `/${layer.layer_data.img}`
           }
           tellSize={handleImageSize}
+          filterColor={layer.layer_data.color}
           key={layer.id}
           listening={false}
         />

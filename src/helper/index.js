@@ -18,9 +18,24 @@ const getDifferenceFromToday = (past_date) => {
   return `${Math.round(difference_In_Day)} days ago`;
 };
 
+const hexToRgba = (hex) => {
+  let result =
+    hex.length > 7
+      ? /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+      : /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return null;
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+    a: hex.length > 7 ? parseInt(result[4], 16) : 255,
+  };
+};
+
 const mathRound2 = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
 
 export default {
   getDifferenceFromToday,
   mathRound2,
+  hexToRgba,
 };

@@ -20,6 +20,7 @@ const BasePaints = (props) => {
           src={`${config.assetsURL}/bases/${layer.layer_data.id}/${layer.layer_data.img}`}
           tellSize={handleImageSize}
           opacity={layer.layer_data.opacity}
+          filterColor={layer.layer_data.color}
           key={layer.id}
           listening={false}
         />

@@ -33,8 +33,8 @@ const LogosAndTexts = (props) => {
               name={layer.id.toString()}
               src={`${config.assetsURL}/${layer.layer_data.source_file}`}
               key={layer.id}
-              x={parseFloat(layer.layer_data.left)}
-              y={parseFloat(layer.layer_data.top)}
+              x={parseFloat(layer.layer_data.left || 0)}
+              y={parseFloat(layer.layer_data.top || 0)}
               width={layer.layer_data.width}
               height={layer.layer_data.height}
               rotation={layer.layer_data.rotation}
@@ -69,8 +69,8 @@ const LogosAndTexts = (props) => {
             stroke={layer.layer_data.scolor}
             strokeEnabled={true}
             key={layer.id}
-            x={parseFloat(layer.layer_data.left)}
-            y={parseFloat(layer.layer_data.top)}
+            x={parseFloat(layer.layer_data.left || 0)}
+            y={parseFloat(layer.layer_data.top || 0)}
             offsetX={0}
             offsetY={0}
             // width={layer.layer_data.width}
