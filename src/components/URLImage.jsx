@@ -22,25 +22,33 @@ const URLImage = ({
     filters.push(Konva.Filters.RGBA);
   }
   const getPixelRatio = (node) => {
-    if (node.width() < 2.5 || node.height() < 2.5) {
-      return 15;
+    // if (node.width() < 2.5 || node.height() < 2.5) {
+    //   return 15;
+    // }
+    // if (node.width() < 5 || node.height() < 5) {
+    //   return 10;
+    // }
+    // if (node.width() < 10 || node.height() < 10) {
+    //   return 7;
+    // }
+    // if (node.width() < 30 || node.height() < 30) {
+    //   return 4;
+    // }
+    // if (node.width() < 50 || node.height() < 50) {
+    //   return 2;
+    // }
+    // if (node.width() < 200 || node.height() < 200) {
+    //   return 1.5;
+    // }
+    // return 1;
+    if (imageRef.current) {
+      return Math.max(
+        1,
+        imageRef.current.width / node.width(),
+        imageRef.current.height / node.height()
+      );
     }
-    if (node.width() < 5 || node.height() < 5) {
-      return 10;
-    }
-    if (node.width() < 10 || node.height() < 10) {
-      return 7;
-    }
-    if (node.width() < 30 || node.height() < 30) {
-      return 4;
-    }
-    if (node.width() < 50 || node.height() < 50) {
-      return 2;
-    }
-    if (node.width() < 200 || node.height() < 200) {
-      return 1;
-    }
-    return 0.7;
+    return 1;
   };
 
   useEffect(() => {
@@ -113,8 +121,9 @@ const URLImage = ({
   };
   const loadImage = async () => {
     const img = new window.Image();
-    img.src = src;
-    img.crossOrigin = "Anonymous";
+    // img.src = src;
+    img.src = src + `?timestamp=${new Date().toISOString()}`;
+    img.crossOrigin = "anonymous";
     imageRef.current = img;
     imageRef.current.addEventListener("load", handleLoad);
   };

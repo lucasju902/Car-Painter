@@ -282,7 +282,7 @@ export const updateLayer = (layer) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  dispatch(setLoading(false));
+  // dispatch(setLoading(false));
 };
 
 export const deleteLayer = (layer) => async (dispatch) => {
