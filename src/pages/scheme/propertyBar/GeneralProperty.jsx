@@ -36,7 +36,7 @@ const GeneralProperty = (props) => {
   } = props;
 
   const [expanded, setExpanded] = useState(true);
-  console.log(errors);
+
   if (
     !AllowedLayerProps[values.layer_type].includes("layer_data.name") &&
     !AllowedLayerProps[values.layer_type].includes("layer_data.text")

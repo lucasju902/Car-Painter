@@ -9,6 +9,11 @@ const TextNode = ({
   loadedFontList,
   loadedList,
   isSelected,
+  shadowColor,
+  shadowBlur,
+  shadowOpacity,
+  shadowOffsetX,
+  shadowOffsetY,
   onSelect,
   onChange,
   onFontLoad,
@@ -25,22 +30,6 @@ const TextNode = ({
       }
     }
   }, [fontFamily, fontFile]);
-
-  // useEffect(() => {
-  //   const node = shapeRef.current;
-  //   if (
-  //     node &&
-  //     (node.width() !== props.width || node.height() !== props.height) &&
-  //     loadedFontFamily
-  //   ) {
-  //     if (onChange) {
-  //       onChange({
-  //         width: Helper.mathRound2(node.width()),
-  //         height: Helper.mathRound2(node.height()),
-  //       });
-  //     }
-  //   }
-  // }, [shapeRef.current, loadedFontFamily]);
 
   const loadFont = () => {
     let fontObject = new FontFace(fontFamily, fontFile);
@@ -95,6 +84,11 @@ const TextNode = ({
       onClick={onSelect}
       onTap={onSelect}
       ref={shapeRef}
+      shadowColor={shapeRef.current ? shadowColor : null}
+      shadowBlur={shapeRef.current ? shadowBlur : null}
+      shadowOpacity={shapeRef.current ? shadowOpacity : null}
+      shadowOffsetX={shapeRef.current ? shadowOffsetX : null}
+      shadowOffsetY={shapeRef.current ? shadowOffsetY : null}
       draggable={onChange}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}

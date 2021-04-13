@@ -40,6 +40,11 @@ const LogosAndTexts = (props) => {
               rotation={layer.layer_data.rotation}
               scaleX={layer.layer_data.flop === 1 ? -1 : 1}
               scaleY={layer.layer_data.flip === 1 ? -1 : 1}
+              shadowColor={layer.layer_data.shadowColor}
+              shadowBlur={layer.layer_data.shadowBlur}
+              shadowOpacity={layer.layer_data.shadowOpacity}
+              shadowOffsetX={layer.layer_data.shadowOffsetX}
+              shadowOffsetY={layer.layer_data.shadowOffsetY}
               opacity={layer.layer_data.opacity}
               onSelect={() => setCurrentLayer(layer)}
               isSelected={currentLayer && currentLayer.id === layer.id}
@@ -85,6 +90,11 @@ const LogosAndTexts = (props) => {
               (layer.layer_data.scaleY || 1) *
               (layer.layer_data.flip === 1 ? -1 : 1)
             }
+            shadowColor={layer.layer_data.shadowColor}
+            shadowBlur={layer.layer_data.shadowBlur}
+            shadowOpacity={layer.layer_data.shadowOpacity}
+            shadowOffsetX={layer.layer_data.shadowOffsetX}
+            shadowOffsetY={layer.layer_data.shadowOffsetY}
             onSelect={() => setCurrentLayer(layer)}
             isSelected={currentLayer && currentLayer.id === layer.id}
             listening={!layer.layer_locked}

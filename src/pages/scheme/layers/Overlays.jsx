@@ -30,6 +30,11 @@ const Overlays = (props) => {
           opacity={layer.layer_data.opacity}
           scaleX={layer.layer_data.flop === 1 ? -1 : 1}
           scaleY={layer.layer_data.flip === 1 ? -1 : 1}
+          shadowColor={layer.layer_data.shadowColor}
+          shadowBlur={layer.layer_data.shadowBlur}
+          shadowOpacity={layer.layer_data.shadowOpacity}
+          shadowOffsetX={layer.layer_data.shadowOffsetX}
+          shadowOffsetY={layer.layer_data.shadowOffsetY}
           onSelect={() => setCurrentLayer(layer)}
           isSelected={currentLayer && currentLayer.id === layer.id}
           listening={!layer.layer_locked}

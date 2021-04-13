@@ -16,6 +16,7 @@ import FontProperty from "./FontProperty";
 import StrokeProperty from "./StrokeProperty";
 import ColorProperty from "./ColorProperty";
 import RotationProperty from "./RotationProperty";
+import ShadowProperty from "./ShadowProperty";
 
 const Wrapper = styled(Box)`
   width: 350px;
@@ -38,12 +39,12 @@ const PropertyBar = () => {
 
   const checkDirty = (values) => {
     for (let i in values.layer_data) {
-      if (values.layer_data[i] !== currentLayer.layer_data[i]) {
+      if (values.layer_data[i] != currentLayer.layer_data[i]) {
         return true;
       }
     }
     for (let i in values) {
-      if (i != "layer_data" && values[i] !== currentLayer[i]) {
+      if (i != "layer_data" && values[i] != currentLayer[i]) {
         return true;
       }
     }
@@ -74,6 +75,11 @@ const PropertyBar = () => {
             scolor: "#000000",
             color: null,
             opacity: 1,
+            shadowColor: null,
+            shadowBlur: 0,
+            shadowOpacity: 1,
+            shadowOffsetX: 0,
+            shadowOffsetY: 0,
           },
           AllowedLayerProps[currentLayer.layer_type]
             .filter((item) => item.includes("layer_data."))
@@ -146,6 +152,11 @@ const PropertyBar = () => {
               stroke: Yup.number(),
               font: Yup.number(),
               opacity: Yup.number(),
+              shadowColor: Yup.string().nullable(),
+              shadowBlur: Yup.number(),
+              shadowOpacity: Yup.number(),
+              shadowOffsetX: Yup.number(),
+              shadowOffsetY: Yup.number(),
             }),
           })}
           enableReinitialize
@@ -182,6 +193,7 @@ const PropertyBar = () => {
               <SizeProperty {...formProps} />
               <PositionProperty {...formProps} />
               <RotationProperty {...formProps} />
+              <ShadowProperty {...formProps} />
             </Form>
           )}
         </Formik>
