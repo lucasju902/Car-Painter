@@ -33,9 +33,13 @@ const GeneralProperty = (props) => {
     setFieldValue,
     touched,
     values,
+    toggleField,
   } = props;
 
   const [expanded, setExpanded] = useState(true);
+  if (errors !== {}) {
+    console.log(errors);
+  }
 
   if (
     !AllowedLayerProps[values.layer_type].includes("layer_data.name") &&
@@ -120,9 +124,7 @@ const GeneralProperty = (props) => {
                 Visibility
               </Typography>
               <IconButton
-                onClick={() =>
-                  setFieldValue("layer_visible", 1 - values.layer_visible)
-                }
+                onClick={() => toggleField("layer_visible")}
                 size="small"
               >
                 {values.layer_visible ? (
@@ -146,9 +148,7 @@ const GeneralProperty = (props) => {
                 Locking
               </Typography>
               <IconButton
-                onClick={() =>
-                  setFieldValue("layer_locked", 1 - values.layer_locked)
-                }
+                onClick={() => toggleField("layer_locked")}
                 size="small"
               >
                 {values.layer_locked ? <LockIcon /> : <LockOpenIcon />}

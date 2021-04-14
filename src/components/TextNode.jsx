@@ -68,7 +68,7 @@ const TextNode = ({
         // set minimal value
         // width: Helper.mathRound2(Math.max(5, node.width())),
         // height: Helper.mathRound2(Math.max(5, node.height())),
-        rotation: Helper.mathRound2(node.rotation()),
+        rotation: Helper.mathRound2(node.rotation()) || 0,
         scaleX: Helper.mathRound2(Math.max(0.01, scaleX)),
         scaleY: Helper.mathRound2(Math.max(0.01, scaleY)),
         flop: scaleX > 0 ? 0 : 1,
@@ -76,7 +76,6 @@ const TextNode = ({
       });
     }
   };
-
   return (
     <Text
       {...props}

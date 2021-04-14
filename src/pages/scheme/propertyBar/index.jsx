@@ -36,6 +36,25 @@ const PropertyBar = () => {
   const handleApply = (values) => {
     dispatch(updateLayer(values));
   };
+  const toggleField = (field) => {
+    dispatch(
+      updateLayer({
+        ...currentLayer,
+        [field]: currentLayer[field] ? 0 : 1,
+      })
+    );
+  };
+  const toggleLayerDataField = (field) => {
+    dispatch(
+      updateLayer({
+        ...currentLayer,
+        layer_data: {
+          ...currentLayer.layer_data,
+          [field]: currentLayer.layer_data[field] ? 0 : 1,
+        },
+      })
+    );
+  };
 
   const checkDirty = (values) => {
     for (let i in values.layer_data) {
@@ -186,11 +205,15 @@ const PropertyBar = () => {
                   <></>
                 )}
               </Box>
-              <GeneralProperty {...formProps} />
+              <GeneralProperty {...formProps} toggleField={toggleField} />
               <FontProperty {...formProps} fontList={fontList} />
               <ColorProperty {...formProps} />
               <StrokeProperty {...formProps} />
-              <SizeProperty {...formProps} />
+              <SizeProperty
+                {...formProps}
+                toggleLayerDataField={toggleLayerDataField}
+                currentLayer={currentLayer}
+              />
               <PositionProperty {...formProps} />
               <RotationProperty {...formProps} />
               <ShadowProperty {...formProps} />

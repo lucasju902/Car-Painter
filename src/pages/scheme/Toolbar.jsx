@@ -51,10 +51,10 @@ const Toolbar = (props) => {
     dispatch(setPaintingGuides(newFormats));
   };
   const handleZoomIn = () => {
-    dispatch(setZoom(zoom * 1.25));
+    dispatch(setZoom(Math.max(Math.min(zoom * 1.25, 10), 0.25)));
   };
   const handleZoomOut = () => {
-    dispatch(setZoom(zoom / 1.25));
+    dispatch(setZoom(Math.max(Math.min(zoom / 1.25, 10), 0.25)));
   };
   const handleZoomChange = (event) => {
     dispatch(setZoom(parseInt(event.target.value || 0) / 100.0));

@@ -53,7 +53,7 @@ const Board = () => {
   };
   const handleZoomStage = (event) => {
     event.evt.preventDefault();
-    if (stageRef.current !== null) {
+    if (stageRef.current !== null && event.evt.ctrlKey) {
       const stage = stageRef.current;
       const oldScale = stage.scaleX();
       const { x: pointerX, y: pointerY } = stage.getPointerPosition();
@@ -61,8 +61,13 @@ const Board = () => {
         x: (pointerX - stage.x()) / oldScale,
         y: (pointerY - stage.y()) / oldScale,
       };
-      const newScale =
-        event.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+      const newScale = Math.max(
+        Math.min(
+          event.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy,
+          10
+        ),
+        0.25
+      );
       dispatch(setZoom(newScale));
       const newPos = {
         x: pointerX - mousePointTo.x * newScale,

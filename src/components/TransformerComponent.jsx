@@ -26,7 +26,33 @@ const TransformerComponent = ({ selectedLayer }) => {
     checkNode();
   });
 
-  if (selectedLayer) return <Transformer ref={trRef} keepRatio={false} />;
+  if (selectedLayer)
+    return (
+      <Transformer
+        ref={trRef}
+        keepRatio={
+          selectedLayer.layer_data.sizeLocked ||
+          selectedLayer.layer_data.scaleLocked
+            ? true
+            : false
+        }
+        enabledAnchors={
+          selectedLayer.layer_data.sizeLocked ||
+          selectedLayer.layer_data.scaleLocked
+            ? ["top-left", "top-right", "bottom-left", "bottom-right"]
+            : [
+                "top-left",
+                "top-center",
+                "top-right",
+                "middle-right",
+                "middle-left",
+                "bottom-left",
+                "bottom-center",
+                "bottom-right",
+              ]
+        }
+      />
+    );
   return <></>;
 };
 

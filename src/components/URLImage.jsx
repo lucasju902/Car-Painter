@@ -155,7 +155,7 @@ const URLImage = ({
         height: Helper.mathRound2(
           Math.max(1, node.height() * Math.abs(scaleY))
         ),
-        rotation: node.rotation(),
+        rotation: Helper.mathRound2(node.rotation()) || 0,
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
       });
@@ -187,6 +187,7 @@ const URLImage = ({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}
+      // onTransform={handleTransform}
     />
   );
 };
