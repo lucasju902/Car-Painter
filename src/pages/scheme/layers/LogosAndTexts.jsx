@@ -11,6 +11,7 @@ const LogosAndTexts = (props) => {
     layers,
     loadedFontList,
     fonts,
+    frameSize,
     currentLayer,
     setCurrentLayer,
     onChange,
@@ -37,6 +38,7 @@ const LogosAndTexts = (props) => {
               y={parseFloat(layer.layer_data.top || 0)}
               width={layer.layer_data.width}
               height={layer.layer_data.height}
+              frameSize={frameSize}
               rotation={layer.layer_data.rotation}
               scaleX={layer.layer_data.flop === 1 ? -1 : 1}
               scaleY={layer.layer_data.flip === 1 ? -1 : 1}

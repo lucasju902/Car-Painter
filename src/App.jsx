@@ -32,7 +32,10 @@ function App() {
 
   return (
     <React.Fragment>
-      <Helmet titleTemplate="%s | Paint Builder" defaultTitle="Paint Builder" />
+      <Helmet
+        titleTemplate="%s · Paint Builder · Trading Paints"
+        defaultTitle="Paint Builder · Trading Paints"
+      />
       <StylesProvider injectFirst>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <MuiThemeProvider theme={createTheme(theme.currentTheme)}>

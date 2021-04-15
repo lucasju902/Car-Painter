@@ -52,15 +52,10 @@ const OpenProjectDialog = (props) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="secondary" variant="outlined">
           Cancel
         </Button>
-        <Button
-          onClick={onCreateProject}
-          color="default"
-          variant="outlined"
-          mb={1}
-        >
+        <Button onClick={onCreateProject} color="default" variant="outlined">
           NEW
         </Button>
       </DialogActions>

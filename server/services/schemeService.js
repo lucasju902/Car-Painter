@@ -25,23 +25,27 @@ class SchemeService {
     return scheme;
   }
 
-  static async create(userID, carMakeID) {
-    let schemeList = await this.getListByUserID(userID);
-    schemeList = schemeList.toJSON();
-    let untitled = 0;
-    for (let item of schemeList) {
-      if (item.name.includes("Untitled Scheme")) {
-        const untitledIndex = parseInt(item.name.substr(15));
-        if (untitledIndex) {
-          if (untitledIndex >= untitled) untitled = untitledIndex + 1;
-        } else {
-          untitled = 1;
+  static async create(userID, carMakeID, name) {
+    let schemeName = name;
+    if (!name || !name.length) {
+      let schemeList = await this.getListByUserID(userID);
+      schemeList = schemeList.toJSON();
+      let untitled = 0;
+      for (let item of schemeList) {
+        if (item.name.includes("Untitled Scheme")) {
+          const untitledIndex = parseInt(item.name.substr(15));
+          if (untitledIndex) {
+            if (untitledIndex >= untitled) untitled = untitledIndex + 1;
+          } else {
+            untitled = 1;
+          }
         }
       }
+      schemeName = untitled ? `Untitled Scheme ${untitled}` : "Untitled Scheme";
     }
-    const name = untitled ? `Untitled Scheme ${untitled}` : "Untitled Scheme";
+
     const scheme = await Scheme.forge({
-      name: name,
+      name: schemeName,
       base_color: "ffffff",
       car_make: carMakeID,
       user_id: userID,

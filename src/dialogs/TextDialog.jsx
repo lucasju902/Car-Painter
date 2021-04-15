@@ -91,6 +91,7 @@ const InnerForm = (props) => {
             <ColorPickerInput
               value={values.color}
               onChange={(color) => setFieldValue("color", color)}
+              onInputChange={(color) => setFieldValue("color", color)}
             />
           </Box>
         </Grid>
@@ -119,6 +120,7 @@ const InnerForm = (props) => {
             <ColorPickerInput
               value={values.scolor}
               onChange={(color) => setFieldValue("scolor", color)}
+              onInputChange={(color) => setFieldValue("scolor", color)}
             />
           </Box>
         </Grid>

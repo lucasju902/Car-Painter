@@ -169,6 +169,7 @@ const Board = () => {
             fonts={fontList}
             loadedFontList={loadedFontList}
             currentLayer={currentLayer}
+            frameSize={frameSize}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
             onFontLoad={handleAddFont}

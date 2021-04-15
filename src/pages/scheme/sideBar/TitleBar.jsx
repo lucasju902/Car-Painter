@@ -30,7 +30,10 @@ const TitleBar = () => {
       mb={2}
     >
       <Box display="flex" flexDirection="row">
-        <TextField value={currentScheme.name} onChange={handleNameChange} />
+        <TextField
+          value={currentScheme ? currentScheme.name : ""}
+          onChange={handleNameChange}
+        />
         {dirtyName ? (
           <Button onClick={handleSaveName} variant="outlined">
             Save

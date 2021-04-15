@@ -8,13 +8,12 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
 } from "@material-ui/core";
 
 const Button = styled(MuiButton)(spacing);
 
 const ProjectSelectDialog = (props) => {
-  const { onCreateProject, onOpenProject, onCancel, open } = props;
+  const { onCreateProject, onOpenProject, open } = props;
 
   return (
     <Dialog aria-labelledby="project-select-title" open={open}>
@@ -34,11 +33,6 @@ const ProjectSelectDialog = (props) => {
           </Button>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel} color="primary">
-          Cancel
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

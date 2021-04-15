@@ -6,7 +6,7 @@ import { LayerTypes } from "constant";
 import config from "config";
 
 const Overlays = (props) => {
-  const { layers, currentLayer, setCurrentLayer, onChange } = props;
+  const { layers, currentLayer, setCurrentLayer, frameSize, onChange } = props;
 
   return (
     <>
@@ -38,6 +38,7 @@ const Overlays = (props) => {
           onSelect={() => setCurrentLayer(layer)}
           isSelected={currentLayer && currentLayer.id === layer.id}
           listening={!layer.layer_locked}
+          frameSize={frameSize}
           onChange={(values) => onChange(layer, values)}
         />
       ))}

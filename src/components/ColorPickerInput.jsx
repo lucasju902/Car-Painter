@@ -9,7 +9,7 @@ const ColorInputField = styled(TextField)`
 `;
 
 const ColorPickerInput = (props) => {
-  const { value, onChange } = props;
+  const { value, onChange, onInputChange } = props;
 
   return (
     <Box display="flex" alignItems="center">
@@ -22,7 +22,7 @@ const ColorPickerInput = (props) => {
       />
       <ColorInputField
         value={value || ""}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => onInputChange(event.target.value)}
       />
     </Box>
   );

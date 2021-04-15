@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
-import { Palette, DialogTypes, LayerTypes } from "constant";
+import { DialogTypes, LayerTypes } from "constant";
 
-import { Box, TextField } from "@material-ui/core";
-import { ColorPicker } from "material-ui-color";
+import { Box, Button } from "@material-ui/core";
 
 import {
   faImage,
@@ -31,29 +30,20 @@ import ShapeDialog from "dialogs/ShapeDialog";
 import LogoDialog from "dialogs/LogoDialog";
 import UploadDialog from "dialogs/UploadDialog";
 import TextDialog from "dialogs/TextDialog";
+import ColorPickerInput from "components/ColorPickerInput";
 
-const CustomColorPicker = styled(ColorPicker)`
-  .MuiInputBase-input {
-    width: 70px;
-    border-bottom: 1px solid #8a8a8a;
-  }
-`;
-const ColorInputField = styled(TextField)`
-  width: 80px;
-  .MuiInputBase-input.Mui-disabled {
-    color: white;
-  }
-`;
 const Wrapper = styled(Box)`
   width: 350px;
   background: #666666;
   overflow: auto;
 `;
+const ColorApplyButton = styled(Button)`
+  padding: 3px 15px 5px;
+`;
 
 const Sidebar = () => {
   const dispatch = useDispatch();
 
-  const [dialog, setDialog] = useState(null);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const layerList = useSelector((state) => state.layerReducer.list);
   const overlayList = useSelector((state) => state.overlayReducer.list);
@@ -62,6 +52,14 @@ const Sidebar = () => {
   const fontList = useSelector((state) => state.fontReducer.list);
   const frameSize = useSelector((state) => state.boardReducer.frameSize);
   const basePaints = useSelector((state) => state.basePaintReducer.list);
+
+  const baseColor =
+    currentScheme.base_color === "transparent"
+      ? currentScheme.base_color
+      : "#" + currentScheme.base_color;
+  const [dialog, setDialog] = useState(null);
+  const [colorInput, setColorInput] = useState(baseColor);
+  const [colorDirty, setColorDirty] = useState(false);
 
   const handleOpenBase = (base) => {
     dispatch(createLayersFromBasePaint(currentScheme.id, base));
@@ -85,8 +83,17 @@ const Sidebar = () => {
   };
 
   const handleChangeBasePaintColor = (color) => {
-    console.log("Color: ", color);
-    dispatch(changeBaseColor(currentScheme.id, color.css.backgroundColor));
+    dispatch(changeBaseColor(currentScheme.id, color));
+    setColorInput(color);
+  };
+  const handleChangeBasePaintColorInput = (color) => {
+    setColorInput(color);
+    if (color !== baseColor) setColorDirty(true);
+    else setColorDirty(false);
+  };
+  const handleApplyBasePaintColor = () => {
+    dispatch(changeBaseColor(currentScheme.id, colorInput));
+    setColorDirty(false);
   };
 
   return (
@@ -148,26 +155,26 @@ const Sidebar = () => {
         ]}
         disableLock={true}
         extraChildren={
-          <Box display="flex" alignItems="center">
-            <CustomColorPicker
-              value={
-                currentScheme.base_color === "transparent"
-                  ? currentScheme.base_color
-                  : "#" + currentScheme.base_color
-              }
-              deferred
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <ColorPickerInput
+              value={colorInput}
               onChange={handleChangeBasePaintColor}
-              palette={Palette}
-              hideTextfield
+              onInputChange={handleChangeBasePaintColorInput}
             />
-            <ColorInputField
-              value={
-                currentScheme.base_color === "transparent"
-                  ? currentScheme.base_color
-                  : "#" + currentScheme.base_color
-              }
-              disabled
-            />
+            {colorDirty ? (
+              <ColorApplyButton
+                onClick={handleApplyBasePaintColor}
+                variant="outlined"
+              >
+                Apply
+              </ColorApplyButton>
+            ) : (
+              <></>
+            )}
           </Box>
         }
       />

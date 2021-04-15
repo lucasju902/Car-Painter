@@ -70,10 +70,10 @@ export const getSchemeList = (userID) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const createScheme = (carMake, userID) => async (dispatch) => {
+export const createScheme = (carMake, name, userID) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const result = await SchemeService.createScheme(carMake.id, userID);
+    const result = await SchemeService.createScheme(carMake.id, name, userID);
     console.log("result: ", result);
     dispatch(setCurrent(result.scheme));
     dispatch(setCurrentCarMake(result.carMake));

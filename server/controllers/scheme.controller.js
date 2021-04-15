@@ -42,10 +42,10 @@ class SchemeController {
 
   static async create(req, res) {
     try {
-      const { carMakeID, userID } = req.body;
+      const { carMakeID, userID, name } = req.body;
       let carMake = await CarMakeService.getById(carMakeID);
       carMake = carMake.toJSON();
-      let scheme = await SchemeService.create(userID, carMake.id);
+      let scheme = await SchemeService.create(userID, carMake.id, name);
       scheme = scheme.toJSON();
       let carMake_builder_layers = JSON.parse(carMake.builder_layers);
       let layer_index = 1;

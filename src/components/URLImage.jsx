@@ -11,6 +11,7 @@ const URLImage = ({
   onSelect,
   onChange,
   filterColor,
+  frameSize,
   ...props
 }) => {
   const imageRef = useRef(null);
@@ -22,25 +23,6 @@ const URLImage = ({
     filters.push(Konva.Filters.RGBA);
   }
   const getPixelRatio = (node) => {
-    // if (node.width() < 2.5 || node.height() < 2.5) {
-    //   return 15;
-    // }
-    // if (node.width() < 5 || node.height() < 5) {
-    //   return 10;
-    // }
-    // if (node.width() < 10 || node.height() < 10) {
-    //   return 7;
-    // }
-    // if (node.width() < 30 || node.height() < 30) {
-    //   return 4;
-    // }
-    // if (node.width() < 50 || node.height() < 50) {
-    //   return 2;
-    // }
-    // if (node.width() < 200 || node.height() < 200) {
-    //   return 1.5;
-    // }
-    // return 1;
     if (imageRef.current) {
       return Math.max(
         1,
@@ -75,8 +57,21 @@ const URLImage = ({
   }, [filterColor]);
 
   const handleLoad = async () => {
-    let width = props.width || imageRef.current.width;
-    let height = props.height || imageRef.current.height;
+    let originWidth =
+      !frameSize ||
+      (imageRef.current.width <= frameSize.width &&
+        imageRef.current.height <= frameSize.height)
+        ? imageRef.current.width
+        : frameSize.width / 2;
+    let originHeight =
+      !frameSize ||
+      (imageRef.current.width < frameSize.width &&
+        imageRef.current.height < frameSize.height)
+        ? imageRef.current.width
+        : ((frameSize.width / 2) * imageRef.current.height) /
+          imageRef.current.width;
+    let width = props.width || originWidth;
+    let height = props.height || originHeight;
     if (
       src.toLowerCase().includes(".svg") &&
       (!imageRef.current.width || !imageRef.current.height)

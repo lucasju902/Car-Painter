@@ -48,9 +48,8 @@ const Scheme = () => {
     setDialog(null);
   };
 
-  const createSchemeFromCarMake = (carMake) => {
-    console.log("Creating scheme with carmake: ", carMake);
-    dispatch(createScheme(carMake, user.id));
+  const createSchemeFromCarMake = (carMake, name) => {
+    dispatch(createScheme(carMake, name, user.id));
     setDialog(null);
   };
 
@@ -76,7 +75,9 @@ const Scheme = () => {
           <CreateProjectDialog
             carMakeList={carMakeList}
             open={dialog === "CreateProjectDialog"}
-            onContinue={(carMake) => createSchemeFromCarMake(carMake)}
+            onContinue={(carMake, name) =>
+              createSchemeFromCarMake(carMake, name)
+            }
             onCancel={() => setDialog("ProjectSelectDialog")}
           />
         </>

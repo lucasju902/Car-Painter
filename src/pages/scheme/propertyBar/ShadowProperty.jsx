@@ -68,6 +68,9 @@ const ShadowProperty = (props) => {
                   onChange={(color) =>
                     setFieldValue("layer_data.shadowColor", color)
                   }
+                  onInputChange={(color) =>
+                    setFieldValue("layer_data.shadowColor", color)
+                  }
                 />
               </Grid>
             </Grid>

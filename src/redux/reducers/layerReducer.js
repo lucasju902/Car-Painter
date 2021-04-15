@@ -284,7 +284,7 @@ export const createTextLayer = (schemeID, textObj, frameSize) => async (
 };
 
 export const updateLayer = (layer) => async (dispatch, getState) => {
-  // dispatch(setLoading(true));
+  dispatch(setLoading(true));
   let configuredLayer = {
     ...layer,
     layer_order: layer.layer_order || 1,
@@ -302,7 +302,20 @@ export const updateLayer = (layer) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  // dispatch(setLoading(false));
+  dispatch(setLoading(false));
+};
+
+export const updateLayerOnly = (layer) => async (dispatch, getState) => {
+  let configuredLayer = {
+    ...layer,
+    layer_order: layer.layer_order || 1,
+  };
+
+  dispatch(updateListItem(configuredLayer));
+  const currentLayer = getState().layerReducer.current;
+  if (currentLayer && currentLayer.id === configuredLayer.id) {
+    dispatch(setCurrent(configuredLayer));
+  }
 };
 
 export const deleteLayer = (layer) => async (dispatch) => {

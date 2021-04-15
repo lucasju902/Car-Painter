@@ -37,7 +37,7 @@ const GeneralProperty = (props) => {
   } = props;
 
   const [expanded, setExpanded] = useState(true);
-  if (errors !== {}) {
+  if (JSON.stringify(errors) !== "{}") {
     console.log(errors);
   }
 

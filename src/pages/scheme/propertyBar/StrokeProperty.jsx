@@ -53,6 +53,9 @@ const StrokeProperty = (props) => {
                   onChange={(color) =>
                     setFieldValue("layer_data.scolor", color)
                   }
+                  onInputChange={(color) =>
+                    setFieldValue("layer_data.scolor", color)
+                  }
                 />
               </Grid>
             </Grid>

@@ -66,6 +66,9 @@ const FontProperty = (props) => {
                 <ColorPickerInput
                   value={values.layer_data.color}
                   onChange={(color) => setFieldValue("layer_data.color", color)}
+                  onInputChange={(color) =>
+                    setFieldValue("layer_data.color", color)
+                  }
                 />
               </Grid>
             </Grid>
