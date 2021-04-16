@@ -12,6 +12,7 @@ const URLImage = ({
   onChange,
   filterColor,
   frameSize,
+  allowFit,
   ...props
 }) => {
   const imageRef = useRef(null);
@@ -58,15 +59,15 @@ const URLImage = ({
 
   const handleLoad = async () => {
     let originWidth =
-      !frameSize ||
-      (imageRef.current.width <= frameSize.width &&
-        imageRef.current.height <= frameSize.height)
+      !allowFit ||
+      (imageRef.current.width <= frameSize.width / 2 &&
+        imageRef.current.height <= frameSize.height / 2)
         ? imageRef.current.width
         : frameSize.width / 2;
     let originHeight =
-      !frameSize ||
-      (imageRef.current.width < frameSize.width &&
-        imageRef.current.height < frameSize.height)
+      !allowFit ||
+      (imageRef.current.width <= frameSize.width / 2 &&
+        imageRef.current.height <= frameSize.height / 2)
         ? imageRef.current.width
         : ((frameSize.width / 2) * imageRef.current.height) /
           imageRef.current.width;

@@ -71,6 +71,18 @@ const ShadowProperty = (props) => {
                   onInputChange={(color) =>
                     setFieldValue("layer_data.shadowColor", color)
                   }
+                  error={Boolean(
+                    touched.layer_data &&
+                      touched.layer_data.shadowColor &&
+                      errors.layer_data &&
+                      errors.layer_data.shadowColor
+                  )}
+                  helperText={
+                    touched.layer_data &&
+                    touched.layer_data.shadowColor &&
+                    errors.layer_data &&
+                    errors.layer_data.shadowColor
+                  }
                 />
               </Grid>
             </Grid>

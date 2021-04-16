@@ -56,6 +56,18 @@ const StrokeProperty = (props) => {
                   onInputChange={(color) =>
                     setFieldValue("layer_data.scolor", color)
                   }
+                  error={Boolean(
+                    touched.layer_data &&
+                      touched.layer_data.scolor &&
+                      errors.layer_data &&
+                      errors.layer_data.scolor
+                  )}
+                  helperText={
+                    touched.layer_data &&
+                    touched.layer_data.scolor &&
+                    errors.layer_data &&
+                    errors.layer_data.scolor
+                  }
                 />
               </Grid>
             </Grid>

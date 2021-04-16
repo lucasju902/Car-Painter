@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { Formik, Form } from "formik";
+import validateColor from "validate-color";
 import * as Yup from "yup";
 import _ from "lodash";
 
@@ -17,6 +18,7 @@ import StrokeProperty from "./StrokeProperty";
 import ColorProperty from "./ColorProperty";
 import RotationProperty from "./RotationProperty";
 import ShadowProperty from "./ShadowProperty";
+import zhCN from "date-fns/locale/zh-CN/index";
 
 const Wrapper = styled(Box)`
   width: 350px;
@@ -54,6 +56,11 @@ const PropertyBar = () => {
         },
       })
     );
+  };
+
+  const colorValidator = (color) => {
+    if (!color || !color.length) return true;
+    return validateColor(color);
   };
 
   const checkDirty = (values) => {
@@ -165,13 +172,31 @@ const PropertyBar = () => {
               flip: Yup.number(),
               scaleX: Yup.number().moreThan(0, "Must be greater than 0"),
               scaleY: Yup.number().moreThan(0, "Must be greater than 0"),
-              color: Yup.string().nullable(),
+              color: Yup.string()
+                .nullable()
+                .test(
+                  "color-validation",
+                  "Incorrect Color Format",
+                  colorValidator
+                ),
               size: Yup.number(),
-              scolor: Yup.string().nullable(),
+              scolor: Yup.string()
+                .nullable()
+                .test(
+                  "color-validation",
+                  "Incorrect Color Format",
+                  colorValidator
+                ),
               stroke: Yup.number(),
               font: Yup.number(),
               opacity: Yup.number(),
-              shadowColor: Yup.string().nullable(),
+              shadowColor: Yup.string()
+                .nullable()
+                .test(
+                  "color-validation",
+                  "Incorrect Color Format",
+                  colorValidator
+                ),
               shadowBlur: Yup.number(),
               shadowOpacity: Yup.number(),
               shadowOffsetX: Yup.number(),

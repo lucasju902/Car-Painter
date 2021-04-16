@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components/macro";
 import { useSelector, useDispatch } from "react-redux";
 import KeyboardEventHandler from "react-keyboard-event-handler";
@@ -14,6 +14,7 @@ import Board from "./Board";
 import Sidebar from "./sideBar";
 import PropertyBar from "./propertyBar";
 import ConfirmDialog from "dialogs/ConfirmDialog";
+import { PaintingGuides, DialogTypes } from "constant";
 
 import { getScheme } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
@@ -24,7 +25,10 @@ import {
   setCurrent as setCurrentLayer,
   updateLayer,
   updateLayerOnly,
+  setClipboard as setLayerClipboard,
+  cloneLayer,
 } from "redux/reducers/layerReducer";
+import { setPaintingGuides, setZoom } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 
 const Wrapper = styled(Box)`
@@ -35,14 +39,22 @@ const Scheme = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const [confirmMessage, setConfirmMessage] = useState("");
-  const [tick, setTick] = useState(0);
-  const [prevTick, setPrevTick] = useState(0);
+  const [dialog, setDialog] = useState(null);
+
+  const tick = useRef(0);
+  const prevTick = useRef(0);
+
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const currentLayer = useSelector((state) => state.layerReducer.current);
+  const clipboardLayer = useSelector((state) => state.layerReducer.clipboard);
   const overlayList = useSelector((state) => state.overlayReducer.list);
   const logoList = useSelector((state) => state.logoReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
+  const zoom = useSelector((state) => state.boardReducer.zoom);
+  const paintingGuides = useSelector(
+    (state) => state.boardReducer.paintingGuides
+  );
 
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
@@ -50,6 +62,29 @@ const Scheme = () => {
   const uploadsInitialized = useSelector(
     (state) => state.uploadReducer.initialized
   );
+
+  const handleZoomIn = () => {
+    dispatch(setZoom(Math.max(Math.min(zoom * 1.25, 10), 0.25)));
+  };
+  const handleZoomOut = () => {
+    dispatch(setZoom(Math.max(Math.min(zoom / 1.25, 10), 0.25)));
+  };
+  const handleChangePaintingGuides = (newFormats) => {
+    dispatch(setPaintingGuides(newFormats));
+  };
+  const togglePaintingGuides = (guide) => {
+    let newPaintingGuides = [...paintingGuides];
+    let index = newPaintingGuides.indexOf(guide);
+    if (index > -1) {
+      newPaintingGuides.splice(index, 1);
+    } else {
+      newPaintingGuides.push(guide);
+    }
+    handleChangePaintingGuides(newPaintingGuides);
+  };
+  const focusBoard = () => {
+    setTimeout(() => document.activeElement.blur(), 1000);
+  };
 
   const handleKeyEvent = (key, event) => {
     // Delete Selected Layer
@@ -63,11 +98,40 @@ const Scheme = () => {
         setConfirmMessage(
           `Are you sure to delete "${currentLayer.layer_data.name}"?`
         );
-      }
-      if (key === "esc" && currentLayer) {
+      } else if (key === "esc" && currentLayer) {
         dispatch(setCurrentLayer(null));
+      } else if (event.key === "+" && event.shiftKey) {
+        handleZoomIn();
+      } else if (event.key === "_" && event.shiftKey) {
+        handleZoomOut();
+      } else if (event.key === ")" && event.shiftKey) {
+        dispatch(setZoom(1));
+      } else if (event.key === "c" && event.ctrlKey && currentLayer) {
+        dispatch(setLayerClipboard(currentLayer));
+      } else if (event.key === "v" && event.ctrlKey && clipboardLayer) {
+        dispatch(cloneLayer(clipboardLayer));
+      } else if (key === "1") {
+        togglePaintingGuides(PaintingGuides.CARMASK);
+      } else if (key === "2") {
+        togglePaintingGuides(PaintingGuides.WIREFRAME);
+      } else if (key === "3") {
+        togglePaintingGuides(PaintingGuides.SPONSORBLOCKS);
+      } else if (key === "4") {
+        togglePaintingGuides(PaintingGuides.NUMBERBLOCKS);
+      } else if (key === "5") {
+        togglePaintingGuides(PaintingGuides.GRID);
+      } else if (key === "t") {
+        setDialog(DialogTypes.TEXT);
+      } else if (key === "s") {
+        setDialog(DialogTypes.SHAPE);
+      } else if (key === "l") {
+        setDialog(DialogTypes.LOGO);
+      } else if (key === "b") {
+        setDialog(DialogTypes.BASEPAINT);
       }
     }
+
+    // Arrow Keys
     if (event.target.tagName !== "INPUT") {
       if (
         ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(
@@ -76,7 +140,7 @@ const Scheme = () => {
         currentLayer &&
         ![LayerTypes.CAR, LayerTypes.BASE].includes(currentLayer.layer_type)
       ) {
-        let speed = event.shiftKey ? 50 : 5;
+        let speed = event.shiftKey ? 10 : 1;
         let speedX =
           event.key === "ArrowLeft"
             ? -speed
@@ -90,18 +154,20 @@ const Scheme = () => {
             ? speed
             : 0;
         if (event.type === "keyup") {
+          let layer_data = { ...currentLayer.layer_data };
+          if (prevTick.current != tick.current) {
+            layer_data.left = currentLayer.layer_data.left + speedX;
+            layer_data.top = currentLayer.layer_data.top + speedY;
+          }
           dispatch(
             updateLayer({
               ...currentLayer,
-              layer_data: {
-                ...currentLayer.layer_data,
-                left: currentLayer.layer_data.left + speedX,
-                top: currentLayer.layer_data.top + speedY,
-              },
+              layer_data: layer_data,
             })
           );
         } else {
-          if (prevTick !== tick) {
+          if (prevTick.current != tick.current) {
+            prevTick.current = Object.assign(tick.current);
             dispatch(
               updateLayerOnly({
                 ...currentLayer,
@@ -112,7 +178,6 @@ const Scheme = () => {
                 },
               })
             );
-            setPrevTick(tick);
           }
         }
       }
@@ -140,7 +205,7 @@ const Scheme = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTick((tick) => tick + 1);
+      tick.current += 1;
     }, 200);
     return () => clearInterval(interval);
   }, []);
@@ -162,7 +227,11 @@ const Scheme = () => {
             onKeyEvent={handleKeyEvent}
           />
           <Box width="100%" height="calc(100% - 50px)" display="flex">
-            <Sidebar />
+            <Sidebar
+              dialog={dialog}
+              setDialog={setDialog}
+              focusBoard={focusBoard}
+            />
             <Wrapper
               width="calc(100% - 350px)"
               background="#282828"
@@ -172,7 +241,11 @@ const Scheme = () => {
             </Wrapper>
             <PropertyBar />
           </Box>
-          <Toolbar />
+          <Toolbar
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
+            onChangePaintingGuides={handleChangePaintingGuides}
+          />
         </Box>
       )}
       <ConfirmDialog

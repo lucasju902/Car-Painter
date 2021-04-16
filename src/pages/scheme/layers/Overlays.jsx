@@ -23,6 +23,7 @@ const Overlays = (props) => {
           key={layer.id}
           x={parseFloat(layer.layer_data.left || 0)}
           y={parseFloat(layer.layer_data.top || 0)}
+          allowFit={true}
           filterColor={layer.layer_data.color}
           width={layer.layer_data.width}
           height={layer.layer_data.height}

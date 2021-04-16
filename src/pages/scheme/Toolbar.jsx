@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
-import { setPaintingGuides, setZoom } from "redux/reducers/boardReducer";
+import { setZoom } from "redux/reducers/boardReducer";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -41,6 +41,8 @@ const CustomOutlinedInput = styled(OutlinedInput)`
 `;
 
 const Toolbar = (props) => {
+  const { onZoomIn, onZoomOut, onChangePaintingGuides } = props;
+
   const dispatch = useDispatch();
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
@@ -48,14 +50,9 @@ const Toolbar = (props) => {
   const zoom = useSelector((state) => state.boardReducer.zoom);
 
   const handleChangePaintingGuides = (event, newFormats) => {
-    dispatch(setPaintingGuides(newFormats));
+    onChangePaintingGuides(newFormats);
   };
-  const handleZoomIn = () => {
-    dispatch(setZoom(Math.max(Math.min(zoom * 1.25, 10), 0.25)));
-  };
-  const handleZoomOut = () => {
-    dispatch(setZoom(Math.max(Math.min(zoom / 1.25, 10), 0.25)));
-  };
+
   const handleZoomChange = (event) => {
     dispatch(setZoom(parseInt(event.target.value || 0) / 100.0));
   };
@@ -110,10 +107,10 @@ const Toolbar = (props) => {
           <Button mr={2} variant="outlined">
             SIM PREVIEW
           </Button>
-          <IconButton onClick={handleZoomOut}>
+          <IconButton onClick={onZoomOut}>
             <ZoomOutIcon />
           </IconButton>
-          <IconButton onClick={handleZoomIn} mr={1}>
+          <IconButton onClick={onZoomIn} mr={1}>
             <ZoomInIcon />
           </IconButton>
           <CustomOutlinedInput

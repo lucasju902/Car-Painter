@@ -41,7 +41,9 @@ const ColorApplyButton = styled(Button)`
   padding: 3px 15px 5px;
 `;
 
-const Sidebar = () => {
+const Sidebar = (props) => {
+  const { dialog, setDialog, focusBoard } = props;
+
   const dispatch = useDispatch();
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -57,34 +59,39 @@ const Sidebar = () => {
     currentScheme.base_color === "transparent"
       ? currentScheme.base_color
       : "#" + currentScheme.base_color;
-  const [dialog, setDialog] = useState(null);
   const [colorInput, setColorInput] = useState(baseColor);
   const [colorDirty, setColorDirty] = useState(false);
 
   const handleOpenBase = (base) => {
     dispatch(createLayersFromBasePaint(currentScheme.id, base));
     setDialog(null);
+    focusBoard();
   };
   const handleOpenShape = (shape) => {
     dispatch(createLayerFromShape(currentScheme.id, shape, frameSize));
     setDialog(null);
+    focusBoard();
   };
   const handleOpenLogo = (logo) => {
     dispatch(createLayerFromLogo(currentScheme.id, logo, frameSize));
     setDialog(null);
+    focusBoard();
   };
   const handleOpenUpload = (upload) => {
     dispatch(createLayerFromUpload(currentScheme.id, upload, frameSize));
     setDialog(null);
+    focusBoard();
   };
   const handleCreateText = (values) => {
     dispatch(createTextLayer(currentScheme.id, values, frameSize));
     setDialog(null);
+    focusBoard();
   };
 
   const handleChangeBasePaintColor = (color) => {
     dispatch(changeBaseColor(currentScheme.id, color));
     setColorInput(color);
+    setColorDirty(false);
   };
   const handleChangeBasePaintColorInput = (color) => {
     setColorInput(color);

@@ -1,6 +1,6 @@
 import React from "react";
 import { ColorPicker } from "material-ui-color";
-import { Box, TextField } from "@material-ui/core";
+import { Box, TextField, Typography } from "@material-ui/core";
 import { Palette } from "constant";
 import styled from "styled-components/macro";
 
@@ -9,21 +9,37 @@ const ColorInputField = styled(TextField)`
 `;
 
 const ColorPickerInput = (props) => {
-  const { value, onChange, onInputChange } = props;
+  const { value, onChange, onInputChange, error, helperText } = props;
+
+  const handleInputKeyDown = (event) => {
+    if (event.key === "Enter") {
+      onChange(event.target.value);
+    }
+  };
 
   return (
-    <Box display="flex" alignItems="center">
-      <ColorPicker
-        value={value || ""}
-        onChange={(color) => onChange(color.css.backgroundColor)}
-        palette={Palette}
-        deferred
-        hideTextfield
-      />
-      <ColorInputField
-        value={value || ""}
-        onChange={(event) => onInputChange(event.target.value)}
-      />
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <Box display="flex" alignItems="center">
+        <ColorPicker
+          value={value || ""}
+          onChange={(color) => onChange(color.css.backgroundColor)}
+          palette={Palette}
+          deferred
+          hideTextfield
+        />
+        <ColorInputField
+          value={value || ""}
+          onChange={(event) => onInputChange(event.target.value)}
+          onKeyDown={handleInputKeyDown}
+        />
+      </Box>
+      {error ? (
+        <Typography color="secondary" variant="body2">
+          {helperText}
+        </Typography>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };

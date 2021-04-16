@@ -7,6 +7,7 @@ import { LayerTypes } from "constant";
 const initialState = {
   list: [],
   current: null,
+  clipboard: null,
   loading: false,
 };
 
@@ -69,6 +70,13 @@ export const slice = createSlice({
       }
       state.current = layer;
     },
+    setClipboard: (state, action) => {
+      let layer = action.payload;
+      if (layer && typeof layer.layer_data === "string") {
+        layer.layer_data = JSON.parse(layer.layer_data);
+      }
+      state.clipboard = layer;
+    },
   },
 });
 
@@ -80,6 +88,7 @@ export const {
   concatList,
   updateListItem,
   deleteListItem,
+  setClipboard,
 } = slice.actions;
 
 export default slice.reducer;
@@ -283,8 +292,31 @@ export const createTextLayer = (schemeID, textObj, frameSize) => async (
   dispatch(setLoading(false));
 };
 
+export const cloneLayer = (layerToClone) => async (dispatch, getState) => {
+  const frameSize = getState().boardReducer.frameSize;
+
+  if (layerToClone) {
+    dispatch(setLoading(true));
+    try {
+      const layer = await LayerService.createLayer({
+        ..._.omit(layerToClone, ["id"]),
+        layer_data: {
+          ...layerToClone.layer_data,
+          left: frameSize.width / 2 - layerToClone.layer_data.width / 2,
+          top: frameSize.height / 2 - layerToClone.layer_data.height / 2,
+        },
+      });
+      dispatch(insertToList(layer));
+      dispatch(setCurrent(layer));
+    } catch (err) {
+      dispatch(setMessage({ message: err.message }));
+    }
+    dispatch(setLoading(false));
+  }
+};
+
 export const updateLayer = (layer) => async (dispatch, getState) => {
-  dispatch(setLoading(true));
+  // dispatch(setLoading(true));
   let configuredLayer = {
     ...layer,
     layer_order: layer.layer_order || 1,
@@ -302,7 +334,7 @@ export const updateLayer = (layer) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  dispatch(setLoading(false));
+  // dispatch(setLoading(false));
 };
 
 export const updateLayerOnly = (layer) => async (dispatch, getState) => {
