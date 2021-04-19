@@ -17,6 +17,10 @@ import {
   ToggleButtonGroup,
 } from "@material-ui/lab";
 import { ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "react-feather";
+import {
+  RotateLeft as RotateLeftIcon,
+  RotateRight as RotateRightIcon,
+} from "@material-ui/icons";
 import { PaintingGuides } from "constant";
 
 const Typography = styled(MuiTypography)(spacing);
@@ -41,13 +45,19 @@ const CustomOutlinedInput = styled(OutlinedInput)`
 `;
 
 const Toolbar = (props) => {
-  const { onZoomIn, onZoomOut, onChangePaintingGuides } = props;
+  const {
+    onZoomIn,
+    onZoomOut,
+    onChangePaintingGuides,
+    onChangeBoardRotation,
+  } = props;
 
   const dispatch = useDispatch();
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
   const zoom = useSelector((state) => state.boardReducer.zoom);
+  const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
 
   const handleChangePaintingGuides = (event, newFormats) => {
     onChangePaintingGuides(newFormats);
@@ -55,6 +65,10 @@ const Toolbar = (props) => {
 
   const handleZoomChange = (event) => {
     dispatch(setZoom(parseInt(event.target.value || 0) / 100.0));
+  };
+  const handleChangeBoardRotation = (isRight = true) => {
+    if (isRight) onChangeBoardRotation(boardRotate + 90);
+    else onChangeBoardRotation(boardRotate - 90);
   };
 
   return (
@@ -107,6 +121,12 @@ const Toolbar = (props) => {
           <Button mr={2} variant="outlined">
             SIM PREVIEW
           </Button>
+          <IconButton onClick={() => handleChangeBoardRotation(false)}>
+            <RotateLeftIcon />
+          </IconButton>
+          <IconButton onClick={() => handleChangeBoardRotation(true)}>
+            <RotateRightIcon />
+          </IconButton>
           <IconButton onClick={onZoomOut}>
             <ZoomOutIcon />
           </IconButton>

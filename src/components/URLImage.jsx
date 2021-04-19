@@ -68,11 +68,12 @@ const URLImage = ({
       !allowFit ||
       (imageRef.current.width <= frameSize.width / 2 &&
         imageRef.current.height <= frameSize.height / 2)
-        ? imageRef.current.width
+        ? imageRef.current.height
         : ((frameSize.width / 2) * imageRef.current.height) /
           imageRef.current.width;
     let width = props.width || originWidth;
     let height = props.height || originHeight;
+
     if (
       src.toLowerCase().includes(".svg") &&
       (!imageRef.current.width || !imageRef.current.height)
@@ -183,7 +184,6 @@ const URLImage = ({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}
-      // onTransform={handleTransform}
     />
   );
 };

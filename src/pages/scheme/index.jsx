@@ -28,7 +28,12 @@ import {
   setClipboard as setLayerClipboard,
   cloneLayer,
 } from "redux/reducers/layerReducer";
-import { setPaintingGuides, setZoom } from "redux/reducers/boardReducer";
+import {
+  setPaintingGuides,
+  setZoom,
+  setPressedKey,
+  setBoardRotate,
+} from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 
 const Wrapper = styled(Box)`
@@ -52,6 +57,7 @@ const Scheme = () => {
   const logoList = useSelector((state) => state.logoReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
   const zoom = useSelector((state) => state.boardReducer.zoom);
+  const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
@@ -72,6 +78,9 @@ const Scheme = () => {
   const handleChangePaintingGuides = (newFormats) => {
     dispatch(setPaintingGuides(newFormats));
   };
+  const handleChangeBoardRotation = (newRotation) => {
+    dispatch(setBoardRotate(newRotation));
+  };
   const togglePaintingGuides = (guide) => {
     let newPaintingGuides = [...paintingGuides];
     let index = newPaintingGuides.indexOf(guide);
@@ -90,6 +99,9 @@ const Scheme = () => {
     // Delete Selected Layer
     console.log("KeyEvent: ", key, event);
     if (event.target.tagName !== "INPUT" && event.type === "keydown") {
+      if (pressedKey !== key) {
+        dispatch(setPressedKey(key));
+      }
       if (
         (key === "del" || key === "backspace") &&
         currentLayer &&
@@ -106,9 +118,17 @@ const Scheme = () => {
         handleZoomOut();
       } else if (event.key === ")" && event.shiftKey) {
         dispatch(setZoom(1));
-      } else if (event.key === "c" && event.ctrlKey && currentLayer) {
+      } else if (
+        event.key === "c" &&
+        (event.ctrlKey || event.metaKey) &&
+        currentLayer
+      ) {
         dispatch(setLayerClipboard(currentLayer));
-      } else if (event.key === "v" && event.ctrlKey && clipboardLayer) {
+      } else if (
+        event.key === "v" &&
+        (event.ctrlKey || event.metaKey) &&
+        clipboardLayer
+      ) {
         dispatch(cloneLayer(clipboardLayer));
       } else if (key === "1") {
         togglePaintingGuides(PaintingGuides.CARMASK);
@@ -133,6 +153,9 @@ const Scheme = () => {
 
     // Arrow Keys
     if (event.target.tagName !== "INPUT") {
+      if (event.type === "keyup") {
+        dispatch(setPressedKey(null));
+      }
       if (
         ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(
           event.key
@@ -245,6 +268,7 @@ const Scheme = () => {
             onZoomIn={handleZoomIn}
             onZoomOut={handleZoomOut}
             onChangePaintingGuides={handleChangePaintingGuides}
+            onChangeBoardRotation={handleChangeBoardRotation}
           />
         </Box>
       )}

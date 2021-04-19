@@ -7,6 +7,8 @@ const initialState = {
   },
   paintingGuides: ["car-mask"],
   zoom: 1,
+  pressedKey: null,
+  boardRotate: 0,
 };
 
 export const slice = createSlice({
@@ -15,6 +17,12 @@ export const slice = createSlice({
   reducers: {
     setFrameSize: (state, action) => {
       state.frameSize = action.payload;
+    },
+    setPressedKey: (state, action) => {
+      state.pressedKey = action.payload;
+    },
+    setBoardRotate: (state, action) => {
+      state.boardRotate = action.payload;
     },
     setFrameSizeToMax: (state, action) => {
       let size = action.payload;
@@ -39,6 +47,8 @@ export const {
   setFrameSizeToMax,
   setPaintingGuides,
   setZoom,
+  setPressedKey,
+  setBoardRotate,
 } = slice.actions;
 
 export default slice.reducer;

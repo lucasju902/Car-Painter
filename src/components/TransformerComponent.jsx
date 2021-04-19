@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 
 import { Transformer } from "react-konva";
 
-const TransformerComponent = ({ selectedLayer }) => {
+const TransformerComponent = ({ selectedLayer, pressedKey }) => {
   const trRef = useRef();
 
   const checkNode = () => {
@@ -25,6 +25,61 @@ const TransformerComponent = ({ selectedLayer }) => {
   useEffect(() => {
     checkNode();
   });
+
+  const getCenter = (shape) => {
+    return {
+      x:
+        shape.x +
+        (shape.width / 2) * Math.cos(shape.rotation) +
+        (shape.height / 2) * Math.sin(-shape.rotation),
+      y:
+        shape.y +
+        (shape.height / 2) * Math.cos(shape.rotation) +
+        (shape.width / 2) * Math.sin(shape.rotation),
+    };
+  };
+
+  const rotateAroundPoint = (shape, deltaDeg, point) => {
+    const x = Math.round(
+      point.x +
+        (shape.x - point.x) * Math.cos(deltaDeg) -
+        (shape.y - point.y) * Math.sin(deltaDeg)
+    );
+    const y = Math.round(
+      point.y +
+        (shape.x - point.x) * Math.sin(deltaDeg) +
+        (shape.y - point.y) * Math.cos(deltaDeg)
+    );
+
+    return {
+      ...shape,
+      rotation: shape.rotation + deltaDeg,
+      x,
+      y,
+    };
+  };
+
+  const rotateAroundCenter = (shape, deltaDeg) => {
+    const center = getCenter(shape);
+    return rotateAroundPoint(shape, deltaDeg, center);
+  };
+
+  const getSnapRotation = (rot) => {
+    const rotation = rot < 0 ? 2 * Math.PI + rot : rot;
+    const son = Math.PI / 12;
+    return Math.round(rotation / son) * son;
+  };
+  const boundBoxFunc = (oldBoundBox, newBoundBox) => {
+    const closesSnap = getSnapRotation(newBoundBox.rotation);
+    const diff = closesSnap - oldBoundBox.rotation;
+    if (pressedKey === "shift") {
+      if (Math.abs(diff) > 0) {
+        return rotateAroundCenter(oldBoundBox, diff);
+      }
+      return oldBoundBox;
+    }
+    return newBoundBox;
+  };
 
   if (selectedLayer)
     return (
@@ -51,6 +106,7 @@ const TransformerComponent = ({ selectedLayer }) => {
                 "bottom-right",
               ]
         }
+        boundBoxFunc={boundBoxFunc}
       />
     );
   return <></>;

@@ -29,6 +29,8 @@ const Board = () => {
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
+  const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
+  const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
   const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const layerList = useSelector((state) => state.layerReducer.list);
@@ -125,6 +127,11 @@ const Board = () => {
         onWheel={handleZoomStage}
         scaleX={zoom || 1}
         scaleY={zoom || 1}
+        rotation={boardRotate}
+        x={width / 2}
+        y={height / 2}
+        offsetX={width / 2}
+        offsetY={height / 2}
         ref={stageRef}
         draggable
       >
@@ -182,7 +189,10 @@ const Board = () => {
             frameSize={frameSize}
           />
 
-          <TransformerComponent selectedLayer={currentLayer} />
+          <TransformerComponent
+            selectedLayer={currentLayer}
+            pressedKey={pressedKey}
+          />
         </Layer>
       </Stage>
     </Box>
