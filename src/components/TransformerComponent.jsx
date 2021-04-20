@@ -73,6 +73,9 @@ const TransformerComponent = ({ selectedLayer, pressedKey }) => {
     const closesSnap = getSnapRotation(newBoundBox.rotation);
     const diff = closesSnap - oldBoundBox.rotation;
     if (pressedKey === "shift") {
+      if (newBoundBox.rotation - oldBoundBox.rotation === 0) {
+        return newBoundBox;
+      }
       if (Math.abs(diff) > 0) {
         return rotateAroundCenter(oldBoundBox, diff);
       }
@@ -87,13 +90,15 @@ const TransformerComponent = ({ selectedLayer, pressedKey }) => {
         ref={trRef}
         keepRatio={
           selectedLayer.layer_data.sizeLocked ||
-          selectedLayer.layer_data.scaleLocked
+          selectedLayer.layer_data.scaleLocked ||
+          pressedKey === "shift"
             ? true
             : false
         }
         enabledAnchors={
           selectedLayer.layer_data.sizeLocked ||
-          selectedLayer.layer_data.scaleLocked
+          selectedLayer.layer_data.scaleLocked ||
+          pressedKey === "shift"
             ? ["top-left", "top-right", "bottom-left", "bottom-right"]
             : [
                 "top-left",

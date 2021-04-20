@@ -67,8 +67,15 @@ const Toolbar = (props) => {
     dispatch(setZoom(parseInt(event.target.value || 0) / 100.0));
   };
   const handleChangeBoardRotation = (isRight = true) => {
-    if (isRight) onChangeBoardRotation(boardRotate + 90);
-    else onChangeBoardRotation(boardRotate - 90);
+    let newBoardRotate;
+    if (isRight) {
+      newBoardRotate = boardRotate + 90;
+      if (newBoardRotate >= 360) newBoardRotate = 0;
+    } else {
+      newBoardRotate = boardRotate - 90;
+      if (newBoardRotate < 0) newBoardRotate = 270;
+    }
+    onChangeBoardRotation(newBoardRotate);
   };
 
   return (

@@ -14,6 +14,7 @@ const LogosAndTexts = (props) => {
     frameSize,
     currentLayer,
     setCurrentLayer,
+    boardRotate,
     onChange,
     onFontLoad,
   } = props;
@@ -28,6 +29,19 @@ const LogosAndTexts = (props) => {
   return (
     <>
       {_.orderBy(filteredLayers, ["layer_order"], ["desc"]).map((layer) => {
+        let shadowOffsetX = layer.layer_data.shadowOffsetX;
+        let shadowOffsetY = layer.layer_data.shadowOffsetY;
+        if (boardRotate === 90) {
+          shadowOffsetX = -layer.layer_data.shadowOffsetY;
+          shadowOffsetY = layer.layer_data.shadowOffsetX;
+        } else if (boardRotate === 180) {
+          shadowOffsetX = -layer.layer_data.shadowOffsetX;
+          shadowOffsetY = -layer.layer_data.shadowOffsetY;
+        } else if (boardRotate === 270) {
+          shadowOffsetX = layer.layer_data.shadowOffsetY;
+          shadowOffsetY = -layer.layer_data.shadowOffsetX;
+        }
+
         if (layer.layer_type !== LayerTypes.TEXT) {
           return (
             <URLImage
@@ -41,13 +55,14 @@ const LogosAndTexts = (props) => {
               height={layer.layer_data.height}
               frameSize={frameSize}
               rotation={layer.layer_data.rotation}
+              boardRotate={boardRotate}
               scaleX={layer.layer_data.flop === 1 ? -1 : 1}
               scaleY={layer.layer_data.flip === 1 ? -1 : 1}
               shadowColor={layer.layer_data.shadowColor}
               shadowBlur={layer.layer_data.shadowBlur}
               shadowOpacity={layer.layer_data.shadowOpacity}
-              shadowOffsetX={layer.layer_data.shadowOffsetX}
-              shadowOffsetY={layer.layer_data.shadowOffsetY}
+              shadowOffsetX={shadowOffsetX}
+              shadowOffsetY={shadowOffsetY}
               opacity={layer.layer_data.opacity}
               onSelect={() => setCurrentLayer(layer)}
               isSelected={currentLayer && currentLayer.id === layer.id}
@@ -96,8 +111,8 @@ const LogosAndTexts = (props) => {
             shadowColor={layer.layer_data.shadowColor}
             shadowBlur={layer.layer_data.shadowBlur}
             shadowOpacity={layer.layer_data.shadowOpacity}
-            shadowOffsetX={layer.layer_data.shadowOffsetX}
-            shadowOffsetY={layer.layer_data.shadowOffsetY}
+            shadowOffsetX={shadowOffsetX}
+            shadowOffsetY={shadowOffsetY}
             onSelect={() => setCurrentLayer(layer)}
             isSelected={currentLayer && currentLayer.id === layer.id}
             listening={!layer.layer_locked}

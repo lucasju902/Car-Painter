@@ -38,8 +38,11 @@ const SizeProperty = (props) => {
     values,
     toggleLayerDataField,
     currentLayer,
+    pressedKey,
   } = props;
   const [expanded, setExpanded] = useState(true);
+  const pressingShiftKey = pressedKey === "shift";
+
   const handleChangeWidth = (event) => {
     let value = parseFloat(event.target.value) || 0;
     if (values.layer_data.sizeLocked) {
@@ -145,7 +148,11 @@ const SizeProperty = (props) => {
               <CustomIconButton
                 onClick={() => toggleLayerDataField("sizeLocked")}
               >
-                {values.layer_data.sizeLocked ? <LinkIcon /> : <LinkOfficon />}
+                {values.layer_data.sizeLocked || pressingShiftKey ? (
+                  <LinkIcon />
+                ) : (
+                  <LinkOfficon />
+                )}
               </CustomIconButton>
             ) : (
               <></>
@@ -232,7 +239,11 @@ const SizeProperty = (props) => {
               <CustomIconButton
                 onClick={() => toggleLayerDataField("scaleLocked")}
               >
-                {values.layer_data.scaleLocked ? <LinkIcon /> : <LinkOfficon />}
+                {values.layer_data.scaleLocked || pressingShiftKey ? (
+                  <LinkIcon />
+                ) : (
+                  <LinkOfficon />
+                )}
               </CustomIconButton>
             ) : (
               <></>

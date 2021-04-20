@@ -127,11 +127,13 @@ export const createLayersFromBasePaint = (schemeID, base) => async (
 };
 
 export const createLayerFromShape = (schemeID, shape, frameSize) => async (
-  dispatch
+  dispatch,
+  getState
 ) => {
   dispatch(setLoading(true));
 
   try {
+    const boardRotate = getState().boardReducer.boardRotate;
     const layer = await LayerService.createLayer({
       layer_type: LayerTypes.OVERLAY,
       scheme_id: schemeID,
@@ -139,7 +141,7 @@ export const createLayerFromShape = (schemeID, shape, frameSize) => async (
       layer_data: JSON.stringify({
         id: shape.id,
         name: shape.name,
-        rotation: 0,
+        rotation: -boardRotate,
         flip: 0,
         flop: 0,
         left: frameSize.width / 2,
@@ -168,11 +170,13 @@ export const createLayerFromShape = (schemeID, shape, frameSize) => async (
 };
 
 export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
-  dispatch
+  dispatch,
+  getState
 ) => {
   dispatch(setLoading(true));
 
   try {
+    const boardRotate = getState().boardReducer.boardRotate;
     const layer = await LayerService.createLayer({
       layer_type: LayerTypes.LOGO,
       scheme_id: schemeID,
@@ -180,7 +184,7 @@ export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
       layer_data: JSON.stringify({
         id: logo.id,
         name: logo.name,
-        rotation: 0,
+        rotation: -boardRotate,
         flip: 0,
         flop: 0,
         left: frameSize.width / 2,
@@ -209,11 +213,13 @@ export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
 };
 
 export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
-  dispatch
+  dispatch,
+  getState
 ) => {
   dispatch(setLoading(true));
 
   try {
+    const boardRotate = getState().boardReducer.boardRotate;
     const layer = await LayerService.createLayer({
       layer_type: LayerTypes.UPLOAD,
       scheme_id: schemeID,
@@ -224,7 +230,7 @@ export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
           upload.file_name.lastIndexOf("uploads/") + "uploads/".length,
           upload.file_name.lastIndexOf(".")
         ),
-        rotation: 0,
+        rotation: -boardRotate,
         flip: 0,
         flop: 0,
         left: frameSize.width / 2,
@@ -253,11 +259,13 @@ export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
 };
 
 export const createTextLayer = (schemeID, textObj, frameSize) => async (
-  dispatch
+  dispatch,
+  getState
 ) => {
   dispatch(setLoading(true));
 
   try {
+    const boardRotate = getState().boardReducer.boardRotate;
     const layer = await LayerService.createLayer({
       layer_type: LayerTypes.TEXT,
       scheme_id: schemeID,
@@ -265,6 +273,7 @@ export const createTextLayer = (schemeID, textObj, frameSize) => async (
       layer_data: JSON.stringify({
         ...textObj,
         name: textObj.text,
+        rotation: textObj.rotation - boardRotate,
         left: frameSize.width / 2,
         top: frameSize.height / 2,
         opacity: 1,
@@ -302,8 +311,16 @@ export const cloneLayer = (layerToClone) => async (dispatch, getState) => {
         ..._.omit(layerToClone, ["id"]),
         layer_data: {
           ...layerToClone.layer_data,
-          left: frameSize.width / 2 - layerToClone.layer_data.width / 2,
-          top: frameSize.height / 2 - layerToClone.layer_data.height / 2,
+          left:
+            frameSize.width / 2 -
+            (layerToClone.layer_data.width
+              ? layerToClone.layer_data.width / 2
+              : 0),
+          top:
+            frameSize.height / 2 -
+            (layerToClone.layer_data.height
+              ? layerToClone.layer_data.height / 2
+              : 0),
         },
       });
       dispatch(insertToList(layer));

@@ -58,6 +58,7 @@ const Scheme = () => {
   const fontList = useSelector((state) => state.fontReducer.list);
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
+  const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
@@ -164,18 +165,30 @@ const Scheme = () => {
         ![LayerTypes.CAR, LayerTypes.BASE].includes(currentLayer.layer_type)
       ) {
         let speed = event.shiftKey ? 10 : 1;
-        let speedX =
+        let initialspeedX =
           event.key === "ArrowLeft"
             ? -speed
             : event.key === "ArrowRight"
             ? speed
             : 0;
-        let speedY =
+        let initialspeedY =
           event.key === "ArrowUp"
             ? -speed
             : event.key === "ArrowDown"
             ? speed
             : 0;
+        let speedX = initialspeedX;
+        let speedY = initialspeedY;
+        if (boardRotate === 90) {
+          speedX = initialspeedY;
+          speedY = -initialspeedX;
+        } else if (boardRotate === 180) {
+          speedX = -initialspeedX;
+          speedY = -initialspeedY;
+        } else if (boardRotate === 270) {
+          speedX = -initialspeedY;
+          speedY = initialspeedX;
+        }
         if (event.type === "keyup") {
           let layer_data = { ...currentLayer.layer_data };
           if (prevTick.current != tick.current) {

@@ -166,6 +166,7 @@ const Board = () => {
             layers={layerList}
             handleImageSize={handleImageSize}
             frameSize={frameSize}
+            boardRotate={boardRotate}
             currentLayer={currentLayer}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
@@ -177,6 +178,7 @@ const Board = () => {
             loadedFontList={loadedFontList}
             currentLayer={currentLayer}
             frameSize={frameSize}
+            boardRotate={boardRotate}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
             onFontLoad={handleAddFont}

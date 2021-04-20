@@ -176,7 +176,7 @@ const ShadowProperty = (props) => {
           ) ? (
             <CustomeTextField
               name="layer_data.shadowOffsetY"
-              label="Shadow OffsetX"
+              label="Shadow OffsetY"
               variant="outlined"
               type="number"
               value={Helper.mathRound2(values.layer_data.shadowOffsetY)}

@@ -51,9 +51,12 @@ const TextNode = ({
   };
   const handleDragEnd = (e) => {
     if (onChange) {
+      const node = shapeRef.current;
       onChange({
         left: Helper.mathRound2(e.target.x()),
         top: Helper.mathRound2(e.target.y()),
+        width: Helper.mathRound2(Math.max(5, node.width())),
+        height: Helper.mathRound2(Math.max(5, node.height())),
       });
     }
   };
@@ -66,8 +69,8 @@ const TextNode = ({
         left: Helper.mathRound2(node.x()),
         top: Helper.mathRound2(node.y()),
         // set minimal value
-        // width: Helper.mathRound2(Math.max(5, node.width())),
-        // height: Helper.mathRound2(Math.max(5, node.height())),
+        width: Helper.mathRound2(Math.max(5, node.width())),
+        height: Helper.mathRound2(Math.max(5, node.height())),
         rotation: Helper.mathRound2(node.rotation()) || 0,
         scaleX: Helper.mathRound2(Math.max(0.01, scaleX)),
         scaleY: Helper.mathRound2(Math.max(0.01, scaleY)),

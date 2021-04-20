@@ -34,6 +34,7 @@ const PropertyBar = () => {
   const dispatch = useDispatch();
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
+  const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
 
   const handleApply = (values) => {
     dispatch(updateLayer(values));
@@ -166,8 +167,8 @@ const PropertyBar = () => {
               left: Yup.number(),
               top: Yup.number(),
               rotation: Yup.number()
-                .moreThan(-180, "Must be greater than -180")
-                .lessThan(180, "Must be less than 180"),
+                .moreThan(-181, "Must be greater than -181")
+                .lessThan(181, "Must be less than 181"),
               flop: Yup.number(),
               flip: Yup.number(),
               scaleX: Yup.number().moreThan(0, "Must be greater than 0"),
@@ -238,6 +239,7 @@ const PropertyBar = () => {
                 {...formProps}
                 toggleLayerDataField={toggleLayerDataField}
                 currentLayer={currentLayer}
+                pressedKey={pressedKey}
               />
               <PositionProperty {...formProps} />
               <RotationProperty {...formProps} />
