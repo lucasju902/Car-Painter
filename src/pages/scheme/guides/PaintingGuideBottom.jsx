@@ -5,7 +5,7 @@ import URLImage from "components/URLImage";
 import config from "config";
 
 const PaintingGuideBottom = (props) => {
-  const { paintingGuides, currentCarMake, handleImageSize } = props;
+  const { paintingGuides, currentCarMake, handleImageSize, guideData } = props;
 
   return (
     <>
@@ -18,6 +18,8 @@ const PaintingGuideBottom = (props) => {
             "_"
           )}/sponsor_blocks.png`}
           tellSize={handleImageSize}
+          filterColor={guideData.sponsor_color}
+          opacity={guideData.sponsor_opacity}
           listening={false}
         />
       ) : (
@@ -32,6 +34,8 @@ const PaintingGuideBottom = (props) => {
             "_"
           )}/number_blocks.png`}
           tellSize={handleImageSize}
+          filterColor={guideData.numberblock_color}
+          opacity={guideData.numberblock_opacity}
           listening={false}
         />
       ) : (

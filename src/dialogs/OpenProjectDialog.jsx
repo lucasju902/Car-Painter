@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@material-ui/core";
 
-import Helper from "helper";
+import { getDifferenceFromToday } from "helper";
 
 const Button = styled(MuiButton)(spacing);
 const SchemeWrapper = styled(Box)`
@@ -41,8 +41,7 @@ const OpenProjectDialog = (props) => {
               >
                 <Typography variant="body1">{scheme.name}</Typography>
                 <Typography variant="body2">
-                  Last modified{" "}
-                  {Helper.getDifferenceFromToday(scheme.date_modified)}
+                  Last modified {getDifferenceFromToday(scheme.date_modified)}
                 </Typography>
               </SchemeWrapper>
             ))

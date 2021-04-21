@@ -23,6 +23,10 @@ const SliderWrapper = styled(Box)`
   margin-right: 8px;
   height: 28px;
 `;
+const Wrapper = styled(Grid)`
+  height: 100%;
+  align-items: center;
+`;
 
 const SliderInput = (props) => {
   const { label, min, max, value, setValue, step } = props;
@@ -34,7 +38,7 @@ const SliderInput = (props) => {
     }
   };
   return (
-    <Grid container spacing={2}>
+    <Wrapper container>
       <Grid item xs={6}>
         <Typography variant="body1" color="textSecondary" mr={2}>
           {label}
@@ -66,6 +70,7 @@ const SliderInput = (props) => {
             value={value}
             margin="dense"
             type="number"
+            step={step || 1}
             onChange={(event) =>
               setValue(
                 event.target.value === ""
@@ -82,7 +87,7 @@ const SliderInput = (props) => {
           />
         </Box>
       </Grid>
-    </Grid>
+    </Wrapper>
   );
 };
 

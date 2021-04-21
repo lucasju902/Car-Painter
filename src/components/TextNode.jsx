@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 
 import { Text } from "react-konva";
-import Helper from "helper";
+import { mathRound2 } from "helper";
 
 const TextNode = ({
   fontFamily,
@@ -53,10 +53,10 @@ const TextNode = ({
     if (onChange) {
       const node = shapeRef.current;
       onChange({
-        left: Helper.mathRound2(e.target.x()),
-        top: Helper.mathRound2(e.target.y()),
-        width: Helper.mathRound2(Math.max(5, node.width())),
-        height: Helper.mathRound2(Math.max(5, node.height())),
+        left: mathRound2(e.target.x()),
+        top: mathRound2(e.target.y()),
+        width: mathRound2(Math.max(5, node.width())),
+        height: mathRound2(Math.max(5, node.height())),
       });
     }
   };
@@ -66,14 +66,14 @@ const TextNode = ({
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
       onChange({
-        left: Helper.mathRound2(node.x()),
-        top: Helper.mathRound2(node.y()),
+        left: mathRound2(node.x()),
+        top: mathRound2(node.y()),
         // set minimal value
-        width: Helper.mathRound2(Math.max(5, node.width())),
-        height: Helper.mathRound2(Math.max(5, node.height())),
-        rotation: Helper.mathRound2(node.rotation()) || 0,
-        scaleX: Helper.mathRound2(Math.max(0.01, scaleX)),
-        scaleY: Helper.mathRound2(Math.max(0.01, scaleY)),
+        width: mathRound2(Math.max(5, node.width())),
+        height: mathRound2(Math.max(5, node.height())),
+        rotation: mathRound2(node.rotation()) || 0,
+        scaleX: mathRound2(Math.max(0.01, scaleX)),
+        scaleY: mathRound2(Math.max(0.01, scaleY)),
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
       });

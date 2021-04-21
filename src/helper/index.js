@@ -1,6 +1,7 @@
 import _ from "lodash";
+import validateColor from "validate-color";
 
-const getDifferenceFromToday = (past_date) => {
+export const getDifferenceFromToday = (past_date) => {
   const difference_In_Second =
     new Date().getTime() / 1000 - new Date(past_date).getTime();
   if (difference_In_Second < 60) {
@@ -18,7 +19,7 @@ const getDifferenceFromToday = (past_date) => {
   return `${Math.round(difference_In_Day)} days ago`;
 };
 
-const hexToRgba = (hex) => {
+export const hexToRgba = (hex) => {
   let result =
     hex.length > 7
       ? /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -32,10 +33,10 @@ const hexToRgba = (hex) => {
   };
 };
 
-const mathRound2 = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
+export const mathRound2 = (num) =>
+  Math.round((num + Number.EPSILON) * 100) / 100;
 
-export default {
-  getDifferenceFromToday,
-  mathRound2,
-  hexToRgba,
+export const colorValidator = (color) => {
+  if (!color || !color.length) return true;
+  return validateColor(color);
 };

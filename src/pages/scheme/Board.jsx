@@ -155,6 +155,7 @@ const Board = () => {
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}
             handleImageSize={handleImageSize}
+            guideData={currentScheme.guide_data}
           />
 
           <CarParts
@@ -189,6 +190,7 @@ const Board = () => {
             paintingGuides={paintingGuides}
             handleImageSize={handleImageSize}
             frameSize={frameSize}
+            guideData={currentScheme.guide_data}
           />
 
           <TransformerComponent

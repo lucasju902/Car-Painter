@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps } from "constant";
-import Helper from "helper";
+import { mathRound2 } from "helper";
 
 import {
   Box,
@@ -114,7 +114,7 @@ const SizeProperty = (props) => {
                 label="Width"
                 variant="outlined"
                 type="number"
-                value={Helper.mathRound2(values.layer_data.width)}
+                value={mathRound2(values.layer_data.width)}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.width &&
@@ -165,7 +165,7 @@ const SizeProperty = (props) => {
                 label="Height"
                 variant="outlined"
                 type="number"
-                value={Helper.mathRound2(values.layer_data.height)}
+                value={mathRound2(values.layer_data.height)}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.height &&
@@ -205,7 +205,7 @@ const SizeProperty = (props) => {
                 label="ScaleX"
                 variant="outlined"
                 type="number"
-                value={Helper.mathRound2(values.layer_data.scaleX)}
+                value={mathRound2(values.layer_data.scaleX)}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.scaleX &&
@@ -256,7 +256,7 @@ const SizeProperty = (props) => {
                 label="ScaleY"
                 variant="outlined"
                 type="number"
-                value={Helper.mathRound2(values.layer_data.scaleY)}
+                value={mathRound2(values.layer_data.scaleY)}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.scaleY &&

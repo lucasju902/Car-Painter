@@ -6,8 +6,16 @@ import URLImage from "components/URLImage";
 import config from "config";
 
 const PaintingGuideTop = (props) => {
-  const gridPadding = 10;
-  const { paintingGuides, currentCarMake, handleImageSize, frameSize } = props;
+  const {
+    paintingGuides,
+    currentCarMake,
+    handleImageSize,
+    frameSize,
+    guideData,
+  } = props;
+  const gridPadding = guideData.grid_padding || 10;
+  const gridStroke = guideData.grid_stroke || 0.1;
+
   return (
     <>
       {paintingGuides.includes(PaintingGuides.CARMASK) ? (
@@ -19,6 +27,8 @@ const PaintingGuideTop = (props) => {
             "_"
           )}/mask.png`}
           tellSize={handleImageSize}
+          filterColor={guideData.carmask_color}
+          opacity={guideData.carmask_opacity}
           listening={false}
         />
       ) : (
@@ -33,6 +43,8 @@ const PaintingGuideTop = (props) => {
             "_"
           )}/wireframe.png`}
           tellSize={handleImageSize}
+          filterColor={guideData.wireframe_color}
+          opacity={guideData.wireframe_opacity}
           listening={false}
         />
       ) : (
@@ -52,8 +64,9 @@ const PaintingGuideTop = (props) => {
                     Math.round(i * gridPadding),
                     frameSize.width,
                   ]}
-                  stroke="#ddd"
-                  strokeWidth={0.1}
+                  stroke={guideData.grid_color || "#ddd"}
+                  opacity={guideData.grid_opacity || 1}
+                  strokeWidth={gridStroke}
                   listening={false}
                 />
               );
@@ -71,8 +84,9 @@ const PaintingGuideTop = (props) => {
                     frameSize.height,
                     Math.round(i * gridPadding),
                   ]}
-                  stroke="#ddd"
-                  strokeWidth={0.1}
+                  stroke={guideData.grid_color || "#ddd"}
+                  opacity={guideData.grid_opacity || 1}
+                  strokeWidth={gridStroke}
                   listening={false}
                 />
               );

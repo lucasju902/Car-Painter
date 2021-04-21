@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 
 import styled from "styled-components/macro";
+import { colorValidator } from "helper";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -92,6 +93,8 @@ const InnerForm = (props) => {
               value={values.color}
               onChange={(color) => setFieldValue("color", color)}
               onInputChange={(color) => setFieldValue("color", color)}
+              error={Boolean(errors.color)}
+              helperText={errors.color}
             />
           </Box>
         </Grid>
@@ -121,6 +124,8 @@ const InnerForm = (props) => {
               value={values.scolor}
               onChange={(color) => setFieldValue("scolor", color)}
               onInputChange={(color) => setFieldValue("scolor", color)}
+              error={Boolean(errors.scolor)}
+              helperText={errors.scolor}
             />
           </Box>
         </Grid>
@@ -159,6 +164,12 @@ const TextDialog = (props) => {
         }}
         validationSchema={Yup.object().shape({
           text: Yup.string().required("Required"),
+          color: Yup.string()
+            .nullable()
+            .test("color-validation", "Incorrect Color Format", colorValidator),
+          scolor: Yup.string()
+            .nullable()
+            .test("color-validation", "Incorrect Color Format", colorValidator),
         })}
         validate={(values) => {
           console.log(values);

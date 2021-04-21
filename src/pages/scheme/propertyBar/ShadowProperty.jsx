@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps } from "constant";
-import Helper from "helper";
+import { mathRound2 } from "helper";
 
 import {
   Box,
@@ -72,16 +72,10 @@ const ShadowProperty = (props) => {
                     setFieldValue("layer_data.shadowColor", color)
                   }
                   error={Boolean(
-                    touched.layer_data &&
-                      touched.layer_data.shadowColor &&
-                      errors.layer_data &&
-                      errors.layer_data.shadowColor
+                    errors.layer_data && errors.layer_data.shadowColor
                   )}
                   helperText={
-                    touched.layer_data &&
-                    touched.layer_data.shadowColor &&
-                    errors.layer_data &&
-                    errors.layer_data.shadowColor
+                    errors.layer_data && errors.layer_data.shadowColor
                   }
                 />
               </Grid>
@@ -97,7 +91,7 @@ const ShadowProperty = (props) => {
               label="Shadow Blur"
               variant="outlined"
               type="number"
-              value={Helper.mathRound2(values.layer_data.shadowBlur)}
+              value={mathRound2(values.layer_data.shadowBlur)}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.shadowBlur &&
@@ -146,7 +140,7 @@ const ShadowProperty = (props) => {
               label="Shadow OffsetX"
               variant="outlined"
               type="number"
-              value={Helper.mathRound2(values.layer_data.shadowOffsetX)}
+              value={mathRound2(values.layer_data.shadowOffsetX)}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.shadowOffsetX &&
@@ -179,7 +173,7 @@ const ShadowProperty = (props) => {
               label="Shadow OffsetY"
               variant="outlined"
               type="number"
-              value={Helper.mathRound2(values.layer_data.shadowOffsetY)}
+              value={mathRound2(values.layer_data.shadowOffsetY)}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.shadowOffsetY &&

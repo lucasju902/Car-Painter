@@ -1,7 +1,7 @@
 import Canvg from "canvg";
 import React, { useRef, useState, useEffect } from "react";
 import Konva from "konva";
-import Helper from "helper";
+import { mathRound2, hexToRgba } from "helper";
 import { Image } from "react-konva";
 
 const URLImage = ({
@@ -20,7 +20,7 @@ const URLImage = ({
   const [image, setImage] = useState(null);
   const filters = [];
 
-  if (filterColor) {
+  if (filterColor && filterColor.length) {
     filters.push(Konva.Filters.RGBA);
   }
   const getPixelRatio = (node) => {
@@ -45,7 +45,7 @@ const URLImage = ({
 
   useEffect(() => {
     if (shapeRef.current) {
-      if (filterColor) {
+      if (filterColor && filterColor.length) {
         shapeRef.current.cache({
           pixelRatio: getPixelRatio(shapeRef.current),
           imageSmoothingEnabled: true,
@@ -95,14 +95,14 @@ const URLImage = ({
 
     if (onChange && !props.width && !props.height) {
       onChange({
-        left: Helper.mathRound2(props.x - width / 2),
-        top: Helper.mathRound2(props.y - height / 2),
-        width: Helper.mathRound2(width),
-        height: Helper.mathRound2(height),
+        left: mathRound2(props.x - width / 2),
+        top: mathRound2(props.y - height / 2),
+        width: mathRound2(width),
+        height: mathRound2(height),
       });
     }
 
-    if (filterColor) {
+    if (filterColor && filterColor.length) {
       shapeRef.current.cache({
         pixelRatio: getPixelRatio(shapeRef.current),
         imageSmoothingEnabled: true,
@@ -130,8 +130,8 @@ const URLImage = ({
   const handleDragEnd = (e) => {
     if (onChange) {
       onChange({
-        left: Helper.mathRound2(e.target.x()),
-        top: Helper.mathRound2(e.target.y()),
+        left: mathRound2(e.target.x()),
+        top: mathRound2(e.target.y()),
       });
     }
   };
@@ -145,18 +145,16 @@ const URLImage = ({
       node.scaleX(scaleX > 0 ? 1 : -1);
       node.scaleY(scaleY > 0 ? 1 : -1);
       onChange({
-        left: Helper.mathRound2(node.x()),
-        top: Helper.mathRound2(node.y()),
+        left: mathRound2(node.x()),
+        top: mathRound2(node.y()),
         // set minimal value
-        width: Helper.mathRound2(Math.max(1, node.width() * Math.abs(scaleX))),
-        height: Helper.mathRound2(
-          Math.max(1, node.height() * Math.abs(scaleY))
-        ),
-        rotation: Helper.mathRound2(node.rotation()) || 0,
+        width: mathRound2(Math.max(1, node.width() * Math.abs(scaleX))),
+        height: mathRound2(Math.max(1, node.height() * Math.abs(scaleY))),
+        rotation: mathRound2(node.rotation()) || 0,
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
       });
-      if (filterColor) {
+      if (filterColor && filterColor.length) {
         node.cache({
           pixelRatio: getPixelRatio(shapeRef.current),
           imageSmoothingEnabled: true,
@@ -177,10 +175,16 @@ const URLImage = ({
       ref={shapeRef}
       draggable={onChange}
       filters={filters.length ? filters : null}
-      red={filterColor ? Helper.hexToRgba(filterColor).r : null}
-      green={filterColor ? Helper.hexToRgba(filterColor).g : null}
-      blue={filterColor ? Helper.hexToRgba(filterColor).b : null}
-      alpha={filterColor ? Helper.hexToRgba(filterColor).a / 255 : null}
+      red={filterColor && filterColor.length ? hexToRgba(filterColor).r : null}
+      green={
+        filterColor && filterColor.length ? hexToRgba(filterColor).g : null
+      }
+      blue={filterColor && filterColor.length ? hexToRgba(filterColor).b : null}
+      alpha={
+        filterColor && filterColor.length
+          ? hexToRgba(filterColor).a / 255
+          : null
+      }
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}

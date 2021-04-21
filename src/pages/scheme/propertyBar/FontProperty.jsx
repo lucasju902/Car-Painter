@@ -69,18 +69,8 @@ const FontProperty = (props) => {
                   onInputChange={(color) =>
                     setFieldValue("layer_data.color", color)
                   }
-                  rror={Boolean(
-                    touched.layer_data &&
-                      touched.layer_data.color &&
-                      errors.layer_data &&
-                      errors.layer_data.color
-                  )}
-                  helperText={
-                    touched.layer_data &&
-                    touched.layer_data.color &&
-                    errors.layer_data &&
-                    errors.layer_data.color
-                  }
+                  error={Boolean(errors.layer_data && errors.layer_data.color)}
+                  helperText={errors.layer_data && errors.layer_data.color}
                 />
               </Grid>
             </Grid>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps } from "constant";
-import Helper from "helper";
+import { mathRound2 } from "helper";
 
 import {
   Box,
@@ -48,7 +48,7 @@ const PositionProperty = (props) => {
               label="Left"
               variant="outlined"
               type="number"
-              value={Helper.mathRound2(values.layer_data.left)}
+              value={mathRound2(values.layer_data.left)}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.left &&
@@ -79,7 +79,7 @@ const PositionProperty = (props) => {
               label="Top"
               variant="outlined"
               type="number"
-              value={Helper.mathRound2(values.layer_data.top)}
+              value={mathRound2(values.layer_data.top)}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.top &&

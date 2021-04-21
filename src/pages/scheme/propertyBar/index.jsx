@@ -2,12 +2,12 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { Formik, Form } from "formik";
-import validateColor from "validate-color";
 import * as Yup from "yup";
 import _ from "lodash";
 
 import { updateLayer } from "redux/reducers/layerReducer";
 import { AllowedLayerProps, LayerTypes } from "constant";
+import { colorValidator } from "helper";
 
 import { Box, Typography, Button } from "@material-ui/core";
 import GeneralProperty from "./GeneralProperty";
@@ -18,7 +18,6 @@ import StrokeProperty from "./StrokeProperty";
 import ColorProperty from "./ColorProperty";
 import RotationProperty from "./RotationProperty";
 import ShadowProperty from "./ShadowProperty";
-import zhCN from "date-fns/locale/zh-CN/index";
 
 const Wrapper = styled(Box)`
   width: 350px;
@@ -57,11 +56,6 @@ const PropertyBar = () => {
         },
       })
     );
-  };
-
-  const colorValidator = (color) => {
-    if (!color || !color.length) return true;
-    return validateColor(color);
   };
 
   const checkDirty = (values) => {

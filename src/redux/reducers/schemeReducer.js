@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
 import SchemeService from "services/schemeService";
 import { setMessage } from "./messageReducer";
@@ -19,10 +20,23 @@ export const slice = createSlice({
       state.loading = action.payload;
     },
     setList: (state, action) => {
-      state.list = action.payload;
+      let list = action.payload;
+      for (let item of list) {
+        if (typeof item.guide_data === "string" || !item.guide_data) {
+          item.guide_data = JSON.parse(item.guide_data) || {};
+        }
+      }
+      state.list = list;
     },
     insertToList: (state, action) => {
-      state.list.push(action.payload);
+      let scheme = action.payload;
+      if (
+        scheme &&
+        (typeof scheme.guide_data === "string" || !scheme.guide_data)
+      ) {
+        scheme.guide_data = JSON.parse(scheme.guide_data) || {};
+      }
+      state.list.push(scheme);
     },
     updateListItem: (state, action) => {
       let schemeList = [...state.list];
@@ -35,7 +49,14 @@ export const slice = createSlice({
       }
     },
     setCurrent: (state, action) => {
-      state.current = action.payload;
+      let scheme = action.payload;
+      if (
+        scheme &&
+        (typeof scheme.guide_data === "string" || !scheme.guide_data)
+      ) {
+        scheme.guide_data = JSON.parse(scheme.guide_data) || {};
+      }
+      state.current = scheme;
     },
     setCurrentName: (state, action) => {
       state.current = {
@@ -100,15 +121,21 @@ export const getScheme = (schemeID) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const updateScheme = (id, payload) => async (dispatch) => {
-  dispatch(setLoading(true));
+export const updateScheme = (payload) => async (dispatch, getState) => {
   try {
-    const scheme = await SchemeService.updateScheme(id, payload);
+    const currentScheme = getState().schemeReducer.current;
+    if (currentScheme && currentScheme.id === payload.id) {
+      dispatch(setCurrent(payload));
+    }
+
+    const scheme = await SchemeService.updateScheme(payload.id, {
+      ..._.omit(payload, ["carMake", "layers"]),
+      guide_data: JSON.stringify(payload.guide_data),
+    });
     dispatch(updateListItem(scheme));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  dispatch(setLoading(false));
 };
 
 export const changeName = (id, name) => async (dispatch) => {
