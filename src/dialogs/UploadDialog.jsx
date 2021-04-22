@@ -8,6 +8,7 @@ import { spacing } from "@material-ui/system";
 import {
   Box,
   Button as MuiButton,
+  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -16,8 +17,10 @@ import {
   GridListTile,
   GridListTileBar,
 } from "@material-ui/core";
+import ConfirmDialog from "dialogs/ConfirmDialog";
+import { Delete as DeleteIcon } from "@material-ui/icons";
 import { DropzoneArea } from "material-ui-dropzone";
-import { uploadFiles } from "redux/reducers/uploadReducer";
+import { uploadFiles, deleteUpload } from "redux/reducers/uploadReducer";
 import config from "config";
 
 const Button = styled(MuiButton)(spacing);
@@ -44,12 +47,16 @@ const CustomImg = styled.img`
   position: relative;
   object-fit: contain;
 `;
+const DeleteButton = styled(IconButton)`
+  color: #ccc;
+`;
 
 const UploadDialog = (props) => {
   const step = 15;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const [uploadToDelete, setUploadToDelete] = useState(null);
 
   const [limit, setLimit] = useState(step);
   const [files, setFiles] = useState([]);
@@ -74,6 +81,16 @@ const UploadDialog = (props) => {
     dispatch(uploadFiles(user.id, currentScheme.id, files));
     setFiles([]);
     setDropZoneKey(dropZoneKey + 1);
+  };
+  const handleDeleteUpload = (event, uploadItem) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+    setUploadToDelete(uploadItem);
+  };
+  const handleDeleteUploadConfirm = () => {
+    console.log("Deleting: ", uploadToDelete);
+    dispatch(deleteUpload(uploadToDelete));
+    setUploadToDelete(null);
   };
 
   return (
@@ -122,6 +139,15 @@ const UploadDialog = (props) => {
                   />
                   <GridListTileBar
                     title={getNameFromFileName(uploadItem.file_name)}
+                    actionIcon={
+                      <DeleteButton
+                        onClick={(event) =>
+                          handleDeleteUpload(event, uploadItem)
+                        }
+                      >
+                        <DeleteIcon />
+                      </DeleteButton>
+                    }
                   />
                 </CustomGridListTile>
               ))}
@@ -134,6 +160,18 @@ const UploadDialog = (props) => {
           Cancel
         </Button>
       </DialogActions>
+      <ConfirmDialog
+        text={
+          uploadToDelete
+            ? `Are you sure to delete "${getNameFromFileName(
+                uploadToDelete.file_name
+              )}"?`
+            : ""
+        }
+        open={!!uploadToDelete}
+        onCancel={() => setUploadToDelete(null)}
+        onConfirm={handleDeleteUploadConfirm}
+      />
     </Dialog>
   );
 };

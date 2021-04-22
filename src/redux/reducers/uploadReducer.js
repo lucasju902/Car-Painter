@@ -34,6 +34,14 @@ export const slice = createSlice({
         state.list = list;
       }
     },
+    deleteListItem: (state, action) => {
+      let list = [...state.list];
+      let foundIndex = list.findIndex((item) => item.id === action.payload.id);
+      if (foundIndex !== -1) {
+        list.splice(foundIndex, 1);
+        state.list = list;
+      }
+    },
     setCurrent: (state, action) => {
       state.current = action.payload;
     },
@@ -47,6 +55,7 @@ export const {
   concatList,
   insertToList,
   updateListItem,
+  deleteListItem,
 } = slice.actions;
 
 export const getUploadListByUserID = (userID) => async (dispatch) => {
@@ -79,6 +88,24 @@ export const uploadFiles = (userID, schemeID, files) => async (dispatch) => {
     dispatch(setMessage({ message: err.message }));
   }
   dispatch(setLoading(false));
+};
+
+export const deleteUpload = (upload) => async (dispatch) => {
+  // dispatch(setLoading(true));
+
+  try {
+    dispatch(deleteListItem(upload));
+    await UploadService.deleteUpload(upload.id);
+    dispatch(
+      setMessage({
+        message: "Deleted your uploaded file successfully!",
+        type: "success",
+      })
+    );
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  // dispatch(setLoading(false));
 };
 
 export default slice.reducer;

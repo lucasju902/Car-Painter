@@ -20,6 +20,7 @@ router
 router
   .route("/:id")
   .get(isAuthenticated, UploadController.getByID)
-  .put(isAuthenticated, UploadController.update);
+  .put(isAuthenticated, UploadController.update)
+  .delete(isAuthenticated, UploadController.delete);
 
 module.exports = router;

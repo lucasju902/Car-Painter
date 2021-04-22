@@ -33,6 +33,12 @@ class UploadService {
     return upload;
   }
 
+  static async deleteById(id) {
+    const upload = await this.getById(id);
+    await upload.destroy();
+    return true;
+  }
+
   static uploadFiles() {
     let storage = multer.diskStorage({
       destination: function (req, file, cb) {
@@ -65,6 +71,16 @@ class UploadService {
       }),
     }).fields([{ name: "files", maxCount: 3 }]);
     return filesUploadMulter;
+  }
+
+  static async deleteFileFromS3(file_path) {
+    await s3
+      .deleteObject({
+        Bucket: config.bucketURL,
+        Key: file_path,
+      })
+      .promise();
+    return true;
   }
 }
 

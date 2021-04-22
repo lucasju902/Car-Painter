@@ -16,6 +16,9 @@ export default class UploadService extends BaseAPIService {
   static updateUpload = async (id, payload) => {
     return this.requestWithAuth(`/upload/${id}`, "PUT", payload);
   };
+  static deleteUpload = async (id) => {
+    return this.requestWithAuth(`/upload/${id}`, "DELETE");
+  };
   static uploadFiles = async (formData) => {
     return this.requestWithAuth(
       `/upload/uploadFiles`,

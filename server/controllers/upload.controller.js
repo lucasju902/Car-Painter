@@ -99,6 +99,21 @@ class UploadController {
       });
     }
   }
+
+  static async delete(req, res) {
+    try {
+      let upload = await UploadService.getById(req.params.id);
+      upload = upload.toJSON();
+      await UploadService.deleteFileFromS3(upload.file_name);
+      await UploadService.deleteById(upload.id);
+      res.json({});
+    } catch (err) {
+      logger.log("error", err.stack);
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
 }
 
 module.exports = UploadController;

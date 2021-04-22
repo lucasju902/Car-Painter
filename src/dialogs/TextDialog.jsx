@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 
 import styled from "styled-components/macro";
 import { colorValidator } from "helper";
+import config from "config";
+import { insertToLoadedList as insertToLoadedFontList } from "redux/reducers/fontReducer";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -31,6 +34,18 @@ const CustomeTextField = styled(TextField)`
     height: 2rem;
   }
 `;
+const TextPreviewWrapper = styled(Box)`
+  background: white;
+  overflow: auto;
+`;
+const TextPreview = styled(Box)`
+  color: ${(props) => props.color};
+  -webkit-text-stroke-width: ${(props) => props.stroke}px;
+  -webkit-text-stroke-color: ${(props) => props.scolor};
+  font-size: ${(props) => props.size}px;
+  font-family: ${(props) => props.font};
+  transform: rotate(${(props) => props.rotate}deg);
+`;
 
 const InnerForm = (props) => {
   const {
@@ -42,6 +57,32 @@ const InnerForm = (props) => {
     touched,
     values,
   } = props;
+  const dispatch = useDispatch();
+  const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
+
+  const loadFont = (fontFamily, fontFile) => {
+    let fontObject = new FontFace(fontFamily, fontFile);
+    fontObject
+      .load()
+      .then(function (loaded_face) {
+        document.fonts.add(loaded_face);
+        dispatch(insertToLoadedFontList(fontFamily));
+      })
+      .catch(function (error) {
+        // error occurred
+        console.warn(error, fontFamily);
+      });
+  };
+
+  useEffect(() => {
+    let font = fontList.length
+      ? fontList.find((item) => item.id === values.font)
+      : null;
+    if (font && !loadedFontList.includes(font.font_name)) {
+      loadFont(font.font_name, `url(${config.assetsURL}/${font.font_file})`);
+    }
+  }, [values.font]);
+
   return (
     <>
       <CustomeTextField
@@ -142,6 +183,25 @@ const InnerForm = (props) => {
           />
         </Grid>
       </Grid>
+      <TextPreviewWrapper
+        width="100%"
+        height="200px"
+        my={2}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <TextPreview
+          color={values.color}
+          stroke={values.stroke}
+          scolor={values.scolor}
+          size={values.size}
+          rotate={values.rotation}
+          font={fontList.find((item) => item.id === values.font).font_name}
+        >
+          {values.text}
+        </TextPreview>
+      </TextPreviewWrapper>
     </>
   );
 };
