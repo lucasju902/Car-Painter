@@ -11,6 +11,17 @@ class LayerService {
     return layer;
   }
 
+  static async getListByUploadID(uploadID) {
+    const layers = await Layer.query((qb) => {
+      qb.whereRaw(
+        `layer_type = 5 AND (layer_data LIKE '%"id":${uploadID},%' OR layer_data LIKE '%"id":${uploadID}}%')`
+      );
+    }).fetchAll({
+      withRelated: ["scheme"],
+    });
+    return layers;
+  }
+
   static async create(payload) {
     const layer = await Layer.forge(payload).save();
     return layer;

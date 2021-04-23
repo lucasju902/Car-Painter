@@ -18,10 +18,18 @@ import {
   GridListTileBar,
 } from "@material-ui/core";
 import ConfirmDialog from "dialogs/ConfirmDialog";
+import YesNoDialog from "dialogs/YesNoDialog";
 import { Delete as DeleteIcon } from "@material-ui/icons";
 import { DropzoneArea } from "material-ui-dropzone";
 import { uploadFiles, deleteUpload } from "redux/reducers/uploadReducer";
+import {
+  deleteItemsByUploadID as deleteLayerItemsByUploadID,
+  setCurrent as setCurrentLayer,
+} from "redux/reducers/layerReducer";
+import { setMessage } from "redux/reducers/messageReducer";
+
 import config from "config";
+import SchemeService from "services/schemeService";
 
 const Button = styled(MuiButton)(spacing);
 
@@ -57,6 +65,7 @@ const UploadDialog = (props) => {
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const [uploadToDelete, setUploadToDelete] = useState(null);
+  const [associatedSchemes, setAssociatedSchemes] = useState([]);
 
   const [limit, setLimit] = useState(step);
   const [files, setFiles] = useState([]);
@@ -82,15 +91,37 @@ const UploadDialog = (props) => {
     setFiles([]);
     setDropZoneKey(dropZoneKey + 1);
   };
-  const handleDeleteUpload = (event, uploadItem) => {
+  const handleClickDeleteUpload = (event, uploadItem) => {
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
     setUploadToDelete(uploadItem);
   };
-  const handleDeleteUploadConfirm = () => {
+  const handleDeleteUploadConfirm = async () => {
     console.log("Deleting: ", uploadToDelete);
-    dispatch(deleteUpload(uploadToDelete));
+    try {
+      let schemes = await SchemeService.getSchemeListByUploadID(
+        uploadToDelete.id
+      );
+      if (schemes.length) {
+        setAssociatedSchemes(schemes);
+      } else {
+        dispatch(deleteUpload(uploadToDelete, true));
+        setUploadToDelete(null);
+      }
+    } catch (err) {
+      dispatch(setMessage({ message: err.message }));
+      setUploadToDelete(null);
+    }
+  };
+
+  const handleDeleteUploadFinally = (deleteFromAll = true) => {
+    if (deleteFromAll) {
+      dispatch(deleteLayerItemsByUploadID(uploadToDelete.id));
+      dispatch(setCurrentLayer(null));
+    }
+    dispatch(deleteUpload(uploadToDelete, deleteFromAll));
     setUploadToDelete(null);
+    setAssociatedSchemes([]);
   };
 
   return (
@@ -142,7 +173,7 @@ const UploadDialog = (props) => {
                     actionIcon={
                       <DeleteButton
                         onClick={(event) =>
-                          handleDeleteUpload(event, uploadItem)
+                          handleClickDeleteUpload(event, uploadItem)
                         }
                       >
                         <DeleteIcon />
@@ -171,6 +202,26 @@ const UploadDialog = (props) => {
         open={!!uploadToDelete}
         onCancel={() => setUploadToDelete(null)}
         onConfirm={handleDeleteUploadConfirm}
+      />
+      <YesNoDialog
+        text={
+          associatedSchemes.length ? (
+            <>
+              The Projects below have the associated file:
+              <ul>
+                {associatedSchemes.map((item, index) => (
+                  <li key={index}>{item.name}</li>
+                ))}
+              </ul>
+              Would you like delete all of them?
+            </>
+          ) : (
+            ""
+          )
+        }
+        open={!!associatedSchemes.length}
+        onYes={() => handleDeleteUploadFinally(true)}
+        onNo={() => handleDeleteUploadFinally(false)}
       />
     </Dialog>
   );

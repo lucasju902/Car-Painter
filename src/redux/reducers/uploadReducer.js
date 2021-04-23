@@ -90,12 +90,12 @@ export const uploadFiles = (userID, schemeID, files) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const deleteUpload = (upload) => async (dispatch) => {
+export const deleteUpload = (upload, deleteFromAll) => async (dispatch) => {
   // dispatch(setLoading(true));
 
   try {
     dispatch(deleteListItem(upload));
-    await UploadService.deleteUpload(upload.id);
+    await UploadService.deleteUpload(upload.id, deleteFromAll);
     dispatch(
       setMessage({
         message: "Deleted your uploaded file successfully!",

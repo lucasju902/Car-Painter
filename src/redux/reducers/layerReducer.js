@@ -53,6 +53,14 @@ export const slice = createSlice({
         state.list = layerList;
       }
     },
+    deleteItemsByUploadID: (state, action) => {
+      let layerList = [...state.list];
+      state.list = layerList.filter(
+        (item) =>
+          item.layer_type !== LayerTypes.UPLOAD ||
+          item.layer_data.id !== action.payload
+      );
+    },
     deleteListItem: (state, action) => {
       let layerList = [...state.list];
       let foundIndex = layerList.findIndex(
@@ -89,6 +97,7 @@ export const {
   updateListItem,
   deleteListItem,
   setClipboard,
+  deleteItemsByUploadID,
 } = slice.actions;
 
 export default slice.reducer;

@@ -93,6 +93,25 @@ class SchemeController {
       });
     }
   }
+
+  static async getListByUploadID(req, res) {
+    try {
+      let layers = await LayerService.getListByUploadID(req.params.id);
+      layers = layers.toJSON();
+      let schemes = [];
+      for (let layer of layers) {
+        if (!schemes.find((scheme) => scheme.id === layer.scheme.id)) {
+          schemes.push(layer.scheme);
+        }
+      }
+      res.json(schemes);
+    } catch (err) {
+      logger.log("error", err.stack);
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
 }
 
 module.exports = SchemeController;

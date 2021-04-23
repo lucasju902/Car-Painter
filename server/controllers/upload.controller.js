@@ -1,4 +1,5 @@
 const UploadService = require("../services/uploadService");
+const LayerService = require("../services/layerService");
 const logger = require("../config/winston");
 const config = require("../config");
 
@@ -102,9 +103,25 @@ class UploadController {
 
   static async delete(req, res) {
     try {
+      let { deleteFromAll } = req.body;
       let upload = await UploadService.getById(req.params.id);
       upload = upload.toJSON();
-      await UploadService.deleteFileFromS3(upload.file_name);
+      if (deleteFromAll) {
+        await UploadService.deleteFileFromS3(upload.file_name);
+        let layers = await LayerService.getListByUploadID(req.params.id);
+        layers = layers.toJSON();
+        let promises = [];
+
+        for (let layer of layers) {
+          promises.push(
+            new Promise(async (resolve) => {
+              await LayerService.deleteById(layer.id);
+              resolve();
+            })
+          );
+        }
+        await Promise.all(promises);
+      }
       await UploadService.deleteById(upload.id);
       res.json({});
     } catch (err) {

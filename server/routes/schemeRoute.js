@@ -14,4 +14,8 @@ router
   .get(isAuthenticated, SchemeController.getByID)
   .put(isAuthenticated, SchemeController.update);
 
+router
+  .route("/byUpload/:id")
+  .get(isAuthenticated, SchemeController.getListByUploadID);
+
 module.exports = router;
