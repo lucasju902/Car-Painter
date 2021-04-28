@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { MouseModes } from "constant";
 
 const initialState = {
   frameSize: {
@@ -9,6 +10,7 @@ const initialState = {
   zoom: 1,
   pressedKey: null,
   boardRotate: 0,
+  mouseMode: MouseModes.DEFAULT,
 };
 
 export const slice = createSlice({
@@ -32,12 +34,14 @@ export const slice = createSlice({
         height: Math.max(size.height, originSize.height),
       };
     },
-
     setPaintingGuides: (state, action) => {
       state.paintingGuides = [...action.payload];
     },
     setZoom: (state, action) => {
       state.zoom = action.payload;
+    },
+    setMouseMode: (state, action) => {
+      state.mouseMode = action.payload;
     },
   },
 });
@@ -49,6 +53,7 @@ export const {
   setZoom,
   setPressedKey,
   setBoardRotate,
+  setMouseMode,
 } = slice.actions;
 
 export default slice.reducer;

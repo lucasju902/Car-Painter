@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
-import { setZoom } from "redux/reducers/boardReducer";
+import { setZoom, setMouseMode } from "redux/reducers/boardReducer";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -11,22 +11,37 @@ import {
   Box,
   OutlinedInput,
   InputAdornment,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import {
   ToggleButton as MuiToggleButton,
   ToggleButtonGroup,
 } from "@material-ui/lab";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "react-feather";
 import {
   RotateLeft as RotateLeftIcon,
   RotateRight as RotateRightIcon,
 } from "@material-ui/icons";
-import { PaintingGuides } from "constant";
+import {
+  faSquare,
+  faCircle,
+  faStar,
+  faMousePointer,
+} from "@fortawesome/free-solid-svg-icons";
+import { PaintingGuides, MouseModes } from "constant";
 
 const Typography = styled(MuiTypography)(spacing);
 const ToggleButton = styled(MuiToggleButton)(spacing);
 const Button = styled(MuiButton)(spacing);
 const IconButton = styled(MuiIconButton)(spacing);
+const CustomSelect = styled(Select)`
+  .MuiSelect-select {
+    padding-left: 10px;
+  }
+  margin: 0 10px;
+`;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -44,6 +59,25 @@ const CustomOutlinedInput = styled(OutlinedInput)`
   }
 `;
 
+const modes = [
+  {
+    value: MouseModes.DEFAULT,
+    icon: faMousePointer,
+  },
+  {
+    value: MouseModes.RECT,
+    icon: faSquare,
+  },
+  {
+    value: MouseModes.CIRCLE,
+    icon: faCircle,
+  },
+  {
+    value: MouseModes.STAR,
+    icon: faStar,
+  },
+];
+
 const Toolbar = (props) => {
   const {
     onZoomIn,
@@ -58,6 +92,7 @@ const Toolbar = (props) => {
   );
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
+  const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
 
   const handleChangePaintingGuides = (event, newFormats) => {
     onChangePaintingGuides(newFormats);
@@ -76,6 +111,9 @@ const Toolbar = (props) => {
       if (newBoardRotate < 0) newBoardRotate = 270;
     }
     onChangeBoardRotation(newBoardRotate);
+  };
+  const handleModeChange = (event) => {
+    dispatch(setMouseMode(event.target.value));
   };
 
   return (
@@ -122,6 +160,23 @@ const Toolbar = (props) => {
           </ToggleButtonGroup>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
+          <CustomSelect
+            value={mouseMode}
+            onChange={handleModeChange}
+            renderValue={(value) => {
+              const mode = modes.find((item) => item.value === value);
+              if (!mode) {
+                return <></>;
+              }
+              return <FontAwesomeIcon icon={mode.icon} />;
+            }}
+          >
+            {modes.map((mode) => (
+              <MenuItem value={mode.value} key={mode.value}>
+                <FontAwesomeIcon icon={mode.icon} />
+              </MenuItem>
+            ))}
+          </CustomSelect>
           <Button mr={2} variant="outlined">
             SHORTCUTS
           </Button>

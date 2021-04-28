@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
@@ -11,19 +11,29 @@ import CarParts from "./layers/CarParts";
 import BasePaints from "./layers/BasePaints";
 import Overlays from "./layers/Overlays";
 import LogosAndTexts from "./layers/LogosAndTexts";
+import Shapes from "./layers/Shapes";
 import TransformerComponent from "components/TransformerComponent";
 
-import { setFrameSizeToMax, setZoom } from "redux/reducers/boardReducer";
+import {
+  setFrameSizeToMax,
+  setMouseMode,
+  setZoom,
+} from "redux/reducers/boardReducer";
 import { insertToLoadedList as insertToLoadedFontList } from "redux/reducers/fontReducer";
 import {
   setCurrent as setCurrentLayer,
   updateLayer,
+  createShape,
+  setDrawingLayer,
 } from "redux/reducers/layerReducer";
+import { MouseModes, LayerTypes } from "constant";
 
 const Board = () => {
+  const scaleBy = 1.2;
   const stageRef = useRef(null);
   const dispatch = useDispatch();
   const { width, height, ref } = useResizeDetector();
+
   const frameSize = useSelector((state) => state.boardReducer.frameSize);
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const paintingGuides = useSelector(
@@ -31,27 +41,77 @@ const Board = () => {
   );
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
+  const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
-  const layerList = useSelector((state) => state.layerReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
   const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
+  const layerList = useSelector((state) => state.layerReducer.list);
   const currentLayer = useSelector((state) => state.layerReducer.current);
-
-  const scaleBy = 1.2;
+  const drawingLayer = useSelector((state) => state.layerReducer.drawingLayer);
 
   const handleMouseDown = (e) => {
     // console.log("Mouse Down");
-    const clickedOnEmpty = e.target === e.target.getStage();
-    if (clickedOnEmpty && currentLayer) {
-      dispatch(setCurrentLayer(null));
+    if (mouseMode === MouseModes.DEFAULT) {
+      const clickedOnEmpty = e.target === e.target.getStage();
+      if (clickedOnEmpty && currentLayer) {
+        dispatch(setCurrentLayer(null));
+      }
+    }
+  };
+  const handleContentMouseDown = (e) => {
+    // console.log("Mouse Down");
+    if (mouseMode !== MouseModes.DEFAULT) {
+      console.log(stageRef.current);
+      const offsetX = stageRef.current.attrs.x - stageRef.current.attrs.offsetX;
+      const offsetY = stageRef.current.attrs.y - stageRef.current.attrs.offsetY;
+      let newLayer = {
+        layer_type: LayerTypes.SHAPE,
+        layer_data: {
+          type: mouseMode,
+          name: mouseMode,
+          left: e.evt.layerX - offsetX,
+          top: e.evt.layerY - offsetY,
+          width: 0,
+          height: 0,
+          color: "#000000",
+          scolor: "#000000",
+          stroke: 1,
+          shadowColor: null,
+          shadowBlur: 0,
+          shadowOpacity: 1,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+        },
+      };
+      dispatch(setDrawingLayer(newLayer));
     }
   };
   const handleMouseMove = (e) => {
     // console.log("Mouse Move");
+
+    if (mouseMode !== MouseModes.DEFAULT && drawingLayer) {
+      const offsetX = stageRef.current.attrs.x - stageRef.current.attrs.offsetX;
+      const offsetY = stageRef.current.attrs.y - stageRef.current.attrs.offsetY;
+      let width = e.evt.layerX - offsetX - drawingLayer.layer_data.left;
+      let height = e.evt.layerY - offsetY - drawingLayer.layer_data.top;
+      let layer = {
+        ...drawingLayer,
+        layer_data: {
+          ...drawingLayer.layer_data,
+          width: width,
+          height: height,
+        },
+      };
+      dispatch(setDrawingLayer(layer));
+    }
   };
   const handleMouseUp = (e) => {
     // console.log("Mouse Up");
+    if (mouseMode !== MouseModes.DEFAULT && drawingLayer) {
+      dispatch(createShape(currentScheme.id, drawingLayer));
+      dispatch(setMouseMode(MouseModes.DEFAULT));
+    }
   };
   const handleZoomStage = (event) => {
     event.evt.preventDefault();
@@ -120,9 +180,10 @@ const Board = () => {
       <Stage
         width={width}
         height={height}
-        onMouseDown={handleMouseDown}
-        onMousemove={handleMouseMove}
-        onMouseup={handleMouseUp}
+        onMousedown={handleMouseDown}
+        onContentMousedown={handleContentMouseDown}
+        onContentMousemove={handleMouseMove}
+        onContentMouseup={handleMouseUp}
         onTouchStart={handleMouseDown}
         onWheel={handleZoomStage}
         scaleX={zoom || 1}
@@ -133,7 +194,7 @@ const Board = () => {
         offsetX={width / 2}
         offsetY={height / 2}
         ref={stageRef}
-        draggable
+        draggable={mouseMode === MouseModes.DEFAULT}
       >
         <Layer>
           {/* Background */}
@@ -172,7 +233,14 @@ const Board = () => {
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
           />
-
+          <Shapes
+            layers={layerList}
+            drawingLayer={drawingLayer}
+            currentLayer={currentLayer}
+            boardRotate={boardRotate}
+            setCurrentLayer={handleLayerSelect}
+            onChange={handleLayerDataChange}
+          />
           <LogosAndTexts
             layers={layerList}
             fonts={fontList}
@@ -184,7 +252,6 @@ const Board = () => {
             onChange={handleLayerDataChange}
             onFontLoad={handleAddFont}
           />
-
           <PaintingGuideTop
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}

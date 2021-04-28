@@ -16,6 +16,7 @@ export const LayerTypes = {
   OVERLAY: 4,
   UPLOAD: 5,
   CAR: 6,
+  SHAPE: 7,
 };
 
 export const AllowedLayerProps = {
@@ -88,6 +89,29 @@ export const AllowedLayerProps = {
     "layer_data.shadowOffsetX",
     "layer_data.shadowOffsetY",
   ],
+  [LayerTypes.SHAPE]: [
+    "layer_visible",
+    "layer_locked",
+    "layer_data",
+    "layer_data.name",
+    "layer_data.width",
+    "layer_data.height",
+    "layer_data.left",
+    "layer_data.top",
+    "layer_data.rotation",
+    "layer_data.flop",
+    "layer_data.flip",
+    "layer_data.opacity",
+    "layer_data.color",
+    "layer_data.stroke",
+    "layer_data.scolor",
+    "layer_data.shadowColor",
+    "layer_data.shadowBlur",
+    "layer_data.shadowOpacity",
+    "layer_data.shadowBlur",
+    "layer_data.shadowOffsetX",
+    "layer_data.shadowOffsetY",
+  ],
   [LayerTypes.UPLOAD]: [
     "layer_visible",
     "layer_locked",
@@ -153,4 +177,21 @@ export const DialogTypes = {
   LOGO: "LOGO",
   UPLOAD: "UPLOAD",
   TEXT: "TEXT",
+};
+
+export const MouseModes = {
+  DEFAULT: "DEFAULT",
+  RECT: "Rectangle",
+  CIRCLE: "Circle",
+  ELLIPSE: "Ellipse",
+  REGULARPOLYGON: "Regular Polygon",
+  ARROW: "Arrow",
+  LINE: "Line",
+  WEDGE: "Wedge",
+  POLYGON: "Polygon",
+  SOFTPOLYGON: "Soft Polygon",
+  STAR: "Star",
+  RING: "Ring",
+  ARC: "Arc",
+  PEN: "Pen",
 };

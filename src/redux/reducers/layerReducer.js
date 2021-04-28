@@ -1,13 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { setMessage } from "./messageReducer";
-import LayerService from "services/layerService";
 import _ from "lodash";
+import { createSlice } from "@reduxjs/toolkit";
+
 import { LayerTypes } from "constant";
+import LayerService from "services/layerService";
+import { setMessage } from "./messageReducer";
 
 const initialState = {
   list: [],
   current: null,
   clipboard: null,
+  drawingLayer: null,
   loading: false,
 };
 
@@ -85,6 +87,9 @@ export const slice = createSlice({
       }
       state.clipboard = layer;
     },
+    setDrawingLayer: (state, action) => {
+      state.drawingLayer = action.payload;
+    },
   },
 });
 
@@ -92,6 +97,7 @@ const { setLoading } = slice.actions;
 export const {
   setCurrent,
   setList,
+  setDrawingLayer,
   insertToList,
   concatList,
   updateListItem,
@@ -339,6 +345,30 @@ export const cloneLayer = (layerToClone) => async (dispatch, getState) => {
     }
     dispatch(setLoading(false));
   }
+};
+
+export const createShape = (schemeID, newlayer) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const layer = await LayerService.createLayer({
+      ...newlayer,
+      layer_type: LayerTypes.SHAPE,
+      scheme_id: schemeID,
+      upload_id: 0,
+      layer_visible: 1,
+      layer_locked: 0,
+      layer_order: 0,
+      time_modified: 0,
+      confirm: "",
+      layer_data: newlayer.layer_data,
+    });
+    dispatch(insertToList(layer));
+    dispatch(setCurrent(layer));
+    dispatch(setDrawingLayer(null));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
 };
 
 export const updateLayer = (layer) => async (dispatch, getState) => {

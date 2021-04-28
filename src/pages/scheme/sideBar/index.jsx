@@ -140,6 +140,12 @@ const Sidebar = (props) => {
       <PartGroup
         title="Shapes"
         layerList={layerList.filter(
+          (item) => item.layer_type === LayerTypes.SHAPE
+        )}
+      />
+      <PartGroup
+        title="Overlays"
+        layerList={layerList.filter(
           (item) => item.layer_type === LayerTypes.OVERLAY
         )}
         actions={[
