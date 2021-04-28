@@ -40,3 +40,28 @@ export const colorValidator = (color) => {
   if (!color || !color.length) return true;
   return validateColor(color);
 };
+
+export const getRelativePointerPosition = (node) => {
+  var transform = node.getAbsoluteTransform().copy();
+  // to detect relative position we need to invert transform
+  transform.invert();
+  // get pointer (say mouse or touch) position
+  var pos = node.getStage().getPointerPosition();
+  // now we can find relative point
+  return transform.point(pos);
+};
+
+export const getRelativeShadowOffset = (boardRotate, offset) => {
+  let shadowOffset = { ...offset };
+  if (boardRotate === 90) {
+    shadowOffset.x = -offset.y;
+    shadowOffset.y = offset.x;
+  } else if (boardRotate === 180) {
+    shadowOffset.x = -offset.x;
+    shadowOffset.y = -offset.y;
+  } else if (boardRotate === 270) {
+    shadowOffset.x = offset.y;
+    shadowOffset.y = -offset.x;
+  }
+  return shadowOffset;
+};

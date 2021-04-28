@@ -111,6 +111,10 @@ export const AllowedLayerProps = {
     "layer_data.shadowBlur",
     "layer_data.shadowOffsetX",
     "layer_data.shadowOffsetY",
+    "layer_data.cornerTopLeft",
+    "layer_data.cornerTopRight",
+    "layer_data.cornerBottomLeft",
+    "layer_data.cornerBottomRight",
   ],
   [LayerTypes.UPLOAD]: [
     "layer_visible",

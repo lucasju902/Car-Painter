@@ -7,7 +7,6 @@ import { Image } from "react-konva";
 const URLImage = ({
   src,
   tellSize,
-  isSelected,
   onSelect,
   onChange,
   filterColor,

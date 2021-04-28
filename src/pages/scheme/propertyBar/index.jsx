@@ -18,6 +18,7 @@ import StrokeProperty from "./StrokeProperty";
 import ColorProperty from "./ColorProperty";
 import RotationProperty from "./RotationProperty";
 import ShadowProperty from "./ShadowProperty";
+import CornerProperty from "./CornerProperty";
 
 const Wrapper = styled(Box)`
   width: 350px;
@@ -101,6 +102,10 @@ const PropertyBar = () => {
             shadowOpacity: 1,
             shadowOffsetX: 0,
             shadowOffsetY: 0,
+            cornerTopLeft: 0,
+            cornerTopRight: 0,
+            cornerBottomLeft: 0,
+            cornerBottomRight: 0,
           },
           AllowedLayerProps[currentLayer.layer_type]
             .filter((item) => item.includes("layer_data."))
@@ -136,28 +141,24 @@ const PropertyBar = () => {
                   (value && value.length) ||
                   currentLayer.layer_type !== LayerTypes.TEXT
               ),
-              width: Yup.number()
-                .moreThan(0, "Must be greater than 0")
-                .test(
-                  "width-validation",
-                  "Required",
-                  (value) =>
-                    value ||
-                    currentLayer.layer_type === LayerTypes.TEXT ||
-                    currentLayer.layer_type === LayerTypes.CAR ||
-                    currentLayer.layer_type === LayerTypes.BASE
-                ),
-              height: Yup.number()
-                .moreThan(0, "Must be greater than 0")
-                .test(
-                  "height-validation",
-                  "Required",
-                  (value) =>
-                    value ||
-                    currentLayer.layer_type === LayerTypes.TEXT ||
-                    currentLayer.layer_type === LayerTypes.CAR ||
-                    currentLayer.layer_type === LayerTypes.BASE
-                ),
+              width: Yup.number().test(
+                "width-validation",
+                "Required",
+                (value) =>
+                  value ||
+                  currentLayer.layer_type === LayerTypes.TEXT ||
+                  currentLayer.layer_type === LayerTypes.CAR ||
+                  currentLayer.layer_type === LayerTypes.BASE
+              ),
+              height: Yup.number().test(
+                "height-validation",
+                "Required",
+                (value) =>
+                  value ||
+                  currentLayer.layer_type === LayerTypes.TEXT ||
+                  currentLayer.layer_type === LayerTypes.CAR ||
+                  currentLayer.layer_type === LayerTypes.BASE
+              ),
               left: Yup.number(),
               top: Yup.number(),
               rotation: Yup.number()
@@ -196,6 +197,10 @@ const PropertyBar = () => {
               shadowOpacity: Yup.number(),
               shadowOffsetX: Yup.number(),
               shadowOffsetY: Yup.number(),
+              cornerTopLeft: Yup.number(),
+              cornerTopRight: Yup.number(),
+              cornerBottomLeft: Yup.number(),
+              cornerBottomRight: Yup.number(),
             }),
           })}
           enableReinitialize
@@ -238,6 +243,7 @@ const PropertyBar = () => {
               <PositionProperty {...formProps} />
               <RotationProperty {...formProps} />
               <ShadowProperty {...formProps} />
+              <CornerProperty {...formProps} />
             </Form>
           )}
         </Formik>

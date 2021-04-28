@@ -3,8 +3,9 @@ import _ from "lodash";
 
 import URLImage from "components/URLImage";
 import TextNode from "components/TextNode";
-import { LayerTypes } from "constant";
 import config from "config";
+import { LayerTypes, MouseModes } from "constant";
+import { getRelativeShadowOffset } from "helper";
 
 const LogosAndTexts = (props) => {
   const {
@@ -12,7 +13,7 @@ const LogosAndTexts = (props) => {
     loadedFontList,
     fonts,
     frameSize,
-    currentLayer,
+    mouseMode,
     setCurrentLayer,
     boardRotate,
     onChange,
@@ -29,18 +30,10 @@ const LogosAndTexts = (props) => {
   return (
     <>
       {_.orderBy(filteredLayers, ["layer_order"], ["desc"]).map((layer) => {
-        let shadowOffsetX = layer.layer_data.shadowOffsetX;
-        let shadowOffsetY = layer.layer_data.shadowOffsetY;
-        if (boardRotate === 90) {
-          shadowOffsetX = -layer.layer_data.shadowOffsetY;
-          shadowOffsetY = layer.layer_data.shadowOffsetX;
-        } else if (boardRotate === 180) {
-          shadowOffsetX = -layer.layer_data.shadowOffsetX;
-          shadowOffsetY = -layer.layer_data.shadowOffsetY;
-        } else if (boardRotate === 270) {
-          shadowOffsetX = layer.layer_data.shadowOffsetY;
-          shadowOffsetY = -layer.layer_data.shadowOffsetX;
-        }
+        let shadowOffset = getRelativeShadowOffset(boardRotate, {
+          x: layer.layer_data.shadowOffsetX,
+          y: layer.layer_data.shadowOffsetY,
+        });
 
         if (layer.layer_type !== LayerTypes.TEXT) {
           return (
@@ -61,12 +54,13 @@ const LogosAndTexts = (props) => {
               shadowColor={layer.layer_data.shadowColor}
               shadowBlur={layer.layer_data.shadowBlur}
               shadowOpacity={layer.layer_data.shadowOpacity}
-              shadowOffsetX={shadowOffsetX}
-              shadowOffsetY={shadowOffsetY}
+              shadowOffsetX={shadowOffset.x}
+              shadowOffsetY={shadowOffset.y}
               opacity={layer.layer_data.opacity}
               onSelect={() => setCurrentLayer(layer)}
-              isSelected={currentLayer && currentLayer.id === layer.id}
-              listening={!layer.layer_locked}
+              listening={
+                !layer.layer_locked && mouseMode === MouseModes.DEFAULT
+              }
               onChange={(values) => onChange(layer, values)}
             />
           );
@@ -111,11 +105,10 @@ const LogosAndTexts = (props) => {
             shadowColor={layer.layer_data.shadowColor}
             shadowBlur={layer.layer_data.shadowBlur}
             shadowOpacity={layer.layer_data.shadowOpacity}
-            shadowOffsetX={shadowOffsetX}
-            shadowOffsetY={shadowOffsetY}
+            shadowOffsetX={shadowOffset.x}
+            shadowOffsetY={shadowOffset.y}
             onSelect={() => setCurrentLayer(layer)}
-            isSelected={currentLayer && currentLayer.id === layer.id}
-            listening={!layer.layer_locked}
+            listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
           />
         );

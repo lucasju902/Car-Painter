@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
@@ -27,6 +27,7 @@ import {
   setDrawingLayer,
 } from "redux/reducers/layerReducer";
 import { MouseModes, LayerTypes } from "constant";
+import { getRelativePointerPosition } from "helper";
 
 const Board = () => {
   const scaleBy = 1.2;
@@ -62,16 +63,14 @@ const Board = () => {
   const handleContentMouseDown = (e) => {
     // console.log("Mouse Down");
     if (mouseMode !== MouseModes.DEFAULT) {
-      console.log(stageRef.current);
-      const offsetX = stageRef.current.attrs.x - stageRef.current.attrs.offsetX;
-      const offsetY = stageRef.current.attrs.y - stageRef.current.attrs.offsetY;
+      const position = getRelativePointerPosition(stageRef.current);
       let newLayer = {
         layer_type: LayerTypes.SHAPE,
         layer_data: {
           type: mouseMode,
           name: mouseMode,
-          left: e.evt.layerX - offsetX,
-          top: e.evt.layerY - offsetY,
+          left: position.x,
+          top: position.y,
           width: 0,
           height: 0,
           color: "#000000",
@@ -82,6 +81,10 @@ const Board = () => {
           shadowOpacity: 1,
           shadowOffsetX: 0,
           shadowOffsetY: 0,
+          cornerTopLeft: 0,
+          cornerTopRight: 0,
+          cornerBottomLeft: 0,
+          cornerBottomRight: 0,
         },
       };
       dispatch(setDrawingLayer(newLayer));
@@ -91,10 +94,10 @@ const Board = () => {
     // console.log("Mouse Move");
 
     if (mouseMode !== MouseModes.DEFAULT && drawingLayer) {
-      const offsetX = stageRef.current.attrs.x - stageRef.current.attrs.offsetX;
-      const offsetY = stageRef.current.attrs.y - stageRef.current.attrs.offsetY;
-      let width = e.evt.layerX - offsetX - drawingLayer.layer_data.left;
-      let height = e.evt.layerY - offsetY - drawingLayer.layer_data.top;
+      const position = getRelativePointerPosition(stageRef.current);
+      const width = position.x - drawingLayer.layer_data.left;
+      const height = position.y - drawingLayer.layer_data.top;
+
       let layer = {
         ...drawingLayer,
         layer_data: {
@@ -229,15 +232,15 @@ const Board = () => {
             handleImageSize={handleImageSize}
             frameSize={frameSize}
             boardRotate={boardRotate}
-            currentLayer={currentLayer}
+            mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
           />
           <Shapes
             layers={layerList}
             drawingLayer={drawingLayer}
-            currentLayer={currentLayer}
             boardRotate={boardRotate}
+            mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
           />
@@ -245,8 +248,8 @@ const Board = () => {
             layers={layerList}
             fonts={fontList}
             loadedFontList={loadedFontList}
-            currentLayer={currentLayer}
             frameSize={frameSize}
+            mouseMode={mouseMode}
             boardRotate={boardRotate}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}

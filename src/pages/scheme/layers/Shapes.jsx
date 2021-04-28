@@ -2,7 +2,8 @@ import React from "react";
 import _ from "lodash";
 
 import Shape from "components/Shape";
-import { LayerTypes } from "constant";
+import { LayerTypes, MouseModes } from "constant";
+import { getRelativeShadowOffset } from "helper";
 
 const Shapes = (props) => {
   const {
@@ -10,6 +11,7 @@ const Shapes = (props) => {
     drawingLayer,
     setCurrentLayer,
     boardRotate,
+    mouseMode,
     onChange,
   } = props;
 
@@ -22,18 +24,10 @@ const Shapes = (props) => {
         ["layer_order"],
         ["desc"]
       ).map((layer) => {
-        let shadowOffsetX = layer.layer_data.shadowOffsetX;
-        let shadowOffsetY = layer.layer_data.shadowOffsetY;
-        if (boardRotate === 90) {
-          shadowOffsetX = -layer.layer_data.shadowOffsetY;
-          shadowOffsetY = layer.layer_data.shadowOffsetX;
-        } else if (boardRotate === 180) {
-          shadowOffsetX = -layer.layer_data.shadowOffsetX;
-          shadowOffsetY = -layer.layer_data.shadowOffsetY;
-        } else if (boardRotate === 270) {
-          shadowOffsetX = layer.layer_data.shadowOffsetY;
-          shadowOffsetY = -layer.layer_data.shadowOffsetX;
-        }
+        let shadowOffset = getRelativeShadowOffset(boardRotate, {
+          x: layer.layer_data.shadowOffsetX,
+          y: layer.layer_data.shadowOffsetY,
+        });
 
         return (
           <Shape
@@ -51,14 +45,20 @@ const Shapes = (props) => {
             shadowColor={layer.layer_data.shadowColor}
             shadowBlur={layer.layer_data.shadowBlur}
             shadowOpacity={layer.layer_data.shadowOpacity}
-            shadowOffsetX={shadowOffsetX}
-            shadowOffsetY={shadowOffsetY}
+            shadowOffsetX={shadowOffset.x}
+            shadowOffsetY={shadowOffset.y}
             fill={layer.layer_data.color}
             strokeWidth={layer.layer_data.stroke}
             stroke={layer.layer_data.scolor}
             strokeEnabled={true}
+            cornerRadius={[
+              layer.layer_data.cornerTopLeft,
+              layer.layer_data.cornerTopRight,
+              layer.layer_data.cornerBottomLeft,
+              layer.layer_data.cornerBottomRight,
+            ]}
             onSelect={() => setCurrentLayer(layer)}
-            listening={!layer.layer_locked}
+            listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
           />
         );

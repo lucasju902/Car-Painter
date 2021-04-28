@@ -2,15 +2,16 @@ import React from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
-import { LayerTypes } from "constant";
+import { LayerTypes, MouseModes } from "constant";
 import config from "config";
+import { getRelativeShadowOffset } from "helper";
 
 const Overlays = (props) => {
   const {
     layers,
-    currentLayer,
     setCurrentLayer,
     frameSize,
+    mouseMode,
     boardRotate,
     onChange,
   } = props;
@@ -24,18 +25,10 @@ const Overlays = (props) => {
         ["layer_order"],
         ["desc"]
       ).map((layer) => {
-        let shadowOffsetX = layer.layer_data.shadowOffsetX;
-        let shadowOffsetY = layer.layer_data.shadowOffsetY;
-        if (boardRotate === 90) {
-          shadowOffsetX = -layer.layer_data.shadowOffsetY;
-          shadowOffsetY = layer.layer_data.shadowOffsetX;
-        } else if (boardRotate === 180) {
-          shadowOffsetX = -layer.layer_data.shadowOffsetX;
-          shadowOffsetY = -layer.layer_data.shadowOffsetY;
-        } else if (boardRotate === 270) {
-          shadowOffsetX = layer.layer_data.shadowOffsetY;
-          shadowOffsetY = -layer.layer_data.shadowOffsetX;
-        }
+        let shadowOffset = getRelativeShadowOffset(boardRotate, {
+          x: layer.layer_data.shadowOffsetX,
+          y: layer.layer_data.shadowOffsetY,
+        });
 
         return (
           <URLImage
@@ -56,11 +49,10 @@ const Overlays = (props) => {
             shadowColor={layer.layer_data.shadowColor}
             shadowBlur={layer.layer_data.shadowBlur}
             shadowOpacity={layer.layer_data.shadowOpacity}
-            shadowOffsetX={shadowOffsetX}
-            shadowOffsetY={shadowOffsetY}
+            shadowOffsetX={shadowOffset.x}
+            shadowOffsetY={shadowOffset.y}
             onSelect={() => setCurrentLayer(layer)}
-            isSelected={currentLayer && currentLayer.id === layer.id}
-            listening={!layer.layer_locked}
+            listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             frameSize={frameSize}
             onChange={(values) => onChange(layer, values)}
           />
