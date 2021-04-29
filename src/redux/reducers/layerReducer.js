@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
 
-import { LayerTypes } from "constant";
+import { LayerTypes, DefaultLayer } from "constant";
 import LayerService from "services/layerService";
 import { setMessage } from "./messageReducer";
 
@@ -117,20 +117,16 @@ export const createLayersFromBasePaint = (schemeID, base) => async (
     // let layer_order = order;
     for (let base_item of base.base_data) {
       const layer = await LayerService.createLayer({
+        ...DefaultLayer,
         layer_type: LayerTypes.BASE,
         scheme_id: schemeID,
-        upload_id: 0,
         layer_data: JSON.stringify({
+          ...DefaultLayer.layer_data,
           ...base_item,
-          color: undefined,
+          // color: undefined,
           id: base.id,
           opacity: 1,
         }),
-        layer_visible: 1,
-        layer_locked: 0,
-        layer_order: 0,
-        time_modified: 0,
-        confirm: "",
       });
       dispatch(insertToList(layer));
       dispatch(setCurrent(layer));
@@ -150,31 +146,19 @@ export const createLayerFromShape = (schemeID, shape, frameSize) => async (
   try {
     const boardRotate = getState().boardReducer.boardRotate;
     const layer = await LayerService.createLayer({
+      ...DefaultLayer,
       layer_type: LayerTypes.OVERLAY,
       scheme_id: schemeID,
-      upload_id: 0,
       layer_data: JSON.stringify({
+        ...DefaultLayer.layer_data,
         id: shape.id,
         name: shape.name,
         rotation: -boardRotate,
-        flip: 0,
-        flop: 0,
         left: frameSize.width / 2,
         top: frameSize.height / 2,
         source_file: shape.overlay_file,
         preview_file: shape.overlay_thumb,
-        opacity: 1,
-        shadowColor: null,
-        shadowBlur: 0,
-        shadowOpacity: 1,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
       }),
-      layer_visible: 1,
-      layer_locked: 0,
-      layer_order: 0,
-      time_modified: 0,
-      confirm: "",
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -193,31 +177,19 @@ export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
   try {
     const boardRotate = getState().boardReducer.boardRotate;
     const layer = await LayerService.createLayer({
+      ...DefaultLayer,
       layer_type: LayerTypes.LOGO,
       scheme_id: schemeID,
-      upload_id: 0,
       layer_data: JSON.stringify({
+        ...DefaultLayer.layer_data,
         id: logo.id,
         name: logo.name,
         rotation: -boardRotate,
-        flip: 0,
-        flop: 0,
         left: frameSize.width / 2,
         top: frameSize.height / 2,
         source_file: logo.source_file,
         preview_file: logo.preview_file,
-        opacity: 1,
-        shadowColor: null,
-        shadowBlur: 0,
-        shadowOpacity: 1,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
       }),
-      layer_visible: 1,
-      layer_locked: 0,
-      layer_order: 0,
-      time_modified: 0,
-      confirm: "",
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -236,34 +208,22 @@ export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
   try {
     const boardRotate = getState().boardReducer.boardRotate;
     const layer = await LayerService.createLayer({
+      ...DefaultLayer,
       layer_type: LayerTypes.UPLOAD,
       scheme_id: schemeID,
-      upload_id: 0,
       layer_data: JSON.stringify({
+        ...DefaultLayer.layer_data,
         id: upload.id,
         name: upload.file_name.substring(
           upload.file_name.lastIndexOf("uploads/") + "uploads/".length,
           upload.file_name.lastIndexOf(".")
         ),
         rotation: -boardRotate,
-        flip: 0,
-        flop: 0,
         left: frameSize.width / 2,
         top: frameSize.height / 2,
         source_file: upload.file_name,
         preview_file: upload.file_name,
-        opacity: 1,
-        shadowColor: null,
-        shadowBlur: 0,
-        shadowOpacity: 1,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
       }),
-      layer_visible: 1,
-      layer_locked: 0,
-      layer_order: 0,
-      time_modified: 0,
-      confirm: "",
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -282,31 +242,17 @@ export const createTextLayer = (schemeID, textObj, frameSize) => async (
   try {
     const boardRotate = getState().boardReducer.boardRotate;
     const layer = await LayerService.createLayer({
+      ...DefaultLayer,
       layer_type: LayerTypes.TEXT,
       scheme_id: schemeID,
-      upload_id: 0,
       layer_data: JSON.stringify({
+        ...DefaultLayer.layer_data,
         ...textObj,
         name: textObj.text,
         rotation: textObj.rotation - boardRotate,
         left: frameSize.width / 2,
         top: frameSize.height / 2,
-        opacity: 1,
-        scaleX: 1,
-        scaleY: 1,
-        flop: 0,
-        flip: 0,
-        shadowColor: null,
-        shadowBlur: 0,
-        shadowOpacity: 1,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
       }),
-      layer_visible: 1,
-      layer_locked: 0,
-      layer_order: 0,
-      time_modified: 0,
-      confirm: "",
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -351,16 +297,14 @@ export const createShape = (schemeID, newlayer) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     const layer = await LayerService.createLayer({
+      ...DefaultLayer,
       ...newlayer,
       layer_type: LayerTypes.SHAPE,
       scheme_id: schemeID,
-      upload_id: 0,
-      layer_visible: 1,
-      layer_locked: 0,
-      layer_order: 0,
-      time_modified: 0,
-      confirm: "",
-      layer_data: newlayer.layer_data,
+      layer_data: {
+        ...DefaultLayer.layer_data,
+        ...newlayer.layer_data,
+      },
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components/macro";
-import { AllowedLayerProps, MouseModes } from "constant";
+import { AllowedLayerProps, LayerTypes } from "constant";
 import { mathRound2 } from "helper";
 
 import {
@@ -29,21 +29,19 @@ const CornerProperty = (props) => {
     values,
   } = props;
   const [expanded, setExpanded] = useState(true);
-  console.log(values.layer_data.type);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      values.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[values.layer_type]
+        : AllowedLayerProps[values.layer_type][values.layer_data.type],
+    [values]
+  );
+
   if (
-    (!AllowedLayerProps[values.layer_type].includes(
-      "layer_data.cornerTopLeft"
-    ) &&
-      !AllowedLayerProps[values.layer_type].includes(
-        "layer_data.cornerTopRight"
-      ) &&
-      !AllowedLayerProps[values.layer_type].includes(
-        "layer_data.cornerBottomLeft"
-      ) &&
-      !AllowedLayerProps[values.layer_type].includes(
-        "layer_data.cornerBottomRight"
-      )) ||
-    values.layer_data.type !== MouseModes.RECT
+    !AllowedLayerTypes.includes("layer_data.cornerTopLeft") &&
+    !AllowedLayerTypes.includes("layer_data.cornerTopRight") &&
+    !AllowedLayerTypes.includes("layer_data.cornerBottomLeft") &&
+    !AllowedLayerTypes.includes("layer_data.cornerBottomRight")
   )
     return <></>;
   return (
@@ -54,9 +52,7 @@ const CornerProperty = (props) => {
       <AccordionDetails>
         <Grid container spacing={1}>
           <Grid item xs={6}>
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.cornerTopLeft"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.cornerTopLeft") ? (
               <CustomeTextField
                 name="layer_data.cornerTopLeft"
                 label="Top Left"
@@ -89,9 +85,7 @@ const CornerProperty = (props) => {
             )}
           </Grid>
           <Grid item xs={6}>
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.cornerTopRight"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.cornerTopRight") ? (
               <CustomeTextField
                 name="layer_data.cornerTopRight"
                 label="Top Right"
@@ -124,9 +118,7 @@ const CornerProperty = (props) => {
             )}
           </Grid>
           <Grid item xs={6}>
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.cornerBottomLeft"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.cornerBottomLeft") ? (
               <CustomeTextField
                 name="layer_data.cornerBottomLeft"
                 label="Bottom Left"
@@ -159,9 +151,7 @@ const CornerProperty = (props) => {
             )}
           </Grid>
           <Grid item xs={6}>
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.cornerBottomRight"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.cornerBottomRight") ? (
               <CustomeTextField
                 name="layer_data.cornerBottomRight"
                 label="Bottom Right"

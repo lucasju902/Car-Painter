@@ -6,10 +6,12 @@ import styled from "styled-components/macro";
 import { ReactSortable } from "react-sortablejs";
 import { spacing } from "@material-ui/system";
 
+import { MouseModes } from "constant";
 import {
   updateLayer,
   setCurrent as setCurrentLayer,
 } from "redux/reducers/layerReducer";
+import { setMouseMode } from "redux/reducers/boardReducer";
 
 import {
   Box,
@@ -114,6 +116,7 @@ const PartGroup = (props) => {
   };
   const selectLayer = (layer) => {
     dispatch(setCurrentLayer(layer));
+    dispatch(setMouseMode(MouseModes.DEFAULT));
   };
 
   return (

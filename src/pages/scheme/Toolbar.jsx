@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
 import { setZoom, setMouseMode } from "redux/reducers/boardReducer";
+import { setCurrent as setCurrentLayer } from "redux/reducers/layerReducer";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -58,6 +59,9 @@ const CustomOutlinedInput = styled(OutlinedInput)`
     width: 40px;
   }
 `;
+const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
+  transform: ${(props) => (props.stretch ? "scaleX(1.2) scaleY(0.8)" : "none")};
+`;
 
 const modes = [
   {
@@ -71,6 +75,11 @@ const modes = [
   {
     value: MouseModes.CIRCLE,
     icon: faCircle,
+  },
+  {
+    value: MouseModes.ELLIPSE,
+    icon: faCircle,
+    stretch: true,
   },
   {
     value: MouseModes.STAR,
@@ -114,6 +123,9 @@ const Toolbar = (props) => {
   };
   const handleModeChange = (event) => {
     dispatch(setMouseMode(event.target.value));
+    if (event.target.value !== MouseModes.DEFAULT) {
+      dispatch(setCurrentLayer(null));
+    }
   };
 
   return (
@@ -168,12 +180,20 @@ const Toolbar = (props) => {
               if (!mode) {
                 return <></>;
               }
-              return <FontAwesomeIcon icon={mode.icon} />;
+              return (
+                <CustomFontAwesomeIcon
+                  icon={mode.icon}
+                  stretch={mode.stretch}
+                />
+              );
             }}
           >
             {modes.map((mode) => (
               <MenuItem value={mode.value} key={mode.value}>
-                <FontAwesomeIcon icon={mode.icon} />
+                <CustomFontAwesomeIcon
+                  icon={mode.icon}
+                  stretch={mode.stretch}
+                />
               </MenuItem>
             ))}
           </CustomSelect>

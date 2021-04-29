@@ -1,9 +1,19 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 
+import { MouseModes } from "constant";
 import { Transformer } from "react-konva";
 
 const TransformerComponent = ({ selectedLayer, pressedKey }) => {
   const trRef = useRef();
+  const keepRatio = useMemo(
+    () =>
+      selectedLayer &&
+      (selectedLayer.layer_data.sizeLocked ||
+        selectedLayer.layer_data.scaleLocked ||
+        selectedLayer.layer_data.type === MouseModes.CIRCLE ||
+        pressedKey === "shift"),
+    [selectedLayer, pressedKey]
+  );
 
   const checkNode = () => {
     if (selectedLayer) {
@@ -88,17 +98,9 @@ const TransformerComponent = ({ selectedLayer, pressedKey }) => {
     return (
       <Transformer
         ref={trRef}
-        keepRatio={
-          selectedLayer.layer_data.sizeLocked ||
-          selectedLayer.layer_data.scaleLocked ||
-          pressedKey === "shift"
-            ? true
-            : false
-        }
+        keepRatio={keepRatio}
         enabledAnchors={
-          selectedLayer.layer_data.sizeLocked ||
-          selectedLayer.layer_data.scaleLocked ||
-          pressedKey === "shift"
+          keepRatio
             ? ["top-left", "top-right", "bottom-left", "bottom-right"]
             : [
                 "top-left",

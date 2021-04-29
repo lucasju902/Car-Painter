@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
-import { AllowedLayerProps } from "constant";
+import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
@@ -25,11 +25,18 @@ const RotationProperty = (props) => {
     values,
   } = props;
   const [expanded, setExpanded] = useState(true);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      values.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[values.layer_type]
+        : AllowedLayerProps[values.layer_type][values.layer_data.type],
+    [values]
+  );
 
   if (
-    !AllowedLayerProps[values.layer_type].includes("layer_data.rotation") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.flip") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.flop")
+    !AllowedLayerTypes.includes("layer_data.rotation") &&
+    !AllowedLayerTypes.includes("layer_data.flip") &&
+    !AllowedLayerTypes.includes("layer_data.flop")
   )
     return <></>;
   return (
@@ -39,9 +46,7 @@ const RotationProperty = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.rotation"
-          ) ? (
+          {AllowedLayerTypes.includes("layer_data.rotation") ? (
             <SliderInput
               label="Rotation"
               min={-179}
@@ -53,9 +58,7 @@ const RotationProperty = (props) => {
             <></>
           )}
           <Box display="flex" justifyContent="space-around">
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.flop"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.flop") ? (
               <FormControl component="fieldset">
                 <FormControlLabel
                   control={
@@ -77,9 +80,7 @@ const RotationProperty = (props) => {
             ) : (
               <></>
             )}
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.flip"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.flip") ? (
               <FormControl component="fieldset">
                 <FormControlLabel
                   control={

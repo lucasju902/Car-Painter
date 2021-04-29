@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components/macro";
-import { AllowedLayerProps } from "constant";
+import { AllowedLayerProps, LayerTypes } from "constant";
 import { mathRound2 } from "helper";
 
 import {
@@ -33,17 +33,20 @@ const ShadowProperty = (props) => {
     values,
   } = props;
   const [expanded, setExpanded] = useState(true);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      values.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[values.layer_type]
+        : AllowedLayerProps[values.layer_type][values.layer_data.type],
+    [values]
+  );
 
   if (
-    !AllowedLayerProps[values.layer_type].includes("layer_data.shadowColor") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.shadowBlur") &&
-    !AllowedLayerProps[values.layer_type].includes(
-      "layer_data.shadowOpacity"
-    ) &&
-    !AllowedLayerProps[values.layer_type].includes(
-      "layer_data.shadowOffsetX"
-    ) &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.shadowOffsetY")
+    !AllowedLayerTypes.includes("layer_data.shadowColor") &&
+    !AllowedLayerTypes.includes("layer_data.shadowBlur") &&
+    !AllowedLayerTypes.includes("layer_data.shadowOpacity") &&
+    !AllowedLayerTypes.includes("layer_data.shadowOffsetX") &&
+    !AllowedLayerTypes.includes("layer_data.shadowOffsetY")
   )
     return <></>;
   return (
@@ -53,9 +56,7 @@ const ShadowProperty = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.shadowColor"
-          ) ? (
+          {AllowedLayerTypes.includes("layer_data.shadowColor") ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Typography variant="body1" color="textSecondary" mr={2}>
@@ -83,9 +84,7 @@ const ShadowProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.shadowBlur"
-          ) ? (
+          {AllowedLayerTypes.includes("layer_data.shadowBlur") ? (
             <CustomeTextField
               name="layer_data.shadowBlur"
               label="Shadow Blur"
@@ -116,9 +115,7 @@ const ShadowProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.shadowOpacity"
-          ) ? (
+          {AllowedLayerTypes.includes("layer_data.shadowOpacity") ? (
             <SliderInput
               label="Shadow Opacity"
               min={0}
@@ -132,9 +129,7 @@ const ShadowProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.shadowOffsetX"
-          ) ? (
+          {AllowedLayerTypes.includes("layer_data.shadowOffsetX") ? (
             <CustomeTextField
               name="layer_data.shadowOffsetX"
               label="Shadow OffsetX"
@@ -165,9 +160,7 @@ const ShadowProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.shadowOffsetY"
-          ) ? (
+          {AllowedLayerTypes.includes("layer_data.shadowOffsetY") ? (
             <CustomeTextField
               name="layer_data.shadowOffsetY"
               label="Shadow OffsetY"

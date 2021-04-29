@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import { AllowedLayerProps, LayerTypes } from "constant";
 
@@ -25,10 +25,17 @@ const ColorProperty = (props) => {
     values,
   } = props;
   const [expanded, setExpanded] = useState(true);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      values.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[values.layer_type]
+        : AllowedLayerProps[values.layer_type][values.layer_data.type],
+    [values]
+  );
 
   if (
-    !AllowedLayerProps[values.layer_type].includes("layer_data.color") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.opacity")
+    !AllowedLayerTypes.includes("layer_data.color") &&
+    !AllowedLayerTypes.includes("layer_data.opacity")
   )
     return <></>;
   return (
@@ -38,7 +45,7 @@ const ColorProperty = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerProps[values.layer_type].includes("layer_data.color") &&
+          {AllowedLayerTypes.includes("layer_data.color") &&
           values.layer_type !== LayerTypes.TEXT ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -61,9 +68,7 @@ const ColorProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes(
-            "layer_data.opacity"
-          ) ? (
+          {AllowedLayerTypes.includes("layer_data.opacity") ? (
             <SliderInput
               label="Opacity"
               min={0}

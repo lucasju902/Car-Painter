@@ -26,7 +26,7 @@ import {
   createShape,
   setDrawingLayer,
 } from "redux/reducers/layerReducer";
-import { MouseModes, LayerTypes } from "constant";
+import { MouseModes, LayerTypes, DefaultLayer } from "constant";
 import { getRelativePointerPosition } from "helper";
 
 const Board = () => {
@@ -65,26 +65,17 @@ const Board = () => {
     if (mouseMode !== MouseModes.DEFAULT) {
       const position = getRelativePointerPosition(stageRef.current);
       let newLayer = {
+        ...DefaultLayer,
         layer_type: LayerTypes.SHAPE,
         layer_data: {
+          ...DefaultLayer.layer_data,
           type: mouseMode,
           name: mouseMode,
           left: position.x,
           top: position.y,
-          width: 0,
-          height: 0,
           color: "#000000",
           scolor: "#000000",
           stroke: 1,
-          shadowColor: null,
-          shadowBlur: 0,
-          shadowOpacity: 1,
-          shadowOffsetX: 0,
-          shadowOffsetY: 0,
-          cornerTopLeft: 0,
-          cornerTopRight: 0,
-          cornerBottomLeft: 0,
-          cornerBottomRight: 0,
         },
       };
       dispatch(setDrawingLayer(newLayer));
@@ -104,6 +95,7 @@ const Board = () => {
           ...drawingLayer.layer_data,
           width: width,
           height: height,
+          radius: Math.abs(width),
         },
       };
       dispatch(setDrawingLayer(layer));

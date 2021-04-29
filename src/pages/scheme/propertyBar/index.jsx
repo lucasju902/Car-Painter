@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { Formik, Form } from "formik";
@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import _ from "lodash";
 
 import { updateLayer } from "redux/reducers/layerReducer";
-import { AllowedLayerProps, LayerTypes } from "constant";
+import { AllowedLayerProps, LayerTypes, DefaultLayer } from "constant";
 import { colorValidator } from "helper";
 
 import { Box, Typography, Button } from "@material-ui/core";
@@ -35,6 +35,34 @@ const PropertyBar = () => {
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      !currentLayer
+        ? []
+        : currentLayer.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[currentLayer.layer_type]
+        : AllowedLayerProps[currentLayer.layer_type][
+            currentLayer.layer_data.type
+          ],
+    [currentLayer]
+  );
+  const defaultValues = useMemo(
+    () =>
+      _.pick(
+        {
+          layer_visible: 1,
+          layer_locked: 0,
+          layer_data: _.pick(
+            DefaultLayer.layer_data,
+            AllowedLayerTypes.filter((item) =>
+              item.includes("layer_data.")
+            ).map((item) => item.replace("layer_data.", ""))
+          ),
+        },
+        AllowedLayerTypes.filter((item) => !item.includes("layer_data."))
+      ),
+    [AllowedLayerTypes]
+  );
 
   const handleApply = (values) => {
     dispatch(updateLayer(values));
@@ -74,49 +102,6 @@ const PropertyBar = () => {
   };
 
   if (currentLayer) {
-    const defaultValues = _.pick(
-      {
-        layer_visible: 1,
-        layer_locked: 0,
-        layer_data: _.pick(
-          {
-            name: "",
-            text: "",
-            width: 0,
-            height: 0,
-            left: 0,
-            top: 0,
-            rotation: 0,
-            flop: 0,
-            flip: 0,
-            scaleX: 1,
-            scaleY: 1,
-            stroke: 0,
-            font: 0,
-            size: 0,
-            scolor: "#000000",
-            color: null,
-            opacity: 1,
-            shadowColor: null,
-            shadowBlur: 0,
-            shadowOpacity: 1,
-            shadowOffsetX: 0,
-            shadowOffsetY: 0,
-            cornerTopLeft: 0,
-            cornerTopRight: 0,
-            cornerBottomLeft: 0,
-            cornerBottomRight: 0,
-          },
-          AllowedLayerProps[currentLayer.layer_type]
-            .filter((item) => item.includes("layer_data."))
-            .map((item) => item.replace("layer_data.", ""))
-        ),
-      },
-      AllowedLayerProps[currentLayer.layer_type].filter(
-        (item) => !item.includes("layer_data.")
-      )
-    );
-
     return (
       <Wrapper py={5} px={3}>
         <Formik

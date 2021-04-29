@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components/macro";
-import { AllowedLayerProps } from "constant";
+import { AllowedLayerProps, LayerTypes, MouseModes } from "constant";
 import { mathRound2 } from "helper";
 
 import {
@@ -41,6 +41,13 @@ const SizeProperty = (props) => {
     pressedKey,
   } = props;
   const [expanded, setExpanded] = useState(true);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      values.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[values.layer_type]
+        : AllowedLayerProps[values.layer_type][values.layer_data.type],
+    [values]
+  );
   const pressingShiftKey = pressedKey === "shift";
 
   const handleChangeWidth = (event) => {
@@ -87,10 +94,11 @@ const SizeProperty = (props) => {
   };
 
   if (
-    !AllowedLayerProps[values.layer_type].includes("layer_data.width") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.height") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.scaleX") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.scaleY")
+    !AllowedLayerTypes.includes("layer_data.width") &&
+    !AllowedLayerTypes.includes("layer_data.height") &&
+    !AllowedLayerTypes.includes("layer_data.scaleX") &&
+    !AllowedLayerTypes.includes("layer_data.scaleY") &&
+    !AllowedLayerTypes.includes("layer_data.radius")
   )
     return <></>;
   return (
@@ -106,12 +114,14 @@ const SizeProperty = (props) => {
             width="100%"
             alignItems="center"
           >
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.width"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.width") ? (
               <CustomeTextField
                 name="layer_data.width"
-                label="Width"
+                label={
+                  values.layer_data.type !== MouseModes.ELLIPSE
+                    ? "Width"
+                    : "RadiusX"
+                }
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.width)}
@@ -139,12 +149,8 @@ const SizeProperty = (props) => {
             ) : (
               <></>
             )}
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.width"
-            ) &&
-            AllowedLayerProps[values.layer_type].includes(
-              "layer_data.height"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.width") &&
+            AllowedLayerTypes.includes("layer_data.height") ? (
               <CustomIconButton
                 onClick={() => toggleLayerDataField("sizeLocked")}
               >
@@ -157,12 +163,14 @@ const SizeProperty = (props) => {
             ) : (
               <></>
             )}
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.height"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.height") ? (
               <CustomeTextField
                 name="layer_data.height"
-                label="Height"
+                label={
+                  values.layer_data.type !== MouseModes.ELLIPSE
+                    ? "Height"
+                    : "RadiusY"
+                }
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.height)}
@@ -197,9 +205,7 @@ const SizeProperty = (props) => {
             width="100%"
             alignItems="center"
           >
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.scaleX"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.scaleX") ? (
               <CustomeTextField
                 name="layer_data.scaleX"
                 label="ScaleX"
@@ -230,12 +236,8 @@ const SizeProperty = (props) => {
             ) : (
               <></>
             )}
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.scaleX"
-            ) &&
-            AllowedLayerProps[values.layer_type].includes(
-              "layer_data.scaleY"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.scaleX") &&
+            AllowedLayerTypes.includes("layer_data.scaleY") ? (
               <CustomIconButton
                 onClick={() => toggleLayerDataField("scaleLocked")}
               >
@@ -248,9 +250,7 @@ const SizeProperty = (props) => {
             ) : (
               <></>
             )}
-            {AllowedLayerProps[values.layer_type].includes(
-              "layer_data.scaleY"
-            ) ? (
+            {AllowedLayerTypes.includes("layer_data.scaleY") ? (
               <CustomeTextField
                 name="layer_data.scaleY"
                 label="ScaleY"
@@ -282,6 +282,37 @@ const SizeProperty = (props) => {
               <></>
             )}
           </Box>
+          {AllowedLayerTypes.includes("layer_data.radius") ? (
+            <CustomeTextField
+              name="layer_data.radius"
+              label="Radius"
+              variant="outlined"
+              type="number"
+              value={mathRound2(values.layer_data.radius)}
+              error={Boolean(
+                touched.layer_data &&
+                  touched.layer_data.radius &&
+                  errors.layer_data &&
+                  errors.layer_data.radius
+              )}
+              helperText={
+                touched.layer_data &&
+                touched.layer_data.radius &&
+                errors.layer_data &&
+                errors.layer_data.radius
+              }
+              onBlur={handleBlur}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              mb={4}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>

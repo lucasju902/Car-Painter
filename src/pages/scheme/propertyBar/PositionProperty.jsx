@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components/macro";
-import { AllowedLayerProps } from "constant";
+import { AllowedLayerProps, LayerTypes } from "constant";
 import { mathRound2 } from "helper";
 
 import {
@@ -29,10 +29,17 @@ const PositionProperty = (props) => {
     values,
   } = props;
   const [expanded, setExpanded] = useState(true);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      values.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[values.layer_type]
+        : AllowedLayerProps[values.layer_type][values.layer_data.type],
+    [values]
+  );
 
   if (
-    !AllowedLayerProps[values.layer_type].includes("layer_data.left") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.top")
+    !AllowedLayerTypes.includes("layer_data.left") &&
+    !AllowedLayerTypes.includes("layer_data.top")
   )
     return <></>;
   return (
@@ -42,7 +49,7 @@ const PositionProperty = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerProps[values.layer_type].includes("layer_data.left") ? (
+          {AllowedLayerTypes.includes("layer_data.left") ? (
             <CustomeTextField
               name="layer_data.left"
               label="Left"
@@ -73,7 +80,7 @@ const PositionProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes("layer_data.top") ? (
+          {AllowedLayerTypes.includes("layer_data.top") ? (
             <CustomeTextField
               name="layer_data.top"
               label="Top"

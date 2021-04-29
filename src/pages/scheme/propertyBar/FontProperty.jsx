@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components/macro";
-import { AllowedLayerProps } from "constant";
+import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
@@ -31,9 +31,15 @@ const FontProperty = (props) => {
     fontList,
   } = props;
   const [expanded, setExpanded] = useState(true);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      values.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[values.layer_type]
+        : AllowedLayerProps[values.layer_type][values.layer_data.type],
+    [values]
+  );
 
-  if (!AllowedLayerProps[values.layer_type].includes("layer_data.font"))
-    return <></>;
+  if (!AllowedLayerTypes.includes("layer_data.font")) return <></>;
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -41,7 +47,7 @@ const FontProperty = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerProps[values.layer_type].includes("layer_data.font") ? (
+          {AllowedLayerTypes.includes("layer_data.font") ? (
             <FormControl variant="outlined" mt={2}>
               <InputLabel id="font-select-label">Font</InputLabel>
               <FontSelect
@@ -55,7 +61,7 @@ const FontProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes("layer_data.color") ? (
+          {AllowedLayerTypes.includes("layer_data.color") ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Typography variant="body1" color="textSecondary" mr={2}>
@@ -77,7 +83,7 @@ const FontProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes("layer_data.size") ? (
+          {AllowedLayerTypes.includes("layer_data.size") ? (
             <SliderInput
               label="Font Size"
               min={6}

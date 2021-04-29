@@ -31,13 +31,18 @@ const Shapes = (props) => {
 
         return (
           <Shape
-            name={layer.id.toString()}
             type={layer.layer_data.type}
-            key={layer.id}
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
             width={layer.layer_data.width}
             height={layer.layer_data.height}
+            radius={layer.layer_data.radius}
+            cornerRadius={[
+              layer.layer_data.cornerTopLeft,
+              layer.layer_data.cornerTopRight,
+              layer.layer_data.cornerBottomLeft,
+              layer.layer_data.cornerBottomRight,
+            ]}
             rotation={layer.layer_data.rotation}
             opacity={layer.layer_data.opacity}
             scaleX={layer.layer_data.flop === 1 ? -1 : 1}
@@ -51,12 +56,8 @@ const Shapes = (props) => {
             strokeWidth={layer.layer_data.stroke}
             stroke={layer.layer_data.scolor}
             strokeEnabled={true}
-            cornerRadius={[
-              layer.layer_data.cornerTopLeft,
-              layer.layer_data.cornerTopRight,
-              layer.layer_data.cornerBottomLeft,
-              layer.layer_data.cornerBottomRight,
-            ]}
+            name={layer.id.toString()}
+            key={layer.id}
             onSelect={() => setCurrentLayer(layer)}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
@@ -70,6 +71,7 @@ const Shapes = (props) => {
           y={parseFloat(drawingLayer.layer_data.top || 0)}
           width={drawingLayer.layer_data.width}
           height={drawingLayer.layer_data.height}
+          radius={drawingLayer.layer_data.radius}
           fill={drawingLayer.layer_data.color}
           strokeWidth={drawingLayer.layer_data.stroke}
           stroke={drawingLayer.layer_data.scolor}

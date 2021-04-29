@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components/macro";
-import { AllowedLayerProps } from "constant";
+import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
@@ -37,13 +37,20 @@ const GeneralProperty = (props) => {
   } = props;
 
   const [expanded, setExpanded] = useState(true);
+  const AllowedLayerTypes = useMemo(
+    () =>
+      values.layer_type !== LayerTypes.SHAPE
+        ? AllowedLayerProps[values.layer_type]
+        : AllowedLayerProps[values.layer_type][values.layer_data.type],
+    [values]
+  );
   if (JSON.stringify(errors) !== "{}") {
     console.log(errors);
   }
 
   if (
-    !AllowedLayerProps[values.layer_type].includes("layer_data.name") &&
-    !AllowedLayerProps[values.layer_type].includes("layer_data.text")
+    !AllowedLayerTypes.includes("layer_data.name") &&
+    !AllowedLayerTypes.includes("layer_data.text")
   )
     return <></>;
   return (
@@ -53,7 +60,7 @@ const GeneralProperty = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerProps[values.layer_type].includes("layer_data.name") ? (
+          {AllowedLayerTypes.includes("layer_data.name") ? (
             <CustomeTextField
               name="layer_data.name"
               label="Name"
@@ -83,7 +90,7 @@ const GeneralProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes("layer_data.text") ? (
+          {AllowedLayerTypes.includes("layer_data.text") ? (
             <CustomeTextField
               name="layer_data.text"
               label="Text"
@@ -113,7 +120,7 @@ const GeneralProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes("layer_visible") ? (
+          {AllowedLayerTypes.includes("layer_visible") ? (
             <Box
               display="flex"
               alignItems="center"
@@ -137,7 +144,7 @@ const GeneralProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerProps[values.layer_type].includes("layer_locked") ? (
+          {AllowedLayerTypes.includes("layer_locked") ? (
             <Box
               display="flex"
               alignItems="center"
