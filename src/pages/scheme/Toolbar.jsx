@@ -60,7 +60,8 @@ const CustomOutlinedInput = styled(OutlinedInput)`
   }
 `;
 const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
-  transform: ${(props) => (props.stretch ? "scaleX(1.2) scaleY(0.8)" : "none")};
+  transform: ${(props) =>
+    props.isstretch === "true" ? "scaleX(1.2) scaleY(0.8)" : "none"};
 `;
 
 const modes = [
@@ -183,7 +184,7 @@ const Toolbar = (props) => {
               return (
                 <CustomFontAwesomeIcon
                   icon={mode.icon}
-                  stretch={mode.stretch}
+                  isstretch={mode.stretch ? "true" : "false"}
                 />
               );
             }}
@@ -192,7 +193,7 @@ const Toolbar = (props) => {
               <MenuItem value={mode.value} key={mode.value}>
                 <CustomFontAwesomeIcon
                   icon={mode.icon}
-                  stretch={mode.stretch}
+                  isstretch={mode.stretch ? "true" : "false"}
                 />
               </MenuItem>
             ))}

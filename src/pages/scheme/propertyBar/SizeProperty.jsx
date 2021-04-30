@@ -93,12 +93,43 @@ const SizeProperty = (props) => {
     setFieldValue("layer_data.scaleY", parseFloat(event.target.value) || 0);
   };
 
+  const handleChangeInnerRadius = (event) => {
+    let value = parseFloat(event.target.value) || 0;
+    if (values.layer_data.scaleLocked) {
+      setFieldValue(
+        "layer_data.outerRadius",
+        (value * currentLayer.layer_data.outerRadius) /
+          currentLayer.layer_data.innerRadius
+      );
+    }
+    setFieldValue(
+      "layer_data.innerRadius",
+      parseFloat(event.target.value) || 0
+    );
+  };
+  const handleChangeOuterRadius = (event) => {
+    let value = parseFloat(event.target.value) || 0;
+    if (values.layer_data.scaleLocked) {
+      setFieldValue(
+        "layer_data.innerRadius",
+        (value * currentLayer.layer_data.innerRadius) /
+          currentLayer.layer_data.outerRadius
+      );
+    }
+    setFieldValue(
+      "layer_data.outerRadius",
+      parseFloat(event.target.value) || 0
+    );
+  };
+
   if (
     !AllowedLayerTypes.includes("layer_data.width") &&
     !AllowedLayerTypes.includes("layer_data.height") &&
     !AllowedLayerTypes.includes("layer_data.scaleX") &&
     !AllowedLayerTypes.includes("layer_data.scaleY") &&
-    !AllowedLayerTypes.includes("layer_data.radius")
+    !AllowedLayerTypes.includes("layer_data.radius") &&
+    !AllowedLayerTypes.includes("layer_data.innerRadius") &&
+    !AllowedLayerTypes.includes("layer_data.outerRadius")
   )
     return <></>;
   return (
@@ -271,6 +302,89 @@ const SizeProperty = (props) => {
                 }
                 onBlur={handleBlur}
                 onChange={handleChangeScaleY}
+                fullWidth
+                margin="normal"
+                mb={4}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            ) : (
+              <></>
+            )}
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            width="100%"
+            alignItems="center"
+          >
+            {AllowedLayerTypes.includes("layer_data.innerRadius") ? (
+              <CustomeTextField
+                name="layer_data.innerRadius"
+                label="Inner Radius"
+                variant="outlined"
+                type="number"
+                value={mathRound2(values.layer_data.innerRadius)}
+                error={Boolean(
+                  touched.layer_data &&
+                    touched.layer_data.innerRadius &&
+                    errors.layer_data &&
+                    errors.layer_data.innerRadius
+                )}
+                helperText={
+                  touched.layer_data &&
+                  touched.layer_data.innerRadius &&
+                  errors.layer_data &&
+                  errors.layer_data.innerRadius
+                }
+                onBlur={handleBlur}
+                onChange={handleChangeInnerRadius}
+                fullWidth
+                margin="normal"
+                mb={4}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            ) : (
+              <></>
+            )}
+            {AllowedLayerTypes.includes("layer_data.innerRadius") &&
+            AllowedLayerTypes.includes("layer_data.outerRadius") ? (
+              <CustomIconButton
+                onClick={() => toggleLayerDataField("scaleLocked")}
+              >
+                {values.layer_data.scaleLocked || pressingShiftKey ? (
+                  <LinkIcon />
+                ) : (
+                  <LinkOfficon />
+                )}
+              </CustomIconButton>
+            ) : (
+              <></>
+            )}
+            {AllowedLayerTypes.includes("layer_data.outerRadius") ? (
+              <CustomeTextField
+                name="layer_data.outerRadius"
+                label="Outer Radius"
+                variant="outlined"
+                type="number"
+                value={mathRound2(values.layer_data.outerRadius)}
+                error={Boolean(
+                  touched.layer_data &&
+                    touched.layer_data.outerRadius &&
+                    errors.layer_data &&
+                    errors.layer_data.outerRadius
+                )}
+                helperText={
+                  touched.layer_data &&
+                  touched.layer_data.outerRadius &&
+                  errors.layer_data &&
+                  errors.layer_data.outerRadius
+                }
+                onBlur={handleBlur}
+                onChange={handleChangeOuterRadius}
                 fullWidth
                 margin="normal"
                 mb={4}

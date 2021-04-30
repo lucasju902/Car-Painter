@@ -52,7 +52,7 @@ const PositionProperty = (props) => {
           {AllowedLayerTypes.includes("layer_data.left") ? (
             <CustomeTextField
               name="layer_data.left"
-              label="Left"
+              label="X"
               variant="outlined"
               type="number"
               value={mathRound2(values.layer_data.left)}
@@ -83,7 +83,7 @@ const PositionProperty = (props) => {
           {AllowedLayerTypes.includes("layer_data.top") ? (
             <CustomeTextField
               name="layer_data.top"
-              label="Top"
+              label="Y"
               variant="outlined"
               type="number"
               value={mathRound2(values.layer_data.top)}

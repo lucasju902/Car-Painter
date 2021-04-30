@@ -50,7 +50,8 @@ const GeneralProperty = (props) => {
 
   if (
     !AllowedLayerTypes.includes("layer_data.name") &&
-    !AllowedLayerTypes.includes("layer_data.text")
+    !AllowedLayerTypes.includes("layer_data.text") &&
+    !AllowedLayerTypes.includes("layer_data.numPoints")
   )
     return <></>;
   return (
@@ -107,6 +108,37 @@ const GeneralProperty = (props) => {
                 touched.layer_data.text &&
                 errors.layer_data &&
                 errors.layer_data.text
+              }
+              onBlur={handleBlur}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              mb={4}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          {AllowedLayerTypes.includes("layer_data.numPoints") ? (
+            <CustomeTextField
+              name="layer_data.numPoints"
+              label="Number of Points"
+              variant="outlined"
+              type="number"
+              value={Math.round(values.layer_data.numPoints)}
+              error={Boolean(
+                touched.layer_data &&
+                  touched.layer_data.numPoints &&
+                  errors.layer_data &&
+                  errors.layer_data.numPoints
+              )}
+              helperText={
+                touched.layer_data &&
+                touched.layer_data.numPoints &&
+                errors.layer_data &&
+                errors.layer_data.numPoints
               }
               onBlur={handleBlur}
               onChange={handleChange}

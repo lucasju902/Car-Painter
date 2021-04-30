@@ -96,6 +96,8 @@ const Board = () => {
           width: width,
           height: height,
           radius: Math.abs(width),
+          innerRadius: Math.abs(width) / 2.5,
+          outerRadius: Math.abs(width),
         },
       };
       dispatch(setDrawingLayer(layer));

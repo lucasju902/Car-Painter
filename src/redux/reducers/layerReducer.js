@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
 
-import { LayerTypes, DefaultLayer } from "constant";
+import { LayerTypes, DefaultLayer, AllowedLayerProps } from "constant";
 import LayerService from "services/layerService";
 import { setMessage } from "./messageReducer";
 
@@ -296,15 +296,22 @@ export const cloneLayer = (layerToClone) => async (dispatch, getState) => {
 export const createShape = (schemeID, newlayer) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
+    const AllowedLayerTypes =
+      AllowedLayerProps[LayerTypes.SHAPE][newlayer.layer_data.type];
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
       ...newlayer,
       layer_type: LayerTypes.SHAPE,
       scheme_id: schemeID,
-      layer_data: {
-        ...DefaultLayer.layer_data,
-        ...newlayer.layer_data,
-      },
+      layer_data: _.pick(
+        {
+          ...DefaultLayer.layer_data,
+          ...newlayer.layer_data,
+        },
+        AllowedLayerTypes.filter((item) =>
+          item.includes("layer_data.")
+        ).map((item) => item.replace("layer_data.", ""))
+      ),
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));

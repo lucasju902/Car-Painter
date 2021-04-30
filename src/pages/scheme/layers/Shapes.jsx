@@ -37,6 +37,9 @@ const Shapes = (props) => {
             width={layer.layer_data.width}
             height={layer.layer_data.height}
             radius={layer.layer_data.radius}
+            innerRadius={layer.layer_data.innerRadius}
+            outerRadius={layer.layer_data.outerRadius}
+            numPoints={layer.layer_data.numPoints}
             cornerRadius={[
               layer.layer_data.cornerTopLeft,
               layer.layer_data.cornerTopRight,
@@ -72,6 +75,9 @@ const Shapes = (props) => {
           width={drawingLayer.layer_data.width}
           height={drawingLayer.layer_data.height}
           radius={drawingLayer.layer_data.radius}
+          innerRadius={drawingLayer.layer_data.innerRadius}
+          outerRadius={drawingLayer.layer_data.outerRadius}
+          numPoints={drawingLayer.layer_data.numPoints}
           fill={drawingLayer.layer_data.color}
           strokeWidth={drawingLayer.layer_data.stroke}
           stroke={drawingLayer.layer_data.scolor}

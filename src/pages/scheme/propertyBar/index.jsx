@@ -124,25 +124,19 @@ const PropertyBar = () => {
                 "Required",
                 (value) =>
                   (value && value.length) ||
-                  currentLayer.layer_type !== LayerTypes.TEXT
+                  !AllowedLayerTypes.includes("layer_data.text")
               ),
               width: Yup.number().test(
                 "width-validation",
                 "Required",
                 (value) =>
-                  value ||
-                  currentLayer.layer_type === LayerTypes.TEXT ||
-                  currentLayer.layer_type === LayerTypes.CAR ||
-                  currentLayer.layer_type === LayerTypes.BASE
+                  value || !AllowedLayerTypes.includes("layer_data.width")
               ),
               height: Yup.number().test(
                 "height-validation",
                 "Required",
                 (value) =>
-                  value ||
-                  currentLayer.layer_type === LayerTypes.TEXT ||
-                  currentLayer.layer_type === LayerTypes.CAR ||
-                  currentLayer.layer_type === LayerTypes.BASE
+                  value || !AllowedLayerTypes.includes("layer_data.height")
               ),
               left: Yup.number(),
               top: Yup.number(),
@@ -186,6 +180,10 @@ const PropertyBar = () => {
               cornerTopRight: Yup.number(),
               cornerBottomLeft: Yup.number(),
               cornerBottomRight: Yup.number(),
+              radius: Yup.number().moreThan(0, "Must be greater than 0"),
+              innerRadius: Yup.number().moreThan(0, "Must be greater than 0"),
+              outerRadius: Yup.number().moreThan(0, "Must be greater than 0"),
+              numPoints: Yup.number().moreThan(1, "Must be greater than 1"),
             }),
           })}
           enableReinitialize

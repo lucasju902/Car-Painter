@@ -10,7 +10,9 @@ const TransformerComponent = ({ selectedLayer, pressedKey }) => {
       selectedLayer &&
       (selectedLayer.layer_data.sizeLocked ||
         selectedLayer.layer_data.scaleLocked ||
-        selectedLayer.layer_data.type === MouseModes.CIRCLE ||
+        [MouseModes.CIRCLE, MouseModes.STAR].includes(
+          selectedLayer.layer_data.type
+        ) ||
         pressedKey === "shift"),
     [selectedLayer, pressedKey]
   );
