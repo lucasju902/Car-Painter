@@ -20,7 +20,11 @@ import {
   ToggleButtonGroup,
 } from "@material-ui/lab";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "react-feather";
+import {
+  ZoomIn as ZoomInIcon,
+  ZoomOut as ZoomOutIcon,
+  Octagon as OctagonIcon,
+} from "react-feather";
 import {
   RotateLeft as RotateLeftIcon,
   RotateRight as RotateRightIcon,
@@ -29,6 +33,7 @@ import {
   faSquare,
   faCircle,
   faStar,
+  faDotCircle,
   faMousePointer,
 } from "@fortawesome/free-solid-svg-icons";
 import { PaintingGuides, MouseModes } from "constant";
@@ -67,24 +72,31 @@ const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
 const modes = [
   {
     value: MouseModes.DEFAULT,
-    icon: faMousePointer,
+    icon: <CustomFontAwesomeIcon icon={faMousePointer} />,
   },
   {
     value: MouseModes.RECT,
-    icon: faSquare,
+    icon: <CustomFontAwesomeIcon icon={faSquare} />,
   },
   {
     value: MouseModes.CIRCLE,
-    icon: faCircle,
+    icon: <CustomFontAwesomeIcon icon={faCircle} />,
   },
   {
     value: MouseModes.ELLIPSE,
-    icon: faCircle,
-    stretch: true,
+    icon: <CustomFontAwesomeIcon icon={faCircle} isstretch="true" />,
   },
   {
     value: MouseModes.STAR,
-    icon: faStar,
+    icon: <CustomFontAwesomeIcon icon={faStar} />,
+  },
+  {
+    value: MouseModes.RING,
+    icon: <CustomFontAwesomeIcon icon={faDotCircle} />,
+  },
+  {
+    value: MouseModes.REGULARPOLYGON,
+    icon: <OctagonIcon size={17} />,
   },
 ];
 
@@ -181,20 +193,12 @@ const Toolbar = (props) => {
               if (!mode) {
                 return <></>;
               }
-              return (
-                <CustomFontAwesomeIcon
-                  icon={mode.icon}
-                  isstretch={mode.stretch ? "true" : "false"}
-                />
-              );
+              return mode.icon;
             }}
           >
             {modes.map((mode) => (
               <MenuItem value={mode.value} key={mode.value}>
-                <CustomFontAwesomeIcon
-                  icon={mode.icon}
-                  isstretch={mode.stretch ? "true" : "false"}
-                />
+                {mode.icon}
               </MenuItem>
             ))}
           </CustomSelect>

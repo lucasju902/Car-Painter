@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import _ from "lodash";
-import { Rect, Circle, Ellipse, Star } from "react-konva";
+import { Rect, Circle, Ellipse, Star, Ring, RegularPolygon } from "react-konva";
 import { mathRound2 } from "helper";
 
 import { MouseModes, AllowedLayerProps, LayerTypes } from "constant";
@@ -154,6 +154,49 @@ const Shape = ({
           innerRadius={innerRadius}
           outerRadius={outerRadius}
           numPoints={numPoints}
+          shadowColor={shapeRef.current ? shadowColor : null}
+          shadowBlur={shapeRef.current ? shadowBlur : null}
+          shadowOpacity={shapeRef.current ? shadowOpacity : null}
+          shadowOffsetX={shapeRef.current ? shadowOffsetX : null}
+          shadowOffsetY={shapeRef.current ? shadowOffsetY : null}
+          draggable={onChange}
+          onClick={onSelect}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onTransformEnd={handleTransformEnd}
+        />
+      );
+    case MouseModes.RING:
+      return (
+        <Ring
+          {...props}
+          ref={shapeRef}
+          x={x}
+          y={y}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
+          numPoints={numPoints}
+          shadowColor={shapeRef.current ? shadowColor : null}
+          shadowBlur={shapeRef.current ? shadowBlur : null}
+          shadowOpacity={shapeRef.current ? shadowOpacity : null}
+          shadowOffsetX={shapeRef.current ? shadowOffsetX : null}
+          shadowOffsetY={shapeRef.current ? shadowOffsetY : null}
+          draggable={onChange}
+          onClick={onSelect}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onTransformEnd={handleTransformEnd}
+        />
+      );
+    case MouseModes.REGULARPOLYGON:
+      return (
+        <RegularPolygon
+          {...props}
+          ref={shapeRef}
+          x={x}
+          y={y}
+          radius={radius}
+          sides={numPoints}
           shadowColor={shapeRef.current ? shadowColor : null}
           shadowBlur={shapeRef.current ? shadowBlur : null}
           shadowOpacity={shapeRef.current ? shadowOpacity : null}
