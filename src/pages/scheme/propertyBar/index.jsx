@@ -184,6 +184,7 @@ const PropertyBar = () => {
               innerRadius: Yup.number().moreThan(0, "Must be greater than 0"),
               outerRadius: Yup.number().moreThan(0, "Must be greater than 0"),
               numPoints: Yup.number().moreThan(1, "Must be greater than 1"),
+              angle: Yup.number(),
             }),
           })}
           enableReinitialize

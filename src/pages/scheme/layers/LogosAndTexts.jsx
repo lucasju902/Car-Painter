@@ -57,6 +57,7 @@ const LogosAndTexts = (props) => {
               shadowOffsetX={shadowOffset.x}
               shadowOffsetY={shadowOffset.y}
               opacity={layer.layer_data.opacity}
+              layer_data={layer.layer_data}
               onSelect={() => setCurrentLayer(layer)}
               listening={
                 !layer.layer_locked && mouseMode === MouseModes.DEFAULT

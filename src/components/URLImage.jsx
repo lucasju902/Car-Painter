@@ -12,6 +12,7 @@ const URLImage = ({
   filterColor,
   frameSize,
   allowFit,
+  layer_data,
   ...props
 }) => {
   const imageRef = useRef(null);
@@ -143,6 +144,9 @@ const URLImage = ({
       // we will reset it back
       node.scaleX(scaleX > 0 ? 1 : -1);
       node.scaleY(scaleY > 0 ? 1 : -1);
+      const xyScale = Math.abs(
+        Math.abs(mathRound2(scaleY)) !== 1 ? scaleY : scaleX
+      );
       onChange({
         left: mathRound2(node.x()),
         top: mathRound2(node.y()),
@@ -152,6 +156,9 @@ const URLImage = ({
         rotation: mathRound2(node.rotation()) || 0,
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
+        shadowBlur: mathRound2(node.shadowBlur() * xyScale),
+        shadowOffsetX: mathRound2(layer_data.shadowOffsetX * Math.abs(scaleX)),
+        shadowOffsetY: mathRound2(layer_data.shadowOffsetY * Math.abs(scaleY)),
       });
       if (filterColor && filterColor.length) {
         node.cache({

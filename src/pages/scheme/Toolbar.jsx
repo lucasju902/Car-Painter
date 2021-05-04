@@ -28,6 +28,7 @@ import {
 import {
   RotateLeft as RotateLeftIcon,
   RotateRight as RotateRightIcon,
+  SignalWifi4Bar as WedgeIcon,
 } from "@material-ui/icons";
 import {
   faSquare,
@@ -36,6 +37,7 @@ import {
   faDotCircle,
   faMousePointer,
 } from "@fortawesome/free-solid-svg-icons";
+import { faCuttlefish } from "@fortawesome/free-brands-svg-icons";
 import { PaintingGuides, MouseModes } from "constant";
 
 const Typography = styled(MuiTypography)(spacing);
@@ -97,6 +99,14 @@ const modes = [
   {
     value: MouseModes.REGULARPOLYGON,
     icon: <OctagonIcon size={17} />,
+  },
+  {
+    value: MouseModes.WEDGE,
+    icon: <WedgeIcon fontSize="small" />,
+  },
+  {
+    value: MouseModes.ARC,
+    icon: <CustomFontAwesomeIcon icon={faCuttlefish} />,
   },
 ];
 

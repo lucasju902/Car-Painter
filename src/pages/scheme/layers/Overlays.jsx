@@ -54,6 +54,7 @@ const Overlays = (props) => {
             onSelect={() => setCurrentLayer(layer)}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             frameSize={frameSize}
+            layer_data={layer.layer_data}
             onChange={(values) => onChange(layer, values)}
           />
         );

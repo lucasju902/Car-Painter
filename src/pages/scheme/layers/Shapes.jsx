@@ -47,6 +47,7 @@ const Shapes = (props) => {
               layer.layer_data.cornerBottomRight,
             ]}
             rotation={layer.layer_data.rotation}
+            angle={layer.layer_data.angle}
             opacity={layer.layer_data.opacity}
             scaleX={layer.layer_data.flop === 1 ? -1 : 1}
             scaleY={layer.layer_data.flip === 1 ? -1 : 1}
@@ -61,6 +62,7 @@ const Shapes = (props) => {
             strokeEnabled={true}
             name={layer.id.toString()}
             key={layer.id}
+            layer_data={layer.layer_data}
             onSelect={() => setCurrentLayer(layer)}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
@@ -75,6 +77,7 @@ const Shapes = (props) => {
           width={drawingLayer.layer_data.width}
           height={drawingLayer.layer_data.height}
           radius={drawingLayer.layer_data.radius}
+          angle={drawingLayer.layer_data.angle}
           innerRadius={drawingLayer.layer_data.innerRadius}
           outerRadius={drawingLayer.layer_data.outerRadius}
           numPoints={drawingLayer.layer_data.numPoints}
@@ -82,6 +85,7 @@ const Shapes = (props) => {
           strokeWidth={drawingLayer.layer_data.stroke}
           stroke={drawingLayer.layer_data.scolor}
           strokeEnabled={true}
+          layer_data={drawingLayer.layer_data}
         />
       ) : (
         <></>

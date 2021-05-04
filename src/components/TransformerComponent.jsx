@@ -15,6 +15,8 @@ const TransformerComponent = ({ selectedLayer, pressedKey }) => {
           MouseModes.STAR,
           MouseModes.RING,
           MouseModes.REGULARPOLYGON,
+          MouseModes.WEDGE,
+          MouseModes.ARC,
         ].includes(selectedLayer.layer_data.type) ||
         pressedKey === "shift"),
     [selectedLayer, pressedKey]

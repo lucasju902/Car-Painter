@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 
+import SliderInput from "components/SliderInput";
 import {
   Box,
   TextField,
@@ -51,7 +52,8 @@ const GeneralProperty = (props) => {
   if (
     !AllowedLayerTypes.includes("layer_data.name") &&
     !AllowedLayerTypes.includes("layer_data.text") &&
-    !AllowedLayerTypes.includes("layer_data.numPoints")
+    !AllowedLayerTypes.includes("layer_data.numPoints") &&
+    !AllowedLayerTypes.includes("layer_data.angle")
   )
     return <></>;
   return (
@@ -148,6 +150,17 @@ const GeneralProperty = (props) => {
               InputLabelProps={{
                 shrink: true,
               }}
+            />
+          ) : (
+            <></>
+          )}
+          {AllowedLayerTypes.includes("layer_data.angle") ? (
+            <SliderInput
+              label="Angle"
+              min={0}
+              max={360}
+              value={Math.round(values.layer_data.angle)}
+              setValue={(value) => setFieldValue("layer_data.angle", value)}
             />
           ) : (
             <></>
