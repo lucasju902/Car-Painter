@@ -9,6 +9,7 @@ import {
   RegularPolygon,
   Wedge,
   Arc,
+  Line,
 } from "react-konva";
 import { mathRound2 } from "helper";
 
@@ -21,6 +22,10 @@ const Shape = ({
   width,
   height,
   radius,
+  points,
+  lineCap,
+  lineJoin,
+  dash,
   innerRadius,
   outerRadius,
   cornerRadius,
@@ -37,16 +42,23 @@ const Shape = ({
   ...props
 }) => {
   const shapeRef = useRef();
-
   const handleDragStart = (e) => {
     onSelect();
   };
   const handleDragEnd = (e) => {
     if (onChange) {
-      onChange({
-        left: mathRound2(e.target.x()),
-        top: mathRound2(e.target.y()),
-      });
+      const AllowedLayerTypes = AllowedLayerProps[LayerTypes.SHAPE][type];
+      onChange(
+        _.pick(
+          {
+            left: mathRound2(e.target.x()),
+            top: mathRound2(e.target.y()),
+          },
+          AllowedLayerTypes.filter((item) =>
+            item.includes("layer_data.")
+          ).map((item) => item.replace("layer_data.", ""))
+        )
+      );
     }
   };
   const handleTransformEnd = (e) => {
@@ -98,6 +110,11 @@ const Shape = ({
             cornerBottomLeft: mathRound2(layer_data.cornerBottomLeft * xyScale),
             cornerBottomRight: mathRound2(
               layer_data.cornerBottomRight * xyScale
+            ),
+            points: points.map((point, index) =>
+              index % 2 === 0
+                ? mathRound2(point * Math.abs(scaleX))
+                : mathRound2(point * Math.abs(scaleY))
             ),
           },
           AllowedLayerTypes.filter((item) =>
@@ -267,6 +284,29 @@ const Shape = ({
           innerRadius={innerRadius}
           outerRadius={outerRadius}
           angle={angle}
+          shadowColor={shapeRef.current ? shadowColor : null}
+          shadowBlur={shapeRef.current ? shadowBlur : null}
+          shadowOpacity={shapeRef.current ? shadowOpacity : null}
+          shadowOffsetX={shapeRef.current ? shadowOffsetX : null}
+          shadowOffsetY={shapeRef.current ? shadowOffsetY : null}
+          draggable={onChange}
+          onClick={onSelect}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onTransformEnd={handleTransformEnd}
+        />
+      );
+    case MouseModes.LINE:
+      return (
+        <Line
+          {...props}
+          ref={shapeRef}
+          x={x}
+          y={y}
+          points={points}
+          lineCap={lineCap}
+          lineJoin={lineJoin}
+          dash={dash}
           shadowColor={shapeRef.current ? shadowColor : null}
           shadowBlur={shapeRef.current ? shadowBlur : null}
           shadowOpacity={shapeRef.current ? shadowOpacity : null}

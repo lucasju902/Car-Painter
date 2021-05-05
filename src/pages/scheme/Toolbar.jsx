@@ -29,6 +29,7 @@ import {
   RotateLeft as RotateLeftIcon,
   RotateRight as RotateRightIcon,
   SignalWifi4Bar as WedgeIcon,
+  Timeline as LineIcon,
 } from "@material-ui/icons";
 import {
   faSquare,
@@ -107,6 +108,10 @@ const modes = [
   {
     value: MouseModes.ARC,
     icon: <CustomFontAwesomeIcon icon={faCuttlefish} />,
+  },
+  {
+    value: MouseModes.LINE,
+    icon: <LineIcon />,
   },
 ];
 

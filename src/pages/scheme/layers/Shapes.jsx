@@ -37,6 +37,10 @@ const Shapes = (props) => {
             width={layer.layer_data.width}
             height={layer.layer_data.height}
             radius={layer.layer_data.radius}
+            points={layer.layer_data.points}
+            lineCap={layer.layer_data.lineCap}
+            lineJoin={layer.layer_data.lineJoin}
+            dash={layer.layer_data.dash}
             innerRadius={layer.layer_data.innerRadius}
             outerRadius={layer.layer_data.outerRadius}
             numPoints={layer.layer_data.numPoints}
@@ -78,6 +82,10 @@ const Shapes = (props) => {
           height={drawingLayer.layer_data.height}
           radius={drawingLayer.layer_data.radius}
           angle={drawingLayer.layer_data.angle}
+          points={drawingLayer.layer_data.points}
+          lineCap={drawingLayer.layer_data.lineCap}
+          lineJoin={drawingLayer.layer_data.lineJoin}
+          dash={drawingLayer.layer_data.dash}
           innerRadius={drawingLayer.layer_data.innerRadius}
           outerRadius={drawingLayer.layer_data.outerRadius}
           numPoints={drawingLayer.layer_data.numPoints}

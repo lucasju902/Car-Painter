@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
@@ -32,6 +32,7 @@ import { getRelativePointerPosition } from "helper";
 const Board = () => {
   const scaleBy = 1.2;
   const stageRef = useRef(null);
+  const [prevPosition, setPrevPosition] = useState({});
   const dispatch = useDispatch();
   const { width, height, ref } = useResizeDetector();
 
@@ -53,6 +54,7 @@ const Board = () => {
 
   const handleMouseDown = (e) => {
     // console.log("Mouse Down");
+    console.log(e);
     if (mouseMode === MouseModes.DEFAULT) {
       const clickedOnEmpty = e.target === e.target.getStage();
       if (clickedOnEmpty && currentLayer) {
@@ -61,24 +63,62 @@ const Board = () => {
     }
   };
   const handleContentMouseDown = (e) => {
-    // console.log("Mouse Down");
+    console.log("Mouse Down");
     if (mouseMode !== MouseModes.DEFAULT) {
       const position = getRelativePointerPosition(stageRef.current);
-      let newLayer = {
-        ...DefaultLayer,
-        layer_type: LayerTypes.SHAPE,
-        layer_data: {
-          ...DefaultLayer.layer_data,
-          type: mouseMode,
-          name: mouseMode,
-          left: position.x,
-          top: position.y,
-          color: "#000000",
-          scolor: "#000000",
-          stroke: 1,
-        },
-      };
-      dispatch(setDrawingLayer(newLayer));
+      if (!drawingLayer) {
+        let newLayer = {
+          ...DefaultLayer,
+          layer_type: LayerTypes.SHAPE,
+          layer_data: {
+            ...DefaultLayer.layer_data,
+            type: mouseMode,
+            name: mouseMode,
+            left: position.x,
+            top: position.y,
+            color: "#000000",
+            scolor: "#000000",
+            stroke: 1,
+          },
+        };
+
+        if (
+          [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+            mouseMode
+          )
+        ) {
+          newLayer.layer_data.stroke = 5;
+          newLayer.layer_data.points = [0, 0, 0, 0];
+        }
+        if (mouseMode === MouseModes.PEN) {
+          newLayer.layer_data.stroke = 5;
+          newLayer.layer_data.points = [0, 0];
+        }
+        dispatch(setDrawingLayer(newLayer));
+      } else {
+        if (
+          [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+            mouseMode
+          )
+        ) {
+          let layer = {
+            ...drawingLayer,
+            layer_data: {
+              ...drawingLayer.layer_data,
+              points: [...drawingLayer.layer_data.points],
+            },
+          };
+          layer.layer_data.points.splice(
+            -2,
+            2,
+            position.x - drawingLayer.layer_data.left,
+            position.y - drawingLayer.layer_data.top,
+            position.x - drawingLayer.layer_data.left,
+            position.y - drawingLayer.layer_data.top
+          );
+          dispatch(setDrawingLayer(layer));
+        }
+      }
     }
   };
   const handleMouseMove = (e) => {
@@ -93,6 +133,7 @@ const Board = () => {
         ...drawingLayer,
         layer_data: {
           ...drawingLayer.layer_data,
+          points: [...drawingLayer.layer_data.points],
           width: width,
           height: height,
           radius: Math.abs(width),
@@ -100,13 +141,65 @@ const Board = () => {
           outerRadius: Math.abs(width),
         },
       };
+      if (
+        [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+          mouseMode
+        )
+      ) {
+        layer.layer_data.points.splice(
+          -2,
+          2,
+          position.x - drawingLayer.layer_data.left,
+          position.y - drawingLayer.layer_data.top
+        );
+      }
+      if (mouseMode === MouseModes.PEN) {
+        layer.layer_data.points.push(position.x - drawingLayer.layer_data.left);
+        layer.layer_data.points.push(position.y - drawingLayer.layer_data.top);
+      }
       dispatch(setDrawingLayer(layer));
     }
   };
   const handleMouseUp = (e) => {
     // console.log("Mouse Up");
-    if (mouseMode !== MouseModes.DEFAULT && drawingLayer) {
+    if (
+      ![
+        MouseModes.DEFAULT,
+        MouseModes.LINE,
+        MouseModes.ARROW,
+        MouseModes.POLYGON,
+      ].includes(mouseMode) &&
+      drawingLayer
+    ) {
       dispatch(createShape(currentScheme.id, drawingLayer));
+      dispatch(setMouseMode(MouseModes.DEFAULT));
+    }
+    const position = getRelativePointerPosition(stageRef.current);
+    setPrevPosition(position);
+  };
+  const handleContentDoubleClick = (e) => {
+    console.log("Double Click");
+    const position = getRelativePointerPosition(stageRef.current);
+    if (
+      [
+        MouseModes.DEFAULT,
+        MouseModes.LINE,
+        MouseModes.ARROW,
+        MouseModes.POLYGON,
+      ].includes(mouseMode) &&
+      drawingLayer &&
+      prevPosition.x === position.x &&
+      prevPosition.y === position.y
+    ) {
+      let layer = {
+        ...drawingLayer,
+        layer_data: {
+          ...drawingLayer.layer_data,
+          points: [...drawingLayer.layer_data.points],
+        },
+      };
+      layer.layer_data.points.splice(-2, 6);
+      dispatch(createShape(currentScheme.id, layer));
       dispatch(setMouseMode(MouseModes.DEFAULT));
     }
   };
@@ -181,6 +274,7 @@ const Board = () => {
         onContentMousedown={handleContentMouseDown}
         onContentMousemove={handleMouseMove}
         onContentMouseup={handleMouseUp}
+        onDblClick={handleContentDoubleClick}
         onTouchStart={handleMouseDown}
         onWheel={handleZoomStage}
         scaleX={zoom || 1}
