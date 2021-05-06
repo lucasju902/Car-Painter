@@ -129,7 +129,9 @@ const SizeProperty = (props) => {
     !AllowedLayerTypes.includes("layer_data.scaleY") &&
     !AllowedLayerTypes.includes("layer_data.radius") &&
     !AllowedLayerTypes.includes("layer_data.innerRadius") &&
-    !AllowedLayerTypes.includes("layer_data.outerRadius")
+    !AllowedLayerTypes.includes("layer_data.outerRadius") &&
+    !AllowedLayerTypes.includes("layer_data.pointerLength") &&
+    !AllowedLayerTypes.includes("layer_data.pointerWidth")
   )
     return <></>;
   return (
@@ -414,6 +416,68 @@ const SizeProperty = (props) => {
                 touched.layer_data.radius &&
                 errors.layer_data &&
                 errors.layer_data.radius
+              }
+              onBlur={handleBlur}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              mb={4}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          {AllowedLayerTypes.includes("layer_data.pointerWidth") ? (
+            <CustomeTextField
+              name="layer_data.pointerWidth"
+              label="Pointer Width"
+              variant="outlined"
+              type="number"
+              value={mathRound2(values.layer_data.pointerWidth)}
+              error={Boolean(
+                touched.layer_data &&
+                  touched.layer_data.pointerWidth &&
+                  errors.layer_data &&
+                  errors.layer_data.pointerWidth
+              )}
+              helperText={
+                touched.layer_data &&
+                touched.layer_data.pointerWidth &&
+                errors.layer_data &&
+                errors.layer_data.pointerWidth
+              }
+              onBlur={handleBlur}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              mb={4}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          {AllowedLayerTypes.includes("layer_data.pointerLength") ? (
+            <CustomeTextField
+              name="layer_data.pointerLength"
+              label="Pointer Length"
+              variant="outlined"
+              type="number"
+              value={mathRound2(values.layer_data.pointerLength)}
+              error={Boolean(
+                touched.layer_data &&
+                  touched.layer_data.pointerLength &&
+                  errors.layer_data &&
+                  errors.layer_data.pointerLength
+              )}
+              helperText={
+                touched.layer_data &&
+                touched.layer_data.pointerLength &&
+                errors.layer_data &&
+                errors.layer_data.pointerLength
               }
               onBlur={handleBlur}
               onChange={handleChange}

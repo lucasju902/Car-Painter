@@ -65,3 +65,14 @@ export const getRelativeShadowOffset = (boardRotate, offset) => {
   }
   return shadowOffset;
 };
+
+export const removeDuplicatedPointFromEnd = (points) => {
+  let new_points = [...points];
+  while (
+    new_points[new_points.length - 1] === new_points[new_points.length - 3] &&
+    new_points[new_points.length - 2] === new_points[new_points.length - 4]
+  ) {
+    new_points.splice(-2, 2);
+  }
+  return new_points;
+};

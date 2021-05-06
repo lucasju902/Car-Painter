@@ -10,6 +10,7 @@ import {
   Wedge,
   Arc,
   Line,
+  Arrow,
 } from "react-konva";
 import { mathRound2 } from "helper";
 
@@ -25,7 +26,8 @@ const Shape = ({
   points,
   lineCap,
   lineJoin,
-  dash,
+  pointerLength,
+  pointerWidth,
   innerRadius,
   outerRadius,
   cornerRadius,
@@ -306,7 +308,53 @@ const Shape = ({
           points={points}
           lineCap={lineCap}
           lineJoin={lineJoin}
-          dash={dash}
+          shadowColor={shapeRef.current ? shadowColor : null}
+          shadowBlur={shapeRef.current ? shadowBlur : null}
+          shadowOpacity={shapeRef.current ? shadowOpacity : null}
+          shadowOffsetX={shapeRef.current ? shadowOffsetX : null}
+          shadowOffsetY={shapeRef.current ? shadowOffsetY : null}
+          draggable={onChange}
+          onClick={onSelect}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onTransformEnd={handleTransformEnd}
+        />
+      );
+    case MouseModes.POLYGON:
+      return (
+        <Line
+          {...props}
+          ref={shapeRef}
+          x={x}
+          y={y}
+          points={points}
+          lineCap={lineCap}
+          lineJoin={lineJoin}
+          shadowColor={shapeRef.current ? shadowColor : null}
+          shadowBlur={shapeRef.current ? shadowBlur : null}
+          shadowOpacity={shapeRef.current ? shadowOpacity : null}
+          shadowOffsetX={shapeRef.current ? shadowOffsetX : null}
+          shadowOffsetY={shapeRef.current ? shadowOffsetY : null}
+          draggable={onChange}
+          closed={true}
+          onClick={onSelect}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onTransformEnd={handleTransformEnd}
+        />
+      );
+    case MouseModes.ARROW:
+      return (
+        <Arrow
+          {...props}
+          ref={shapeRef}
+          x={x}
+          y={y}
+          points={points}
+          lineCap={lineCap}
+          lineJoin={lineJoin}
+          pointerLength={pointerLength}
+          pointerWidth={pointerWidth}
           shadowColor={shapeRef.current ? shadowColor : null}
           shadowBlur={shapeRef.current ? shadowBlur : null}
           shadowOpacity={shapeRef.current ? shadowOpacity : null}

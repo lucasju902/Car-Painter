@@ -29,7 +29,8 @@ import {
   RotateLeft as RotateLeftIcon,
   RotateRight as RotateRightIcon,
   SignalWifi4Bar as WedgeIcon,
-  Timeline as LineIcon,
+  ShowChart as LineIcon,
+  TrendingUp as ArrowIcon,
 } from "@material-ui/icons";
 import {
   faSquare,
@@ -37,6 +38,7 @@ import {
   faStar,
   faDotCircle,
   faMousePointer,
+  faDrawPolygon,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCuttlefish } from "@fortawesome/free-brands-svg-icons";
 import { PaintingGuides, MouseModes } from "constant";
@@ -110,8 +112,16 @@ const modes = [
     icon: <CustomFontAwesomeIcon icon={faCuttlefish} />,
   },
   {
+    value: MouseModes.POLYGON,
+    icon: <CustomFontAwesomeIcon icon={faDrawPolygon} />,
+  },
+  {
     value: MouseModes.LINE,
     icon: <LineIcon />,
+  },
+  {
+    value: MouseModes.ARROW,
+    icon: <ArrowIcon fontSize="small" />,
   },
 ];
 

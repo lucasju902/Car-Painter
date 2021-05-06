@@ -14,7 +14,8 @@ import Board from "./Board";
 import Sidebar from "./sideBar";
 import PropertyBar from "./propertyBar";
 import ConfirmDialog from "dialogs/ConfirmDialog";
-import { PaintingGuides, DialogTypes } from "constant";
+import { MouseModes, PaintingGuides, DialogTypes } from "constant";
+import { removeDuplicatedPointFromEnd } from "helper";
 
 import { getScheme } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
@@ -27,10 +28,12 @@ import {
   updateLayerOnly,
   setClipboard as setLayerClipboard,
   cloneLayer,
+  createShape,
 } from "redux/reducers/layerReducer";
 import {
   setPaintingGuides,
   setZoom,
+  setMouseMode,
   setPressedKey,
   setBoardRotate,
 } from "redux/reducers/boardReducer";
@@ -53,12 +56,14 @@ const Scheme = () => {
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const clipboardLayer = useSelector((state) => state.layerReducer.clipboard);
+  const drawingLayer = useSelector((state) => state.layerReducer.drawingLayer);
   const overlayList = useSelector((state) => state.overlayReducer.list);
   const logoList = useSelector((state) => state.logoReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
+  const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
@@ -149,6 +154,28 @@ const Scheme = () => {
         setDialog(DialogTypes.LOGO);
       } else if (key === "b") {
         setDialog(DialogTypes.BASEPAINT);
+      } else if (key === "enter") {
+        if (
+          [
+            MouseModes.DEFAULT,
+            MouseModes.LINE,
+            MouseModes.ARROW,
+            MouseModes.POLYGON,
+          ].includes(mouseMode) &&
+          drawingLayer
+        ) {
+          let layer = {
+            ...drawingLayer,
+            layer_data: {
+              ...drawingLayer.layer_data,
+              points: removeDuplicatedPointFromEnd(
+                drawingLayer.layer_data.points
+              ),
+            },
+          };
+          dispatch(createShape(currentScheme.id, layer));
+          dispatch(setMouseMode(MouseModes.DEFAULT));
+        }
       }
     }
 

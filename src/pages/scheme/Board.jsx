@@ -27,7 +27,10 @@ import {
   setDrawingLayer,
 } from "redux/reducers/layerReducer";
 import { MouseModes, LayerTypes, DefaultLayer } from "constant";
-import { getRelativePointerPosition } from "helper";
+import {
+  getRelativePointerPosition,
+  removeDuplicatedPointFromEnd,
+} from "helper";
 
 const Board = () => {
   const scaleBy = 1.2;
@@ -54,7 +57,6 @@ const Board = () => {
 
   const handleMouseDown = (e) => {
     // console.log("Mouse Down");
-    console.log(e);
     if (mouseMode === MouseModes.DEFAULT) {
       const clickedOnEmpty = e.target === e.target.getStage();
       if (clickedOnEmpty && currentLayer) {
@@ -63,7 +65,6 @@ const Board = () => {
     }
   };
   const handleContentMouseDown = (e) => {
-    console.log("Mouse Down");
     if (mouseMode !== MouseModes.DEFAULT) {
       const position = getRelativePointerPosition(stageRef.current);
       if (!drawingLayer) {
@@ -105,17 +106,17 @@ const Board = () => {
             ...drawingLayer,
             layer_data: {
               ...drawingLayer.layer_data,
-              points: [...drawingLayer.layer_data.points],
+              points: removeDuplicatedPointFromEnd(
+                drawingLayer.layer_data.points
+              ),
             },
           };
-          layer.layer_data.points.splice(
-            -2,
-            2,
+          layer.layer_data.points = layer.layer_data.points.concat([
             position.x - drawingLayer.layer_data.left,
             position.y - drawingLayer.layer_data.top,
             position.x - drawingLayer.layer_data.left,
-            position.y - drawingLayer.layer_data.top
-          );
+            position.y - drawingLayer.layer_data.top,
+          ]);
           dispatch(setDrawingLayer(layer));
         }
       }
@@ -178,7 +179,6 @@ const Board = () => {
     setPrevPosition(position);
   };
   const handleContentDoubleClick = (e) => {
-    console.log("Double Click");
     const position = getRelativePointerPosition(stageRef.current);
     if (
       [
@@ -195,10 +195,9 @@ const Board = () => {
         ...drawingLayer,
         layer_data: {
           ...drawingLayer.layer_data,
-          points: [...drawingLayer.layer_data.points],
+          points: removeDuplicatedPointFromEnd(drawingLayer.layer_data.points),
         },
       };
-      layer.layer_data.points.splice(-2, 6);
       dispatch(createShape(currentScheme.id, layer));
       dispatch(setMouseMode(MouseModes.DEFAULT));
     }
