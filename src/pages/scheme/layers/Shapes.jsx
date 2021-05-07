@@ -40,7 +40,7 @@ const Shapes = (props) => {
             points={
               layer.layer_data.points
                 ? removeDuplicatedPointFromEnd(layer.layer_data.points)
-                : null
+                : []
             }
             pointerLength={layer.layer_data.pointerLength}
             pointerWidth={layer.layer_data.pointerWidth}
@@ -91,7 +91,7 @@ const Shapes = (props) => {
           points={
             drawingLayer.layer_data.points
               ? removeDuplicatedPointFromEnd(drawingLayer.layer_data.points)
-              : null
+              : []
           }
           pointerLength={drawingLayer.layer_data.pointerLength}
           pointerWidth={drawingLayer.layer_data.pointerWidth}
