@@ -39,6 +39,7 @@ import {
   faDotCircle,
   faMousePointer,
   faDrawPolygon,
+  faPaintBrush,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCuttlefish } from "@fortawesome/free-brands-svg-icons";
 import { PaintingGuides, MouseModes } from "constant";
@@ -122,6 +123,10 @@ const modes = [
   {
     value: MouseModes.ARROW,
     icon: <ArrowIcon fontSize="small" />,
+  },
+  {
+    value: MouseModes.PEN,
+    icon: <CustomFontAwesomeIcon icon={faPaintBrush} />,
   },
 ];
 

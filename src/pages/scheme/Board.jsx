@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Stage, Layer, Rect } from "react-konva";
+import { Stage, Layer, FastLayer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
 
@@ -286,7 +286,7 @@ const Board = () => {
         ref={stageRef}
         draggable={mouseMode === MouseModes.DEFAULT}
       >
-        <Layer>
+        <FastLayer hitGraphEnabled={false}>
           {/* Background */}
           <Rect
             x={0}
@@ -314,6 +314,8 @@ const Board = () => {
             currentCarMake={currentCarMake}
             handleImageSize={handleImageSize}
           />
+        </FastLayer>
+        <Layer>
           <Overlays
             layers={layerList}
             handleImageSize={handleImageSize}
@@ -342,6 +344,8 @@ const Board = () => {
             onChange={handleLayerDataChange}
             onFontLoad={handleAddFont}
           />
+        </Layer>
+        <FastLayer hitGraphEnabled={false}>
           <PaintingGuideTop
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}
@@ -349,7 +353,8 @@ const Board = () => {
             frameSize={frameSize}
             guideData={currentScheme.guide_data}
           />
-
+        </FastLayer>
+        <Layer>
           <TransformerComponent
             selectedLayer={currentLayer}
             pressedKey={pressedKey}

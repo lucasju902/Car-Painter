@@ -299,6 +299,7 @@ const Shape = ({
         />
       );
     case MouseModes.LINE:
+    case MouseModes.PEN:
       return (
         <Line
           {...props}
