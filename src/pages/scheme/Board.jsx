@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Stage, Layer, FastLayer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
@@ -24,7 +24,8 @@ import {
   setCurrent as setCurrentLayer,
   updateLayer,
   createShape,
-  setDrawingLayer,
+  setDrawingStatus,
+  DrawingStatus,
 } from "redux/reducers/layerReducer";
 import { MouseModes, LayerTypes, DefaultLayer } from "constant";
 import {
@@ -36,6 +37,8 @@ const Board = () => {
   const scaleBy = 1.2;
   const stageRef = useRef(null);
   const [prevPosition, setPrevPosition] = useState({});
+  const [drawingLayer, setDrawingLayer] = useState(null);
+
   const dispatch = useDispatch();
   const { width, height, ref } = useResizeDetector();
 
@@ -53,7 +56,35 @@ const Board = () => {
   const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
   const layerList = useSelector((state) => state.layerReducer.list);
   const currentLayer = useSelector((state) => state.layerReducer.current);
-  const drawingLayer = useSelector((state) => state.layerReducer.drawingLayer);
+  const drawingStatus = useSelector(
+    (state) => state.layerReducer.drawingStatus
+  );
+
+  useEffect(() => {
+    switch (drawingStatus) {
+      case DrawingStatus.ADD_TO_SHAPE:
+        if (drawingLayer) {
+          let layer = {
+            ...drawingLayer,
+            layer_data: {
+              ...drawingLayer.layer_data,
+              points: removeDuplicatedPointFromEnd(
+                drawingLayer.layer_data.points
+              ),
+            },
+          };
+          dispatch(createShape(currentScheme.id, layer));
+          dispatch(setMouseMode(MouseModes.DEFAULT));
+        }
+        break;
+      case DrawingStatus.CLEAR_COMMAND:
+        setDrawingLayer(null);
+        dispatch(setDrawingStatus(null));
+        break;
+      default:
+        break;
+    }
+  }, [drawingStatus]);
 
   const handleMouseDown = (e) => {
     // console.log("Mouse Down");
@@ -95,7 +126,8 @@ const Board = () => {
           newLayer.layer_data.stroke = 5;
           newLayer.layer_data.points = [0, 0];
         }
-        dispatch(setDrawingLayer(newLayer));
+        // dispatch(setDrawingLayer(newLayer));
+        setDrawingLayer(newLayer);
       } else {
         if (
           [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
@@ -117,7 +149,8 @@ const Board = () => {
             position.x - drawingLayer.layer_data.left,
             position.y - drawingLayer.layer_data.top,
           ]);
-          dispatch(setDrawingLayer(layer));
+          // dispatch(setDrawingLayer(layer));
+          setDrawingLayer(layer);
         }
       }
     }
@@ -158,7 +191,8 @@ const Board = () => {
         layer.layer_data.points.push(position.x - drawingLayer.layer_data.left);
         layer.layer_data.points.push(position.y - drawingLayer.layer_data.top);
       }
-      dispatch(setDrawingLayer(layer));
+      // dispatch(setDrawingLayer(layer));
+      setDrawingLayer(layer);
     }
   };
   const handleMouseUp = (e) => {
@@ -169,11 +203,9 @@ const Board = () => {
         MouseModes.LINE,
         MouseModes.ARROW,
         MouseModes.POLYGON,
-      ].includes(mouseMode) &&
-      drawingLayer
+      ].includes(mouseMode)
     ) {
-      dispatch(createShape(currentScheme.id, drawingLayer));
-      dispatch(setMouseMode(MouseModes.DEFAULT));
+      dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
     }
     const position = getRelativePointerPosition(stageRef.current);
     setPrevPosition(position);
@@ -191,15 +223,7 @@ const Board = () => {
       prevPosition.x === position.x &&
       prevPosition.y === position.y
     ) {
-      let layer = {
-        ...drawingLayer,
-        layer_data: {
-          ...drawingLayer.layer_data,
-          points: removeDuplicatedPointFromEnd(drawingLayer.layer_data.points),
-        },
-      };
-      dispatch(createShape(currentScheme.id, layer));
-      dispatch(setMouseMode(MouseModes.DEFAULT));
+      dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
     }
   };
   const handleZoomStage = (event) => {

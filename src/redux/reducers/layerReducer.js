@@ -9,8 +9,13 @@ const initialState = {
   list: [],
   current: null,
   clipboard: null,
-  drawingLayer: null,
+  drawingStatus: null,
   loading: false,
+};
+
+export const DrawingStatus = {
+  CLEAR_COMMAND: "CLEAR_COMMAND",
+  ADD_TO_SHAPE: "ADD_TO_SHAPE",
 };
 
 export const slice = createSlice({
@@ -87,8 +92,8 @@ export const slice = createSlice({
       }
       state.clipboard = layer;
     },
-    setDrawingLayer: (state, action) => {
-      state.drawingLayer = action.payload;
+    setDrawingStatus: (state, action) => {
+      state.drawingStatus = action.payload;
     },
   },
 });
@@ -97,7 +102,7 @@ const { setLoading } = slice.actions;
 export const {
   setCurrent,
   setList,
-  setDrawingLayer,
+  setDrawingStatus,
   insertToList,
   concatList,
   updateListItem,
@@ -270,7 +275,7 @@ export const cloneLayer = (layerToClone) => async (dispatch, getState) => {
     try {
       const layer = await LayerService.createLayer({
         ..._.omit(layerToClone, ["id"]),
-        layer_data: {
+        layer_data: JSON.stringify({
           ...layerToClone.layer_data,
           left:
             frameSize.width / 2 -
@@ -282,7 +287,7 @@ export const cloneLayer = (layerToClone) => async (dispatch, getState) => {
             (layerToClone.layer_data.height
               ? layerToClone.layer_data.height / 2
               : 0),
-        },
+        }),
       });
       dispatch(insertToList(layer));
       dispatch(setCurrent(layer));
@@ -317,7 +322,7 @@ export const createShape = (schemeID, newlayer) => async (dispatch) => {
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
-    dispatch(setDrawingLayer(null));
+    dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

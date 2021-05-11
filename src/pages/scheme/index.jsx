@@ -28,7 +28,8 @@ import {
   updateLayerOnly,
   setClipboard as setLayerClipboard,
   cloneLayer,
-  createShape,
+  setDrawingStatus,
+  DrawingStatus,
 } from "redux/reducers/layerReducer";
 import {
   setPaintingGuides,
@@ -161,20 +162,9 @@ const Scheme = () => {
             MouseModes.LINE,
             MouseModes.ARROW,
             MouseModes.POLYGON,
-          ].includes(mouseMode) &&
-          drawingLayer
+          ].includes(mouseMode)
         ) {
-          let layer = {
-            ...drawingLayer,
-            layer_data: {
-              ...drawingLayer.layer_data,
-              points: removeDuplicatedPointFromEnd(
-                drawingLayer.layer_data.points
-              ),
-            },
-          };
-          dispatch(createShape(currentScheme.id, layer));
-          dispatch(setMouseMode(MouseModes.DEFAULT));
+          dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
         }
       }
     }

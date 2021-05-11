@@ -95,6 +95,8 @@ const TextNode = ({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}
+      perfectDrawEnabled={false}
+      shadowForStrokeEnabled={false}
     />
   );
 };

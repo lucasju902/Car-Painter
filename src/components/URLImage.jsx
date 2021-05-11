@@ -194,7 +194,8 @@ const URLImage = ({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}
-      // perfectDrawEnabled={false}
+      perfectDrawEnabled={false}
+      shadowForStrokeEnabled={false}
     />
   );
 };

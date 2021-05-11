@@ -148,6 +148,7 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          shadowForStrokeEnabled={false}
         />
       );
     case MouseModes.CIRCLE:
@@ -168,6 +169,7 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          shadowForStrokeEnabled={false}
         />
       );
     case MouseModes.ELLIPSE:
@@ -189,6 +191,7 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          shadowForStrokeEnabled={false}
         />
       );
     case MouseModes.STAR:
@@ -211,6 +214,7 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          shadowForStrokeEnabled={false}
         />
       );
     case MouseModes.RING:
@@ -232,6 +236,7 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          shadowForStrokeEnabled={false}
         />
       );
     case MouseModes.REGULARPOLYGON:
@@ -253,6 +258,7 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          shadowForStrokeEnabled={false}
         />
       );
     case MouseModes.WEDGE:
@@ -274,6 +280,7 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          shadowForStrokeEnabled={false}
         />
       );
     case MouseModes.ARC:
@@ -296,6 +303,7 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          shadowForStrokeEnabled={false}
         />
       );
     case MouseModes.LINE:

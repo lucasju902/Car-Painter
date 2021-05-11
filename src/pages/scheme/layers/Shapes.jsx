@@ -72,7 +72,7 @@ const Shapes = (props) => {
             name={layer.id.toString()}
             key={layer.id}
             layer_data={layer.layer_data}
-            // perfectDrawEnabled={false}
+            perfectDrawEnabled={false}
             onSelect={() => setCurrentLayer(layer)}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
@@ -105,7 +105,7 @@ const Shapes = (props) => {
           stroke={drawingLayer.layer_data.scolor}
           strokeEnabled={true}
           layer_data={drawingLayer.layer_data}
-          // perfectDrawEnabled={false}
+          perfectDrawEnabled={false}
         />
       ) : (
         <></>
