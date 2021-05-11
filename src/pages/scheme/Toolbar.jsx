@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
 import { setZoom, setMouseMode } from "redux/reducers/boardReducer";
@@ -43,6 +43,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faCuttlefish } from "@fortawesome/free-brands-svg-icons";
 import { PaintingGuides, MouseModes } from "constant";
+import ShortCutsDialog from "dialogs/ShortCutsDialog";
 
 const Typography = styled(MuiTypography)(spacing);
 const ToggleButton = styled(MuiToggleButton)(spacing);
@@ -130,6 +131,10 @@ const modes = [
   },
 ];
 
+const Dialogs = {
+  SHORTCUTS: "SHORTCUTS",
+};
+
 const Toolbar = (props) => {
   const {
     onZoomIn,
@@ -139,6 +144,7 @@ const Toolbar = (props) => {
   } = props;
 
   const dispatch = useDispatch();
+  const [dialog, setDialog] = useState(null);
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
@@ -232,7 +238,11 @@ const Toolbar = (props) => {
               </MenuItem>
             ))}
           </CustomSelect>
-          <Button mr={2} variant="outlined">
+          <Button
+            mr={2}
+            variant="outlined"
+            onClick={() => setDialog(Dialogs.SHORTCUTS)}
+          >
             SHORTCUTS
           </Button>
           <Button mr={2} variant="outlined">
@@ -262,6 +272,10 @@ const Toolbar = (props) => {
           />
         </Box>
       </Box>
+      <ShortCutsDialog
+        open={dialog === Dialogs.SHORTCUTS}
+        onCancel={() => setDialog(null)}
+      />
     </Wrapper>
   );
 };

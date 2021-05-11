@@ -70,6 +70,7 @@
     "react-scripts": "4.0.2",
     "react-sortablejs": "^6.0.0",
     "react-syntax-highlighter": "^15.4.3",
+    "react-useinterval": "^1.0.2",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",

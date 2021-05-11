@@ -15,7 +15,6 @@ import Sidebar from "./sideBar";
 import PropertyBar from "./propertyBar";
 import ConfirmDialog from "dialogs/ConfirmDialog";
 import { MouseModes, PaintingGuides, DialogTypes } from "constant";
-import { removeDuplicatedPointFromEnd } from "helper";
 
 import { getScheme } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
@@ -57,7 +56,6 @@ const Scheme = () => {
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const clipboardLayer = useSelector((state) => state.layerReducer.clipboard);
-  const drawingLayer = useSelector((state) => state.layerReducer.drawingLayer);
   const overlayList = useSelector((state) => state.overlayReducer.list);
   const logoList = useSelector((state) => state.logoReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
@@ -125,6 +123,32 @@ const Scheme = () => {
         handleZoomOut();
       } else if (event.key === ")" && event.shiftKey) {
         dispatch(setZoom(1));
+      } else if (event.key === "D" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.DEFAULT));
+      } else if (event.key === "B" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.PEN));
+      } else if (event.key === "R" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.RECT));
+      } else if (event.key === "C" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.CIRCLE));
+      } else if (event.key === "E" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.ELLIPSE));
+      } else if (event.key === "S" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.STAR));
+      } else if (event.key === "G" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.RING));
+      } else if (event.key === "O" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.REGULARPOLYGON));
+      } else if (event.key === "W" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.WEDGE));
+      } else if (event.key === "A" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.ARC));
+      } else if (event.key === "P" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.POLYGON));
+      } else if (event.key === "L" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.LINE));
+      } else if (event.key === ">" && event.shiftKey) {
+        dispatch(setMouseMode(MouseModes.ARROW));
       } else if (
         event.key === "c" &&
         (event.ctrlKey || event.metaKey) &&
