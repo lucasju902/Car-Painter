@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import useInterval from "react-useinterval";
 import { Stage, Layer, FastLayer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
@@ -37,7 +38,10 @@ const Board = () => {
   const scaleBy = 1.2;
   const stageRef = useRef(null);
   const [prevPosition, setPrevPosition] = useState({});
-  const [drawingLayer, setDrawingLayer] = useState(null);
+  const drawingLayerRef = useRef(null);
+  const prevTick = useRef(0);
+  const currentTick = useRef(0);
+  const [tick, setTick] = useState(0);
 
   const dispatch = useDispatch();
   const { width, height, ref } = useResizeDetector();
@@ -63,13 +67,13 @@ const Board = () => {
   useEffect(() => {
     switch (drawingStatus) {
       case DrawingStatus.ADD_TO_SHAPE:
-        if (drawingLayer) {
+        if (drawingLayerRef.current) {
           let layer = {
-            ...drawingLayer,
+            ...drawingLayerRef.current,
             layer_data: {
-              ...drawingLayer.layer_data,
+              ...drawingLayerRef.current.layer_data,
               points: removeDuplicatedPointFromEnd(
-                drawingLayer.layer_data.points
+                drawingLayerRef.current.layer_data.points
               ),
             },
           };
@@ -78,13 +82,26 @@ const Board = () => {
         }
         break;
       case DrawingStatus.CLEAR_COMMAND:
-        setDrawingLayer(null);
+        // setDrawingLayer(null);
+        drawingLayerRef.current = null;
         dispatch(setDrawingStatus(null));
         break;
       default:
         break;
     }
   }, [drawingStatus]);
+
+  useInterval(() => {
+    if (mouseMode !== MouseModes.DEFAULT) {
+      setTick(tick + 1);
+    }
+  }, 50 * (Math.min(currentTick.current - prevTick.current > 4 ? currentTick.current - prevTick.current : (currentTick.current - prevTick.current) / 2, 20) || 1));
+
+  useInterval(() => {
+    if (mouseMode !== MouseModes.DEFAULT) {
+      currentTick.current = currentTick.current + 1;
+    }
+  }, 5);
 
   const handleMouseDown = (e) => {
     // console.log("Mouse Down");
@@ -98,7 +115,7 @@ const Board = () => {
   const handleContentMouseDown = (e) => {
     if (mouseMode !== MouseModes.DEFAULT) {
       const position = getRelativePointerPosition(stageRef.current);
-      if (!drawingLayer) {
+      if (!drawingLayerRef.current) {
         let newLayer = {
           ...DefaultLayer,
           layer_type: LayerTypes.SHAPE,
@@ -126,8 +143,7 @@ const Board = () => {
           newLayer.layer_data.stroke = 5;
           newLayer.layer_data.points = [0, 0];
         }
-        // dispatch(setDrawingLayer(newLayer));
-        setDrawingLayer(newLayer);
+        drawingLayerRef.current = newLayer;
       } else {
         if (
           [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
@@ -135,64 +151,89 @@ const Board = () => {
           )
         ) {
           let layer = {
-            ...drawingLayer,
+            ...drawingLayerRef.current,
             layer_data: {
-              ...drawingLayer.layer_data,
+              ...drawingLayerRef.current.layer_data,
               points: removeDuplicatedPointFromEnd(
-                drawingLayer.layer_data.points
+                drawingLayerRef.current.layer_data.points
               ),
             },
           };
           layer.layer_data.points = layer.layer_data.points.concat([
-            position.x - drawingLayer.layer_data.left,
-            position.y - drawingLayer.layer_data.top,
-            position.x - drawingLayer.layer_data.left,
-            position.y - drawingLayer.layer_data.top,
+            position.x - drawingLayerRef.current.layer_data.left,
+            position.y - drawingLayerRef.current.layer_data.top,
+            position.x - drawingLayerRef.current.layer_data.left,
+            position.y - drawingLayerRef.current.layer_data.top,
           ]);
-          // dispatch(setDrawingLayer(layer));
-          setDrawingLayer(layer);
+
+          drawingLayerRef.current = layer;
         }
       }
     }
   };
-  const handleMouseMove = (e) => {
+  const handleMouseMove = () => {
     // console.log("Mouse Move");
 
-    if (mouseMode !== MouseModes.DEFAULT && drawingLayer) {
+    if (mouseMode !== MouseModes.DEFAULT && drawingLayerRef.current) {
       const position = getRelativePointerPosition(stageRef.current);
-      const width = position.x - drawingLayer.layer_data.left;
-      const height = position.y - drawingLayer.layer_data.top;
-
-      let layer = {
-        ...drawingLayer,
-        layer_data: {
-          ...drawingLayer.layer_data,
-          points: [...drawingLayer.layer_data.points],
-          width: width,
-          height: height,
-          radius: Math.abs(width),
-          innerRadius: Math.abs(width) / 2.5,
-          outerRadius: Math.abs(width),
-        },
-      };
+      const width = position.x - drawingLayerRef.current.layer_data.left;
+      const height = position.y - drawingLayerRef.current.layer_data.top;
+      const positionX = position.x - drawingLayerRef.current.layer_data.left;
+      const positionY = position.y - drawingLayerRef.current.layer_data.top;
       if (
-        [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-          mouseMode
-        )
+        drawingLayerRef.current.layer_data.points.length < 2 ||
+        positionX !==
+          drawingLayerRef.current.layer_data.points[
+            drawingLayerRef.current.layer_data.points.length - 2
+          ] ||
+        positionY !==
+          drawingLayerRef.current.layer_data.points[
+            drawingLayerRef.current.layer_data.points.length - 1
+          ]
       ) {
-        layer.layer_data.points.splice(
-          -2,
-          2,
-          position.x - drawingLayer.layer_data.left,
-          position.y - drawingLayer.layer_data.top
-        );
+        if (
+          currentTick.current - prevTick.current > 1 ||
+          drawingLayerRef.current.layer_data.points.length < 2 ||
+          Math.abs(
+            positionX -
+              drawingLayerRef.current.layer_data.points[
+                drawingLayerRef.current.layer_data.points.length - 2
+              ]
+          ) > 10 ||
+          Math.abs(
+            positionY -
+              drawingLayerRef.current.layer_data.points[
+                drawingLayerRef.current.layer_data.points.length - 1
+              ]
+          ) > 10
+        ) {
+          let layer = {
+            ...drawingLayerRef.current,
+            layer_data: {
+              ...drawingLayerRef.current.layer_data,
+              points: [...drawingLayerRef.current.layer_data.points],
+              width: width,
+              height: height,
+              radius: Math.abs(width),
+              innerRadius: Math.abs(width) / 2.5,
+              outerRadius: Math.abs(width),
+            },
+          };
+          if (
+            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+              mouseMode
+            )
+          ) {
+            layer.layer_data.points.splice(-2, 2, positionX, positionY);
+          }
+          if (mouseMode === MouseModes.PEN) {
+            layer.layer_data.points.push(positionX);
+            layer.layer_data.points.push(positionY);
+          }
+          drawingLayerRef.current = layer;
+        }
       }
-      if (mouseMode === MouseModes.PEN) {
-        layer.layer_data.points.push(position.x - drawingLayer.layer_data.left);
-        layer.layer_data.points.push(position.y - drawingLayer.layer_data.top);
-      }
-      // dispatch(setDrawingLayer(layer));
-      setDrawingLayer(layer);
+      prevTick.current = currentTick.current;
     }
   };
   const handleMouseUp = (e) => {
@@ -219,7 +260,7 @@ const Board = () => {
         MouseModes.ARROW,
         MouseModes.POLYGON,
       ].includes(mouseMode) &&
-      drawingLayer &&
+      drawingLayerRef.current &&
       prevPosition.x === position.x &&
       prevPosition.y === position.y
     ) {
@@ -351,7 +392,7 @@ const Board = () => {
           />
           <Shapes
             layers={layerList}
-            drawingLayer={drawingLayer}
+            drawingLayer={drawingLayerRef.current}
             boardRotate={boardRotate}
             mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
