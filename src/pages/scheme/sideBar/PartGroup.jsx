@@ -80,10 +80,13 @@ const PartGroup = (props) => {
     for (let index in sortedList) {
       if (sortedList[index].layer_order !== parseInt(index) + 1) {
         dispatch(
-          updateLayer({
-            ...sortedList[index],
-            layer_order: parseInt(index) + 1,
-          })
+          updateLayer(
+            {
+              ...sortedList[index],
+              layer_order: parseInt(index) + 1,
+            },
+            false
+          )
         );
       }
     }
@@ -97,10 +100,13 @@ const PartGroup = (props) => {
       const layer = layerList.find((item) => item.id == list[index].id);
       if (layer && layer.layer_order !== parseInt(index) + 1) {
         dispatch(
-          updateLayer({
-            ...layer,
-            layer_order: parseInt(index) + 1,
-          })
+          updateLayer(
+            {
+              ...layer,
+              layer_order: parseInt(index) + 1,
+            },
+            false
+          )
         );
       }
     }

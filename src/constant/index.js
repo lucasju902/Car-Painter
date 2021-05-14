@@ -115,6 +115,13 @@ export const MouseModes = {
   PEN: "Pen",
 };
 
+export const HistoryActions = {
+  SCHEME_CHANGE_ACTION: "SCHEME_CHANGE_ACTION",
+  LAYER_ADD_ACTION: "LAYER_ADD_ACTION",
+  LAYER_CHANGE_ACTION: "LAYER_CHANGE_ACTION",
+  LAYER_DELETE_ACTION: "LAYER_DELETE_ACTION",
+};
+
 export const AllowedLayerProps = {
   [LayerTypes.TEXT]: [
     "layer_visible",

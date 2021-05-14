@@ -1,9 +1,16 @@
 import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
 
-import { LayerTypes, DefaultLayer, AllowedLayerProps } from "constant";
+import {
+  LayerTypes,
+  DefaultLayer,
+  AllowedLayerProps,
+  HistoryActions,
+} from "constant";
+import { parseLayer } from "helper";
 import LayerService from "services/layerService";
 import { setMessage } from "./messageReducer";
+import { pushToActionHistory } from "./boardReducer";
 
 const initialState = {
   list: [],
@@ -135,6 +142,12 @@ export const createLayersFromBasePaint = (schemeID, base) => async (
       });
       dispatch(insertToList(layer));
       dispatch(setCurrent(layer));
+      dispatch(
+        pushToActionHistory({
+          action: HistoryActions.LAYER_ADD_ACTION,
+          data: parseLayer(layer),
+        })
+      );
     }
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
@@ -167,6 +180,12 @@ export const createLayerFromShape = (schemeID, shape, frameSize) => async (
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
+    dispatch(
+      pushToActionHistory({
+        action: HistoryActions.LAYER_ADD_ACTION,
+        data: parseLayer(layer),
+      })
+    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -198,6 +217,12 @@ export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
+    dispatch(
+      pushToActionHistory({
+        action: HistoryActions.LAYER_ADD_ACTION,
+        data: parseLayer(layer),
+      })
+    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -232,6 +257,12 @@ export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
+    dispatch(
+      pushToActionHistory({
+        action: HistoryActions.LAYER_ADD_ACTION,
+        data: parseLayer(layer),
+      })
+    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -261,13 +292,23 @@ export const createTextLayer = (schemeID, textObj, frameSize) => async (
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
+    dispatch(
+      pushToActionHistory({
+        action: HistoryActions.LAYER_ADD_ACTION,
+        data: parseLayer(layer),
+      })
+    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
   dispatch(setLoading(false));
 };
 
-export const cloneLayer = (layerToClone) => async (dispatch, getState) => {
+export const cloneLayer = (
+  layerToClone,
+  samePosition = false,
+  pushingToHistory = true
+) => async (dispatch, getState) => {
   const frameSize = getState().boardReducer.frameSize;
 
   if (layerToClone) {
@@ -277,20 +318,29 @@ export const cloneLayer = (layerToClone) => async (dispatch, getState) => {
         ..._.omit(layerToClone, ["id"]),
         layer_data: JSON.stringify({
           ...layerToClone.layer_data,
-          left:
-            frameSize.width / 2 -
-            (layerToClone.layer_data.width
-              ? layerToClone.layer_data.width / 2
-              : 0),
-          top:
-            frameSize.height / 2 -
-            (layerToClone.layer_data.height
-              ? layerToClone.layer_data.height / 2
-              : 0),
+          left: samePosition
+            ? layerToClone.layer_data.left
+            : frameSize.width / 2 -
+              (layerToClone.layer_data.width
+                ? layerToClone.layer_data.width / 2
+                : 0),
+          top: samePosition
+            ? layerToClone.layer_data.top
+            : frameSize.height / 2 -
+              (layerToClone.layer_data.height
+                ? layerToClone.layer_data.height / 2
+                : 0),
         }),
       });
       dispatch(insertToList(layer));
       dispatch(setCurrent(layer));
+      if (pushingToHistory)
+        dispatch(
+          pushToActionHistory({
+            action: HistoryActions.LAYER_ADD_ACTION,
+            data: parseLayer(layer),
+          })
+        );
     } catch (err) {
       dispatch(setMessage({ message: err.message }));
     }
@@ -323,19 +373,32 @@ export const createShape = (schemeID, newlayer) => async (dispatch) => {
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
     dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
+    dispatch(
+      pushToActionHistory({
+        action: HistoryActions.LAYER_ADD_ACTION,
+        data: parseLayer(layer),
+      })
+    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
   dispatch(setLoading(false));
 };
 
-export const updateLayer = (layer) => async (dispatch, getState) => {
+export const updateLayer = (layer, pushingToHistory = true) => async (
+  dispatch,
+  getState
+) => {
   // dispatch(setLoading(true));
   let configuredLayer = {
     ...layer,
     layer_order: layer.layer_order || 1,
   };
   try {
+    let previousLayer = getState().layerReducer.list.find(
+      (item) => item.id === layer.id
+    );
+
     dispatch(updateListItem(configuredLayer));
     const currentLayer = getState().layerReducer.current;
     if (currentLayer && currentLayer.id === configuredLayer.id) {
@@ -345,6 +408,15 @@ export const updateLayer = (layer) => async (dispatch, getState) => {
       ...configuredLayer,
       layer_data: JSON.stringify(configuredLayer.layer_data),
     });
+    if (pushingToHistory) {
+      dispatch(
+        pushToActionHistory({
+          action: HistoryActions.LAYER_CHANGE_ACTION,
+          prev_data: previousLayer,
+          next_data: configuredLayer,
+        })
+      );
+    }
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -364,13 +436,22 @@ export const updateLayerOnly = (layer) => async (dispatch, getState) => {
   }
 };
 
-export const deleteLayer = (layer) => async (dispatch) => {
+export const deleteLayer = (layer, pushingToHistory = true) => async (
+  dispatch
+) => {
   // dispatch(setLoading(true));
 
   try {
     dispatch(deleteListItem(layer));
     dispatch(setCurrent(null));
     await LayerService.deleteLayer(layer.id);
+    if (pushingToHistory)
+      dispatch(
+        pushToActionHistory({
+          action: HistoryActions.LAYER_DELETE_ACTION,
+          data: layer,
+        })
+      );
     dispatch(
       setMessage({ message: "Deleted Layer successfully!", type: "success" })
     );

@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
-import { setZoom, setMouseMode } from "redux/reducers/boardReducer";
+import {
+  setZoom,
+  setMouseMode,
+  historyActionBack,
+  historyActionUp,
+} from "redux/reducers/boardReducer";
 import { setCurrent as setCurrentLayer } from "redux/reducers/layerReducer";
 
 import { spacing } from "@material-ui/system";
@@ -31,6 +36,8 @@ import {
   SignalWifi4Bar as WedgeIcon,
   ShowChart as LineIcon,
   TrendingUp as ArrowIcon,
+  Undo as UndoIcon,
+  Redo as RedoIcon,
 } from "@material-ui/icons";
 import {
   faSquare,
@@ -170,6 +177,13 @@ const Toolbar = (props) => {
     }
     onChangeBoardRotation(newBoardRotate);
   };
+  const handleUndoRedo = (isUndo = true) => {
+    if (isUndo) {
+      dispatch(historyActionBack());
+    } else {
+      dispatch(historyActionUp());
+    }
+  };
   const handleModeChange = (event) => {
     dispatch(setMouseMode(event.target.value));
     if (event.target.value !== MouseModes.DEFAULT) {
@@ -186,9 +200,6 @@ const Toolbar = (props) => {
         width="100%"
       >
         <Box display="flex" justifyContent="start" alignContent="center">
-          <Typography variant="subtitle1" mr={2}>
-            Painting Guides:
-          </Typography>
           <ToggleButtonGroup
             value={paintingGuides}
             onChange={handleChangePaintingGuides}
@@ -245,9 +256,12 @@ const Toolbar = (props) => {
           >
             SHORTCUTS
           </Button>
-          <Button mr={2} variant="outlined">
-            SIM PREVIEW
-          </Button>
+          <IconButton onClick={() => handleUndoRedo(true)}>
+            <UndoIcon />
+          </IconButton>
+          <IconButton onClick={() => handleUndoRedo(false)}>
+            <RedoIcon />
+          </IconButton>
           <IconButton onClick={() => handleChangeBoardRotation(false)}>
             <RotateLeftIcon />
           </IconButton>

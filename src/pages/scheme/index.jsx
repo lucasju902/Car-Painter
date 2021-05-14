@@ -36,6 +36,8 @@ import {
   setMouseMode,
   setPressedKey,
   setBoardRotate,
+  historyActionUp,
+  historyActionBack,
 } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 
@@ -161,6 +163,10 @@ const Scheme = () => {
         clipboardLayer
       ) {
         dispatch(cloneLayer(clipboardLayer));
+      } else if (event.key === "z" && (event.ctrlKey || event.metaKey)) {
+        dispatch(historyActionBack());
+      } else if (event.key === "y" && (event.ctrlKey || event.metaKey)) {
+        dispatch(historyActionUp());
       } else if (key === "1") {
         togglePaintingGuides(PaintingGuides.CARMASK);
       } else if (key === "2") {

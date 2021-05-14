@@ -78,3 +78,19 @@ export const removeDuplicatedPointFromEnd = (points) => {
   }
   return new_points;
 };
+
+export const parseLayer = (layer) => {
+  let newLayer = layer;
+  if (typeof newLayer.layer_data === "string") {
+    newLayer.layer_data = JSON.parse(newLayer.layer_data);
+  }
+  return newLayer;
+};
+
+export const parseScheme = (scheme) => {
+  let newScheme = scheme;
+  if (typeof newScheme.guide_data === "string" || !newScheme.guide_data) {
+    newScheme.guide_data = JSON.parse(newScheme.guide_data) || {};
+  }
+  return newScheme;
+};

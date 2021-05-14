@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { DialogTypes, LayerTypes } from "constant";
@@ -55,12 +55,20 @@ const Sidebar = (props) => {
   const frameSize = useSelector((state) => state.boardReducer.frameSize);
   const basePaints = useSelector((state) => state.basePaintReducer.list);
 
-  const baseColor =
-    currentScheme.base_color === "transparent"
-      ? currentScheme.base_color
-      : "#" + currentScheme.base_color;
+  const baseColor = useMemo(
+    () =>
+      currentScheme.base_color === "transparent"
+        ? currentScheme.base_color
+        : "#" + currentScheme.base_color,
+    [currentScheme.base_color]
+  );
+
   const [colorInput, setColorInput] = useState(baseColor);
   const [colorDirty, setColorDirty] = useState(false);
+
+  useEffect(() => {
+    setColorInput(baseColor);
+  }, [baseColor]);
 
   const handleOpenBase = (base) => {
     dispatch(createLayersFromBasePaint(currentScheme.id, base));

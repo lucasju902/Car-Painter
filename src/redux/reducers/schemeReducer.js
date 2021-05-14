@@ -1,10 +1,13 @@
 import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
+import { HistoryActions } from "constant";
+import { parseScheme } from "helper";
 import SchemeService from "services/schemeService";
 import { setMessage } from "./messageReducer";
 import { setCurrent as setCurrentCarMake } from "./carMakeReducer";
 import { setList as setLayerList } from "./layerReducer";
 import { setList as setBasePaintList } from "./basePaintReducer";
+import { pushToActionHistory } from "./boardReducer";
 
 const initialState = {
   list: [],
@@ -121,7 +124,10 @@ export const getScheme = (schemeID) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const updateScheme = (payload) => async (dispatch, getState) => {
+export const updateScheme = (payload, pushingToHistory = true) => async (
+  dispatch,
+  getState
+) => {
   try {
     const currentScheme = getState().schemeReducer.current;
     if (currentScheme && currentScheme.id === payload.id) {
@@ -133,6 +139,14 @@ export const updateScheme = (payload) => async (dispatch, getState) => {
       guide_data: JSON.stringify(payload.guide_data),
     });
     dispatch(updateListItem(scheme));
+    if (pushingToHistory)
+      dispatch(
+        pushToActionHistory({
+          action: HistoryActions.SCHEME_CHANGE_ACTION,
+          prev_data: currentScheme,
+          next_data: parseScheme(scheme),
+        })
+      );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -146,14 +160,22 @@ export const changeName = (id, name) => async (dispatch) => {
   }
 };
 
-export const changeBaseColor = (id, color) => async (dispatch) => {
+export const changeBaseColor = (id, color) => async (dispatch, getState) => {
   try {
+    const currentScheme = getState().schemeReducer.current;
     let base_color = color;
     if (base_color !== "transparent") {
       base_color = base_color.replace("#", "");
     }
-    await SchemeService.updateScheme(id, { base_color });
+    const scheme = await SchemeService.updateScheme(id, { base_color });
     dispatch(setCurrentBaseColor(base_color));
+    dispatch(
+      pushToActionHistory({
+        action: HistoryActions.SCHEME_CHANGE_ACTION,
+        prev_data: currentScheme,
+        next_data: parseScheme(scheme),
+      })
+    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
