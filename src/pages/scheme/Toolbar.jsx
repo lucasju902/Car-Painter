@@ -3,11 +3,9 @@ import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setZoom,
-  setMouseMode,
   historyActionBack,
   historyActionUp,
 } from "redux/reducers/boardReducer";
-import { setCurrent as setCurrentLayer } from "redux/reducers/layerReducer";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -17,51 +15,26 @@ import {
   Box,
   OutlinedInput,
   InputAdornment,
-  Select,
-  MenuItem,
 } from "@material-ui/core";
 import {
   ToggleButton as MuiToggleButton,
   ToggleButtonGroup,
 } from "@material-ui/lab";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  ZoomIn as ZoomInIcon,
-  ZoomOut as ZoomOutIcon,
-  Octagon as OctagonIcon,
-} from "react-feather";
+import { ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "react-feather";
 import {
   RotateLeft as RotateLeftIcon,
   RotateRight as RotateRightIcon,
-  SignalWifi4Bar as WedgeIcon,
-  ShowChart as LineIcon,
-  TrendingUp as ArrowIcon,
   Undo as UndoIcon,
   Redo as RedoIcon,
 } from "@material-ui/icons";
-import {
-  faSquare,
-  faCircle,
-  faStar,
-  faDotCircle,
-  faMousePointer,
-  faDrawPolygon,
-  faPaintBrush,
-} from "@fortawesome/free-solid-svg-icons";
-import { faCuttlefish } from "@fortawesome/free-brands-svg-icons";
-import { PaintingGuides, MouseModes } from "constant";
-import ShortCutsDialog from "dialogs/ShortCutsDialog";
+
+import { PaintingGuides } from "constant";
+import LightTooltip from "components/LightTooltip";
 
 const Typography = styled(MuiTypography)(spacing);
 const ToggleButton = styled(MuiToggleButton)(spacing);
 const Button = styled(MuiButton)(spacing);
 const IconButton = styled(MuiIconButton)(spacing);
-const CustomSelect = styled(Select)`
-  .MuiSelect-select {
-    padding-left: 10px;
-  }
-  margin: 0 10px;
-`;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -78,69 +51,6 @@ const CustomOutlinedInput = styled(OutlinedInput)`
     width: 40px;
   }
 `;
-const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
-  transform: ${(props) =>
-    props.isstretch === "true" ? "scaleX(1.2) scaleY(0.8)" : "none"};
-`;
-
-const modes = [
-  {
-    value: MouseModes.DEFAULT,
-    icon: <CustomFontAwesomeIcon icon={faMousePointer} />,
-  },
-  {
-    value: MouseModes.RECT,
-    icon: <CustomFontAwesomeIcon icon={faSquare} />,
-  },
-  {
-    value: MouseModes.CIRCLE,
-    icon: <CustomFontAwesomeIcon icon={faCircle} />,
-  },
-  {
-    value: MouseModes.ELLIPSE,
-    icon: <CustomFontAwesomeIcon icon={faCircle} isstretch="true" />,
-  },
-  {
-    value: MouseModes.STAR,
-    icon: <CustomFontAwesomeIcon icon={faStar} />,
-  },
-  {
-    value: MouseModes.RING,
-    icon: <CustomFontAwesomeIcon icon={faDotCircle} />,
-  },
-  {
-    value: MouseModes.REGULARPOLYGON,
-    icon: <OctagonIcon size={17} />,
-  },
-  {
-    value: MouseModes.WEDGE,
-    icon: <WedgeIcon fontSize="small" />,
-  },
-  {
-    value: MouseModes.ARC,
-    icon: <CustomFontAwesomeIcon icon={faCuttlefish} />,
-  },
-  {
-    value: MouseModes.POLYGON,
-    icon: <CustomFontAwesomeIcon icon={faDrawPolygon} />,
-  },
-  {
-    value: MouseModes.LINE,
-    icon: <LineIcon />,
-  },
-  {
-    value: MouseModes.ARROW,
-    icon: <ArrowIcon fontSize="small" />,
-  },
-  {
-    value: MouseModes.PEN,
-    icon: <CustomFontAwesomeIcon icon={faPaintBrush} />,
-  },
-];
-
-const Dialogs = {
-  SHORTCUTS: "SHORTCUTS",
-};
 
 const Toolbar = (props) => {
   const {
@@ -157,7 +67,6 @@ const Toolbar = (props) => {
   );
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
-  const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
 
   const handleChangePaintingGuides = (event, newFormats) => {
     onChangePaintingGuides(newFormats);
@@ -182,12 +91,6 @@ const Toolbar = (props) => {
       dispatch(historyActionBack());
     } else {
       dispatch(historyActionUp());
-    }
-  };
-  const handleModeChange = (event) => {
-    dispatch(setMouseMode(event.target.value));
-    if (event.target.value !== MouseModes.DEFAULT) {
-      dispatch(setCurrentLayer(null));
     }
   };
 
@@ -232,36 +135,18 @@ const Toolbar = (props) => {
           </ToggleButtonGroup>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
-          <CustomSelect
-            value={mouseMode}
-            onChange={handleModeChange}
-            renderValue={(value) => {
-              const mode = modes.find((item) => item.value === value);
-              if (!mode) {
-                return <></>;
-              }
-              return mode.icon;
-            }}
-          >
-            {modes.map((mode) => (
-              <MenuItem value={mode.value} key={mode.value}>
-                {mode.icon}
-              </MenuItem>
-            ))}
-          </CustomSelect>
-          <Button
-            mr={2}
-            variant="outlined"
-            onClick={() => setDialog(Dialogs.SHORTCUTS)}
-          >
-            SHORTCUTS
-          </Button>
-          <IconButton onClick={() => handleUndoRedo(true)}>
-            <UndoIcon />
-          </IconButton>
-          <IconButton onClick={() => handleUndoRedo(false)}>
-            <RedoIcon />
-          </IconButton>
+          <LightTooltip title="Undo" arrow>
+            <IconButton onClick={() => handleUndoRedo(true)}>
+              <UndoIcon />
+            </IconButton>
+          </LightTooltip>
+
+          <LightTooltip title="Redo" arrow>
+            <IconButton onClick={() => handleUndoRedo(false)}>
+              <RedoIcon />
+            </IconButton>
+          </LightTooltip>
+
           <IconButton onClick={() => handleChangeBoardRotation(false)}>
             <RotateLeftIcon />
           </IconButton>
@@ -286,10 +171,6 @@ const Toolbar = (props) => {
           />
         </Box>
       </Box>
-      <ShortCutsDialog
-        open={dialog === Dialogs.SHORTCUTS}
-        onCancel={() => setDialog(null)}
-      />
     </Wrapper>
   );
 };

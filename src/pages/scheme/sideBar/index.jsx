@@ -1,41 +1,28 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
-import { DialogTypes, LayerTypes } from "constant";
+import { LayerTypes } from "constant";
 
 import { Box, Button } from "@material-ui/core";
 
-import {
-  faImage,
-  faFont,
-  faFolderOpen,
-  faShapes,
-  faCar,
-} from "@fortawesome/free-solid-svg-icons";
-
 import TitleBar from "./TitleBar";
 import PartGroup from "./PartGroup";
+import DrawerBar from "./DrawerBar";
 
 import { changeBaseColor } from "redux/reducers/schemeReducer";
-import {
-  createLayersFromBasePaint,
-  createLayerFromShape,
-  createLayerFromLogo,
-  createLayerFromUpload,
-  createTextLayer,
-} from "redux/reducers/layerReducer";
-
-import BasePaintDialog from "dialogs/BasePaintDialog";
-import ShapeDialog from "dialogs/ShapeDialog";
-import LogoDialog from "dialogs/LogoDialog";
-import UploadDialog from "dialogs/UploadDialog";
-import TextDialog from "dialogs/TextDialog";
 import ColorPickerInput from "components/ColorPickerInput";
 
-const Wrapper = styled(Box)`
-  width: 350px;
+const LayerWrapper = styled(Box)`
+  width: 300px;
   background: #666666;
   overflow: auto;
+`;
+const TitleWrapper = styled(Box)`
+  background: #666666;
+`;
+const Wrapper = styled(Box)`
+  height: calc(100% - 46px);
+  position: relative;
 `;
 const ColorApplyButton = styled(Button)`
   padding: 3px 15px 5px;
@@ -48,12 +35,6 @@ const Sidebar = (props) => {
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const layerList = useSelector((state) => state.layerReducer.list);
-  const overlayList = useSelector((state) => state.overlayReducer.list);
-  const logoList = useSelector((state) => state.logoReducer.list);
-  const uploadList = useSelector((state) => state.uploadReducer.list);
-  const fontList = useSelector((state) => state.fontReducer.list);
-  const frameSize = useSelector((state) => state.boardReducer.frameSize);
-  const basePaints = useSelector((state) => state.basePaintReducer.list);
 
   const baseColor = useMemo(
     () =>
@@ -69,32 +50,6 @@ const Sidebar = (props) => {
   useEffect(() => {
     setColorInput(baseColor);
   }, [baseColor]);
-
-  const handleOpenBase = (base) => {
-    dispatch(createLayersFromBasePaint(currentScheme.id, base));
-    setDialog(null);
-    focusBoard();
-  };
-  const handleOpenShape = (shape) => {
-    dispatch(createLayerFromShape(currentScheme.id, shape, frameSize));
-    setDialog(null);
-    focusBoard();
-  };
-  const handleOpenLogo = (logo) => {
-    dispatch(createLayerFromLogo(currentScheme.id, logo, frameSize));
-    setDialog(null);
-    focusBoard();
-  };
-  const handleOpenUpload = (upload) => {
-    dispatch(createLayerFromUpload(currentScheme.id, upload, frameSize));
-    setDialog(null);
-    focusBoard();
-  };
-  const handleCreateText = (values) => {
-    dispatch(createTextLayer(currentScheme.id, values, frameSize));
-    setDialog(null);
-    focusBoard();
-  };
 
   const handleChangeBasePaintColor = (color) => {
     dispatch(changeBaseColor(currentScheme.id, color));
@@ -112,125 +67,79 @@ const Sidebar = (props) => {
   };
 
   return (
-    <Wrapper p={3}>
-      <TitleBar />
-      <PartGroup
-        title="Car Parts"
-        layerList={layerList.filter(
-          (item) => item.layer_type === LayerTypes.CAR
-        )}
-        disableLock={true}
-        disableDnd={true}
-      />
-      <PartGroup
-        title="Logos & Text"
-        layerList={layerList.filter(
-          (item) =>
-            item.layer_type === LayerTypes.LOGO ||
-            item.layer_type === LayerTypes.TEXT ||
-            item.layer_type === LayerTypes.UPLOAD
-        )}
-        actions={[
-          {
-            onClick: () => setDialog(DialogTypes.UPLOAD),
-            icon: faFolderOpen,
-          },
-          {
-            onClick: () => setDialog(DialogTypes.LOGO),
-            icon: faImage,
-          },
-          {
-            onClick: () => setDialog(DialogTypes.TEXT),
-            icon: faFont,
-          },
-        ]}
-      />
-      <PartGroup
-        title="Shapes"
-        layerList={layerList.filter(
-          (item) => item.layer_type === LayerTypes.SHAPE
-        )}
-      />
-      <PartGroup
-        title="Overlays"
-        layerList={layerList.filter(
-          (item) => item.layer_type === LayerTypes.OVERLAY
-        )}
-        actions={[
-          {
-            onClick: () => setDialog(DialogTypes.SHAPE),
-            icon: faShapes,
-          },
-        ]}
-      />
-      <PartGroup
-        title="Base Paint"
-        layerList={layerList.filter(
-          (item) => item.layer_type === LayerTypes.BASE
-        )}
-        actions={[
-          {
-            onClick: () => setDialog(DialogTypes.BASEPAINT),
-            icon: faCar,
-          },
-        ]}
-        disableLock={true}
-        extraChildren={
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <ColorPickerInput
-              value={colorInput}
-              onChange={handleChangeBasePaintColor}
-              onInputChange={handleChangeBasePaintColorInput}
-            />
-            {colorDirty ? (
-              <ColorApplyButton
-                onClick={handleApplyBasePaintColor}
-                variant="outlined"
-              >
-                Apply
-              </ColorApplyButton>
-            ) : (
-              <></>
+    <Box display="flex" flexDirection="column">
+      <TitleWrapper px={3}>
+        <TitleBar />
+      </TitleWrapper>
+      <Wrapper display="flex">
+        <DrawerBar
+          dialog={dialog}
+          setDialog={setDialog}
+          focusBoard={focusBoard}
+        />
+        <LayerWrapper pr={3} pb={2}>
+          <PartGroup
+            title="Car Parts"
+            layerList={layerList.filter(
+              (item) => item.layer_type === LayerTypes.CAR
             )}
-          </Box>
-        }
-      />
-
-      <BasePaintDialog
-        open={dialog === DialogTypes.BASEPAINT}
-        basePaints={basePaints}
-        onOpenBase={handleOpenBase}
-        onCancel={() => setDialog(null)}
-      />
-      <ShapeDialog
-        open={dialog === DialogTypes.SHAPE}
-        shapes={overlayList}
-        onOpenShape={handleOpenShape}
-        onCancel={() => setDialog(null)}
-      />
-      <LogoDialog
-        open={dialog === DialogTypes.LOGO}
-        logos={logoList}
-        onOpenLogo={handleOpenLogo}
-        onCancel={() => setDialog(null)}
-      />
-      <UploadDialog
-        open={dialog === DialogTypes.UPLOAD}
-        uploads={uploadList}
-        onOpenUpload={handleOpenUpload}
-        onCancel={() => setDialog(null)}
-      />
-      <TextDialog
-        open={dialog === DialogTypes.TEXT}
-        fontList={fontList}
-        onCreate={handleCreateText}
-        onCancel={() => setDialog(null)}
-      />
-    </Wrapper>
+            disableLock={true}
+            disableDnd={true}
+          />
+          <PartGroup
+            title="Logos & Text"
+            layerList={layerList.filter(
+              (item) =>
+                item.layer_type === LayerTypes.LOGO ||
+                item.layer_type === LayerTypes.TEXT ||
+                item.layer_type === LayerTypes.UPLOAD
+            )}
+          />
+          <PartGroup
+            title="Shapes"
+            layerList={layerList.filter(
+              (item) => item.layer_type === LayerTypes.SHAPE
+            )}
+          />
+          <PartGroup
+            title="Overlays"
+            layerList={layerList.filter(
+              (item) => item.layer_type === LayerTypes.OVERLAY
+            )}
+          />
+          <PartGroup
+            title="Base Paint"
+            layerList={layerList.filter(
+              (item) => item.layer_type === LayerTypes.BASE
+            )}
+            disableLock={true}
+            extraChildren={
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <ColorPickerInput
+                  value={colorInput}
+                  onChange={handleChangeBasePaintColor}
+                  onInputChange={handleChangeBasePaintColorInput}
+                />
+                {colorDirty ? (
+                  <ColorApplyButton
+                    onClick={handleApplyBasePaintColor}
+                    variant="outlined"
+                  >
+                    Apply
+                  </ColorApplyButton>
+                ) : (
+                  <></>
+                )}
+              </Box>
+            }
+          />
+        </LayerWrapper>
+      </Wrapper>
+    </Box>
   );
 };
 

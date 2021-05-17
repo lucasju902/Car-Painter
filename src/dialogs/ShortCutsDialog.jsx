@@ -75,7 +75,7 @@ const ShortCutsDialog = (props) => {
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle id="short-cuts-title">ShortCuts</DialogTitle>
+      <DialogTitle id="short-cuts-title">Shortcuts</DialogTitle>
       <DialogContent dividers id="short-cuts-dialog-content">
         {Object.keys(ShortCuts).map((item, index) => (
           <Grid container key={index} mb={2}>

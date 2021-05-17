@@ -57,15 +57,15 @@ const PartItem = (props) => {
       className={clsx(selected && "activeItem")}
     >
       <Grid container justify="space-between" alignItems="center" spacing={2}>
-        <Grid item xs={10}>
+        <Grid item xs={disableLock ? 12 : 10}>
           <Grid container wrap="nowrap" alignItems="center" spacing={2}>
+            <Grid item xs={10}>
+              <Typography noWrap>{text}</Typography>
+            </Grid>
             <Grid item xs={2}>
               <IconButton onClick={handleToggleVisible} size="small">
                 {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </IconButton>
-            </Grid>
-            <Grid item xs={10}>
-              <Typography noWrap>{text}</Typography>
             </Grid>
           </Grid>
         </Grid>
