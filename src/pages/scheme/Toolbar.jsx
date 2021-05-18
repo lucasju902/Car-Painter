@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,7 +9,6 @@ import {
 
 import { spacing } from "@material-ui/system";
 import {
-  Button as MuiButton,
   IconButton as MuiIconButton,
   Typography as MuiTypography,
   Box,
@@ -21,19 +20,13 @@ import {
   ToggleButtonGroup,
 } from "@material-ui/lab";
 import { ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "react-feather";
-import {
-  RotateLeft as RotateLeftIcon,
-  RotateRight as RotateRightIcon,
-  Undo as UndoIcon,
-  Redo as RedoIcon,
-} from "@material-ui/icons";
+import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
 
 import { PaintingGuides } from "constant";
 import LightTooltip from "components/LightTooltip";
 
 const Typography = styled(MuiTypography)(spacing);
 const ToggleButton = styled(MuiToggleButton)(spacing);
-const Button = styled(MuiButton)(spacing);
 const IconButton = styled(MuiIconButton)(spacing);
 
 const Wrapper = styled.div`
@@ -53,20 +46,19 @@ const CustomOutlinedInput = styled(OutlinedInput)`
 `;
 
 const Toolbar = (props) => {
-  const {
-    onZoomIn,
-    onZoomOut,
-    onChangePaintingGuides,
-    onChangeBoardRotation,
-  } = props;
+  const { onZoomIn, onZoomOut, onChangePaintingGuides } = props;
 
   const dispatch = useDispatch();
-  const [dialog, setDialog] = useState(null);
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
+  const actionHistoryIndex = useSelector(
+    (state) => state.boardReducer.actionHistoryIndex
+  );
+  const actionHistory = useSelector(
+    (state) => state.boardReducer.actionHistory
+  );
   const zoom = useSelector((state) => state.boardReducer.zoom);
-  const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
 
   const handleChangePaintingGuides = (event, newFormats) => {
     onChangePaintingGuides(newFormats);
@@ -75,17 +67,7 @@ const Toolbar = (props) => {
   const handleZoomChange = (event) => {
     dispatch(setZoom(parseInt(event.target.value || 0) / 100.0));
   };
-  const handleChangeBoardRotation = (isRight = true) => {
-    let newBoardRotate;
-    if (isRight) {
-      newBoardRotate = boardRotate + 90;
-      if (newBoardRotate >= 360) newBoardRotate = 0;
-    } else {
-      newBoardRotate = boardRotate - 90;
-      if (newBoardRotate < 0) newBoardRotate = 270;
-    }
-    onChangeBoardRotation(newBoardRotate);
-  };
+
   const handleUndoRedo = (isUndo = true) => {
     if (isUndo) {
       dispatch(historyActionBack());
@@ -136,23 +118,23 @@ const Toolbar = (props) => {
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
           <LightTooltip title="Undo" arrow>
-            <IconButton onClick={() => handleUndoRedo(true)}>
+            <IconButton
+              disabled={actionHistoryIndex === -1}
+              onClick={() => handleUndoRedo(true)}
+            >
               <UndoIcon />
             </IconButton>
           </LightTooltip>
 
           <LightTooltip title="Redo" arrow>
-            <IconButton onClick={() => handleUndoRedo(false)}>
+            <IconButton
+              disabled={actionHistoryIndex === actionHistory.length - 1}
+              onClick={() => handleUndoRedo(false)}
+            >
               <RedoIcon />
             </IconButton>
           </LightTooltip>
 
-          <IconButton onClick={() => handleChangeBoardRotation(false)}>
-            <RotateLeftIcon />
-          </IconButton>
-          <IconButton onClick={() => handleChangeBoardRotation(true)}>
-            <RotateRightIcon />
-          </IconButton>
           <IconButton onClick={onZoomOut}>
             <ZoomOutIcon />
           </IconButton>

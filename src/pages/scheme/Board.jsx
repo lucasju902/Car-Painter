@@ -4,7 +4,13 @@ import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
 
-import { Box } from "@material-ui/core";
+import styled from "styled-components/macro";
+import { spacing } from "@material-ui/system";
+import { Box, IconButton as MuiIconButton } from "@material-ui/core";
+import {
+  RotateLeft as RotateLeftIcon,
+  RotateRight as RotateRightIcon,
+} from "@material-ui/icons";
 
 import PaintingGuideTop from "./guides/PaintingGuideTop";
 import PaintingGuideBottom from "./guides/PaintingGuideBottom";
@@ -14,6 +20,7 @@ import Overlays from "./layers/Overlays";
 import LogosAndTexts from "./layers/LogosAndTexts";
 import Shapes from "./layers/Shapes";
 import TransformerComponent from "components/TransformerComponent";
+import LightTooltip from "components/LightTooltip";
 
 import {
   setFrameSizeToMax,
@@ -34,7 +41,16 @@ import {
   removeDuplicatedPointFromEnd,
 } from "helper";
 
-const Board = () => {
+const IconButton = styled(MuiIconButton)(spacing);
+const RotationButton = styled(IconButton)`
+  background: black;
+  border-radius: 0;
+  &:hover {
+    background: #444;
+  }
+`;
+
+const Board = ({ onChangeBoardRotation }) => {
   const scaleBy = 1.2;
   const stageRef = useRef(null);
   const [prevPosition, setPrevPosition] = useState({});
@@ -321,14 +337,28 @@ const Board = () => {
     dispatch(insertToLoadedFontList(fontFamily));
   };
 
+  const handleChangeBoardRotation = (isRight = true) => {
+    let newBoardRotate;
+    if (isRight) {
+      newBoardRotate = boardRotate + 90;
+      if (newBoardRotate >= 360) newBoardRotate = 0;
+    } else {
+      newBoardRotate = boardRotate - 90;
+      if (newBoardRotate < 0) newBoardRotate = 270;
+    }
+    onChangeBoardRotation(newBoardRotate);
+  };
+
   return (
     <Box
       width="100%"
       height="100%"
       display="flex"
       justifyContent="center"
+      flexDirection="column"
       alignItems="center"
       margin="auto"
+      position="relative"
       ref={ref}
     >
       <Stage
@@ -420,6 +450,18 @@ const Board = () => {
           />
         </Layer>
       </Stage>
+      <Box position="absolute" right={currentLayer ? "350px" : 0} top={0}>
+        <LightTooltip title="Rotate Left" position="bottom" arrow>
+          <RotationButton onClick={() => handleChangeBoardRotation(false)}>
+            <RotateLeftIcon />
+          </RotationButton>
+        </LightTooltip>
+        <LightTooltip title="Rotate Right" position="bottom" arrow>
+          <RotationButton onClick={() => handleChangeBoardRotation(true)}>
+            <RotateRightIcon />
+          </RotationButton>
+        </LightTooltip>
+      </Box>
     </Box>
   );
 };

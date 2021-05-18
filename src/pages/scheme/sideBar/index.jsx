@@ -35,6 +35,7 @@ const Sidebar = (props) => {
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const layerList = useSelector((state) => state.layerReducer.list);
+  const currentCarMake = useSelector((state) => state.carMakeReducer.current);
 
   const baseColor = useMemo(
     () =>
@@ -79,7 +80,7 @@ const Sidebar = (props) => {
         />
         <LayerWrapper pr={3} pb={2}>
           <PartGroup
-            title="Car Parts"
+            title={currentCarMake ? currentCarMake.name : ""}
             layerList={layerList.filter(
               (item) => item.layer_type === LayerTypes.CAR
             )}

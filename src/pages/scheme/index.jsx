@@ -320,7 +320,7 @@ const Scheme = () => {
               background="#282828"
               overflow="hidden"
             >
-              <Board />
+              <Board onChangeBoardRotation={handleChangeBoardRotation} />
             </Wrapper>
             <PropertyBar />
           </Box>
@@ -328,7 +328,6 @@ const Scheme = () => {
             onZoomIn={handleZoomIn}
             onZoomOut={handleZoomOut}
             onChangePaintingGuides={handleChangePaintingGuides}
-            onChangeBoardRotation={handleChangeBoardRotation}
           />
         </Box>
       )}

@@ -60,6 +60,16 @@ const AddButton = styled(Button)`
     font-size: 1.3333333333em !important;
   }
 `;
+const CustomCardHeader = styled(CardHeader)`
+  .MuiCardHeader-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .MuiCardHeader-content {
+    width: calc(100% - 50px);
+  }
+`;
 
 const PartGroup = (props) => {
   const classes = useStyles();
@@ -128,7 +138,7 @@ const PartGroup = (props) => {
   return (
     <Box mb={2}>
       <Card>
-        <CardHeader
+        <CustomCardHeader
           title={title}
           action={
             <Box display="flex">
