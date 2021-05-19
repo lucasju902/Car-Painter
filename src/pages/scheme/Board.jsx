@@ -359,6 +359,7 @@ const Board = ({ onChangeBoardRotation }) => {
       alignItems="center"
       margin="auto"
       position="relative"
+      id="board-wrapper"
       ref={ref}
     >
       <Stage

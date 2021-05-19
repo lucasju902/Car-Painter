@@ -33,6 +33,7 @@ const ShortCuts = {
   "Shift →": "10x Move Lyer Right",
   "Shift +": "Zoom In",
   "Shift -": "Zoom Out",
+  "Shift 9": "Zoom To Fit",
   "Shift 0": "Zoom To 100%",
   "Shift D": "Default Mouse Mode",
   "Shift B": "Brush Drawing Mode",
@@ -49,6 +50,8 @@ const ShortCuts = {
   "Shift >": "Arrow Drawing Mode",
   "Ctrl/Meta C": "Copy Layer To Clipboard",
   "Ctrl/Meta V": "Paste Layer From Clipboard",
+  "Ctrl/Meta Z": "Undo Action",
+  "Ctrl/Meta Y": "Redo Action",
 };
 
 const Grid = styled(MuiGrid)(spacing);

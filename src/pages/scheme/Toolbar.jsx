@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,18 +12,21 @@ import {
   IconButton as MuiIconButton,
   Typography as MuiTypography,
   Box,
-  OutlinedInput,
-  InputAdornment,
+  Button,
 } from "@material-ui/core";
 import {
   ToggleButton as MuiToggleButton,
   ToggleButtonGroup,
 } from "@material-ui/lab";
-import { ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "react-feather";
-import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
+import {
+  Undo as UndoIcon,
+  Redo as RedoIcon,
+  KeyboardArrowUp as ArrowUpIcon,
+} from "@material-ui/icons";
 
 import { PaintingGuides } from "constant";
 import LightTooltip from "components/LightTooltip";
+import ZoomPopover from "dialogs/ZoomPopover";
 
 const Typography = styled(MuiTypography)(spacing);
 const ToggleButton = styled(MuiToggleButton)(spacing);
@@ -37,16 +40,16 @@ const Wrapper = styled.div`
   background: #151515;
   z-index: 1201;
 `;
-const CustomOutlinedInput = styled(OutlinedInput)`
-  .MuiOutlinedInput-input {
-    padding: 6px 14px;
-    border-bottom: none;
-    width: 40px;
+const ZoomButton = styled(Button)`
+  &.MuiButton-contained {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.12);
   }
 `;
 
 const Toolbar = (props) => {
-  const { onZoomIn, onZoomOut, onChangePaintingGuides } = props;
+  const { onZoomIn, onZoomOut, onZoomFit, onChangePaintingGuides } = props;
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const dispatch = useDispatch();
   const paintingGuides = useSelector(
@@ -64,16 +67,24 @@ const Toolbar = (props) => {
     onChangePaintingGuides(newFormats);
   };
 
-  const handleZoomChange = (event) => {
-    dispatch(setZoom(parseInt(event.target.value || 0) / 100.0));
-  };
-
   const handleUndoRedo = (isUndo = true) => {
     if (isUndo) {
       dispatch(historyActionBack());
     } else {
       dispatch(historyActionUp());
     }
+  };
+
+  const handleZoomPoperOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseZoomPoper = () => {
+    setAnchorEl(null);
+  };
+
+  const handleZoom = (value) => {
+    dispatch(setZoom(value));
   };
 
   return (
@@ -135,21 +146,22 @@ const Toolbar = (props) => {
             </IconButton>
           </LightTooltip>
 
-          <IconButton onClick={onZoomOut}>
-            <ZoomOutIcon />
-          </IconButton>
-          <IconButton onClick={onZoomIn} mr={1}>
-            <ZoomInIcon />
-          </IconButton>
-          <CustomOutlinedInput
-            id="zoom-value"
-            value={zoom * 100}
-            onChange={handleZoomChange}
-            endAdornment={<InputAdornment position="end">%</InputAdornment>}
-            // inputProps={{
-            //   "aria-label": "weight",
-            // }}
-            labelWidth={0}
+          <ZoomButton
+            variant="contained"
+            endIcon={<ArrowUpIcon />}
+            onClick={handleZoomPoperOpen}
+          >
+            {(zoom * 100).toFixed(2)} %
+          </ZoomButton>
+
+          <ZoomPopover
+            anchorEl={anchorEl}
+            zoom={zoom}
+            setZoom={handleZoom}
+            onZoomIn={onZoomIn}
+            onZoomOut={onZoomOut}
+            onZoomFit={onZoomFit}
+            onClose={handleCloseZoomPoper}
           />
         </Box>
       </Box>

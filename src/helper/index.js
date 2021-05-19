@@ -36,6 +36,8 @@ export const hexToRgba = (hex) => {
 export const mathRound2 = (num) =>
   Math.round((num + Number.EPSILON) * 100) / 100;
 
+export const mathRound4 = (num) => Math.round(num * 10000) / 10000;
+
 export const colorValidator = (color) => {
   if (!color || !color.length) return true;
   return validateColor(color);

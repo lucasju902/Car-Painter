@@ -40,6 +40,7 @@ import {
   historyActionBack,
 } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
+import { mathRound4 } from "helper";
 
 const Wrapper = styled(Box)`
   background-color: ${(props) => props.background};
@@ -64,6 +65,7 @@ const Scheme = () => {
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
+  const frameSize = useSelector((state) => state.boardReducer.frameSize);
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
@@ -77,10 +79,19 @@ const Scheme = () => {
   );
 
   const handleZoomIn = () => {
-    dispatch(setZoom(Math.max(Math.min(zoom * 1.25, 10), 0.25)));
+    dispatch(setZoom(mathRound4(Math.max(Math.min(zoom * 1.25, 10), 0.25))));
   };
   const handleZoomOut = () => {
-    dispatch(setZoom(Math.max(Math.min(zoom / 1.25, 10), 0.25)));
+    dispatch(setZoom(mathRound4(Math.max(Math.min(zoom / 1.25, 10), 0.25))));
+  };
+  const handleZoomFit = () => {
+    let width = document.getElementById("board-wrapper").offsetWidth;
+    let height = document.getElementById("board-wrapper").offsetHeight;
+    dispatch(
+      setZoom(
+        mathRound4(Math.min(width / frameSize.width, height / frameSize.height))
+      )
+    );
   };
   const handleChangePaintingGuides = (newFormats) => {
     dispatch(setPaintingGuides(newFormats));
@@ -125,6 +136,8 @@ const Scheme = () => {
         handleZoomOut();
       } else if (event.key === ")" && event.shiftKey) {
         dispatch(setZoom(1));
+      } else if (event.key === "(" && event.shiftKey) {
+        handleZoomFit();
       } else if (event.key === "D" && event.shiftKey) {
         dispatch(setMouseMode(MouseModes.DEFAULT));
       } else if (event.key === "B" && event.shiftKey) {
@@ -327,6 +340,7 @@ const Scheme = () => {
           <Toolbar
             onZoomIn={handleZoomIn}
             onZoomOut={handleZoomOut}
+            onZoomFit={handleZoomFit}
             onChangePaintingGuides={handleChangePaintingGuides}
           />
         </Box>
