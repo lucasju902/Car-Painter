@@ -54,6 +54,7 @@ const Scheme = () => {
 
   const tick = useRef(0);
   const prevTick = useRef(0);
+  const stageRef = useRef(null);
 
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -85,13 +86,16 @@ const Scheme = () => {
     dispatch(setZoom(mathRound4(Math.max(Math.min(zoom / 1.25, 10), 0.25))));
   };
   const handleZoomFit = () => {
-    let width = document.getElementById("board-wrapper").offsetWidth;
-    let height = document.getElementById("board-wrapper").offsetHeight;
-    dispatch(
-      setZoom(
-        mathRound4(Math.min(width / frameSize.width, height / frameSize.height))
-      )
+    let width = stageRef.current.attrs.width;
+    let height = stageRef.current.attrs.height;
+    const newZoom = mathRound4(
+      Math.min(width / frameSize.width, height / frameSize.height)
     );
+    stageRef.current.x((width / 2 - frameSize.width / 2) * newZoom + width / 2);
+    stageRef.current.y(
+      (height / 2 - frameSize.height / 2) * newZoom + height / 2
+    );
+    dispatch(setZoom(newZoom));
   };
   const handleChangePaintingGuides = (newFormats) => {
     dispatch(setPaintingGuides(newFormats));
@@ -333,7 +337,10 @@ const Scheme = () => {
               background="#282828"
               overflow="hidden"
             >
-              <Board onChangeBoardRotation={handleChangeBoardRotation} />
+              <Board
+                onChangeBoardRotation={handleChangeBoardRotation}
+                stageRef={stageRef}
+              />
             </Wrapper>
             <PropertyBar />
           </Box>

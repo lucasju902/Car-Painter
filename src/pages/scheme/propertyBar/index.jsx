@@ -227,7 +227,7 @@ const PropertyBar = () => {
                 pressedKey={pressedKey}
               />
               <PositionProperty {...formProps} />
-              <RotationProperty {...formProps} />
+              <RotationProperty {...formProps} toggleField={toggleField} />
               <ShadowProperty {...formProps} />
               <CornerProperty {...formProps} />
             </Form>

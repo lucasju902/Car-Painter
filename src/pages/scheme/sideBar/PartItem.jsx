@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import styled from "styled-components/macro";
 
-import { Box, Grid, IconButton, Typography } from "@material-ui/core";
+import { Box, IconButton, Typography } from "@material-ui/core";
 import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
@@ -65,38 +65,34 @@ const PartItem = (props) => {
       onMouseLeave={() => setHover(false)}
       className={clsx(selected && "activeItem", hover && "hoveredItem")}
     >
-      <Grid container justify="space-between" alignItems="center" spacing={2}>
-        <Grid item xs={disableLock ? 12 : 10}>
-          <Grid container wrap="nowrap" alignItems="center" spacing={2}>
-            <Grid item xs={10}>
-              <CustomTypography
-                active={layer_visible ? "true" : "false"}
-                noWrap
-              >
-                {text}
-              </CustomTypography>
-            </Grid>
-            {selected || hover || !layer_visible ? (
-              <Grid item xs={2}>
-                <IconButton onClick={handleToggleVisible} size="small">
-                  {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                </IconButton>
-              </Grid>
-            ) : (
-              <></>
-            )}
-          </Grid>
-        </Grid>
-        {!disableLock && (selected || hover || layer_locked) ? (
-          <Grid item xs={2}>
-            <IconButton onClick={handleToggleLock} size="small">
-              {layer_locked ? <LockIcon /> : <LockOpenIcon />}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        width="100%"
+      >
+        <CustomTypography active={layer_visible ? "true" : "false"} noWrap>
+          {text}
+        </CustomTypography>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          {!disableLock && (selected || hover || layer_locked) ? (
+            <Box mr={1}>
+              <IconButton onClick={handleToggleLock} size="small">
+                {layer_locked ? <LockIcon /> : <LockOpenIcon />}
+              </IconButton>
+            </Box>
+          ) : (
+            <Box width="28.28px" height="28.28px"></Box>
+          )}
+          {selected || hover || !layer_visible ? (
+            <IconButton onClick={handleToggleVisible} size="small">
+              {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>
-          </Grid>
-        ) : (
-          <></>
-        )}
-      </Grid>
+          ) : (
+            <Box width="28.28px" height="28.28px"></Box>
+          )}
+        </Box>
+      </Box>
     </Wrapper>
   );
 };

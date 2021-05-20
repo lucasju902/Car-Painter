@@ -50,9 +50,8 @@ const RotationButton = styled(IconButton)`
   }
 `;
 
-const Board = ({ onChangeBoardRotation }) => {
+const Board = ({ onChangeBoardRotation, stageRef }) => {
   const scaleBy = 1.2;
-  const stageRef = useRef(null);
   const [prevPosition, setPrevPosition] = useState({});
   const drawingLayerRef = useRef(null);
   const prevTick = useRef(0);
@@ -349,6 +348,8 @@ const Board = ({ onChangeBoardRotation }) => {
     onChangeBoardRotation(newBoardRotate);
   };
 
+  console.log(stageRef);
+
   return (
     <Box
       width="100%"
@@ -375,8 +376,8 @@ const Board = ({ onChangeBoardRotation }) => {
         scaleX={zoom || 1}
         scaleY={zoom || 1}
         rotation={boardRotate}
-        x={width / 2}
-        y={height / 2}
+        x={width - frameSize.width / 2}
+        y={height - frameSize.height / 2}
         offsetX={width / 2}
         offsetY={height / 2}
         ref={stageRef}

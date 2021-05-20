@@ -35,8 +35,8 @@ const CustomeTextField = styled(TextField)`
   }
 `;
 const TextPreviewWrapper = styled(Box)`
-  background: white;
   overflow: auto;
+  background: #${(props) => props.backColor};
 `;
 const TextPreview = styled(Box)`
   color: ${(props) => props.color};
@@ -56,6 +56,7 @@ const InnerForm = (props) => {
     setFieldValue,
     touched,
     values,
+    baseColor,
   } = props;
   const dispatch = useDispatch();
   const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
@@ -101,6 +102,7 @@ const InnerForm = (props) => {
         InputLabelProps={{
           shrink: true,
         }}
+        autoFocus={true}
       />
       <FormControl variant="outlined">
         <InputLabel id="font-select-label">Font</InputLabel>
@@ -190,6 +192,7 @@ const InnerForm = (props) => {
         display="flex"
         justifyContent="center"
         alignItems="center"
+        backColor={baseColor}
       >
         <TextPreview
           color={values.color}
@@ -207,7 +210,7 @@ const InnerForm = (props) => {
 };
 
 const TextDialog = (props) => {
-  const { fontList, onCancel, open, onCreate } = props;
+  const { fontList, onCancel, open, baseColor, onCreate } = props;
 
   return (
     <Dialog aria-labelledby="insert-text-title" open={open} onClose={onCancel}>
@@ -240,7 +243,11 @@ const TextDialog = (props) => {
         {(formProps) => (
           <Form onSubmit={formProps.handleSubmit}>
             <DialogContent dividers id="insert-text-dialog-content">
-              <InnerForm {...formProps} fontList={fontList} />
+              <InnerForm
+                {...formProps}
+                fontList={fontList}
+                baseColor={baseColor}
+              />
             </DialogContent>
             <DialogActions>
               <Button onClick={onCancel} color="secondary">

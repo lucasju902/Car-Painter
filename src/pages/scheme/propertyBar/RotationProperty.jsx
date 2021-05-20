@@ -11,8 +11,15 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  IconButton,
 } from "@material-ui/core";
-import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
+import {
+  ExpandMore as ExpandMoreIcon,
+  SwapHoriz as SwapHorizIcon,
+  SwapVert as SwapVertIcon,
+} from "@material-ui/icons";
+import { faSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SliderInput from "components/SliderInput";
 
 const RotationProperty = (props) => {
@@ -21,6 +28,7 @@ const RotationProperty = (props) => {
     handleBlur,
     handleChange,
     setFieldValue,
+    toggleField,
     touched,
     values,
   } = props;
@@ -57,52 +65,74 @@ const RotationProperty = (props) => {
           ) : (
             <></>
           )}
-          <Box display="flex" justifyContent="space-around">
-            {AllowedLayerTypes.includes("layer_data.flop") ? (
-              <FormControl component="fieldset">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      checked={Boolean(values.layer_data.flop)}
-                      onChange={(event) =>
-                        setFieldValue(
-                          "layer_data.flop",
-                          event.target.checked ? 1 : 0
-                        )
-                      }
-                    />
-                  }
-                  label="Flop"
-                  labelPlacement="start"
-                />
-              </FormControl>
-            ) : (
-              <></>
-            )}
-            {AllowedLayerTypes.includes("layer_data.flip") ? (
-              <FormControl component="fieldset">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      checked={Boolean(values.layer_data.flip)}
-                      onChange={(event) =>
-                        setFieldValue(
-                          "layer_data.flip",
-                          event.target.checked ? 1 : 0
-                        )
-                      }
-                    />
-                  }
-                  label="Flip"
-                  labelPlacement="start"
-                />
-              </FormControl>
-            ) : (
-              <></>
-            )}
-          </Box>
+          {AllowedLayerTypes.includes("layer_data.flop") ? (
+            <Box
+              display="flex"
+              alignItems="center"
+              flexDirection="row"
+              justifyContent="space-between"
+            >
+              <Typography variant="body1" color="textSecondary" mr={2}>
+                Flop
+              </Typography>
+              <IconButton
+                onClick={() =>
+                  setFieldValue(
+                    "layer_data.flop",
+                    values.layer_data.flop ? 0 : 1
+                  )
+                }
+                size="small"
+              >
+                {values.layer_data.flop ? (
+                  <SwapHorizIcon />
+                ) : (
+                  <>
+                    <SwapHorizIcon />
+                    <Box position="absolute" left="4px" top="5px">
+                      <FontAwesomeIcon icon={faSlash} size="sm" />
+                    </Box>
+                  </>
+                )}
+              </IconButton>
+            </Box>
+          ) : (
+            <></>
+          )}
+          {AllowedLayerTypes.includes("layer_data.flip") ? (
+            <Box
+              display="flex"
+              alignItems="center"
+              flexDirection="row"
+              justifyContent="space-between"
+            >
+              <Typography variant="body1" color="textSecondary" mr={2}>
+                Flip
+              </Typography>
+              <IconButton
+                onClick={() =>
+                  setFieldValue(
+                    "layer_data.flip",
+                    values.layer_data.flip ? 0 : 1
+                  )
+                }
+                size="small"
+              >
+                {values.layer_data.flip ? (
+                  <SwapVertIcon />
+                ) : (
+                  <>
+                    <SwapVertIcon />
+                    <Box position="absolute" left="4px" top="5px">
+                      <FontAwesomeIcon icon={faSlash} size="sm" />
+                    </Box>
+                  </>
+                )}
+              </IconButton>
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>

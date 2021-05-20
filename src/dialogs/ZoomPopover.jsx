@@ -78,6 +78,7 @@ const ZoomPopover = ({
           onChange={handleZoomChange}
           endAdornment={<InputAdornment position="end">%</InputAdornment>}
           labelWidth={0}
+          autoFocus={true}
         />
       </Box>
     </Popover>
