@@ -35,6 +35,7 @@ const Shape = ({
   angle,
   onSelect,
   onChange,
+  onHover,
   shadowColor,
   shadowBlur,
   shadowOpacity,
@@ -149,6 +150,8 @@ const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.CIRCLE:
@@ -170,6 +173,8 @@ const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.ELLIPSE:
@@ -192,6 +197,8 @@ const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.STAR:
@@ -215,6 +222,8 @@ const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.RING:
@@ -237,6 +246,8 @@ const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.REGULARPOLYGON:
@@ -259,6 +270,8 @@ const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.WEDGE:
@@ -281,6 +294,8 @@ const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.ARC:
@@ -304,6 +319,8 @@ const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.LINE:
@@ -327,6 +344,8 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.POLYGON:
@@ -350,6 +369,8 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     case MouseModes.ARROW:
@@ -374,6 +395,8 @@ const Shape = ({
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onTransformEnd={handleTransformEnd}
+          onMouseOver={() => props.listening && onHover && onHover(true)}
+          onMouseOut={() => props.listening && onHover && onHover(false)}
         />
       );
     default:

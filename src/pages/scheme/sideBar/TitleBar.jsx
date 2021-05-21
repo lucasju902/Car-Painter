@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 
-import {
-  changeName,
-  setCurrentName,
-  updateScheme,
-} from "redux/reducers/schemeReducer";
+import { changeName, updateScheme } from "redux/reducers/schemeReducer";
 
-import { Box, Button, IconButton, TextField } from "@material-ui/core";
+import { Box, IconButton, TextField } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Settings as SettingsIcon } from "@material-ui/icons";
+import {
+  Settings as SettingsIcon,
+  Save as SaveIcon,
+  SettingsBackupRestore as BackUpIcon,
+} from "@material-ui/icons";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import SchemeSettingsDialog from "dialogs/SchemeSettingsDialog";
 import ShortCutsDialog from "dialogs/ShortCutsDialog";
@@ -25,21 +25,26 @@ const DialogTypes = {
   SETTINGS: "SETTINGS",
 };
 
+const NameInput = styled(TextField)`
+  width: ${(props) => props.width};
+`;
+
 const TitleBar = () => {
   const dispatch = useDispatch();
 
-  const [dirtyName, setDirtyName] = useState(false);
+  const [name, setName] = useState("");
   const [dialog, setDialog] = useState(null);
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
 
   const handleNameChange = (event) => {
-    dispatch(setCurrentName(event.target.value));
-    setDirtyName(true);
+    setName(event.target.value);
   };
   const handleSaveName = () => {
-    dispatch(changeName(currentScheme.id, currentScheme.name));
-    setDirtyName(false);
+    dispatch(changeName(currentScheme.id, name));
+  };
+  const handleDiscardName = () => {
+    setName(currentScheme.name);
   };
   const handleApplySettings = (guide_data) => {
     dispatch(
@@ -50,6 +55,11 @@ const TitleBar = () => {
     );
     setDialog(null);
   };
+  useEffect(() => {
+    if (currentScheme) {
+      setName(currentScheme.name);
+    }
+  }, [currentScheme && currentScheme.name]);
 
   return (
     <Box
@@ -59,20 +69,30 @@ const TitleBar = () => {
       px={1}
       my={1}
     >
-      <Box display="flex" flexDirection="row">
-        <TextField
-          value={currentScheme ? currentScheme.name : ""}
-          onChange={handleNameChange}
-        />
-        {dirtyName ? (
-          <Button onClick={handleSaveName} variant="outlined">
-            Save
-          </Button>
+      <NameInput
+        value={name}
+        onChange={handleNameChange}
+        width={currentScheme && name !== currentScheme.name ? "150px" : "230px"}
+      />
+      <Box display="flex">
+        {currentScheme && name !== currentScheme.name ? (
+          <LightTooltip title="Discard Change" arrow>
+            <IconButton onClick={handleDiscardName} color="secondary">
+              <BackUpIcon />
+            </IconButton>
+          </LightTooltip>
         ) : (
           <></>
         )}
-      </Box>
-      <Box display="flex">
+        {currentScheme && name !== currentScheme.name ? (
+          <LightTooltip title="Save" arrow>
+            <IconButton onClick={handleSaveName}>
+              <SaveIcon />
+            </IconButton>
+          </LightTooltip>
+        ) : (
+          <></>
+        )}
         <LightTooltip title="Shortcuts" arrow>
           <IconButton onClick={() => setDialog(DialogTypes.SHORTCUTS)}>
             <CustomIcon icon={faQuestion} size="xs" />

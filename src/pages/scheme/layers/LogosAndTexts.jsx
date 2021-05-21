@@ -18,6 +18,7 @@ const LogosAndTexts = (props) => {
     boardRotate,
     onChange,
     onFontLoad,
+    onHover,
   } = props;
   const filteredLayers = layers.filter(
     (item) =>
@@ -63,6 +64,7 @@ const LogosAndTexts = (props) => {
                 !layer.layer_locked && mouseMode === MouseModes.DEFAULT
               }
               onChange={(values) => onChange(layer, values)}
+              onHover={(flag) => onHover(layer, flag)}
             />
           );
         }
@@ -111,6 +113,7 @@ const LogosAndTexts = (props) => {
             onSelect={() => setCurrentLayer(layer)}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
+            onHover={(flag) => onHover(layer, flag)}
           />
         );
       })}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
 import styled from "styled-components/macro";
 
@@ -36,8 +36,9 @@ const PartItem = (props) => {
     selected,
     disableLock,
     onSelect,
+    hovered,
+    onHover,
   } = props;
-  const [hover, setHover] = useState(false);
 
   const handleToggleVisible = (e) => {
     e.stopPropagation();
@@ -61,9 +62,9 @@ const PartItem = (props) => {
       borderColor="grey.700"
       borderRadius={5}
       onClick={onSelect}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      className={clsx(selected && "activeItem", hover && "hoveredItem")}
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+      className={clsx(selected && "activeItem", hovered && "hoveredItem")}
     >
       <Box
         display="flex"
@@ -75,7 +76,7 @@ const PartItem = (props) => {
           {text}
         </CustomTypography>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          {!disableLock && (selected || hover || layer_locked) ? (
+          {!disableLock && (selected || hovered || layer_locked) ? (
             <Box mr={1}>
               <IconButton onClick={handleToggleLock} size="small">
                 {layer_locked ? <LockIcon /> : <LockOpenIcon />}
@@ -84,7 +85,7 @@ const PartItem = (props) => {
           ) : (
             <Box width="28.28px" height="28.28px"></Box>
           )}
-          {selected || hover || !layer_visible ? (
+          {selected || hovered || !layer_visible ? (
             <IconButton onClick={handleToggleVisible} size="small">
               {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>

@@ -9,6 +9,7 @@ const URLImage = ({
   tellSize,
   onSelect,
   onChange,
+  onHover,
   filterColor,
   frameSize,
   allowFit,
@@ -196,6 +197,8 @@ const URLImage = ({
       onTransformEnd={handleTransformEnd}
       perfectDrawEnabled={false}
       shadowForStrokeEnabled={false}
+      onMouseOver={() => props.listening && onHover && onHover(true)}
+      onMouseOut={() => props.listening && onHover && onHover(false)}
     />
   );
 };

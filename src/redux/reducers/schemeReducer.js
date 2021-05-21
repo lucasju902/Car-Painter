@@ -154,6 +154,7 @@ export const updateScheme = (payload, pushingToHistory = true) => async (
 
 export const changeName = (id, name) => async (dispatch) => {
   try {
+    dispatch(setCurrentName(name));
     await SchemeService.updateScheme(id, { name });
   } catch (err) {
     dispatch(setMessage({ message: err.message }));

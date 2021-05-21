@@ -15,6 +15,7 @@ import { pushToActionHistory } from "./boardReducer";
 const initialState = {
   list: [],
   current: null,
+  hoveredJSON: {},
   clipboard: null,
   drawingStatus: null,
   loading: false,
@@ -92,6 +93,13 @@ export const slice = createSlice({
       }
       state.current = layer;
     },
+    setHoveredJSON: (state, action) => {
+      state.hoveredJSON = action.payload;
+    },
+    setHoveredJSONItem: (state, action) => {
+      let { key, value } = action.payload;
+      state.hoveredJSON[key] = value;
+    },
     setClipboard: (state, action) => {
       let layer = action.payload;
       if (layer && typeof layer.layer_data === "string") {
@@ -115,6 +123,8 @@ export const {
   updateListItem,
   deleteListItem,
   setClipboard,
+  setHoveredJSON,
+  setHoveredJSONItem,
   deleteItemsByUploadID,
 } = slice.actions;
 

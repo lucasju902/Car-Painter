@@ -10,6 +10,7 @@ import { MouseModes } from "constant";
 import {
   updateLayer,
   setCurrent as setCurrentLayer,
+  setHoveredJSONItem,
 } from "redux/reducers/layerReducer";
 import { setMouseMode } from "redux/reducers/boardReducer";
 
@@ -76,6 +77,7 @@ const PartGroup = (props) => {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(true);
   const currentLayer = useSelector((state) => state.layerReducer.current);
+  const hoveredJSON = useSelector((state) => state.layerReducer.hoveredJSON);
   const {
     layerList,
     title,
@@ -134,6 +136,9 @@ const PartGroup = (props) => {
     dispatch(setCurrentLayer(layer));
     dispatch(setMouseMode(MouseModes.DEFAULT));
   };
+  const hoverLayer = (layer, flag) => {
+    dispatch(setHoveredJSONItem({ key: layer.id, value: flag }));
+  };
 
   return (
     <Box mb={2}>
@@ -188,7 +193,9 @@ const PartGroup = (props) => {
                   toggleVisible={() => toggleField(item.id, "layer_visible")}
                   toggleLocked={() => toggleField(item.id, "layer_locked")}
                   selected={currentLayer && currentLayer.id === item.id}
+                  hovered={hoveredJSON[item.id]}
                   onSelect={() => selectLayer(item)}
+                  onHover={(flag) => hoverLayer(item, flag)}
                   disableLock={disableLock}
                 />
               ))}

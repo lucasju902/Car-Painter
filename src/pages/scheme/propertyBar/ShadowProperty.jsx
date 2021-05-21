@@ -24,6 +24,7 @@ const CustomeTextField = styled(TextField)`
 `;
 
 const ShadowProperty = (props) => {
+  const DefaultBlurToSet = 5;
   const {
     errors,
     handleBlur,
@@ -40,6 +41,15 @@ const ShadowProperty = (props) => {
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
   );
+  const handleColorChange = (value) => {
+    if (
+      !values.layer_data.shadowColor ||
+      values.layer_data.shadowColor === "transparent"
+    ) {
+      setFieldValue("layer_data.shadowBlur", DefaultBlurToSet);
+    }
+    setFieldValue("layer_data.shadowColor", value);
+  };
 
   if (
     !AllowedLayerTypes.includes("layer_data.shadowColor") &&
@@ -66,12 +76,8 @@ const ShadowProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.shadowColor}
-                  onChange={(color) =>
-                    setFieldValue("layer_data.shadowColor", color)
-                  }
-                  onInputChange={(color) =>
-                    setFieldValue("layer_data.shadowColor", color)
-                  }
+                  onChange={(color) => handleColorChange(color)}
+                  onInputChange={(color) => handleColorChange(color)}
                   error={Boolean(
                     errors.layer_data && errors.layer_data.shadowColor
                   )}

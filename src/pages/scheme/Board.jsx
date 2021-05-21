@@ -34,6 +34,7 @@ import {
   createShape,
   setDrawingStatus,
   DrawingStatus,
+  setHoveredJSONItem,
 } from "redux/reducers/layerReducer";
 import { MouseModes, LayerTypes, DefaultLayer } from "constant";
 import {
@@ -332,6 +333,9 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
   const handleLayerSelect = (layer) => {
     dispatch(setCurrentLayer(layer));
   };
+  const handleHoverLayer = (layer, flag) => {
+    dispatch(setHoveredJSONItem({ key: layer.id, value: flag }));
+  };
   const handleAddFont = (fontFamily) => {
     dispatch(insertToLoadedFontList(fontFamily));
   };
@@ -382,6 +386,9 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
         offsetY={height / 2}
         ref={stageRef}
         draggable={mouseMode === MouseModes.DEFAULT}
+        style={{
+          cursor: mouseMode === MouseModes.DEFAULT ? "default" : "crosshair",
+        }}
       >
         <Layer>
           {/* Background */}
@@ -419,6 +426,7 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
+            onHover={handleHoverLayer}
           />
           <Shapes
             layers={layerList}
@@ -427,6 +435,7 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
+            onHover={handleHoverLayer}
           />
           <LogosAndTexts
             layers={layerList}
@@ -438,6 +447,7 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
             onFontLoad={handleAddFont}
+            onHover={handleHoverLayer}
           />
           <PaintingGuideTop
             currentCarMake={currentCarMake}

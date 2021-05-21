@@ -13,6 +13,7 @@ const Shapes = (props) => {
     boardRotate,
     mouseMode,
     onChange,
+    onHover,
   } = props;
 
   return (
@@ -76,6 +77,7 @@ const Shapes = (props) => {
             onSelect={() => setCurrentLayer(layer)}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
+            onHover={(flag) => onHover(layer, flag)}
           />
         );
       })}

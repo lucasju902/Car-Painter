@@ -14,6 +14,7 @@ const Overlays = (props) => {
     mouseMode,
     boardRotate,
     onChange,
+    onHover,
   } = props;
 
   return (
@@ -56,6 +57,7 @@ const Overlays = (props) => {
             frameSize={frameSize}
             layer_data={layer.layer_data}
             onChange={(values) => onChange(layer, values)}
+            onHover={(flag) => onHover(layer, flag)}
           />
         );
       })}
