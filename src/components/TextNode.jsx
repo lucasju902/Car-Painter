@@ -8,7 +8,6 @@ const TextNode = ({
   fontFile,
   loadedFontList,
   loadedList,
-  isSelected,
   shadowColor,
   shadowBlur,
   shadowOpacity,
@@ -17,6 +16,7 @@ const TextNode = ({
   onSelect,
   onChange,
   onFontLoad,
+  onHover,
   ...props
 }) => {
   const [loadedFontFamily, setLoadedFontFamily] = useState(null);
@@ -97,6 +97,8 @@ const TextNode = ({
       onTransformEnd={handleTransformEnd}
       perfectDrawEnabled={false}
       shadowForStrokeEnabled={false}
+      onMouseOver={() => props.listening && onHover && onHover(true)}
+      onMouseOut={() => props.listening && onHover && onHover(false)}
     />
   );
 };

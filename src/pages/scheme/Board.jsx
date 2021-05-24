@@ -76,6 +76,9 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
   const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
   const layerList = useSelector((state) => state.layerReducer.list);
   const currentLayer = useSelector((state) => state.layerReducer.current);
+  const hoveredLayerJSON = useSelector(
+    (state) => state.layerReducer.hoveredJSON
+  );
   const drawingStatus = useSelector(
     (state) => state.layerReducer.drawingStatus
   );
@@ -423,6 +426,8 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             handleImageSize={handleImageSize}
             frameSize={frameSize}
             boardRotate={boardRotate}
+            hoveredLayerJSON={hoveredLayerJSON}
+            currentLayer={currentLayer}
             mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
@@ -434,6 +439,8 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             boardRotate={boardRotate}
             mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
+            hoveredLayerJSON={hoveredLayerJSON}
+            currentLayer={currentLayer}
             onChange={handleLayerDataChange}
             onHover={handleHoverLayer}
           />
@@ -445,6 +452,8 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             mouseMode={mouseMode}
             boardRotate={boardRotate}
             setCurrentLayer={handleLayerSelect}
+            hoveredLayerJSON={hoveredLayerJSON}
+            currentLayer={currentLayer}
             onChange={handleLayerDataChange}
             onFontLoad={handleAddFont}
             onHover={handleHoverLayer}
@@ -460,6 +469,17 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             selectedLayer={currentLayer}
             pressedKey={pressedKey}
           />
+          {hoveredLayerJSON &&
+          (!currentLayer || !hoveredLayerJSON[currentLayer.id]) ? (
+            <TransformerComponent
+              selectedLayer={layerList.find(
+                (item) => hoveredLayerJSON[item.id]
+              )}
+              hoveredTransform={true}
+            />
+          ) : (
+            <></>
+          )}
         </Layer>
       </Stage>
       <Box position="absolute" right={currentLayer ? "350px" : 0} top={0}>

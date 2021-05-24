@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import clsx from "clsx";
 import styled from "styled-components/macro";
 
@@ -39,6 +39,7 @@ const PartItem = (props) => {
     hovered,
     onHover,
   } = props;
+  const wrapperRef = useRef(null);
 
   const handleToggleVisible = (e) => {
     e.stopPropagation();
@@ -52,8 +53,15 @@ const PartItem = (props) => {
     toggleLocked();
   };
 
+  useEffect(() => {
+    if (selected || hovered) {
+      wrapperRef.current.scrollIntoView();
+    }
+  }, [selected, hovered]);
+
   return (
     <Wrapper
+      ref={wrapperRef}
       p={2}
       mb={1}
       display="flex"

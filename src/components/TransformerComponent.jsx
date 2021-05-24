@@ -3,7 +3,11 @@ import React, { useRef, useEffect, useMemo } from "react";
 import { MouseModes } from "constant";
 import { Transformer } from "react-konva";
 
-const TransformerComponent = ({ selectedLayer, pressedKey }) => {
+const TransformerComponent = ({
+  selectedLayer,
+  pressedKey,
+  hoveredTransform,
+}) => {
   const trRef = useRef();
   const keepRatio = useMemo(
     () =>
@@ -107,7 +111,9 @@ const TransformerComponent = ({ selectedLayer, pressedKey }) => {
         ref={trRef}
         keepRatio={keepRatio}
         enabledAnchors={
-          keepRatio
+          hoveredTransform
+            ? []
+            : keepRatio
             ? ["top-left", "top-right", "bottom-left", "bottom-right"]
             : [
                 "top-left",
@@ -120,7 +126,9 @@ const TransformerComponent = ({ selectedLayer, pressedKey }) => {
                 "bottom-right",
               ]
         }
+        rotateEnabled={!hoveredTransform}
         boundBoxFunc={boundBoxFunc}
+        borderStroke={hoveredTransform ? "red" : null}
       />
     );
   return <></>;

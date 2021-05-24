@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import _ from "lodash";
 import {
   Rect,
@@ -127,10 +127,9 @@ const Shape = ({
       );
     }
   };
-
-  switch (type) {
-    case MouseModes.RECT:
-      return (
+  return (
+    <>
+      {type === MouseModes.RECT ? (
         <Rect
           {...props}
           ref={shapeRef}
@@ -153,9 +152,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.CIRCLE:
-      return (
+      ) : type === MouseModes.CIRCLE ? (
         <Circle
           {...props}
           ref={shapeRef}
@@ -176,9 +173,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.ELLIPSE:
-      return (
+      ) : type === MouseModes.ELLIPSE ? (
         <Ellipse
           {...props}
           ref={shapeRef}
@@ -200,9 +195,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.STAR:
-      return (
+      ) : type === MouseModes.STAR ? (
         <Star
           {...props}
           ref={shapeRef}
@@ -225,9 +218,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.RING:
-      return (
+      ) : type === MouseModes.RING ? (
         <Ring
           {...props}
           ref={shapeRef}
@@ -249,9 +240,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.REGULARPOLYGON:
-      return (
+      ) : type === MouseModes.REGULARPOLYGON ? (
         <RegularPolygon
           {...props}
           ref={shapeRef}
@@ -273,9 +262,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.WEDGE:
-      return (
+      ) : type === MouseModes.WEDGE ? (
         <Wedge
           {...props}
           ref={shapeRef}
@@ -297,9 +284,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.ARC:
-      return (
+      ) : type === MouseModes.ARC ? (
         <Arc
           {...props}
           ref={shapeRef}
@@ -322,10 +307,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.LINE:
-    case MouseModes.PEN:
-      return (
+      ) : type === MouseModes.LINE || type === MouseModes.PEN ? (
         <Line
           {...props}
           ref={shapeRef}
@@ -347,9 +329,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.POLYGON:
-      return (
+      ) : type === MouseModes.POLYGON ? (
         <Line
           {...props}
           ref={shapeRef}
@@ -372,9 +352,7 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    case MouseModes.ARROW:
-      return (
+      ) : type === MouseModes.ARROW ? (
         <Arrow
           {...props}
           ref={shapeRef}
@@ -398,10 +376,11 @@ const Shape = ({
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
-      );
-    default:
-      return <></>;
-  }
+      ) : (
+        <></>
+      )}
+    </>
+  );
 };
 
 export default Shape;
