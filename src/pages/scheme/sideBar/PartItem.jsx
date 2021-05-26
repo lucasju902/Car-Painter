@@ -53,8 +53,19 @@ const PartItem = (props) => {
     toggleLocked();
   };
 
+  const isInViewport = (el) => {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  };
+
   useEffect(() => {
-    if (selected || hovered) {
+    if ((selected || hovered) && !isInViewport(wrapperRef.current)) {
       wrapperRef.current.scrollIntoView();
     }
   }, [selected, hovered]);

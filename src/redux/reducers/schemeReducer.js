@@ -114,7 +114,11 @@ export const getScheme = (schemeID) => async (dispatch) => {
   try {
     const result = await SchemeService.getScheme(schemeID);
     console.log("result: ", result);
-    dispatch(setCurrent(result.scheme));
+    let scheme = await SchemeService.updateScheme(schemeID, {
+      ..._.omit(result.scheme, ["carMake", "layers"]),
+      date_modified: Math.round(new Date().getTime() / 1000),
+    });
+    dispatch(setCurrent(scheme));
     dispatch(setCurrentCarMake(result.carMake));
     dispatch(setLayerList(result.layers));
     dispatch(setBasePaintList(result.basePaints));
