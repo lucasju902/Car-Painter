@@ -23,4 +23,14 @@ export default class SchemeService extends BaseAPIService {
   static updateScheme = async (schemeID, payload) => {
     return this.requestWithAuth(`/scheme/${schemeID}`, "PUT", payload);
   };
+
+  static uploadThumbnail = async (formData) => {
+    return this.requestWithAuth(
+      `/scheme/thumbnail`,
+      "POST",
+      formData,
+      0,
+      "multipart/form-data"
+    );
+  };
 }

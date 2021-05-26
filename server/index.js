@@ -9,7 +9,7 @@ const config = require("./config");
 const routes = require("./routes");
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "500mb" }));
 
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use("/", express.static(path.join(__dirname, "../build")));

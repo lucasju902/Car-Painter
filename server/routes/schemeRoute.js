@@ -18,4 +18,8 @@ router
   .route("/byUpload/:id")
   .get(isAuthenticated, SchemeController.getListByUploadID);
 
+router
+  .route("/thumbnail")
+  .post(isAuthenticated, SchemeController.uploadThumbnail);
+
 module.exports = router;

@@ -1,5 +1,7 @@
+const config = require("../config");
 const SchemeService = require("../services/schemeService");
 const LayerService = require("../services/layerService");
+const UploadService = require("../services/uploadService");
 const CarMakeService = require("../services/carMakeService");
 const logger = require("../config/winston");
 
@@ -105,6 +107,35 @@ class SchemeController {
         }
       }
       res.json(schemes);
+    } catch (err) {
+      logger.log("error", err.stack);
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
+
+  static async uploadThumbnail(req, res) {
+    try {
+      let uploadFiles;
+      if (config.bucketURL) {
+        uploadFiles = UploadService.uploadFilesToS3("thumbnail");
+      } else {
+        uploadFiles = UploadService.uploadFiles("thumbnail");
+      }
+      uploadFiles(req, res, async function (err) {
+        if (err) {
+          res.status(500).json({
+            message: err.message,
+          });
+        } else {
+          let { schemeID } = req.body;
+          let scheme = await SchemeService.updateById(schemeID, {
+            preview_pic: 1,
+          });
+          res.json(scheme);
+        }
+      });
     } catch (err) {
       logger.log("error", err.stack);
       res.status(500).json({

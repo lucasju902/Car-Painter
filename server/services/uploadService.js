@@ -39,14 +39,17 @@ class UploadService {
     return true;
   }
 
-  static uploadFiles() {
+  // type: "upload", "thumbnail"
+  static uploadFiles(type = "upload") {
     let storage = multer.diskStorage({
       destination: function (req, file, cb) {
-        cb(null, `./server/assets/uploads/`);
+        if (type === "upload") cb(null, `./server/assets/uploads/`);
+        else cb(null, "./server/assets/scheme_thumbnails/");
       },
       filename: function (req, file, cb) {
         let { userID } = req.body;
-        cb(null, userID + "_" + file.originalname);
+        if (type === "upload") cb(null, userID + "_" + file.originalname);
+        else cb(null, file.originalname);
       },
     });
     let upload = multer({ storage: storage }).fields([
@@ -55,7 +58,8 @@ class UploadService {
     return upload;
   }
 
-  static uploadFilesToS3() {
+  // type: "upload", "thumbnail"
+  static uploadFilesToS3(type = "upload") {
     let filesUploadMulter = multer({
       storage: multerS3({
         s3: s3,
@@ -66,7 +70,9 @@ class UploadService {
         },
         key: function (req, file, cb) {
           let { userID } = req.body;
-          cb(null, `uploads/${userID}_${file.originalname}`);
+          if (type === "upload")
+            cb(null, `uploads/${userID}_${file.originalname}`);
+          else cb(null, `scheme_thumbnails/${file.originalname}`);
         },
       }),
     }).fields([{ name: "files", maxCount: 3 }]);

@@ -56,9 +56,9 @@ class UploadController {
     try {
       let uploadFiles;
       if (config.bucketURL) {
-        uploadFiles = UploadService.uploadFilesToS3();
+        uploadFiles = UploadService.uploadFilesToS3("upload");
       } else {
-        uploadFiles = UploadService.uploadFiles();
+        uploadFiles = UploadService.uploadFiles("upload");
       }
       uploadFiles(req, res, async function (err) {
         if (err) {

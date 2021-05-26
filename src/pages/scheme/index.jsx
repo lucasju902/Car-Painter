@@ -20,6 +20,7 @@ import { getScheme } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
 import { getFontList } from "redux/reducers/fontReducer";
 import { getLogoList } from "redux/reducers/logoReducer";
+import { setMessage } from "redux/reducers/messageReducer";
 import {
   deleteLayer,
   setCurrent as setCurrentLayer,
@@ -40,7 +41,8 @@ import {
   historyActionBack,
 } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
-import { mathRound4 } from "helper";
+import { mathRound4, dataURItoBlob } from "helper";
+import SchemeService from "services/schemeService";
 
 const Wrapper = styled(Box)`
   background-color: ${(props) => props.background};
@@ -288,6 +290,26 @@ const Scheme = () => {
     setConfirmMessage("");
   };
 
+  const handleScreenShot = async () => {
+    if (stageRef.current && currentScheme) {
+      try {
+        let dataURL = stageRef.current.toDataURL({ pixelRatio: 0.5 });
+        let blob = dataURItoBlob(dataURL);
+        var fileOfBlob = new File([blob], `${currentScheme.id}.png`, {
+          type: "image/png",
+        });
+
+        let formData = new FormData();
+        formData.append("files", fileOfBlob);
+        formData.append("schemeID", currentScheme.id);
+
+        await SchemeService.uploadThumbnail(formData);
+      } catch (err) {
+        dispatch(setMessage({ message: err.message }));
+      }
+    }
+  };
+
   useEffect(() => {
     if (user && user.id && params.id) {
       if (!currentScheme) {
@@ -308,6 +330,13 @@ const Scheme = () => {
       tick.current += 1;
     }, 200);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("unload", handleScreenShot);
+    return () => {
+      window.removeEventListener("unload", handleScreenShot);
+    };
   }, []);
 
   return (
