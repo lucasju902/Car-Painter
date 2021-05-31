@@ -53,6 +53,7 @@
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "mysql": "^2.18.1",
+    "page-lifecycle": "^0.1.2",
     "path": "^0.12.7",
     "polished": "^4.1.1",
     "react": "^17.0.1",

@@ -18,22 +18,6 @@ const PaintingGuideTop = (props) => {
 
   return (
     <>
-      {paintingGuides.includes(PaintingGuides.CARMASK) ? (
-        <URLImage
-          src={`${
-            config.assetsURL
-          }/templates/${currentCarMake.folder_directory.replace(
-            " ",
-            "_"
-          )}/mask.png`}
-          tellSize={handleImageSize}
-          filterColor={guideData.carmask_color}
-          opacity={guideData.carmask_opacity}
-          listening={false}
-        />
-      ) : (
-        <></>
-      )}
       {paintingGuides.includes(PaintingGuides.WIREFRAME) ? (
         <URLImage
           src={`${

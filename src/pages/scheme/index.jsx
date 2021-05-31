@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
+import _ from "lodash";
 import styled from "styled-components/macro";
 import { useSelector, useDispatch } from "react-redux";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import Helmet from "react-helmet";
 import { useParams } from "react-router";
 
-import { Box } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
 
 import { LayerTypes } from "constant";
 import ScreenLoader from "components/ScreenLoader";
@@ -41,7 +42,7 @@ import {
   historyActionBack,
 } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
-import { mathRound4, dataURItoBlob } from "helper";
+import { mathRound4, dataURItoBlob, addImageProcess } from "helper";
 import SchemeService from "services/schemeService";
 
 const Wrapper = styled(Box)`
@@ -57,6 +58,9 @@ const Scheme = () => {
   const tick = useRef(0);
   const prevTick = useRef(0);
   const stageRef = useRef(null);
+  const baseLayerRef = useRef(null);
+  const mainLayerRef = useRef(null);
+  const carMaskLayerRef = useRef(null);
 
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -73,6 +77,9 @@ const Scheme = () => {
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
+
+  const currentSchemeRef = useRef(null);
+  const frameSizeRef = useRef(null);
 
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
@@ -290,18 +297,94 @@ const Scheme = () => {
     setConfirmMessage("");
   };
 
-  const handleScreenShot = async () => {
-    if (stageRef.current && currentScheme) {
+  const takeScreenshot = async (enableCarMask = true) => {
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
+    const pixelRatio = 0.5;
+
+    let width = frameSizeRef.current.width * pixelRatio;
+    let height = frameSizeRef.current.height * pixelRatio;
+    let baseLayerImg, mainLayerImg, carMaskLayerImg;
+    let attrs = { ...stageRef.current.attrs };
+    stageRef.current.setAttrs({
+      x: 0,
+      y: 0,
+      offsetX: 0,
+      offsetY: 0,
+      scaleX: 1,
+      scaleY: 1,
+      rotation: 0,
+      width: frameSizeRef.current.width,
+      height: frameSizeRef.current.height,
+    });
+    stageRef.current.draw();
+
+    if (baseLayerRef.current) {
+      let baseLayerURL = baseLayerRef.current.toDataURL({ pixelRatio });
+      baseLayerImg = await addImageProcess(baseLayerURL);
+    }
+    if (mainLayerRef.current) {
+      let mainLayerURL = mainLayerRef.current.toDataURL({ pixelRatio });
+      mainLayerImg = await addImageProcess(mainLayerURL);
+    }
+    if (carMaskLayerRef.current && enableCarMask) {
+      let carMaskLayerURL = carMaskLayerRef.current.toDataURL({
+        pixelRatio,
+      });
+      carMaskLayerImg = await addImageProcess(carMaskLayerURL);
+    }
+
+    stageRef.current.setAttrs(_.omit(attrs, ["container"]));
+    stageRef.current.draw();
+    canvas.width = width;
+    canvas.height = height;
+
+    if (baseLayerImg) {
+      ctx.drawImage(
+        baseLayerImg,
+        0,
+        0,
+        baseLayerImg.width,
+        baseLayerImg.height
+      );
+    }
+    if (mainLayerImg) {
+      ctx.drawImage(
+        mainLayerImg,
+        0,
+        0,
+        mainLayerImg.width,
+        mainLayerImg.height
+      );
+    }
+    if (carMaskLayerImg) {
+      ctx.drawImage(
+        carMaskLayerImg,
+        0,
+        0,
+        carMaskLayerImg.width,
+        carMaskLayerImg.height
+      );
+    }
+    return canvas.toDataURL("image/png");
+  };
+
+  const handleUploadThumbnail = async () => {
+    if (stageRef.current && currentSchemeRef.current) {
       try {
-        let dataURL = stageRef.current.toDataURL({ pixelRatio: 0.5 });
+        let dataURL = await takeScreenshot();
         let blob = dataURItoBlob(dataURL);
-        var fileOfBlob = new File([blob], `${currentScheme.id}.png`, {
-          type: "image/png",
-        });
+        var fileOfBlob = new File(
+          [blob],
+          `${currentSchemeRef.current.id}.png`,
+          {
+            type: "image/png",
+          }
+        );
 
         let formData = new FormData();
         formData.append("files", fileOfBlob);
-        formData.append("schemeID", currentScheme.id);
+        formData.append("schemeID", currentSchemeRef.current.id);
 
         await SchemeService.uploadThumbnail(formData);
       } catch (err) {
@@ -329,15 +412,23 @@ const Scheme = () => {
     const interval = setInterval(() => {
       tick.current += 1;
     }, 200);
-    return () => clearInterval(interval);
+    const startTimout = setTimeout(handleUploadThumbnail, 7000);
+    const thumbnailInterval = setInterval(handleUploadThumbnail, 300000);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(thumbnailInterval);
+      clearTimeout(startTimout);
+    };
   }, []);
 
   useEffect(() => {
-    window.addEventListener("unload", handleScreenShot);
-    return () => {
-      window.removeEventListener("unload", handleScreenShot);
-    };
-  }, []);
+    currentSchemeRef.current = currentScheme;
+  }, [currentScheme]);
+
+  useEffect(() => {
+    frameSizeRef.current = frameSize;
+  }, [frameSize]);
 
   return (
     <>
@@ -369,6 +460,9 @@ const Scheme = () => {
               <Board
                 onChangeBoardRotation={handleChangeBoardRotation}
                 stageRef={stageRef}
+                baseLayerRef={baseLayerRef}
+                mainLayerRef={mainLayerRef}
+                carMaskLayerRef={carMaskLayerRef}
               />
             </Wrapper>
             <PropertyBar />

@@ -23,7 +23,7 @@ export const slice = createSlice({
       state.loading = action.payload;
     },
     setList: (state, action) => {
-      let list = action.payload;
+      let list = [...action.payload];
       for (let item of list) {
         if (typeof item.guide_data === "string" || !item.guide_data) {
           item.guide_data = JSON.parse(item.guide_data) || {};
@@ -32,7 +32,7 @@ export const slice = createSlice({
       state.list = list;
     },
     insertToList: (state, action) => {
-      let scheme = action.payload;
+      let scheme = [...action.payload];
       if (
         scheme &&
         (typeof scheme.guide_data === "string" || !scheme.guide_data)
@@ -52,7 +52,7 @@ export const slice = createSlice({
       }
     },
     setCurrent: (state, action) => {
-      let scheme = action.payload;
+      let scheme = { ...state.current, ...action.payload };
       if (
         scheme &&
         (typeof scheme.guide_data === "string" || !scheme.guide_data)

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import useInterval from "react-useinterval";
-import { Stage, Layer, Rect } from "react-konva";
+import { Stage, Layer, Rect, FastLayer } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
 
@@ -13,6 +13,7 @@ import {
 } from "@material-ui/icons";
 
 import PaintingGuideTop from "./guides/PaintingGuideTop";
+import PaintingGuideCarMask from "./guides/PaintingGuideCarMask";
 import PaintingGuideBottom from "./guides/PaintingGuideBottom";
 import CarParts from "./layers/CarParts";
 import BasePaints from "./layers/BasePaints";
@@ -51,7 +52,13 @@ const RotationButton = styled(IconButton)`
   }
 `;
 
-const Board = ({ onChangeBoardRotation, stageRef }) => {
+const Board = ({
+  onChangeBoardRotation,
+  stageRef,
+  baseLayerRef,
+  mainLayerRef,
+  carMaskLayerRef,
+}) => {
   const scaleBy = 1.2;
   const [prevPosition, setPrevPosition] = useState({});
   const drawingLayerRef = useRef(null);
@@ -393,7 +400,7 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
           cursor: mouseMode === MouseModes.DEFAULT ? "default" : "crosshair",
         }}
       >
-        <Layer>
+        <FastLayer ref={baseLayerRef}>
           {/* Background */}
           <Rect
             x={0}
@@ -408,14 +415,16 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             listening={false}
           />
           <BasePaints layers={layerList} handleImageSize={handleImageSize} />
-
+        </FastLayer>
+        <FastLayer>
           <PaintingGuideBottom
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}
             handleImageSize={handleImageSize}
             guideData={currentScheme.guide_data}
           />
-
+        </FastLayer>
+        <Layer ref={mainLayerRef}>
           <CarParts
             layers={layerList}
             currentCarMake={currentCarMake}
@@ -458,6 +467,16 @@ const Board = ({ onChangeBoardRotation, stageRef }) => {
             onFontLoad={handleAddFont}
             onHover={handleHoverLayer}
           />
+        </Layer>
+        <FastLayer ref={carMaskLayerRef}>
+          <PaintingGuideCarMask
+            currentCarMake={currentCarMake}
+            paintingGuides={paintingGuides}
+            handleImageSize={handleImageSize}
+            guideData={currentScheme.guide_data}
+          />
+        </FastLayer>
+        <Layer>
           <PaintingGuideTop
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}

@@ -82,7 +82,7 @@ export const removeDuplicatedPointFromEnd = (points) => {
 };
 
 export const parseLayer = (layer) => {
-  let newLayer = layer;
+  let newLayer = { ...layer };
   if (typeof newLayer.layer_data === "string") {
     newLayer.layer_data = JSON.parse(newLayer.layer_data);
   }
@@ -90,7 +90,7 @@ export const parseLayer = (layer) => {
 };
 
 export const parseScheme = (scheme) => {
-  let newScheme = scheme;
+  let newScheme = { ...scheme };
   if (typeof newScheme.guide_data === "string" || !newScheme.guide_data) {
     newScheme.guide_data = JSON.parse(newScheme.guide_data) || {};
   }
@@ -104,4 +104,13 @@ export const dataURItoBlob = (dataURI) => {
     array.push(binary.charCodeAt(i));
   }
   return new Blob([new Uint8Array(array)], { type: "image/png" });
+};
+
+export const addImageProcess = (src) => {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
 };
