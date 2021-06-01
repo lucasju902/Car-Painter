@@ -21,7 +21,7 @@ import config from "config";
 const Button = styled(MuiButton)(spacing);
 
 const CustomInfiniteScroll = styled(InfiniteScroll)`
-  .infinite-scroll-component {
+  &.infinite-scroll-component {
     overflow: hidden !important;
   }
 `;

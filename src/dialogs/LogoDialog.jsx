@@ -26,7 +26,7 @@ const Button = styled(MuiButton)(spacing);
 const Typography = styled(MuiTypography)(spacing);
 
 const CustomInfiniteScroll = styled(InfiniteScroll)`
-  .infinite-scroll-component {
+  &.infinite-scroll-component {
     overflow: hidden !important;
   }
 `;
