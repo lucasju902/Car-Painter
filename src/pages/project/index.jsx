@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -6,9 +7,21 @@ import config from "config";
 import styled from "styled-components/macro";
 import { spacing } from "@material-ui/system";
 
-import { Box, Button as MuiButton, Typography, Grid } from "@material-ui/core";
+import {
+  Box,
+  Button as MuiButton,
+  Typography,
+  Grid,
+  TextField,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
+} from "@material-ui/core";
+import { Add as AddIcon } from "@material-ui/icons";
 
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Autocomplete as MuiAutocomplete } from "@material-ui/lab";
 import Loader from "components/Loader";
 import ScreenLoader from "components/ScreenLoader";
 import CreateProjectDialog from "dialogs/CreateProjectDialog";
@@ -24,6 +37,25 @@ import {
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 
 const Button = styled(MuiButton)(spacing);
+const Autocomplete = styled(MuiAutocomplete)(spacing);
+const CustomFormControl = styled(FormControl)`
+  .MuiInputBase-root {
+    height: 38px;
+    margin-right: 10px;
+  }
+`;
+const CustomAutocomplete = styled(Autocomplete)`
+  .MuiInputLabel-outlined {
+    transform: translate(14px, 12px) scale(1);
+    &.MuiInputLabel-shrink {
+      transform: translate(14px, -6px) scale(0.75);
+    }
+  }
+  .MuiInputBase-root {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+`;
 const CustomInfiniteScroll = styled(InfiniteScroll)`
   &.infinite-scroll-component {
     overflow: hidden !important;
@@ -47,27 +79,43 @@ const ItemWrapper = styled(Box)`
 const Scheme = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [dialog, setDialog] = useState("ProjectSelectDialog");
+
   const user = useSelector((state) => state.authReducer.user);
   const carMakeList = useSelector((state) => state.carMakeReducer.list);
   const schemeList = useSelector((state) => state.schemeReducer.list);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
-
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
 
   const step = 15;
+  const [dialog, setDialog] = useState();
   const [limit, setLimit] = useState(step);
   const [search, setSearch] = useState("");
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [sortBy, setSortBy] = useState(1);
+
+  let sortedCarMakesList = useMemo(
+    () => _.orderBy([...carMakeList], ["name", "car_type"], ["asc", "asc"]),
+    [carMakeList]
+  );
 
   const filteredSchemeList = useMemo(
     () =>
-      schemeList.filter(
-        (item) =>
-          item.name.toLowerCase().includes(search.toLowerCase()) ||
-          item.carMake.name.toLowerCase().includes(search.toLowerCase())
+      _.orderBy(
+        schemeList.filter(
+          (item) =>
+            (item.name.toLowerCase().includes(search.toLowerCase()) ||
+              item.carMake.name.toLowerCase().includes(search.toLowerCase())) &&
+            (!selectedVehicle || selectedVehicle.id === item.carMake.id)
+        ),
+        sortBy === 1
+          ? ["name"]
+          : sortBy === 2
+          ? ["carMake.name"]
+          : ["date_modified"],
+        sortBy === 1 ? ["asc"] : sortBy === 2 ? ["asc"] : ["desc"]
       ),
-    [schemeList, search]
+    [schemeList, search, selectedVehicle, sortBy]
   );
 
   useEffect(() => {
@@ -117,8 +165,7 @@ const Scheme = () => {
           <Wrapper
             display="flex"
             flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
+            justifyContent="flex-start"
             m={2}
             p={5}
             height="calc(100% - 16px)"
@@ -138,18 +185,52 @@ const Scheme = () => {
                 onClick={handleCreateNew}
                 color="default"
                 variant="outlined"
+                startIcon={<AddIcon />}
               >
-                NEW
+                New
               </Button>
             </Box>
             <Box
               display="flex"
-              justifyContent="space-between"
+              justifyContent="flex-start"
               alignItems="center"
               width="100%"
               mb={3}
             >
-              <Typography variant="body1">Last modified</Typography>
+              <CustomFormControl variant="outlined">
+                <InputLabel id="sort-label">Sort By</InputLabel>
+                <Select
+                  labelId="sort-label"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  label="Sort By"
+                >
+                  <MenuItem value={1}>Project Name</MenuItem>
+                  <MenuItem value={2}>Vehicle Name</MenuItem>
+                  <MenuItem value={3}>Last Modified</MenuItem>
+                </Select>
+              </CustomFormControl>
+              {carMakeList && carMakeList.length ? (
+                <CustomAutocomplete
+                  id="car-make-select"
+                  options={sortedCarMakesList}
+                  groupBy={(option) => option.car_type}
+                  getOptionLabel={(option) => option.name}
+                  style={{ width: 500 }}
+                  onChange={(event, newValue) => {
+                    setSelectedVehicle(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Filter By Vehicle"
+                      variant="outlined"
+                    />
+                  )}
+                />
+              ) : (
+                <></>
+              )}
             </Box>
             <Box id="scheme-list-content" overflow="auto" position="relative">
               <CustomInfiniteScroll
@@ -199,7 +280,7 @@ const Scheme = () => {
             onContinue={(carMake, name) =>
               createSchemeFromCarMake(carMake, name)
             }
-            onCancel={() => setDialog("ProjectSelectDialog")}
+            onCancel={() => setDialog(null)}
           />
         </>
       )}
