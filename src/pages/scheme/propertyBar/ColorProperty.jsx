@@ -86,4 +86,4 @@ const ColorProperty = (props) => {
   );
 };
 
-export default ColorProperty;
+export default React.memo(ColorProperty);

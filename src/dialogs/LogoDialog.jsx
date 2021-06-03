@@ -214,4 +214,4 @@ const LogoDialog = (props) => {
   );
 };
 
-export default LogoDialog;
+export default React.memo(LogoDialog);

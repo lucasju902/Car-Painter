@@ -38,7 +38,7 @@ const CustomImg = styled.img`
   object-fit: contain;
 `;
 
-const BasePaintDialog = (props) => {
+const BasePaintDialog = React.memo((props) => {
   const step = 15;
   const [limit, setLimit] = useState(step);
   const { basePaints, onCancel, open, onOpenBase } = props;
@@ -84,6 +84,6 @@ const BasePaintDialog = (props) => {
       </DialogActions>
     </Dialog>
   );
-};
+});
 
 export default BasePaintDialog;

@@ -37,4 +37,4 @@ const YesNoDialog = (props) => {
   );
 };
 
-export default YesNoDialog;
+export default React.memo(YesNoDialog);

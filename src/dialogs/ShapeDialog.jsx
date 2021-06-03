@@ -104,4 +104,4 @@ const ShapeDialog = (props) => {
   );
 };
 
-export default ShapeDialog;
+export default React.memo(ShapeDialog);

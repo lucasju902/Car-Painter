@@ -87,4 +87,4 @@ const ProjectSelectDialog = (props) => {
   );
 };
 
-export default ProjectSelectDialog;
+export default React.memo(ProjectSelectDialog);

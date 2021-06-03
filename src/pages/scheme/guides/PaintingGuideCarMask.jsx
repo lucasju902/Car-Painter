@@ -29,4 +29,4 @@ const PaintingGuideCarMask = (props) => {
   );
 };
 
-export default PaintingGuideCarMask;
+export default React.memo(PaintingGuideCarMask);

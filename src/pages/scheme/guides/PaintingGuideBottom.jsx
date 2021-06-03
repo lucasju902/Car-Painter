@@ -45,4 +45,4 @@ const PaintingGuideBottom = (props) => {
   );
 };
 
-export default PaintingGuideBottom;
+export default React.memo(PaintingGuideBottom);

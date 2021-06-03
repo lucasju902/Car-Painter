@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes, MouseModes } from "constant";
 import { mathRound2 } from "helper";
@@ -48,80 +48,123 @@ const SizeProperty = (props) => {
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
   );
-  const pressingShiftKey = pressedKey === "shift";
+  const pressingShiftKey = useMemo(() => pressedKey === "shift", [pressedKey]);
 
-  const handleChangeWidth = (event) => {
-    let value = parseFloat(event.target.value) || 0;
-    if (values.layer_data.sizeLocked) {
-      setFieldValue(
-        "layer_data.height",
-        (value * currentLayer.layer_data.height) / currentLayer.layer_data.width
-      );
-    }
-    setFieldValue("layer_data.width", parseFloat(event.target.value) || 0);
-  };
-  const handleChangeHeight = (event) => {
-    let value = parseFloat(event.target.value) || 0;
-    if (values.layer_data.sizeLocked) {
-      setFieldValue(
-        "layer_data.width",
-        (value * currentLayer.layer_data.width) / currentLayer.layer_data.height
-      );
-    }
-    setFieldValue("layer_data.height", parseFloat(event.target.value) || 0);
-  };
-  const handleChangeScaleX = (event) => {
-    let value = parseFloat(event.target.value) || 0;
-    if (values.layer_data.scaleLocked) {
-      setFieldValue(
-        "layer_data.scaleY",
-        (value * currentLayer.layer_data.scaleY) /
-          currentLayer.layer_data.scaleX
-      );
-    }
-    setFieldValue("layer_data.scaleX", parseFloat(event.target.value) || 0);
-  };
-  const handleChangeScaleY = (event) => {
-    let value = parseFloat(event.target.value) || 0;
-    if (values.layer_data.scaleLocked) {
-      setFieldValue(
-        "layer_data.scaleX",
-        (value * currentLayer.layer_data.scaleX) /
-          currentLayer.layer_data.scaleY
-      );
-    }
-    setFieldValue("layer_data.scaleY", parseFloat(event.target.value) || 0);
-  };
+  const handleChangeWidth = useCallback(
+    (event) => {
+      let value = parseFloat(event.target.value) || 0;
+      if (values.layer_data.sizeLocked) {
+        setFieldValue(
+          "layer_data.height",
+          (value * currentLayer.layer_data.height) /
+            currentLayer.layer_data.width
+        );
+      }
+      setFieldValue("layer_data.width", parseFloat(event.target.value) || 0);
+    },
+    [
+      setFieldValue,
+      currentLayer && currentLayer.layer_data.height,
+      currentLayer && currentLayer.layer_data.width,
+    ]
+  );
+  const handleChangeHeight = useCallback(
+    (event) => {
+      let value = parseFloat(event.target.value) || 0;
+      if (values.layer_data.sizeLocked) {
+        setFieldValue(
+          "layer_data.width",
+          (value * currentLayer.layer_data.width) /
+            currentLayer.layer_data.height
+        );
+      }
+      setFieldValue("layer_data.height", parseFloat(event.target.value) || 0);
+    },
+    [
+      setFieldValue,
+      currentLayer && currentLayer.layer_data.height,
+      currentLayer && currentLayer.layer_data.width,
+    ]
+  );
+  const handleChangeScaleX = useCallback(
+    (event) => {
+      let value = parseFloat(event.target.value) || 0;
+      if (values.layer_data.scaleLocked) {
+        setFieldValue(
+          "layer_data.scaleY",
+          (value * currentLayer.layer_data.scaleY) /
+            currentLayer.layer_data.scaleX
+        );
+      }
+      setFieldValue("layer_data.scaleX", parseFloat(event.target.value) || 0);
+    },
+    [
+      setFieldValue,
+      currentLayer && currentLayer.layer_data.scaleY,
+      currentLayer && currentLayer.layer_data.scaleX,
+    ]
+  );
+  const handleChangeScaleY = useCallback(
+    (event) => {
+      let value = parseFloat(event.target.value) || 0;
+      if (values.layer_data.scaleLocked) {
+        setFieldValue(
+          "layer_data.scaleX",
+          (value * currentLayer.layer_data.scaleX) /
+            currentLayer.layer_data.scaleY
+        );
+      }
+      setFieldValue("layer_data.scaleY", parseFloat(event.target.value) || 0);
+    },
+    [
+      setFieldValue,
+      currentLayer && currentLayer.layer_data.scaleY,
+      currentLayer && currentLayer.layer_data.scaleX,
+    ]
+  );
 
-  const handleChangeInnerRadius = (event) => {
-    let value = parseFloat(event.target.value) || 0;
-    if (values.layer_data.scaleLocked) {
-      setFieldValue(
-        "layer_data.outerRadius",
-        (value * currentLayer.layer_data.outerRadius) /
-          currentLayer.layer_data.innerRadius
-      );
-    }
-    setFieldValue(
-      "layer_data.innerRadius",
-      parseFloat(event.target.value) || 0
-    );
-  };
-  const handleChangeOuterRadius = (event) => {
-    let value = parseFloat(event.target.value) || 0;
-    if (values.layer_data.scaleLocked) {
+  const handleChangeInnerRadius = useCallback(
+    (event) => {
+      let value = parseFloat(event.target.value) || 0;
+      if (values.layer_data.scaleLocked) {
+        setFieldValue(
+          "layer_data.outerRadius",
+          (value * currentLayer.layer_data.outerRadius) /
+            currentLayer.layer_data.innerRadius
+        );
+      }
       setFieldValue(
         "layer_data.innerRadius",
-        (value * currentLayer.layer_data.innerRadius) /
-          currentLayer.layer_data.outerRadius
+        parseFloat(event.target.value) || 0
       );
-    }
-    setFieldValue(
-      "layer_data.outerRadius",
-      parseFloat(event.target.value) || 0
-    );
-  };
-
+    },
+    [
+      setFieldValue,
+      currentLayer && currentLayer.layer_data.outerRadius,
+      currentLayer && currentLayer.layer_data.innerRadius,
+    ]
+  );
+  const handleChangeOuterRadius = useCallback(
+    (event) => {
+      let value = parseFloat(event.target.value) || 0;
+      if (values.layer_data.scaleLocked) {
+        setFieldValue(
+          "layer_data.innerRadius",
+          (value * currentLayer.layer_data.innerRadius) /
+            currentLayer.layer_data.outerRadius
+        );
+      }
+      setFieldValue(
+        "layer_data.outerRadius",
+        parseFloat(event.target.value) || 0
+      );
+    },
+    [
+      setFieldValue,
+      currentLayer && currentLayer.layer_data.outerRadius,
+      currentLayer && currentLayer.layer_data.innerRadius,
+    ]
+  );
   if (
     !AllowedLayerTypes.includes("layer_data.width") &&
     !AllowedLayerTypes.includes("layer_data.height") &&
@@ -497,4 +540,4 @@ const SizeProperty = (props) => {
   );
 };
 
-export default SizeProperty;
+export default React.memo(SizeProperty);

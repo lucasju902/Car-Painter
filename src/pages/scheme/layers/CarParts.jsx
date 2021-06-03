@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
@@ -8,15 +8,21 @@ import config from "config";
 const CarParts = (props) => {
   const { layers, currentCarMake, handleImageSize } = props;
 
-  return (
-    <>
-      {_.orderBy(
+  const filteredLayers = useMemo(
+    () =>
+      _.orderBy(
         layers.filter(
           (item) => item.layer_type === LayerTypes.CAR && item.layer_visible
         ),
         ["layer_order"],
         ["desc"]
-      ).map((layer) => (
+      ),
+    [layers]
+  );
+
+  return (
+    <>
+      {filteredLayers.map((layer) => (
         <URLImage
           src={
             config.assetsURL +
@@ -34,4 +40,4 @@ const CarParts = (props) => {
   );
 };
 
-export default CarParts;
+export default React.memo(CarParts);

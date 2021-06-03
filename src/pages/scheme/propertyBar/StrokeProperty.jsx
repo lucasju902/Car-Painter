@@ -86,4 +86,4 @@ const StrokeProperty = (props) => {
   );
 };
 
-export default StrokeProperty;
+export default React.memo(StrokeProperty);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -47,7 +47,7 @@ const ZoomButton = styled(Button)`
   }
 `;
 
-const Toolbar = (props) => {
+const Toolbar = React.memo((props) => {
   const { onZoomIn, onZoomOut, onZoomFit, onChangePaintingGuides } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -63,29 +63,41 @@ const Toolbar = (props) => {
   );
   const zoom = useSelector((state) => state.boardReducer.zoom);
 
-  const handleChangePaintingGuides = (event, newFormats) => {
-    onChangePaintingGuides(newFormats);
-  };
+  const handleChangePaintingGuides = useCallback(
+    (event, newFormats) => {
+      onChangePaintingGuides(newFormats);
+    },
+    [onChangePaintingGuides]
+  );
 
-  const handleUndoRedo = (isUndo = true) => {
-    if (isUndo) {
-      dispatch(historyActionBack());
-    } else {
-      dispatch(historyActionUp());
-    }
-  };
+  const handleUndoRedo = useCallback(
+    (isUndo = true) => {
+      if (isUndo) {
+        dispatch(historyActionBack());
+      } else {
+        dispatch(historyActionUp());
+      }
+    },
+    [dispatch]
+  );
 
-  const handleZoomPoperOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleZoomPoperOpen = useCallback(
+    (event) => {
+      setAnchorEl(event.currentTarget);
+    },
+    [setAnchorEl]
+  );
 
-  const handleCloseZoomPoper = () => {
+  const handleCloseZoomPoper = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, [setAnchorEl]);
 
-  const handleZoom = (value) => {
-    dispatch(setZoom(value));
-  };
+  const handleZoom = useCallback(
+    (value) => {
+      dispatch(setZoom(value));
+    },
+    [dispatch]
+  );
 
   return (
     <Wrapper>
@@ -167,6 +179,6 @@ const Toolbar = (props) => {
       </Box>
     </Wrapper>
   );
-};
+});
 
 export default Toolbar;

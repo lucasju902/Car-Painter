@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import { spacing } from "@material-ui/system";
@@ -176,38 +176,80 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   const frameSize = useSelector((state) => state.boardReducer.frameSize);
   const basePaints = useSelector((state) => state.basePaintReducer.list);
 
-  const handleModeChange = (value) => {
-    dispatch(setMouseMode(value));
-    if (value !== MouseModes.DEFAULT) {
-      dispatch(setCurrentLayer(null));
-    }
-  };
+  const handleModeChange = useCallback(
+    (value) => {
+      dispatch(setMouseMode(value));
+      if (value !== MouseModes.DEFAULT) {
+        dispatch(setCurrentLayer(null));
+      }
+    },
+    [dispatch]
+  );
 
-  const handleOpenBase = (base) => {
-    dispatch(createLayersFromBasePaint(currentScheme.id, base));
-    setDialog(null);
-    focusBoard();
-  };
-  const handleOpenShape = (shape) => {
-    dispatch(createLayerFromShape(currentScheme.id, shape, frameSize));
-    setDialog(null);
-    focusBoard();
-  };
-  const handleOpenLogo = (logo) => {
-    dispatch(createLayerFromLogo(currentScheme.id, logo, frameSize));
-    setDialog(null);
-    focusBoard();
-  };
-  const handleOpenUpload = (upload) => {
-    dispatch(createLayerFromUpload(currentScheme.id, upload, frameSize));
-    setDialog(null);
-    focusBoard();
-  };
-  const handleCreateText = (values) => {
-    dispatch(createTextLayer(currentScheme.id, values, frameSize));
-    setDialog(null);
-    focusBoard();
-  };
+  const handleOpenBase = useCallback(
+    (base) => {
+      dispatch(createLayersFromBasePaint(currentScheme.id, base));
+      setDialog(null);
+      focusBoard();
+    },
+    [dispatch, setDialog, focusBoard, currentScheme && currentScheme.id]
+  );
+  const handleOpenShape = useCallback(
+    (shape) => {
+      dispatch(createLayerFromShape(currentScheme.id, shape, frameSize));
+      setDialog(null);
+      focusBoard();
+    },
+    [
+      dispatch,
+      setDialog,
+      focusBoard,
+      currentScheme && currentScheme.id,
+      frameSize,
+    ]
+  );
+  const handleOpenLogo = useCallback(
+    (logo) => {
+      dispatch(createLayerFromLogo(currentScheme.id, logo, frameSize));
+      setDialog(null);
+      focusBoard();
+    },
+    [
+      dispatch,
+      setDialog,
+      focusBoard,
+      currentScheme && currentScheme.id,
+      frameSize,
+    ]
+  );
+  const handleOpenUpload = useCallback(
+    (upload) => {
+      dispatch(createLayerFromUpload(currentScheme.id, upload, frameSize));
+      setDialog(null);
+      focusBoard();
+    },
+    [
+      dispatch,
+      setDialog,
+      focusBoard,
+      currentScheme && currentScheme.id,
+      frameSize,
+    ]
+  );
+  const handleCreateText = useCallback(
+    (values) => {
+      dispatch(createTextLayer(currentScheme.id, values, frameSize));
+      setDialog(null);
+      focusBoard();
+    },
+    [
+      dispatch,
+      setDialog,
+      focusBoard,
+      currentScheme && currentScheme.id,
+      frameSize,
+    ]
+  );
 
   return (
     <Wrapper>
@@ -281,4 +323,4 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   );
 };
 
-export default DrawerBar;
+export default React.memo(DrawerBar);

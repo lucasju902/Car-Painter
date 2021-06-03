@@ -100,4 +100,4 @@ const FontProperty = (props) => {
   );
 };
 
-export default FontProperty;
+export default React.memo(FontProperty);

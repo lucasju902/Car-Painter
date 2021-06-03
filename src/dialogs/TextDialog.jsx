@@ -47,7 +47,7 @@ const TextPreview = styled(Box)`
   transform: rotate(${(props) => props.rotate}deg);
 `;
 
-const InnerForm = (props) => {
+const InnerForm = React.memo((props) => {
   const {
     fontList,
     errors,
@@ -207,7 +207,7 @@ const InnerForm = (props) => {
       </TextPreviewWrapper>
     </>
   );
-};
+});
 
 const TextDialog = (props) => {
   const { fontList, onCancel, open, baseColor, onCreate } = props;
@@ -269,4 +269,4 @@ const TextDialog = (props) => {
   );
 };
 
-export default TextDialog;
+export default React.memo(TextDialog);

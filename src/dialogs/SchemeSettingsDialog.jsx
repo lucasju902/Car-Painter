@@ -225,4 +225,4 @@ const SchemeSettingsDialog = (props) => {
   );
 };
 
-export default SchemeSettingsDialog;
+export default React.memo(SchemeSettingsDialog);

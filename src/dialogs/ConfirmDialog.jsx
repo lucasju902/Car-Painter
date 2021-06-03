@@ -13,7 +13,7 @@ import {
 
 const Button = styled(MuiButton)(spacing);
 
-const ConfirmDialog = (props) => {
+const ConfirmDialog = React.memo((props) => {
   const { text, open, onCancel, onConfirm } = props;
 
   return (
@@ -37,6 +37,6 @@ const ConfirmDialog = (props) => {
       </DialogActions>
     </Dialog>
   );
-};
+});
 
 export default ConfirmDialog;

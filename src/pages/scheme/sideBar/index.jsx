@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { LayerTypes } from "constant";
@@ -29,7 +29,13 @@ const ColorApplyButton = styled(Button)`
 `;
 
 const Sidebar = (props) => {
-  const { dialog, setDialog, focusBoard } = props;
+  const {
+    dialog,
+    setDialog,
+    focusBoard,
+    hoveredLayerJSON,
+    onChangeHoverJSONItem,
+  } = props;
 
   const dispatch = useDispatch();
 
@@ -52,20 +58,26 @@ const Sidebar = (props) => {
     setColorInput(baseColor);
   }, [baseColor]);
 
-  const handleChangeBasePaintColor = (color) => {
-    dispatch(changeBaseColor(currentScheme.id, color));
-    setColorInput(color);
-    setColorDirty(false);
-  };
-  const handleChangeBasePaintColorInput = (color) => {
-    setColorInput(color);
-    if (color !== baseColor) setColorDirty(true);
-    else setColorDirty(false);
-  };
-  const handleApplyBasePaintColor = () => {
+  const handleChangeBasePaintColor = useCallback(
+    (color) => {
+      dispatch(changeBaseColor(currentScheme.id, color));
+      setColorInput(color);
+      setColorDirty(false);
+    },
+    [dispatch, currentScheme && currentScheme.id, setColorInput, setColorDirty]
+  );
+  const handleChangeBasePaintColorInput = useCallback(
+    (color) => {
+      setColorInput(color);
+      if (color !== baseColor) setColorDirty(true);
+      else setColorDirty(false);
+    },
+    [baseColor, setColorInput, setColorDirty]
+  );
+  const handleApplyBasePaintColor = useCallback(() => {
     dispatch(changeBaseColor(currentScheme.id, colorInput));
     setColorDirty(false);
-  };
+  }, [dispatch, currentScheme && currentScheme.id, colorInput, setColorDirty]);
 
   return (
     <Box display="flex" flexDirection="column">
@@ -86,6 +98,8 @@ const Sidebar = (props) => {
             )}
             disableLock={true}
             disableDnd={true}
+            hoveredLayerJSON={hoveredLayerJSON}
+            onChangeHoverJSONItem={onChangeHoverJSONItem}
           />
           <PartGroup
             title="Logos & Text"
@@ -95,18 +109,24 @@ const Sidebar = (props) => {
                 item.layer_type === LayerTypes.TEXT ||
                 item.layer_type === LayerTypes.UPLOAD
             )}
+            hoveredLayerJSON={hoveredLayerJSON}
+            onChangeHoverJSONItem={onChangeHoverJSONItem}
           />
           <PartGroup
             title="Shapes"
             layerList={layerList.filter(
               (item) => item.layer_type === LayerTypes.SHAPE
             )}
+            hoveredLayerJSON={hoveredLayerJSON}
+            onChangeHoverJSONItem={onChangeHoverJSONItem}
           />
           <PartGroup
             title="Overlays"
             layerList={layerList.filter(
               (item) => item.layer_type === LayerTypes.OVERLAY
             )}
+            hoveredLayerJSON={hoveredLayerJSON}
+            onChangeHoverJSONItem={onChangeHoverJSONItem}
           />
           <PartGroup
             title="Base Paint"
@@ -114,6 +134,8 @@ const Sidebar = (props) => {
               (item) => item.layer_type === LayerTypes.BASE
             )}
             disableLock={true}
+            hoveredLayerJSON={hoveredLayerJSON}
+            onChangeHoverJSONItem={onChangeHoverJSONItem}
             extraChildren={
               <Box
                 display="flex"

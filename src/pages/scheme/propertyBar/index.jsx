@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { Formik, Form } from "formik";
@@ -29,6 +29,68 @@ const Wrapper = styled(Box)`
   height: calc(100% - 50px);
   overflow: auto;
 `;
+
+const InnerForm = React.memo(
+  ({
+    fontList,
+    toggleField,
+    toggleLayerDataField,
+    currentLayer,
+    pressedKey,
+    ...formProps
+  }) => {
+    const isDirty = useMemo(() => {
+      for (let i in formProps.values.layer_data) {
+        if (formProps.values.layer_data[i] != currentLayer.layer_data[i]) {
+          return true;
+        }
+      }
+      for (let i in formProps.values) {
+        if (i != "layer_data" && formProps.values[i] != currentLayer[i]) {
+          return true;
+        }
+      }
+      return false;
+    }, [formProps.values, currentLayer]);
+
+    return (
+      <Form onSubmit={formProps.handleSubmit} noValidate>
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          height="34px"
+        >
+          <Typography variant="h5" noWrap>
+            Properties
+          </Typography>
+          {formProps.isValid && isDirty ? (
+            <Button type="submit" color="primary" variant="outlined">
+              Apply
+            </Button>
+          ) : (
+            <></>
+          )}
+        </Box>
+        <GeneralProperty {...formProps} toggleField={toggleField} />
+        <FontProperty {...formProps} fontList={fontList} />
+        <ColorProperty {...formProps} />
+        <StrokeProperty {...formProps} />
+        <SizeProperty
+          {...formProps}
+          toggleLayerDataField={toggleLayerDataField}
+          currentLayer={currentLayer}
+          pressedKey={pressedKey}
+        />
+        <PositionProperty {...formProps} />
+        <RotationProperty {...formProps} toggleField={toggleField} />
+        <ShadowProperty {...formProps} />
+        <CornerProperty {...formProps} />
+      </Form>
+    );
+  }
+);
 
 const PropertyBar = () => {
   const dispatch = useDispatch();
@@ -64,42 +126,37 @@ const PropertyBar = () => {
     [AllowedLayerTypes]
   );
 
-  const handleApply = (values) => {
-    dispatch(updateLayer(values));
-  };
-  const toggleField = (field) => {
-    dispatch(
-      updateLayer({
-        ...currentLayer,
-        [field]: currentLayer[field] ? 0 : 1,
-      })
-    );
-  };
-  const toggleLayerDataField = (field) => {
-    dispatch(
-      updateLayer({
-        ...currentLayer,
-        layer_data: {
-          ...currentLayer.layer_data,
-          [field]: currentLayer.layer_data[field] ? 0 : 1,
-        },
-      })
-    );
-  };
-
-  const checkDirty = (values) => {
-    for (let i in values.layer_data) {
-      if (values.layer_data[i] != currentLayer.layer_data[i]) {
-        return true;
-      }
-    }
-    for (let i in values) {
-      if (i != "layer_data" && values[i] != currentLayer[i]) {
-        return true;
-      }
-    }
-    return false;
-  };
+  const handleApply = useCallback(
+    (values) => {
+      dispatch(updateLayer(values));
+    },
+    [dispatch]
+  );
+  const toggleField = useCallback(
+    (field) => {
+      dispatch(
+        updateLayer({
+          ...currentLayer,
+          [field]: currentLayer[field] ? 0 : 1,
+        })
+      );
+    },
+    [dispatch, currentLayer]
+  );
+  const toggleLayerDataField = useCallback(
+    (field) => {
+      dispatch(
+        updateLayer({
+          ...currentLayer,
+          layer_data: {
+            ...currentLayer.layer_data,
+            [field]: currentLayer.layer_data[field] ? 0 : 1,
+          },
+        })
+      );
+    },
+    [dispatch, currentLayer]
+  );
 
   if (currentLayer) {
     return (
@@ -216,40 +273,14 @@ const PropertyBar = () => {
           onSubmit={handleApply}
         >
           {(formProps) => (
-            <Form onSubmit={formProps.handleSubmit} noValidate>
-              <Box
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-                height="34px"
-              >
-                <Typography variant="h5" noWrap>
-                  Properties
-                </Typography>
-                {formProps.isValid && checkDirty(formProps.values) ? (
-                  <Button type="submit" color="primary" variant="outlined">
-                    Apply
-                  </Button>
-                ) : (
-                  <></>
-                )}
-              </Box>
-              <GeneralProperty {...formProps} toggleField={toggleField} />
-              <FontProperty {...formProps} fontList={fontList} />
-              <ColorProperty {...formProps} />
-              <StrokeProperty {...formProps} />
-              <SizeProperty
-                {...formProps}
-                toggleLayerDataField={toggleLayerDataField}
-                currentLayer={currentLayer}
-                pressedKey={pressedKey}
-              />
-              <PositionProperty {...formProps} />
-              <RotationProperty {...formProps} toggleField={toggleField} />
-              <ShadowProperty {...formProps} />
-              <CornerProperty {...formProps} />
-            </Form>
+            <InnerForm
+              {...formProps}
+              fontList={fontList}
+              toggleField={toggleField}
+              toggleLayerDataField={toggleLayerDataField}
+              currentLayer={currentLayer}
+              pressedKey={pressedKey}
+            />
           )}
         </Formik>
       </Wrapper>

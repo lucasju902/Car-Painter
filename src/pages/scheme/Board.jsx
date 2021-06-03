@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import useInterval from "react-useinterval";
-import { Stage, Layer, Rect, FastLayer } from "react-konva";
+import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
 
@@ -35,7 +35,6 @@ import {
   createShape,
   setDrawingStatus,
   DrawingStatus,
-  setHoveredJSONItem,
 } from "redux/reducers/layerReducer";
 import { MouseModes, LayerTypes, DefaultLayer } from "constant";
 import {
@@ -53,6 +52,8 @@ const RotationButton = styled(IconButton)`
 `;
 
 const Board = ({
+  hoveredLayerJSON,
+  onChangeHoverJSONItem,
   onChangeBoardRotation,
   stageRef,
   baseLayerRef,
@@ -83,9 +84,6 @@ const Board = ({
   const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
   const layerList = useSelector((state) => state.layerReducer.list);
   const currentLayer = useSelector((state) => state.layerReducer.current);
-  const hoveredLayerJSON = useSelector(
-    (state) => state.layerReducer.hoveredJSON
-  );
   const drawingStatus = useSelector(
     (state) => state.layerReducer.drawingStatus
   );
@@ -129,75 +127,86 @@ const Board = ({
     }
   }, 5);
 
-  const handleMouseDown = (e) => {
-    // console.log("Mouse Down");
-    if (mouseMode === MouseModes.DEFAULT) {
-      const clickedOnEmpty = e.target === e.target.getStage();
-      if (clickedOnEmpty && currentLayer) {
-        dispatch(setCurrentLayer(null));
+  const handleMouseDown = useCallback(
+    (e) => {
+      // console.log("Mouse Down");
+      if (mouseMode === MouseModes.DEFAULT) {
+        const clickedOnEmpty = e.target === e.target.getStage();
+        if (clickedOnEmpty && currentLayer) {
+          dispatch(setCurrentLayer(null));
+        }
       }
-    }
-  };
-  const handleContentMouseDown = (e) => {
-    if (mouseMode !== MouseModes.DEFAULT) {
-      const position = getRelativePointerPosition(stageRef.current);
-      if (!drawingLayerRef.current) {
-        let newLayer = {
-          ...DefaultLayer,
-          layer_type: LayerTypes.SHAPE,
-          layer_data: {
-            ...DefaultLayer.layer_data,
-            type: mouseMode,
-            name: mouseMode,
-            left: position.x,
-            top: position.y,
-            color: "#000000",
-            scolor: "#000000",
-            stroke: 1,
-          },
-        };
-
-        if (
-          [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-            mouseMode
-          )
-        ) {
-          newLayer.layer_data.stroke = 5;
-          newLayer.layer_data.points = [0, 0, 0, 0];
-        }
-        if (mouseMode === MouseModes.PEN) {
-          newLayer.layer_data.stroke = 5;
-          newLayer.layer_data.points = [0, 0];
-        }
-        drawingLayerRef.current = newLayer;
-      } else {
-        if (
-          [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-            mouseMode
-          )
-        ) {
-          let layer = {
-            ...drawingLayerRef.current,
+    },
+    [dispatch, mouseMode, currentLayer]
+  );
+  const handleContentMouseDown = useCallback(
+    (e) => {
+      if (mouseMode !== MouseModes.DEFAULT) {
+        const position = getRelativePointerPosition(stageRef.current);
+        if (!drawingLayerRef.current) {
+          let newLayer = {
+            ...DefaultLayer,
+            layer_type: LayerTypes.SHAPE,
             layer_data: {
-              ...drawingLayerRef.current.layer_data,
-              points: removeDuplicatedPointFromEnd(
-                drawingLayerRef.current.layer_data.points
-              ),
+              ...DefaultLayer.layer_data,
+              type: mouseMode,
+              name: mouseMode,
+              left: position.x,
+              top: position.y,
+              color: "#000000",
+              scolor: "#000000",
+              stroke: 1,
             },
           };
-          layer.layer_data.points = layer.layer_data.points.concat([
-            position.x - drawingLayerRef.current.layer_data.left,
-            position.y - drawingLayerRef.current.layer_data.top,
-            position.x - drawingLayerRef.current.layer_data.left,
-            position.y - drawingLayerRef.current.layer_data.top,
-          ]);
 
-          drawingLayerRef.current = layer;
+          if (
+            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+              mouseMode
+            )
+          ) {
+            newLayer.layer_data.stroke = 5;
+            newLayer.layer_data.points = [0, 0, 0, 0];
+          }
+          if (mouseMode === MouseModes.PEN) {
+            newLayer.layer_data.stroke = 5;
+            newLayer.layer_data.points = [0, 0];
+          }
+          drawingLayerRef.current = newLayer;
+        } else {
+          if (
+            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+              mouseMode
+            )
+          ) {
+            let layer = {
+              ...drawingLayerRef.current,
+              layer_data: {
+                ...drawingLayerRef.current.layer_data,
+                points: removeDuplicatedPointFromEnd(
+                  drawingLayerRef.current.layer_data.points
+                ),
+              },
+            };
+            layer.layer_data.points = layer.layer_data.points.concat([
+              position.x - drawingLayerRef.current.layer_data.left,
+              position.y - drawingLayerRef.current.layer_data.top,
+              position.x - drawingLayerRef.current.layer_data.left,
+              position.y - drawingLayerRef.current.layer_data.top,
+            ]);
+
+            drawingLayerRef.current = layer;
+          }
         }
       }
-    }
-  };
-  const handleMouseMove = () => {
+    },
+    [
+      mouseMode,
+      getRelativePointerPosition,
+      drawingLayerRef.current,
+      stageRef.current,
+    ]
+  );
+  const handleMouseMove = useCallback(() => {
     // console.log("Mouse Move");
 
     if (mouseMode !== MouseModes.DEFAULT && drawingLayerRef.current) {
@@ -261,108 +270,145 @@ const Board = ({
       }
       prevTick.current = currentTick.current;
     }
-  };
-  const handleMouseUp = (e) => {
-    // console.log("Mouse Up");
-    if (
-      ![
-        MouseModes.DEFAULT,
-        MouseModes.LINE,
-        MouseModes.ARROW,
-        MouseModes.POLYGON,
-      ].includes(mouseMode)
-    ) {
-      dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
-    }
-    const position = getRelativePointerPosition(stageRef.current);
-    setPrevPosition(position);
-  };
-  const handleContentDoubleClick = (e) => {
-    const position = getRelativePointerPosition(stageRef.current);
-    if (
-      [
-        MouseModes.DEFAULT,
-        MouseModes.LINE,
-        MouseModes.ARROW,
-        MouseModes.POLYGON,
-      ].includes(mouseMode) &&
-      drawingLayerRef.current &&
-      prevPosition.x === position.x &&
-      prevPosition.y === position.y
-    ) {
-      dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
-    }
-  };
-  const handleZoomStage = (event) => {
-    event.evt.preventDefault();
-    if (stageRef.current !== null && event.evt.ctrlKey) {
-      const stage = stageRef.current;
-      const oldScale = stage.scaleX();
-      const { x: pointerX, y: pointerY } = stage.getPointerPosition();
-      const mousePointTo = {
-        x: (pointerX - stage.x()) / oldScale,
-        y: (pointerY - stage.y()) / oldScale,
-      };
-      const newScale = Math.max(
-        Math.min(
-          event.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy,
-          10
-        ),
-        0.25
-      );
-      dispatch(setZoom(newScale));
-      const newPos = {
-        x: pointerX - mousePointTo.x * newScale,
-        y: pointerY - mousePointTo.y * newScale,
-      };
-      stage.position(newPos);
-      stage.batchDraw();
-    }
-  };
-  const handleImageSize = (size) => {
-    if (frameSize.width < size.width || frameSize.height < size.height) {
+  }, [
+    mouseMode,
+    drawingLayerRef.current,
+    getRelativePointerPosition,
+    stageRef.current,
+    currentTick.current,
+  ]);
+  const handleMouseUp = useCallback(
+    (e) => {
+      // console.log("Mouse Up");
+      if (
+        ![
+          MouseModes.DEFAULT,
+          MouseModes.LINE,
+          MouseModes.ARROW,
+          MouseModes.POLYGON,
+        ].includes(mouseMode)
+      ) {
+        dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
+      }
+      const position = getRelativePointerPosition(stageRef.current);
+      setPrevPosition(position);
+    },
+    [dispatch, mouseMode, getRelativePointerPosition, setPrevPosition]
+  );
+  const handleContentDoubleClick = useCallback(
+    (e) => {
+      const position = getRelativePointerPosition(stageRef.current);
+      if (
+        [
+          MouseModes.DEFAULT,
+          MouseModes.LINE,
+          MouseModes.ARROW,
+          MouseModes.POLYGON,
+        ].includes(mouseMode) &&
+        drawingLayerRef.current &&
+        prevPosition.x === position.x &&
+        prevPosition.y === position.y
+      ) {
+        dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
+      }
+    },
+    [
+      dispatch,
+      mouseMode,
+      getRelativePointerPosition,
+      drawingLayerRef.current,
+      prevPosition,
+    ]
+  );
+  const handleZoomStage = useCallback(
+    (event) => {
+      event.evt.preventDefault();
+      if (stageRef.current !== null && event.evt.ctrlKey) {
+        const stage = stageRef.current;
+        const oldScale = stage.scaleX();
+        const { x: pointerX, y: pointerY } = stage.getPointerPosition();
+        const mousePointTo = {
+          x: (pointerX - stage.x()) / oldScale,
+          y: (pointerY - stage.y()) / oldScale,
+        };
+        const newScale = Math.max(
+          Math.min(
+            event.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy,
+            10
+          ),
+          0.25
+        );
+        dispatch(setZoom(newScale));
+        const newPos = {
+          x: pointerX - mousePointTo.x * newScale,
+          y: pointerY - mousePointTo.y * newScale,
+        };
+        stage.position(newPos);
+        stage.batchDraw();
+      }
+    },
+    [dispatch, stageRef.current]
+  );
+  const handleImageSize = useCallback(
+    (size) => {
+      if (frameSize.width < size.width || frameSize.height < size.height) {
+        dispatch(
+          setFrameSizeToMax({
+            width: Math.max(frameSize.width, size.width),
+            height: Math.max(frameSize.height, size.height),
+          })
+        );
+      }
+    },
+    [dispatch, frameSize]
+  );
+  const handleLayerDataChange = useCallback(
+    (layer, values) => {
       dispatch(
-        setFrameSizeToMax({
-          width: Math.max(frameSize.width, size.width),
-          height: Math.max(frameSize.height, size.height),
+        updateLayer({
+          ...layer,
+          layer_data: {
+            ...layer.layer_data,
+            ...values,
+          },
         })
       );
-    }
-  };
-  const handleLayerDataChange = (layer, values) => {
-    dispatch(
-      updateLayer({
-        ...layer,
-        layer_data: {
-          ...layer.layer_data,
-          ...values,
-        },
-      })
-    );
-  };
-  const handleLayerSelect = (layer) => {
-    dispatch(setCurrentLayer(layer));
-  };
-  const handleHoverLayer = (layer, flag) => {
-    dispatch(setHoveredJSONItem({ key: layer.id, value: flag }));
-  };
-  const handleAddFont = (fontFamily) => {
-    dispatch(insertToLoadedFontList(fontFamily));
-  };
+    },
+    [dispatch]
+  );
+  const handleLayerSelect = useCallback(
+    (layer) => {
+      dispatch(setCurrentLayer(layer));
+    },
+    [dispatch]
+  );
+  const handleHoverLayer = useCallback(
+    (layer, flag) => {
+      onChangeHoverJSONItem(layer.id, flag);
+    },
+    [onChangeHoverJSONItem]
+  );
+  const handleAddFont = useCallback(
+    (fontFamily) => {
+      dispatch(insertToLoadedFontList(fontFamily));
+    },
+    [dispatch]
+  );
 
-  const handleChangeBoardRotation = (isRight = true) => {
-    let newBoardRotate;
-    if (isRight) {
-      newBoardRotate = boardRotate + 90;
-      if (newBoardRotate >= 360) newBoardRotate = 0;
-    } else {
-      newBoardRotate = boardRotate - 90;
-      if (newBoardRotate < 0) newBoardRotate = 270;
-    }
-    onChangeBoardRotation(newBoardRotate);
-  };
-
-  console.log(stageRef);
+  const handleChangeBoardRotation = useCallback(
+    (isRight = true) => {
+      let newBoardRotate;
+      if (isRight) {
+        newBoardRotate = boardRotate + 90;
+        if (newBoardRotate >= 360) newBoardRotate = 0;
+      } else {
+        newBoardRotate = boardRotate - 90;
+        if (newBoardRotate < 0) newBoardRotate = 270;
+      }
+      onChangeBoardRotation(newBoardRotate);
+    },
+    [boardRotate, onChangeBoardRotation]
+  );
 
   return (
     <Box
@@ -400,7 +446,7 @@ const Board = ({
           cursor: mouseMode === MouseModes.DEFAULT ? "default" : "crosshair",
         }}
       >
-        <FastLayer ref={baseLayerRef}>
+        <Layer ref={baseLayerRef} listening={false}>
           {/* Background */}
           <Rect
             x={0}
@@ -415,15 +461,15 @@ const Board = ({
             listening={false}
           />
           <BasePaints layers={layerList} handleImageSize={handleImageSize} />
-        </FastLayer>
-        <FastLayer>
+        </Layer>
+        <Layer listening={false}>
           <PaintingGuideBottom
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}
             handleImageSize={handleImageSize}
             guideData={currentScheme.guide_data}
           />
-        </FastLayer>
+        </Layer>
         <Layer ref={mainLayerRef}>
           <CarParts
             layers={layerList}
@@ -435,7 +481,6 @@ const Board = ({
             handleImageSize={handleImageSize}
             frameSize={frameSize}
             boardRotate={boardRotate}
-            hoveredLayerJSON={hoveredLayerJSON}
             currentLayer={currentLayer}
             mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
@@ -448,7 +493,6 @@ const Board = ({
             boardRotate={boardRotate}
             mouseMode={mouseMode}
             setCurrentLayer={handleLayerSelect}
-            hoveredLayerJSON={hoveredLayerJSON}
             currentLayer={currentLayer}
             onChange={handleLayerDataChange}
             onHover={handleHoverLayer}
@@ -461,21 +505,20 @@ const Board = ({
             mouseMode={mouseMode}
             boardRotate={boardRotate}
             setCurrentLayer={handleLayerSelect}
-            hoveredLayerJSON={hoveredLayerJSON}
             currentLayer={currentLayer}
             onChange={handleLayerDataChange}
             onFontLoad={handleAddFont}
             onHover={handleHoverLayer}
           />
         </Layer>
-        <FastLayer ref={carMaskLayerRef}>
+        <Layer ref={carMaskLayerRef} listening={false}>
           <PaintingGuideCarMask
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}
             handleImageSize={handleImageSize}
             guideData={currentScheme.guide_data}
           />
-        </FastLayer>
+        </Layer>
         <Layer>
           <PaintingGuideTop
             currentCarMake={currentCarMake}

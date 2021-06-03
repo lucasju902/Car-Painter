@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 
@@ -37,24 +37,30 @@ const TitleBar = () => {
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
-  const handleSaveName = () => {
+  const handleNameChange = useCallback(
+    (event) => {
+      setName(event.target.value);
+    },
+    [setName]
+  );
+  const handleSaveName = useCallback(() => {
     dispatch(changeName(currentScheme.id, name));
-  };
-  const handleDiscardName = () => {
+  }, [dispatch, currentScheme && currentScheme.id, name]);
+  const handleDiscardName = useCallback(() => {
     setName(currentScheme.name);
-  };
-  const handleApplySettings = (guide_data) => {
-    dispatch(
-      updateScheme({
-        ...currentScheme,
-        guide_data: guide_data,
-      })
-    );
-    setDialog(null);
-  };
+  }, [setName, currentScheme && currentScheme.name]);
+  const handleApplySettings = useCallback(
+    (guide_data) => {
+      dispatch(
+        updateScheme({
+          ...currentScheme,
+          guide_data: guide_data,
+        })
+      );
+      setDialog(null);
+    },
+    [dispatch, currentScheme, setDialog]
+  );
   useEffect(() => {
     if (currentScheme) {
       setName(currentScheme.name);
@@ -118,4 +124,4 @@ const TitleBar = () => {
   );
 };
 
-export default TitleBar;
+export default React.memo(TitleBar);

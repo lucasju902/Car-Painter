@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import clsx from "clsx";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,7 +10,6 @@ import { MouseModes } from "constant";
 import {
   updateLayer,
   setCurrent as setCurrentLayer,
-  setHoveredJSONItem,
 } from "redux/reducers/layerReducer";
 import { setMouseMode } from "redux/reducers/boardReducer";
 
@@ -77,7 +76,6 @@ const PartGroup = (props) => {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(true);
   const currentLayer = useSelector((state) => state.layerReducer.current);
-  const hoveredJSON = useSelector((state) => state.layerReducer.hoveredJSON);
   const {
     layerList,
     title,
@@ -85,8 +83,14 @@ const PartGroup = (props) => {
     extraChildren,
     disableLock,
     disableDnd,
+    hoveredLayerJSON,
+    onChangeHoverJSONItem,
   } = props;
-  const sortedList = _.orderBy(layerList, ["layer_order"], ["asc"]);
+
+  const sortedList = useMemo(
+    () => _.orderBy(layerList, ["layer_order"], ["asc"]),
+    [layerList]
+  );
 
   useEffect(() => {
     for (let index in sortedList) {
@@ -104,41 +108,53 @@ const PartGroup = (props) => {
     }
   }, [layerList.length]);
 
-  const handleExpandClick = () => {
+  const handleExpandClick = useCallback(() => {
     setExpanded((preValue) => !preValue);
-  };
-  const handleChangeLayer = (list) => {
-    for (let index in list) {
-      const layer = layerList.find((item) => item.id == list[index].id);
-      if (layer && layer.layer_order !== parseInt(index) + 1) {
-        dispatch(
-          updateLayer(
-            {
-              ...layer,
-              layer_order: parseInt(index) + 1,
-            },
-            false
-          )
-        );
+  }, [setExpanded]);
+  const handleChangeLayer = useCallback(
+    (list) => {
+      for (let index in list) {
+        const layer = layerList.find((item) => item.id == list[index].id);
+        if (layer && layer.layer_order !== parseInt(index) + 1) {
+          dispatch(
+            updateLayer(
+              {
+                ...layer,
+                layer_order: parseInt(index) + 1,
+              },
+              false
+            )
+          );
+        }
       }
-    }
-  };
-  const toggleField = (id, field) => {
-    const layer = layerList.find((item) => item.id === id);
-    dispatch(
-      updateLayer({
-        ...layer,
-        [field]: layer[field] ? 0 : 1,
-      })
-    );
-  };
-  const selectLayer = (layer) => {
-    dispatch(setCurrentLayer(layer));
-    dispatch(setMouseMode(MouseModes.DEFAULT));
-  };
-  const hoverLayer = (layer, flag) => {
-    dispatch(setHoveredJSONItem({ key: layer.id, value: flag }));
-  };
+    },
+    [layerList, dispatch]
+  );
+  const toggleField = useCallback(
+    (id, field) => {
+      const layer = layerList.find((item) => item.id === id);
+      dispatch(
+        updateLayer({
+          ...layer,
+          [field]: layer[field] ? 0 : 1,
+        })
+      );
+    },
+    [layerList, dispatch]
+  );
+  const selectLayer = useCallback(
+    (layer) => {
+      dispatch(setCurrentLayer(layer));
+      dispatch(setMouseMode(MouseModes.DEFAULT));
+    },
+    [dispatch]
+  );
+  const hoverLayer = useCallback(
+    (layer, flag) => {
+      onChangeHoverJSONItem(layer.id, flag);
+    },
+    [onChangeHoverJSONItem]
+  );
 
   return (
     <Box mb={2}>
@@ -193,7 +209,7 @@ const PartGroup = (props) => {
                   toggleVisible={() => toggleField(item.id, "layer_visible")}
                   toggleLocked={() => toggleField(item.id, "layer_locked")}
                   selected={currentLayer && currentLayer.id === item.id}
-                  hovered={hoveredJSON[item.id]}
+                  hovered={hoveredLayerJSON[item.id]}
                   onSelect={() => selectLayer(item)}
                   onHover={(flag) => hoverLayer(item, flag)}
                   disableLock={disableLock}

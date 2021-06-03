@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import clsx from "clsx";
 import styled from "styled-components/macro";
 
@@ -39,36 +39,52 @@ const PartItem = (props) => {
     hovered,
     onHover,
   } = props;
+
   const wrapperRef = useRef(null);
 
-  const handleToggleVisible = (e) => {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    toggleVisible();
-  };
+  const handleToggleVisible = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+      toggleVisible();
+    },
+    [toggleVisible]
+  );
 
-  const handleToggleLock = (e) => {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    toggleLocked();
-  };
+  const handleToggleLock = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+      toggleLocked();
+    },
+    [toggleVisible]
+  );
 
-  const isInViewport = (el) => {
-    const rect = el.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  };
+  const isInViewport = useCallback(
+    (el) => {
+      const rect = el.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <=
+          (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <=
+          (window.innerWidth || document.documentElement.clientWidth)
+      );
+    },
+    [
+      window.innerHeight,
+      window.innerWidth,
+      document.documentElement.clientHeight,
+      document.documentElement.clientWidth,
+    ]
+  );
 
   useEffect(() => {
     if ((selected || hovered) && !isInViewport(wrapperRef.current)) {
       wrapperRef.current.scrollIntoView();
     }
-  }, [selected, hovered]);
+  }, [selected, hovered, wrapperRef.current]);
 
   return (
     <Wrapper
@@ -117,4 +133,4 @@ const PartItem = (props) => {
   );
 };
 
-export default PartItem;
+export default React.memo(PartItem);

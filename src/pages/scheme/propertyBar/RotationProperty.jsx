@@ -139,4 +139,4 @@ const RotationProperty = (props) => {
   );
 };
 
-export default RotationProperty;
+export default React.memo(RotationProperty);

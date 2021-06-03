@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 import { mathRound2 } from "helper";
@@ -41,15 +41,18 @@ const ShadowProperty = (props) => {
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
   );
-  const handleColorChange = (value) => {
-    if (
-      !values.layer_data.shadowColor ||
-      values.layer_data.shadowColor === "transparent"
-    ) {
-      setFieldValue("layer_data.shadowBlur", DefaultBlurToSet);
-    }
-    setFieldValue("layer_data.shadowColor", value);
-  };
+  const handleColorChange = useCallback(
+    (value) => {
+      if (
+        !values.layer_data.shadowColor ||
+        values.layer_data.shadowColor === "transparent"
+      ) {
+        setFieldValue("layer_data.shadowBlur", DefaultBlurToSet);
+      }
+      setFieldValue("layer_data.shadowColor", value);
+    },
+    [setFieldValue]
+  );
 
   if (
     !AllowedLayerTypes.includes("layer_data.shadowColor") &&
@@ -203,4 +206,4 @@ const ShadowProperty = (props) => {
   );
 };
 
-export default ShadowProperty;
+export default React.memo(ShadowProperty);

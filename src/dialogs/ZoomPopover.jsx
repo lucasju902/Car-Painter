@@ -85,4 +85,4 @@ const ZoomPopover = ({
   );
 };
 
-export default ZoomPopover;
+export default React.memo(ZoomPopover);

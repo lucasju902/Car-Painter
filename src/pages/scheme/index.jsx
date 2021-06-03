@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import _ from "lodash";
 import styled from "styled-components/macro";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,7 +6,7 @@ import KeyboardEventHandler from "react-keyboard-event-handler";
 import Helmet from "react-helmet";
 import { useParams } from "react-router";
 
-import { Box, Button } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 
 import { LayerTypes } from "constant";
 import ScreenLoader from "components/ScreenLoader";
@@ -54,6 +54,7 @@ const Scheme = () => {
   const params = useParams();
   const [confirmMessage, setConfirmMessage] = useState("");
   const [dialog, setDialog] = useState(null);
+  const [hoveredJSON, setHoveredJSON] = useState({});
 
   const tick = useRef(0);
   const prevTick = useRef(0);
@@ -88,13 +89,20 @@ const Scheme = () => {
     (state) => state.uploadReducer.initialized
   );
 
-  const handleZoomIn = () => {
+  const setHoveredJSONItem = useCallback(
+    (key, value) => {
+      setHoveredJSON((origin) => ({ ...origin, [key]: value }));
+    },
+    [setHoveredJSON]
+  );
+
+  const handleZoomIn = useCallback(() => {
     dispatch(setZoom(mathRound4(Math.max(Math.min(zoom * 1.25, 10), 0.25))));
-  };
-  const handleZoomOut = () => {
+  }, [dispatch, zoom]);
+  const handleZoomOut = useCallback(() => {
     dispatch(setZoom(mathRound4(Math.max(Math.min(zoom / 1.25, 10), 0.25))));
-  };
-  const handleZoomFit = () => {
+  }, [dispatch, zoom]);
+  const handleZoomFit = useCallback(() => {
     let width = stageRef.current.attrs.width;
     let height = stageRef.current.attrs.height;
     const newZoom = mathRound4(
@@ -105,271 +113,298 @@ const Scheme = () => {
       (height / 2 - frameSize.height / 2) * newZoom + height / 2
     );
     dispatch(setZoom(newZoom));
-  };
-  const handleChangePaintingGuides = (newFormats) => {
+  }, [
+    dispatch,
+    stageRef.current && stageRef.current.attrs && stageRef.current.attrs.width,
+    stageRef.current && stageRef.current.attrs && stageRef.current.attrs.height,
+    frameSize,
+  ]);
+  const handleChangePaintingGuides = useCallback((newFormats) => {
     dispatch(setPaintingGuides(newFormats));
-  };
-  const handleChangeBoardRotation = (newRotation) => {
+  }, []);
+  const handleChangeBoardRotation = useCallback((newRotation) => {
     dispatch(setBoardRotate(newRotation));
-  };
-  const togglePaintingGuides = (guide) => {
-    let newPaintingGuides = [...paintingGuides];
-    let index = newPaintingGuides.indexOf(guide);
-    if (index > -1) {
-      newPaintingGuides.splice(index, 1);
-    } else {
-      newPaintingGuides.push(guide);
-    }
-    handleChangePaintingGuides(newPaintingGuides);
-  };
-  const focusBoard = () => {
+  }, []);
+  const togglePaintingGuides = useCallback(
+    (guide) => {
+      let newPaintingGuides = [...paintingGuides];
+      let index = newPaintingGuides.indexOf(guide);
+      if (index > -1) {
+        newPaintingGuides.splice(index, 1);
+      } else {
+        newPaintingGuides.push(guide);
+      }
+      handleChangePaintingGuides(newPaintingGuides);
+    },
+    [paintingGuides, handleChangePaintingGuides]
+  );
+  const focusBoard = useCallback(() => {
     setTimeout(() => document.activeElement.blur(), 1000);
-  };
+  }, []);
 
-  const handleKeyEvent = (key, event) => {
-    // Delete Selected Layer
-    console.log("KeyEvent: ", key, event);
-    if (event.target.tagName !== "INPUT" && event.type === "keydown") {
-      if (pressedKey !== key) {
-        dispatch(setPressedKey(key));
-      }
-      if (
-        (key === "del" || key === "backspace") &&
-        currentLayer &&
-        currentLayer.layer_type !== LayerTypes.CAR
-      ) {
-        setConfirmMessage(
-          `Are you sure to delete "${currentLayer.layer_data.name}"?`
-        );
-      } else if (key === "esc" && currentLayer) {
-        dispatch(setCurrentLayer(null));
-      } else if (event.key === "+" && event.shiftKey) {
-        handleZoomIn();
-      } else if (event.key === "_" && event.shiftKey) {
-        handleZoomOut();
-      } else if (event.key === ")" && event.shiftKey) {
-        dispatch(setZoom(1));
-      } else if (event.key === "(" && event.shiftKey) {
-        handleZoomFit();
-      } else if (event.key === "D" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.DEFAULT));
-      } else if (event.key === "B" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.PEN));
-      } else if (event.key === "R" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.RECT));
-      } else if (event.key === "C" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.CIRCLE));
-      } else if (event.key === "E" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.ELLIPSE));
-      } else if (event.key === "S" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.STAR));
-      } else if (event.key === "G" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.RING));
-      } else if (event.key === "O" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.REGULARPOLYGON));
-      } else if (event.key === "W" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.WEDGE));
-      } else if (event.key === "A" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.ARC));
-      } else if (event.key === "P" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.POLYGON));
-      } else if (event.key === "L" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.LINE));
-      } else if (event.key === ">" && event.shiftKey) {
-        dispatch(setMouseMode(MouseModes.ARROW));
-      } else if (
-        event.key === "c" &&
-        (event.ctrlKey || event.metaKey) &&
-        currentLayer
-      ) {
-        dispatch(setLayerClipboard(currentLayer));
-      } else if (
-        event.key === "v" &&
-        (event.ctrlKey || event.metaKey) &&
-        clipboardLayer
-      ) {
-        dispatch(cloneLayer(clipboardLayer));
-      } else if (event.key === "z" && (event.ctrlKey || event.metaKey)) {
-        dispatch(historyActionBack());
-      } else if (event.key === "y" && (event.ctrlKey || event.metaKey)) {
-        dispatch(historyActionUp());
-      } else if (key === "1") {
-        togglePaintingGuides(PaintingGuides.CARMASK);
-      } else if (key === "2") {
-        togglePaintingGuides(PaintingGuides.WIREFRAME);
-      } else if (key === "3") {
-        togglePaintingGuides(PaintingGuides.SPONSORBLOCKS);
-      } else if (key === "4") {
-        togglePaintingGuides(PaintingGuides.NUMBERBLOCKS);
-      } else if (key === "5") {
-        togglePaintingGuides(PaintingGuides.GRID);
-      } else if (key === "t") {
-        setDialog(DialogTypes.TEXT);
-      } else if (key === "s") {
-        setDialog(DialogTypes.SHAPE);
-      } else if (key === "l") {
-        setDialog(DialogTypes.LOGO);
-      } else if (key === "b") {
-        setDialog(DialogTypes.BASEPAINT);
-      } else if (key === "enter") {
+  const handleKeyEvent = useCallback(
+    (key, event) => {
+      // Delete Selected Layer
+      // console.log("KeyEvent: ", key, event);
+      if (event.target.tagName !== "INPUT" && event.type === "keydown") {
+        if (pressedKey !== key) {
+          dispatch(setPressedKey(key));
+        }
         if (
-          [
-            MouseModes.DEFAULT,
-            MouseModes.LINE,
-            MouseModes.ARROW,
-            MouseModes.POLYGON,
-          ].includes(mouseMode)
+          (key === "del" || key === "backspace") &&
+          currentLayer &&
+          currentLayer.layer_type !== LayerTypes.CAR
         ) {
-          dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
-        }
-      }
-    }
-
-    // Arrow Keys
-    if (event.target.tagName !== "INPUT") {
-      if (event.type === "keyup") {
-        dispatch(setPressedKey(null));
-      }
-      if (
-        ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(
-          event.key
-        ) &&
-        currentLayer &&
-        ![LayerTypes.CAR, LayerTypes.BASE].includes(currentLayer.layer_type)
-      ) {
-        let speed = event.shiftKey ? 10 : 1;
-        let initialspeedX =
-          event.key === "ArrowLeft"
-            ? -speed
-            : event.key === "ArrowRight"
-            ? speed
-            : 0;
-        let initialspeedY =
-          event.key === "ArrowUp"
-            ? -speed
-            : event.key === "ArrowDown"
-            ? speed
-            : 0;
-        let speedX = initialspeedX;
-        let speedY = initialspeedY;
-        if (boardRotate === 90) {
-          speedX = initialspeedY;
-          speedY = -initialspeedX;
-        } else if (boardRotate === 180) {
-          speedX = -initialspeedX;
-          speedY = -initialspeedY;
-        } else if (boardRotate === 270) {
-          speedX = -initialspeedY;
-          speedY = initialspeedX;
-        }
-        if (event.type === "keyup") {
-          let layer_data = { ...currentLayer.layer_data };
-          if (prevTick.current != tick.current) {
-            layer_data.left = currentLayer.layer_data.left + speedX;
-            layer_data.top = currentLayer.layer_data.top + speedY;
-          }
-          dispatch(
-            updateLayer({
-              ...currentLayer,
-              layer_data: layer_data,
-            })
+          setConfirmMessage(
+            `Are you sure to delete "${currentLayer.layer_data.name}"?`
           );
-        } else {
-          if (prevTick.current != tick.current) {
-            prevTick.current = Object.assign(tick.current);
+        } else if (key === "esc" && currentLayer) {
+          dispatch(setCurrentLayer(null));
+        } else if (event.key === "+" && event.shiftKey) {
+          handleZoomIn();
+        } else if (event.key === "_" && event.shiftKey) {
+          handleZoomOut();
+        } else if (event.key === ")" && event.shiftKey) {
+          dispatch(setZoom(1));
+        } else if (event.key === "(" && event.shiftKey) {
+          handleZoomFit();
+        } else if (event.key === "D" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.DEFAULT));
+        } else if (event.key === "B" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.PEN));
+        } else if (event.key === "R" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.RECT));
+        } else if (event.key === "C" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.CIRCLE));
+        } else if (event.key === "E" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.ELLIPSE));
+        } else if (event.key === "S" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.STAR));
+        } else if (event.key === "G" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.RING));
+        } else if (event.key === "O" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.REGULARPOLYGON));
+        } else if (event.key === "W" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.WEDGE));
+        } else if (event.key === "A" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.ARC));
+        } else if (event.key === "P" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.POLYGON));
+        } else if (event.key === "L" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.LINE));
+        } else if (event.key === ">" && event.shiftKey) {
+          dispatch(setMouseMode(MouseModes.ARROW));
+        } else if (
+          event.key === "c" &&
+          (event.ctrlKey || event.metaKey) &&
+          currentLayer
+        ) {
+          dispatch(setLayerClipboard(currentLayer));
+        } else if (
+          event.key === "v" &&
+          (event.ctrlKey || event.metaKey) &&
+          clipboardLayer
+        ) {
+          dispatch(cloneLayer(clipboardLayer));
+        } else if (event.key === "z" && (event.ctrlKey || event.metaKey)) {
+          dispatch(historyActionBack());
+        } else if (event.key === "y" && (event.ctrlKey || event.metaKey)) {
+          dispatch(historyActionUp());
+        } else if (key === "1") {
+          togglePaintingGuides(PaintingGuides.CARMASK);
+        } else if (key === "2") {
+          togglePaintingGuides(PaintingGuides.WIREFRAME);
+        } else if (key === "3") {
+          togglePaintingGuides(PaintingGuides.SPONSORBLOCKS);
+        } else if (key === "4") {
+          togglePaintingGuides(PaintingGuides.NUMBERBLOCKS);
+        } else if (key === "5") {
+          togglePaintingGuides(PaintingGuides.GRID);
+        } else if (key === "t") {
+          setDialog(DialogTypes.TEXT);
+        } else if (key === "s") {
+          setDialog(DialogTypes.SHAPE);
+        } else if (key === "l") {
+          setDialog(DialogTypes.LOGO);
+        } else if (key === "b") {
+          setDialog(DialogTypes.BASEPAINT);
+        } else if (key === "enter") {
+          if (
+            [
+              MouseModes.DEFAULT,
+              MouseModes.LINE,
+              MouseModes.ARROW,
+              MouseModes.POLYGON,
+            ].includes(mouseMode)
+          ) {
+            dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
+          }
+        }
+      }
+
+      // Arrow Keys
+      if (event.target.tagName !== "INPUT") {
+        if (event.type === "keyup") {
+          dispatch(setPressedKey(null));
+        }
+        if (
+          ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(
+            event.key
+          ) &&
+          currentLayer &&
+          ![LayerTypes.CAR, LayerTypes.BASE].includes(currentLayer.layer_type)
+        ) {
+          let speed = event.shiftKey ? 10 : 1;
+          let initialspeedX =
+            event.key === "ArrowLeft"
+              ? -speed
+              : event.key === "ArrowRight"
+              ? speed
+              : 0;
+          let initialspeedY =
+            event.key === "ArrowUp"
+              ? -speed
+              : event.key === "ArrowDown"
+              ? speed
+              : 0;
+          let speedX = initialspeedX;
+          let speedY = initialspeedY;
+          if (boardRotate === 90) {
+            speedX = initialspeedY;
+            speedY = -initialspeedX;
+          } else if (boardRotate === 180) {
+            speedX = -initialspeedX;
+            speedY = -initialspeedY;
+          } else if (boardRotate === 270) {
+            speedX = -initialspeedY;
+            speedY = initialspeedX;
+          }
+          if (event.type === "keyup") {
+            let layer_data = { ...currentLayer.layer_data };
+            if (prevTick.current != tick.current) {
+              layer_data.left = currentLayer.layer_data.left + speedX;
+              layer_data.top = currentLayer.layer_data.top + speedY;
+            }
             dispatch(
-              updateLayerOnly({
+              updateLayer({
                 ...currentLayer,
-                layer_data: {
-                  ...currentLayer.layer_data,
-                  left: currentLayer.layer_data.left + speedX,
-                  top: currentLayer.layer_data.top + speedY,
-                },
+                layer_data: layer_data,
               })
             );
+          } else {
+            if (prevTick.current != tick.current) {
+              prevTick.current = Object.assign(tick.current);
+              dispatch(
+                updateLayerOnly({
+                  ...currentLayer,
+                  layer_data: {
+                    ...currentLayer.layer_data,
+                    left: currentLayer.layer_data.left + speedX,
+                    top: currentLayer.layer_data.top + speedY,
+                  },
+                })
+              );
+            }
           }
         }
       }
-    }
-  };
-  const handleConfirm = () => {
+    },
+    [
+      dispatch,
+      pressedKey,
+      currentLayer,
+      clipboardLayer,
+      prevTick.current,
+      tick.current,
+    ]
+  );
+  const handleConfirm = useCallback(() => {
     dispatch(deleteLayer(currentLayer));
     setConfirmMessage("");
-  };
+  }, [dispatch, currentLayer, setConfirmMessage]);
 
-  const takeScreenshot = async (enableCarMask = true) => {
-    let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d");
-    const pixelRatio = 0.5;
+  const takeScreenshot = useCallback(
+    async (enableCarMask = true) => {
+      let canvas = document.createElement("canvas");
+      let ctx = canvas.getContext("2d");
+      const pixelRatio = 0.5;
 
-    let width = frameSizeRef.current.width * pixelRatio;
-    let height = frameSizeRef.current.height * pixelRatio;
-    let baseLayerImg, mainLayerImg, carMaskLayerImg;
-    let attrs = { ...stageRef.current.attrs };
-    stageRef.current.setAttrs({
-      x: 0,
-      y: 0,
-      offsetX: 0,
-      offsetY: 0,
-      scaleX: 1,
-      scaleY: 1,
-      rotation: 0,
-      width: frameSizeRef.current.width,
-      height: frameSizeRef.current.height,
-    });
-    stageRef.current.draw();
-
-    if (baseLayerRef.current) {
-      let baseLayerURL = baseLayerRef.current.toDataURL({ pixelRatio });
-      baseLayerImg = await addImageProcess(baseLayerURL);
-    }
-    if (mainLayerRef.current) {
-      let mainLayerURL = mainLayerRef.current.toDataURL({ pixelRatio });
-      mainLayerImg = await addImageProcess(mainLayerURL);
-    }
-    if (carMaskLayerRef.current && enableCarMask) {
-      let carMaskLayerURL = carMaskLayerRef.current.toDataURL({
-        pixelRatio,
+      let width = frameSizeRef.current.width * pixelRatio;
+      let height = frameSizeRef.current.height * pixelRatio;
+      let baseLayerImg, mainLayerImg, carMaskLayerImg;
+      let attrs = { ...stageRef.current.attrs };
+      stageRef.current.setAttrs({
+        x: 0,
+        y: 0,
+        offsetX: 0,
+        offsetY: 0,
+        scaleX: 1,
+        scaleY: 1,
+        rotation: 0,
+        width: frameSizeRef.current.width,
+        height: frameSizeRef.current.height,
       });
-      carMaskLayerImg = await addImageProcess(carMaskLayerURL);
-    }
+      stageRef.current.draw();
 
-    stageRef.current.setAttrs(_.omit(attrs, ["container"]));
-    stageRef.current.draw();
-    canvas.width = width;
-    canvas.height = height;
+      if (baseLayerRef.current) {
+        let baseLayerURL = baseLayerRef.current.toDataURL({ pixelRatio });
+        baseLayerImg = await addImageProcess(baseLayerURL);
+      }
+      if (mainLayerRef.current) {
+        let mainLayerURL = mainLayerRef.current.toDataURL({ pixelRatio });
+        mainLayerImg = await addImageProcess(mainLayerURL);
+      }
+      if (carMaskLayerRef.current && enableCarMask) {
+        let carMaskLayerURL = carMaskLayerRef.current.toDataURL({
+          pixelRatio,
+        });
+        carMaskLayerImg = await addImageProcess(carMaskLayerURL);
+      }
 
-    if (baseLayerImg) {
-      ctx.drawImage(
-        baseLayerImg,
-        0,
-        0,
-        baseLayerImg.width,
-        baseLayerImg.height
-      );
-    }
-    if (mainLayerImg) {
-      ctx.drawImage(
-        mainLayerImg,
-        0,
-        0,
-        mainLayerImg.width,
-        mainLayerImg.height
-      );
-    }
-    if (carMaskLayerImg) {
-      ctx.drawImage(
-        carMaskLayerImg,
-        0,
-        0,
-        carMaskLayerImg.width,
-        carMaskLayerImg.height
-      );
-    }
-    return canvas.toDataURL("image/png");
-  };
+      stageRef.current.setAttrs(_.omit(attrs, ["container"]));
+      stageRef.current.draw();
+      canvas.width = width;
+      canvas.height = height;
 
-  const handleUploadThumbnail = async () => {
+      if (baseLayerImg) {
+        ctx.drawImage(
+          baseLayerImg,
+          0,
+          0,
+          baseLayerImg.width,
+          baseLayerImg.height
+        );
+      }
+      if (mainLayerImg) {
+        ctx.drawImage(
+          mainLayerImg,
+          0,
+          0,
+          mainLayerImg.width,
+          mainLayerImg.height
+        );
+      }
+      if (carMaskLayerImg) {
+        ctx.drawImage(
+          carMaskLayerImg,
+          0,
+          0,
+          carMaskLayerImg.width,
+          carMaskLayerImg.height
+        );
+      }
+      return canvas.toDataURL("image/png");
+    },
+    [
+      frameSizeRef.current,
+      stageRef.current,
+      baseLayerRef.current,
+      mainLayerRef.current,
+      carMaskLayerRef.current,
+    ]
+  );
+
+  const handleUploadThumbnail = useCallback(async () => {
     if (stageRef.current && currentSchemeRef.current) {
       try {
         let dataURL = await takeScreenshot();
@@ -391,7 +426,12 @@ const Scheme = () => {
         dispatch(setMessage({ message: err.message }));
       }
     }
-  };
+  }, [
+    dispatch,
+    currentSchemeRef.current && currentSchemeRef.current.id,
+    !stageRef.current,
+    takeScreenshot,
+  ]);
 
   useEffect(() => {
     if (user && user.id && params.id) {
@@ -451,6 +491,8 @@ const Scheme = () => {
               dialog={dialog}
               setDialog={setDialog}
               focusBoard={focusBoard}
+              hoveredLayerJSON={hoveredJSON}
+              onChangeHoverJSONItem={setHoveredJSONItem}
             />
             <Wrapper
               width="calc(100% - 350px)"
@@ -458,6 +500,8 @@ const Scheme = () => {
               overflow="hidden"
             >
               <Board
+                hoveredLayerJSON={hoveredJSON}
+                onChangeHoverJSONItem={setHoveredJSONItem}
                 onChangeBoardRotation={handleChangeBoardRotation}
                 stageRef={stageRef}
                 baseLayerRef={baseLayerRef}

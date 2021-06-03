@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
@@ -17,19 +17,31 @@ const Overlays = (props) => {
     onHover,
   } = props;
 
-  return (
-    <>
-      {_.orderBy(
+  const filteredLayers = useMemo(
+    () =>
+      _.orderBy(
         layers.filter(
           (item) => item.layer_type === LayerTypes.OVERLAY && item.layer_visible
         ),
         ["layer_order"],
         ["desc"]
-      ).map((layer) => {
-        let shadowOffset = getRelativeShadowOffset(boardRotate, {
-          x: layer.layer_data.shadowOffsetX,
-          y: layer.layer_data.shadowOffsetY,
-        });
+      ),
+    [layers]
+  );
+  const getShadowOffset = useCallback(
+    (layer) => {
+      return getRelativeShadowOffset(boardRotate, {
+        x: layer.layer_data.shadowOffsetX,
+        y: layer.layer_data.shadowOffsetY,
+      });
+    },
+    [boardRotate]
+  );
+
+  return (
+    <>
+      {filteredLayers.map((layer) => {
+        let shadowOffset = getShadowOffset(layer);
 
         return (
           <URLImage
@@ -65,4 +77,4 @@ const Overlays = (props) => {
   );
 };
 
-export default Overlays;
+export default React.memo(Overlays);

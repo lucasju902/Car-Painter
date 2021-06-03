@@ -215,4 +215,4 @@ const GeneralProperty = (props) => {
   );
 };
 
-export default GeneralProperty;
+export default React.memo(GeneralProperty);

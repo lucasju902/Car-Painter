@@ -117,4 +117,4 @@ const PositionProperty = (props) => {
   );
 };
 
-export default PositionProperty;
+export default React.memo(PositionProperty);

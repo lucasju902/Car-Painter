@@ -95,4 +95,4 @@ const ShortCutsDialog = (props) => {
   );
 };
 
-export default ShortCutsDialog;
+export default React.memo(ShortCutsDialog);

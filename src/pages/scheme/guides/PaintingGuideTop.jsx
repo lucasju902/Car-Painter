@@ -84,4 +84,4 @@ const PaintingGuideTop = (props) => {
   );
 };
 
-export default PaintingGuideTop;
+export default React.memo(PaintingGuideTop);

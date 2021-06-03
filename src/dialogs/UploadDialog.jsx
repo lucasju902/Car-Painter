@@ -227,4 +227,4 @@ const UploadDialog = (props) => {
   );
 };
 
-export default UploadDialog;
+export default React.memo(UploadDialog);

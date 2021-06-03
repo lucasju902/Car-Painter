@@ -189,4 +189,4 @@ const CornerProperty = (props) => {
   );
 };
 
-export default CornerProperty;
+export default React.memo(CornerProperty);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
@@ -20,21 +20,43 @@ const LogosAndTexts = (props) => {
     onFontLoad,
     onHover,
   } = props;
-  const filteredLayers = layers.filter(
-    (item) =>
-      (item.layer_type === LayerTypes.LOGO ||
-        item.layer_type === LayerTypes.UPLOAD ||
-        item.layer_type === LayerTypes.TEXT) &&
-      item.layer_visible
+  const filteredLayers = useMemo(
+    () =>
+      _.orderBy(
+        layers.filter(
+          (item) =>
+            (item.layer_type === LayerTypes.LOGO ||
+              item.layer_type === LayerTypes.UPLOAD ||
+              item.layer_type === LayerTypes.TEXT) &&
+            item.layer_visible
+        ),
+        ["layer_order"],
+        ["desc"]
+      ),
+    [layers]
+  );
+  const layerFont = useCallback(
+    (layer) => {
+      return fonts.length
+        ? fonts.find((item) => item.id === layer.layer_data.font)
+        : {};
+    },
+    [fonts]
+  );
+  const getShadowOffset = useCallback(
+    (layer) => {
+      return getRelativeShadowOffset(boardRotate, {
+        x: layer.layer_data.shadowOffsetX,
+        y: layer.layer_data.shadowOffsetY,
+      });
+    },
+    [boardRotate]
   );
 
   return (
     <>
-      {_.orderBy(filteredLayers, ["layer_order"], ["desc"]).map((layer) => {
-        let shadowOffset = getRelativeShadowOffset(boardRotate, {
-          x: layer.layer_data.shadowOffsetX,
-          y: layer.layer_data.shadowOffsetY,
-        });
+      {filteredLayers.map((layer) => {
+        let shadowOffset = getShadowOffset(layer);
 
         if (layer.layer_type !== LayerTypes.TEXT) {
           return (
@@ -68,9 +90,7 @@ const LogosAndTexts = (props) => {
             />
           );
         }
-        let font = fonts.length
-          ? fonts.find((item) => item.id === layer.layer_data.font)
-          : {};
+        let font = layerFont(layer);
         return (
           <TextNode
             name={layer.id.toString()}
@@ -121,4 +141,4 @@ const LogosAndTexts = (props) => {
   );
 };
 
-export default LogosAndTexts;
+export default React.memo(LogosAndTexts);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
@@ -8,14 +8,20 @@ import config from "config";
 const BasePaints = (props) => {
   const { layers, handleImageSize } = props;
 
-  return (
-    <>
-      {_.orderBy(
+  const filteredLayers = useMemo(
+    () =>
+      _.orderBy(
         layers.filter(
           (item) => item.layer_type === LayerTypes.BASE && item.layer_visible
         ),
         ["layer_order", "desc"]
-      ).map((layer) => (
+      ),
+    [layers]
+  );
+
+  return (
+    <>
+      {filteredLayers.map((layer) => (
         <URLImage
           src={`${config.assetsURL}/bases/${layer.layer_data.id}/${layer.layer_data.img}`}
           tellSize={handleImageSize}
@@ -29,4 +35,4 @@ const BasePaints = (props) => {
   );
 };
 
-export default BasePaints;
+export default React.memo(BasePaints);
