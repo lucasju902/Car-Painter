@@ -61,6 +61,9 @@ export const slice = createSlice({
       }
       state.current = scheme;
     },
+    clearCurrent: (state, action) => {
+      state.current = null;
+    },
     setCurrentName: (state, action) => {
       state.current = {
         ...state.current,
@@ -79,6 +82,7 @@ export const slice = createSlice({
 const { setLoading, setList, insertToList, updateListItem } = slice.actions;
 export const {
   setCurrent,
+  clearCurrent,
   setCurrentName,
   setCurrentBaseColor,
 } = slice.actions;

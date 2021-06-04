@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import styled from "styled-components/macro";
 
-import { changeName, updateScheme } from "redux/reducers/schemeReducer";
+import {
+  changeName,
+  updateScheme,
+  clearCurrent as clearCurrentScheme,
+} from "redux/reducers/schemeReducer";
 
 import { Box, IconButton, TextField } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,7 +16,7 @@ import {
   Save as SaveIcon,
   SettingsBackupRestore as BackUpIcon,
 } from "@material-ui/icons";
-import { faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faQuestion, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import SchemeSettingsDialog from "dialogs/SchemeSettingsDialog";
 import ShortCutsDialog from "dialogs/ShortCutsDialog";
 import LightTooltip from "components/LightTooltip";
@@ -30,6 +35,7 @@ const NameInput = styled(TextField)`
 `;
 
 const TitleBar = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -46,9 +52,16 @@ const TitleBar = () => {
   const handleSaveName = useCallback(() => {
     dispatch(changeName(currentScheme.id, name));
   }, [dispatch, currentScheme && currentScheme.id, name]);
+
   const handleDiscardName = useCallback(() => {
     setName(currentScheme.name);
   }, [setName, currentScheme && currentScheme.name]);
+
+  const handleGoBack = useCallback(() => {
+    dispatch(clearCurrentScheme());
+    history.push("/");
+  }, [history, dispatch]);
+
   const handleApplySettings = useCallback(
     (guide_data) => {
       dispatch(
@@ -78,7 +91,7 @@ const TitleBar = () => {
       <NameInput
         value={name}
         onChange={handleNameChange}
-        width={currentScheme && name !== currentScheme.name ? "150px" : "230px"}
+        width={currentScheme && name !== currentScheme.name ? "105px" : "185px"}
       />
       <Box display="flex">
         {currentScheme && name !== currentScheme.name ? (
@@ -99,6 +112,11 @@ const TitleBar = () => {
         ) : (
           <></>
         )}
+        <LightTooltip title="Back" arrow>
+          <IconButton onClick={handleGoBack}>
+            <CustomIcon icon={faChevronLeft} size="xs" />
+          </IconButton>
+        </LightTooltip>
         <LightTooltip title="Shortcuts" arrow>
           <IconButton onClick={() => setDialog(DialogTypes.SHORTCUTS)}>
             <CustomIcon icon={faQuestion} size="xs" />

@@ -25,6 +25,12 @@ const Wrapper = styled(Box)`
 const CustomTypography = styled(Typography)`
   color: ${(props) => (props.active === "true" ? "white" : "darkgray")};
 `;
+const SmallIconButton = styled(IconButton)`
+  .MuiSvgIcon-root {
+    width: 18px;
+    height: 18px;
+  }
+`;
 
 const PartItem = (props) => {
   const {
@@ -60,36 +66,11 @@ const PartItem = (props) => {
     [toggleVisible]
   );
 
-  const isInViewport = useCallback(
-    (el) => {
-      const rect = el.getBoundingClientRect();
-      return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <=
-          (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <=
-          (window.innerWidth || document.documentElement.clientWidth)
-      );
-    },
-    [
-      window.innerHeight,
-      window.innerWidth,
-      document.documentElement.clientHeight,
-      document.documentElement.clientWidth,
-    ]
-  );
-
-  useEffect(() => {
-    if ((selected || hovered) && !isInViewport(wrapperRef.current)) {
-      wrapperRef.current.scrollIntoView();
-    }
-  }, [selected, hovered, wrapperRef.current]);
-
   return (
     <Wrapper
       ref={wrapperRef}
-      p={2}
+      px={2}
+      py={1}
       mb={1}
       display="flex"
       width="100%"
@@ -107,25 +88,29 @@ const PartItem = (props) => {
         alignItems="center"
         width="100%"
       >
-        <CustomTypography active={layer_visible ? "true" : "false"} noWrap>
+        <CustomTypography
+          variant="body2"
+          active={layer_visible ? "true" : "false"}
+          noWrap
+        >
           {text}
         </CustomTypography>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           {!disableLock && (selected || hovered || layer_locked) ? (
             <Box mr={1}>
-              <IconButton onClick={handleToggleLock} size="small">
+              <SmallIconButton onClick={handleToggleLock} size="small">
                 {layer_locked ? <LockIcon /> : <LockOpenIcon />}
-              </IconButton>
+              </SmallIconButton>
             </Box>
           ) : (
-            <Box width="28.28px" height="28.28px"></Box>
+            <Box width="24px" height="24px" mr={1}></Box>
           )}
           {selected || hovered || !layer_visible ? (
-            <IconButton onClick={handleToggleVisible} size="small">
+            <SmallIconButton onClick={handleToggleVisible} size="small">
               {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-            </IconButton>
+            </SmallIconButton>
           ) : (
-            <Box width="28.28px" height="28.28px"></Box>
+            <Box width="24px" height="24px"></Box>
           )}
         </Box>
       </Box>

@@ -206,7 +206,7 @@ const LogoDialog = (props) => {
         </TabPanel>
       </CustomDialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="secondary">
           Cancel
         </Button>
       </DialogActions>

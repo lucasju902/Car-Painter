@@ -70,6 +70,9 @@ const CustomCardHeader = styled(CardHeader)`
     width: calc(100% - 50px);
   }
 `;
+const CustomCardContent = styled(CardContent)`
+  padding-top: 0;
+`;
 
 const PartGroup = (props) => {
   const classes = useStyles();
@@ -191,7 +194,7 @@ const PartGroup = (props) => {
           }
         />
         <Collapse in={expanded}>
-          <CardContent>
+          <CustomCardContent>
             <ReactSortable
               list={sortedList}
               setList={handleChangeLayer}
@@ -217,7 +220,7 @@ const PartGroup = (props) => {
               ))}
             </ReactSortable>
             {extraChildren}
-          </CardContent>
+          </CustomCardContent>
         </Collapse>
       </Card>
     </Box>

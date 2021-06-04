@@ -188,6 +188,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
 
   const handleOpenBase = useCallback(
     (base) => {
+      dispatch(setMouseMode(MouseModes.DEFAULT));
       dispatch(createLayersFromBasePaint(currentScheme.id, base));
       setDialog(null);
       focusBoard();
@@ -196,6 +197,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   );
   const handleOpenShape = useCallback(
     (shape) => {
+      dispatch(setMouseMode(MouseModes.DEFAULT));
       dispatch(createLayerFromShape(currentScheme.id, shape, frameSize));
       setDialog(null);
       focusBoard();
@@ -210,6 +212,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   );
   const handleOpenLogo = useCallback(
     (logo) => {
+      dispatch(setMouseMode(MouseModes.DEFAULT));
       dispatch(createLayerFromLogo(currentScheme.id, logo, frameSize));
       setDialog(null);
       focusBoard();
@@ -224,6 +227,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   );
   const handleOpenUpload = useCallback(
     (upload) => {
+      dispatch(setMouseMode(MouseModes.DEFAULT));
       dispatch(createLayerFromUpload(currentScheme.id, upload, frameSize));
       setDialog(null);
       focusBoard();
@@ -238,6 +242,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   );
   const handleCreateText = useCallback(
     (values) => {
+      dispatch(setMouseMode(MouseModes.DEFAULT));
       dispatch(createTextLayer(currentScheme.id, values, frameSize));
       setDialog(null);
       focusBoard();

@@ -78,7 +78,7 @@ const BasePaintDialog = React.memo((props) => {
         </CustomInfiniteScroll>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="secondary">
           Cancel
         </Button>
       </DialogActions>

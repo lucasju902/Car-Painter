@@ -7,6 +7,7 @@ import {
   Box,
   TextField,
   Typography,
+  Grid,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -49,68 +50,74 @@ const PositionProperty = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerTypes.includes("layer_data.left") ? (
-            <CustomeTextField
-              name="layer_data.left"
-              label="X"
-              variant="outlined"
-              type="number"
-              value={mathRound2(values.layer_data.left)}
-              error={Boolean(
-                touched.layer_data &&
-                  touched.layer_data.left &&
-                  errors.layer_data &&
-                  errors.layer_data.left
+          <Grid container spacing={1}>
+            <Grid item sm={6}>
+              {AllowedLayerTypes.includes("layer_data.left") ? (
+                <CustomeTextField
+                  name="layer_data.left"
+                  label="X"
+                  variant="outlined"
+                  type="number"
+                  value={mathRound2(values.layer_data.left)}
+                  error={Boolean(
+                    touched.layer_data &&
+                      touched.layer_data.left &&
+                      errors.layer_data &&
+                      errors.layer_data.left
+                  )}
+                  helperText={
+                    touched.layer_data &&
+                    touched.layer_data.left &&
+                    errors.layer_data &&
+                    errors.layer_data.left
+                  }
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                  mb={4}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              ) : (
+                <></>
               )}
-              helperText={
-                touched.layer_data &&
-                touched.layer_data.left &&
-                errors.layer_data &&
-                errors.layer_data.left
-              }
-              onBlur={handleBlur}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              mb={4}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          ) : (
-            <></>
-          )}
-          {AllowedLayerTypes.includes("layer_data.top") ? (
-            <CustomeTextField
-              name="layer_data.top"
-              label="Y"
-              variant="outlined"
-              type="number"
-              value={mathRound2(values.layer_data.top)}
-              error={Boolean(
-                touched.layer_data &&
-                  touched.layer_data.top &&
-                  errors.layer_data &&
-                  errors.layer_data.top
+            </Grid>
+            <Grid item sm={6}>
+              {AllowedLayerTypes.includes("layer_data.top") ? (
+                <CustomeTextField
+                  name="layer_data.top"
+                  label="Y"
+                  variant="outlined"
+                  type="number"
+                  value={mathRound2(values.layer_data.top)}
+                  error={Boolean(
+                    touched.layer_data &&
+                      touched.layer_data.top &&
+                      errors.layer_data &&
+                      errors.layer_data.top
+                  )}
+                  helperText={
+                    touched.layer_data &&
+                    touched.layer_data.top &&
+                    errors.layer_data &&
+                    errors.layer_data.top
+                  }
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                  mb={4}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              ) : (
+                <></>
               )}
-              helperText={
-                touched.layer_data &&
-                touched.layer_data.top &&
-                errors.layer_data &&
-                errors.layer_data.top
-              }
-              onBlur={handleBlur}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              mb={4}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          ) : (
-            <></>
-          )}
+            </Grid>
+          </Grid>
         </Box>
       </AccordionDetails>
     </Accordion>

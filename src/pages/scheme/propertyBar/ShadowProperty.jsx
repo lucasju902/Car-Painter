@@ -138,68 +138,74 @@ const ShadowProperty = (props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerTypes.includes("layer_data.shadowOffsetX") ? (
-            <CustomeTextField
-              name="layer_data.shadowOffsetX"
-              label="Shadow OffsetX"
-              variant="outlined"
-              type="number"
-              value={mathRound2(values.layer_data.shadowOffsetX)}
-              error={Boolean(
-                touched.layer_data &&
-                  touched.layer_data.shadowOffsetX &&
-                  errors.layer_data &&
-                  errors.layer_data.shadowOffsetX
+          <Grid container spacing={1}>
+            <Grid item sm={6}>
+              {AllowedLayerTypes.includes("layer_data.shadowOffsetX") ? (
+                <CustomeTextField
+                  name="layer_data.shadowOffsetX"
+                  label="Shadow OffsetX"
+                  variant="outlined"
+                  type="number"
+                  value={mathRound2(values.layer_data.shadowOffsetX)}
+                  error={Boolean(
+                    touched.layer_data &&
+                      touched.layer_data.shadowOffsetX &&
+                      errors.layer_data &&
+                      errors.layer_data.shadowOffsetX
+                  )}
+                  helperText={
+                    touched.layer_data &&
+                    touched.layer_data.shadowOffsetX &&
+                    errors.layer_data &&
+                    errors.layer_data.shadowOffsetX
+                  }
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                  mb={4}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              ) : (
+                <></>
               )}
-              helperText={
-                touched.layer_data &&
-                touched.layer_data.shadowOffsetX &&
-                errors.layer_data &&
-                errors.layer_data.shadowOffsetX
-              }
-              onBlur={handleBlur}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              mb={4}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          ) : (
-            <></>
-          )}
-          {AllowedLayerTypes.includes("layer_data.shadowOffsetY") ? (
-            <CustomeTextField
-              name="layer_data.shadowOffsetY"
-              label="Shadow OffsetY"
-              variant="outlined"
-              type="number"
-              value={mathRound2(values.layer_data.shadowOffsetY)}
-              error={Boolean(
-                touched.layer_data &&
-                  touched.layer_data.shadowOffsetY &&
-                  errors.layer_data &&
-                  errors.layer_data.shadowOffsetY
+            </Grid>
+            <Grid item sm={6}>
+              {AllowedLayerTypes.includes("layer_data.shadowOffsetY") ? (
+                <CustomeTextField
+                  name="layer_data.shadowOffsetY"
+                  label="Shadow OffsetY"
+                  variant="outlined"
+                  type="number"
+                  value={mathRound2(values.layer_data.shadowOffsetY)}
+                  error={Boolean(
+                    touched.layer_data &&
+                      touched.layer_data.shadowOffsetY &&
+                      errors.layer_data &&
+                      errors.layer_data.shadowOffsetY
+                  )}
+                  helperText={
+                    touched.layer_data &&
+                    touched.layer_data.shadowOffsetY &&
+                    errors.layer_data &&
+                    errors.layer_data.shadowOffsetY
+                  }
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                  mb={4}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              ) : (
+                <></>
               )}
-              helperText={
-                touched.layer_data &&
-                touched.layer_data.shadowOffsetY &&
-                errors.layer_data &&
-                errors.layer_data.shadowOffsetY
-              }
-              onBlur={handleBlur}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              mb={4}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          ) : (
-            <></>
-          )}
+            </Grid>
+          </Grid>
         </Box>
       </AccordionDetails>
     </Accordion>

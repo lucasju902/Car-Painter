@@ -187,7 +187,7 @@ const UploadDialog = (props) => {
         </Box>
       </CustomDialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="secondary">
           Cancel
         </Button>
       </DialogActions>
