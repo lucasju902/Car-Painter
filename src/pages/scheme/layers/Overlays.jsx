@@ -13,16 +13,16 @@ const Overlays = (props) => {
     frameSize,
     mouseMode,
     boardRotate,
+    loadedStatuses,
     onChange,
     onHover,
+    onLoadLayer,
   } = props;
 
   const filteredLayers = useMemo(
     () =>
       _.orderBy(
-        layers.filter(
-          (item) => item.layer_type === LayerTypes.OVERLAY && item.layer_visible
-        ),
+        layers.filter((item) => item.layer_type === LayerTypes.OVERLAY),
         ["layer_order"],
         ["desc"]
       ),
@@ -45,9 +45,10 @@ const Overlays = (props) => {
 
         return (
           <URLImage
+            key={layer.id}
+            id={layer.id}
             name={layer.id.toString()}
             src={`${config.assetsURL}/${layer.layer_data.source_file}`}
-            key={layer.id}
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
             allowFit={true}
@@ -56,6 +57,7 @@ const Overlays = (props) => {
             height={layer.layer_data.height}
             rotation={layer.layer_data.rotation}
             boardRotate={boardRotate}
+            loadedStatus={loadedStatuses[layer.id]}
             opacity={layer.layer_data.opacity}
             scaleX={layer.layer_data.flop === 1 ? -1 : 1}
             scaleY={layer.layer_data.flip === 1 ? -1 : 1}
@@ -70,6 +72,8 @@ const Overlays = (props) => {
             layer_data={layer.layer_data}
             onChange={(values) => onChange(layer, values)}
             onHover={(flag) => onHover(layer, flag)}
+            visible={layer.layer_visible ? true : false}
+            onLoadLayer={onLoadLayer}
           />
         );
       })}

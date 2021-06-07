@@ -18,6 +18,7 @@ const initialState = {
   hoveredJSON: {},
   clipboard: null,
   drawingStatus: null,
+  loadedStatuses: {},
   loading: false,
 };
 
@@ -110,6 +111,13 @@ export const slice = createSlice({
     setDrawingStatus: (state, action) => {
       state.drawingStatus = action.payload;
     },
+    setLoadedStatusAll: (state, action) => {
+      state.loadedStatuses = action.payload;
+    },
+    setLoadedStatus: (state, action) => {
+      let { key, value } = action.payload;
+      state.loadedStatuses[key] = value;
+    },
   },
 });
 
@@ -126,6 +134,8 @@ export const {
   setHoveredJSON,
   setHoveredJSONItem,
   deleteItemsByUploadID,
+  setLoadedStatusAll,
+  setLoadedStatus,
 } = slice.actions;
 
 export default slice.reducer;

@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useEffect } from "react";
 import _ from "lodash";
 import {
   Rect,
@@ -17,6 +17,7 @@ import { mathRound2 } from "helper";
 import { MouseModes, AllowedLayerProps, LayerTypes } from "constant";
 
 const Shape = ({
+  id,
   type,
   x,
   y,
@@ -42,6 +43,7 @@ const Shape = ({
   shadowOffsetX,
   shadowOffsetY,
   layer_data,
+  onLoadLayer,
   ...props
 }) => {
   const shapeRef = useRef();
@@ -127,6 +129,9 @@ const Shape = ({
       );
     }
   };
+  useEffect(() => {
+    if (onLoadLayer && id) onLoadLayer(id, true);
+  }, []);
   return (
     <>
       {type === MouseModes.RECT ? (

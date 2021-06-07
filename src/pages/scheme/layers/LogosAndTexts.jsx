@@ -11,6 +11,7 @@ const LogosAndTexts = (props) => {
   const {
     layers,
     loadedFontList,
+    loadedStatuses,
     fonts,
     frameSize,
     mouseMode,
@@ -19,16 +20,16 @@ const LogosAndTexts = (props) => {
     onChange,
     onFontLoad,
     onHover,
+    onLoadLayer,
   } = props;
   const filteredLayers = useMemo(
     () =>
       _.orderBy(
         layers.filter(
           (item) =>
-            (item.layer_type === LayerTypes.LOGO ||
-              item.layer_type === LayerTypes.UPLOAD ||
-              item.layer_type === LayerTypes.TEXT) &&
-            item.layer_visible
+            item.layer_type === LayerTypes.LOGO ||
+            item.layer_type === LayerTypes.UPLOAD ||
+            item.layer_type === LayerTypes.TEXT
         ),
         ["layer_order"],
         ["desc"]
@@ -61,9 +62,11 @@ const LogosAndTexts = (props) => {
         if (layer.layer_type !== LayerTypes.TEXT) {
           return (
             <URLImage
+              key={layer.id}
+              id={layer.id}
               name={layer.id.toString()}
               src={`${config.assetsURL}/${layer.layer_data.source_file}`}
-              key={layer.id}
+              loadedStatus={loadedStatuses[layer.id]}
               x={parseFloat(layer.layer_data.left || 0)}
               y={parseFloat(layer.layer_data.top || 0)}
               allowFit={true}
@@ -87,12 +90,16 @@ const LogosAndTexts = (props) => {
               }
               onChange={(values) => onChange(layer, values)}
               onHover={(flag) => onHover(layer, flag)}
+              visible={layer.layer_visible ? true : false}
+              onLoadLayer={onLoadLayer}
             />
           );
         }
         let font = layerFont(layer);
         return (
           <TextNode
+            key={layer.id}
+            id={layer.id}
             name={layer.id.toString()}
             text={layer.layer_data.text}
             fontFamily={font.font_name}
@@ -102,13 +109,13 @@ const LogosAndTexts = (props) => {
                 : null
             }
             loadedFontList={loadedFontList}
+            loadedStatus={loadedStatuses[layer.id]}
             onFontLoad={onFontLoad}
             fontSize={layer.layer_data.size}
             fill={layer.layer_data.color}
             strokeWidth={layer.layer_data.stroke}
             stroke={layer.layer_data.scolor}
             strokeEnabled={true}
-            key={layer.id}
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
             offsetX={0}
@@ -130,10 +137,12 @@ const LogosAndTexts = (props) => {
             shadowOpacity={layer.layer_data.shadowOpacity}
             shadowOffsetX={shadowOffset.x}
             shadowOffsetY={shadowOffset.y}
+            visible={layer.layer_visible ? true : false}
             onSelect={() => setCurrentLayer(layer)}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
             onHover={(flag) => onHover(layer, flag)}
+            onLoadLayer={onLoadLayer}
           />
         );
       })}

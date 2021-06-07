@@ -5,15 +5,18 @@ import { mathRound2, hexToRgba } from "helper";
 import { Image } from "react-konva";
 
 const URLImage = ({
+  id,
   src,
-  tellSize,
-  onSelect,
-  onChange,
-  onHover,
   filterColor,
   frameSize,
   allowFit,
   layer_data,
+  loadedStatus,
+  onLoadLayer,
+  tellSize,
+  onSelect,
+  onChange,
+  onHover,
   ...props
 }) => {
   const imageRef = useRef(null);
@@ -36,6 +39,8 @@ const URLImage = ({
   };
 
   useEffect(() => {
+    if (loadedStatus !== false && loadedStatus !== true && onLoadLayer && id)
+      onLoadLayer(id, false);
     loadImage();
     return () => {
       if (imageRef.current) {
@@ -116,6 +121,7 @@ const URLImage = ({
         height: height,
       });
     }
+    if (onLoadLayer && id) onLoadLayer(id, true);
   };
   const loadImage = async () => {
     const img = new window.Image();

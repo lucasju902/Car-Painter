@@ -17,7 +17,7 @@ import PropertyBar from "./propertyBar";
 import ConfirmDialog from "dialogs/ConfirmDialog";
 import { MouseModes, PaintingGuides, DialogTypes } from "constant";
 
-import { getScheme } from "redux/reducers/schemeReducer";
+import { getScheme, setSaving, setLoaded } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
 import { getFontList } from "redux/reducers/fontReducer";
 import { getLogoList } from "redux/reducers/logoReducer";
@@ -65,8 +65,12 @@ const Scheme = () => {
 
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const schemeLoaded = useSelector((state) => state.schemeReducer.loaded);
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const clipboardLayer = useSelector((state) => state.layerReducer.clipboard);
+  const loadedStatuses = useSelector(
+    (state) => state.layerReducer.loadedStatuses
+  );
   const overlayList = useSelector((state) => state.overlayReducer.list);
   const logoList = useSelector((state) => state.logoReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
@@ -407,7 +411,9 @@ const Scheme = () => {
   const handleUploadThumbnail = useCallback(async () => {
     if (stageRef.current && currentSchemeRef.current) {
       try {
+        dispatch(setSaving(true));
         let dataURL = await takeScreenshot();
+        dispatch(setSaving(false));
         let blob = dataURItoBlob(dataURL);
         var fileOfBlob = new File(
           [blob],
@@ -461,6 +467,17 @@ const Scheme = () => {
       clearTimeout(startTimout);
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      !schemeLoaded &&
+      Object.keys(loadedStatuses).every((k) => loadedStatuses[k]) &&
+      stageRef.current
+    ) {
+      dispatch(setLoaded(true));
+      handleZoomFit();
+    }
+  }, [loadedStatuses]);
 
   useEffect(() => {
     currentSchemeRef.current = currentScheme;

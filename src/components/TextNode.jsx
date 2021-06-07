@@ -4,6 +4,7 @@ import { Text } from "react-konva";
 import { mathRound2 } from "helper";
 
 const TextNode = ({
+  id,
   fontFamily,
   fontFile,
   loadedFontList,
@@ -13,6 +14,7 @@ const TextNode = ({
   shadowOpacity,
   shadowOffsetX,
   shadowOffsetY,
+  onLoadLayer,
   onSelect,
   onChange,
   onFontLoad,
@@ -27,6 +29,7 @@ const TextNode = ({
         loadFont();
       } else {
         setLoadedFontFamily(fontFamily);
+        if (onLoadLayer && id) onLoadLayer(id, true);
       }
     }
   }, [fontFamily, fontFile]);
@@ -39,6 +42,7 @@ const TextNode = ({
         document.fonts.add(loaded_face);
         onFontLoad(fontFamily);
         setLoadedFontFamily(fontFamily);
+        if (onLoadLayer && id) onLoadLayer(id, true);
       })
       .catch(function (error) {
         // error occurred

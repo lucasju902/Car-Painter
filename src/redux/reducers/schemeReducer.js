@@ -5,7 +5,7 @@ import { parseScheme } from "helper";
 import SchemeService from "services/schemeService";
 import { setMessage } from "./messageReducer";
 import { setCurrent as setCurrentCarMake } from "./carMakeReducer";
-import { setList as setLayerList } from "./layerReducer";
+import { setList as setLayerList, setLoadedStatusAll } from "./layerReducer";
 import { setList as setBasePaintList } from "./basePaintReducer";
 import { pushToActionHistory } from "./boardReducer";
 
@@ -13,6 +13,8 @@ const initialState = {
   list: [],
   current: null,
   loading: false,
+  loaded: false,
+  saving: false,
 };
 
 export const slice = createSlice({
@@ -21,6 +23,12 @@ export const slice = createSlice({
   reducers: {
     setLoading: (state, action) => {
       state.loading = action.payload;
+    },
+    setSaving: (state, action) => {
+      state.saving = action.payload;
+    },
+    setLoaded: (state, action) => {
+      state.loaded = action.payload;
     },
     setList: (state, action) => {
       let list = [...action.payload];
@@ -81,6 +89,8 @@ export const slice = createSlice({
 
 const { setLoading, setList, insertToList, updateListItem } = slice.actions;
 export const {
+  setSaving,
+  setLoaded,
   setCurrent,
   clearCurrent,
   setCurrentName,
@@ -105,6 +115,11 @@ export const createScheme = (carMake, name, userID) => async (dispatch) => {
     console.log("result: ", result);
     dispatch(setCurrent(result.scheme));
     dispatch(setCurrentCarMake(result.carMake));
+    let loadedStatuses = {};
+    result.layers.map((item) => {
+      loadedStatuses[item.id] = false;
+    });
+    dispatch(setLoadedStatusAll(loadedStatuses));
     dispatch(setLayerList(result.layers));
     dispatch(setBasePaintList(result.basePaints));
   } catch (err) {
@@ -124,6 +139,11 @@ export const getScheme = (schemeID) => async (dispatch) => {
     });
     dispatch(setCurrent(scheme));
     dispatch(setCurrentCarMake(result.carMake));
+    let loadedStatuses = {};
+    result.layers.map((item) => {
+      loadedStatuses[item.id] = false;
+    });
+    dispatch(setLoadedStatusAll(loadedStatuses));
     dispatch(setLayerList(result.layers));
     dispatch(setBasePaintList(result.basePaints));
   } catch (err) {

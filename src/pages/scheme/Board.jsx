@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import useInterval from "react-useinterval";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,6 +28,7 @@ import LogosAndTexts from "./layers/LogosAndTexts";
 import Shapes from "./layers/Shapes";
 import TransformerComponent from "components/TransformerComponent";
 import LightTooltip from "components/LightTooltip";
+import ScreenLoader from "components/ScreenLoader";
 
 import {
   setFrameSizeToMax,
@@ -35,6 +42,7 @@ import {
   createShape,
   setDrawingStatus,
   DrawingStatus,
+  setLoadedStatus,
 } from "redux/reducers/layerReducer";
 import { MouseModes, LayerTypes, DefaultLayer } from "constant";
 import {
@@ -80,10 +88,15 @@ const Board = ({
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const schemeSaving = useSelector((state) => state.schemeReducer.saving);
+  const schemeLoaded = useSelector((state) => state.schemeReducer.loaded);
   const fontList = useSelector((state) => state.fontReducer.list);
   const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
   const layerList = useSelector((state) => state.layerReducer.list);
   const currentLayer = useSelector((state) => state.layerReducer.current);
+  const loadedStatuses = useSelector(
+    (state) => state.layerReducer.loadedStatuses
+  );
   const drawingStatus = useSelector(
     (state) => state.layerReducer.drawingStatus
   );
@@ -409,6 +422,12 @@ const Board = ({
     },
     [boardRotate, onChangeBoardRotation]
   );
+  const handleLoadLayer = useCallback(
+    (layerID, flag) => {
+      dispatch(setLoadedStatus({ key: layerID, value: flag }));
+    },
+    [dispatch]
+  );
 
   return (
     <Box
@@ -421,6 +440,7 @@ const Board = ({
       margin="auto"
       position="relative"
       id="board-wrapper"
+      position="relative"
       ref={ref}
     >
       <Stage
@@ -460,42 +480,55 @@ const Board = ({
             }
             listening={false}
           />
-          <BasePaints layers={layerList} handleImageSize={handleImageSize} />
+          <BasePaints
+            layers={layerList}
+            loadedStatuses={loadedStatuses}
+            handleImageSize={handleImageSize}
+            onLoadLayer={handleLoadLayer}
+          />
         </Layer>
         <Layer listening={false}>
           <PaintingGuideBottom
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}
-            handleImageSize={handleImageSize}
             guideData={currentScheme.guide_data}
+            loadedStatuses={loadedStatuses}
+            handleImageSize={handleImageSize}
+            onLoadLayer={handleLoadLayer}
           />
         </Layer>
         <Layer ref={mainLayerRef}>
           <CarParts
             layers={layerList}
             currentCarMake={currentCarMake}
+            loadedStatuses={loadedStatuses}
             handleImageSize={handleImageSize}
+            onLoadLayer={handleLoadLayer}
           />
           <Overlays
             layers={layerList}
-            handleImageSize={handleImageSize}
             frameSize={frameSize}
             boardRotate={boardRotate}
             currentLayer={currentLayer}
             mouseMode={mouseMode}
+            loadedStatuses={loadedStatuses}
+            handleImageSize={handleImageSize}
             setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
             onHover={handleHoverLayer}
+            onLoadLayer={handleLoadLayer}
           />
           <Shapes
             layers={layerList}
             drawingLayer={drawingLayerRef.current}
             boardRotate={boardRotate}
             mouseMode={mouseMode}
-            setCurrentLayer={handleLayerSelect}
             currentLayer={currentLayer}
+            loadedStatuses={loadedStatuses}
+            setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
             onHover={handleHoverLayer}
+            onLoadLayer={handleLoadLayer}
           />
           <LogosAndTexts
             layers={layerList}
@@ -504,28 +537,34 @@ const Board = ({
             frameSize={frameSize}
             mouseMode={mouseMode}
             boardRotate={boardRotate}
-            setCurrentLayer={handleLayerSelect}
+            loadedStatuses={loadedStatuses}
             currentLayer={currentLayer}
+            setCurrentLayer={handleLayerSelect}
             onChange={handleLayerDataChange}
             onFontLoad={handleAddFont}
             onHover={handleHoverLayer}
+            onLoadLayer={handleLoadLayer}
           />
         </Layer>
         <Layer ref={carMaskLayerRef} listening={false}>
           <PaintingGuideCarMask
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}
-            handleImageSize={handleImageSize}
+            loadedStatuses={loadedStatuses}
             guideData={currentScheme.guide_data}
+            handleImageSize={handleImageSize}
+            onLoadLayer={handleLoadLayer}
           />
         </Layer>
         <Layer>
           <PaintingGuideTop
             currentCarMake={currentCarMake}
             paintingGuides={paintingGuides}
-            handleImageSize={handleImageSize}
+            loadedStatuses={loadedStatuses}
             frameSize={frameSize}
             guideData={currentScheme.guide_data}
+            handleImageSize={handleImageSize}
+            onLoadLayer={handleLoadLayer}
           />
           <TransformerComponent
             selectedLayer={currentLayer}
@@ -556,6 +595,26 @@ const Board = ({
           </RotationButton>
         </LightTooltip>
       </Box>
+      {schemeSaving || !schemeLoaded ? (
+        <Box
+          width="100%"
+          height="100%"
+          bgcolor="#282828"
+          position="absolute"
+          left="0"
+          top="0"
+        >
+          <Box
+            position="absolute"
+            top="calc(50% - 25px)"
+            right="calc(50% - 25px)"
+          >
+            <ScreenLoader />
+          </Box>
+        </Box>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };
