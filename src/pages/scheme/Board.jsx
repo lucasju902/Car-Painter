@@ -166,9 +166,11 @@ const Board = ({
               name: mouseMode,
               left: position.x,
               top: position.y,
-              color: "#000000",
-              scolor: "#000000",
-              stroke: 1,
+              color: currentScheme.guide_data.default_shape_color || "#000000",
+              opacity: currentScheme.guide_data.default_shape_opacity || 1,
+              scolor:
+                currentScheme.guide_data.default_shape_scolor || "#000000",
+              stroke: currentScheme.guide_data.default_shape_stroke || 1,
             },
           };
 

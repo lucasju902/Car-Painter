@@ -9,6 +9,8 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
@@ -36,7 +38,8 @@ const StrokeProperty = (props) => {
 
   if (
     !AllowedLayerTypes.includes("layer_data.stroke") &&
-    !AllowedLayerTypes.includes("layer_data.scolor")
+    !AllowedLayerTypes.includes("layer_data.scolor") &&
+    !AllowedLayerTypes.includes("layer_data.strokeType")
   )
     return <></>;
   return (
@@ -69,13 +72,39 @@ const StrokeProperty = (props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.stroke") ? (
-            <SliderInput
-              label="Stroke Width"
-              min={0}
-              max={10}
-              value={values.layer_data.stroke}
-              setValue={(value) => setFieldValue("layer_data.stroke", value)}
-            />
+            <Box mb={2}>
+              <SliderInput
+                label="Stroke Width"
+                min={0}
+                max={10}
+                value={values.layer_data.stroke}
+                setValue={(value) => setFieldValue("layer_data.stroke", value)}
+              />
+            </Box>
+          ) : (
+            <></>
+          )}
+          {AllowedLayerTypes.includes("layer_data.strokeType") ? (
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="body1" color="textSecondary" mr={2}>
+                  Stroke Type
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Select
+                  name="layer_data.strokeType"
+                  variant="outlined"
+                  value={values.layer_data.strokeType}
+                  onChange={handleChange}
+                  fullWidth
+                >
+                  <MenuItem value="inside">Inside</MenuItem>
+                  <MenuItem value="middle">Middle</MenuItem>
+                  <MenuItem value="outside">Outside</MenuItem>
+                </Select>
+              </Grid>
+            </Grid>
           ) : (
             <></>
           )}

@@ -36,34 +36,88 @@ const Shapes = (props) => {
     },
     [boardRotate]
   );
+  const getOffsetsFromStroke = useCallback((layer) => {
+    if (layer.layer_data.strokeType === "inside")
+      return {
+        x: [MouseModes.RECT, MouseModes.ELLIPSE].includes(layer.layer_type)
+          ? layer.layer_data.stroke / 2.0
+          : 0,
+        y: [MouseModes.RECT, MouseModes.ELLIPSE].includes(layer.layer_type)
+          ? layer.layer_data.stroke / 2.0
+          : 0,
+        height: -layer.layer_data.stroke / 2.0,
+        width: -layer.layer_data.stroke / 2.0,
+        radius: -layer.layer_data.stroke / 2.0,
+        pointerLength: -layer.layer_data.stroke / 2.0,
+        pointerWidth: -layer.layer_data.stroke / 2.0,
+        innerRadius: layer.layer_data.stroke / 2.0,
+        outerRadius: -layer.layer_data.stroke / 2.0,
+      };
+    if (layer.layer_data.strokeType === "outside")
+      return {
+        x: [MouseModes.RECT, MouseModes.ELLIPSE].includes(layer.layer_type)
+          ? -layer.layer_data.stroke / 2.0
+          : 0,
+        y: [MouseModes.RECT, MouseModes.ELLIPSE].includes(layer.layer_type)
+          ? -layer.layer_data.stroke / 2.0
+          : 0,
+        height: layer.layer_data.stroke / 2.0,
+        width: layer.layer_data.stroke / 2.0,
+        radius: layer.layer_data.stroke / 2.0,
+        pointerLength: layer.layer_data.stroke / 2.0,
+        pointerWidth: layer.layer_data.stroke / 2.0,
+        innerRadius: -layer.layer_data.stroke / 2.0,
+        outerRadius: layer.layer_data.stroke / 2.0,
+      };
+    return {
+      x: 0,
+      y: 0,
+      height: 0,
+      width: 0,
+      radius: 0,
+      pointerLength: 0,
+      pointerWidth: 0,
+      innerRadius: 0,
+      outerRadius: 0,
+    };
+  }, []);
 
   return (
     <>
       {filteredLayers.map((layer) => {
         let shadowOffset = getShadowOffset(layer);
+        let offsetsFromStroke = getOffsetsFromStroke(layer);
 
         return (
           <Shape
             key={layer.id}
             id={layer.id}
             type={layer.layer_data.type}
-            x={parseFloat(layer.layer_data.left || 0)}
-            y={parseFloat(layer.layer_data.top || 0)}
-            width={layer.layer_data.width}
-            height={layer.layer_data.height}
-            radius={layer.layer_data.radius}
+            x={parseFloat(layer.layer_data.left + offsetsFromStroke.x || 0)}
+            y={parseFloat(layer.layer_data.top + offsetsFromStroke.y || 0)}
+            width={layer.layer_data.width + offsetsFromStroke.width}
+            height={layer.layer_data.height + offsetsFromStroke.height}
+            radius={layer.layer_data.radius + offsetsFromStroke.radius}
             points={
               layer.layer_data.points
                 ? removeDuplicatedPointFromEnd(layer.layer_data.points)
                 : []
             }
             loadedStatus={loadedStatuses[layer.id]}
-            pointerLength={layer.layer_data.pointerLength}
-            pointerWidth={layer.layer_data.pointerWidth}
+            pointerLength={
+              layer.layer_data.pointerLength + offsetsFromStroke.pointerLength
+            }
+            pointerWidth={
+              layer.layer_data.pointerWidth + offsetsFromStroke.pointerWidth
+            }
             lineCap={layer.layer_data.lineCap}
             lineJoin={layer.layer_data.lineJoin}
-            innerRadius={layer.layer_data.innerRadius}
-            outerRadius={layer.layer_data.outerRadius}
+            innerRadius={
+              layer.layer_data.innerRadius + offsetsFromStroke.innerRadius
+            }
+            outerRadius={
+              layer.layer_data.outerRadius + offsetsFromStroke.outerRadius
+            }
             numPoints={layer.layer_data.numPoints}
             cornerRadius={[
               layer.layer_data.cornerTopLeft,

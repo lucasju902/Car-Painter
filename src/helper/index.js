@@ -40,6 +40,8 @@ export const mathRound4 = (num) => Math.round(num * 10000) / 10000;
 
 export const colorValidator = (color) => {
   if (!color || !color.length) return true;
+  if (color[0] === "#" && (color.length === 5 || color.length > 7))
+    return false;
   return validateColor(color);
 };
 
