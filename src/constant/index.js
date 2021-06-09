@@ -297,7 +297,6 @@ export const AllowedLayerProps = {
       "layer_data.color",
       "layer_data.stroke",
       "layer_data.scolor",
-      "layer_data.strokeType",
       "layer_data.shadowColor",
       "layer_data.shadowBlur",
       "layer_data.shadowOpacity",
