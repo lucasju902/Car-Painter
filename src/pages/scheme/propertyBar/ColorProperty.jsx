@@ -23,6 +23,7 @@ const ColorProperty = (props) => {
     setFieldValue,
     touched,
     values,
+    onLayerDataUpdate,
   } = props;
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
@@ -56,7 +57,7 @@ const ColorProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.color}
-                  onChange={(color) => setFieldValue("layer_data.color", color)}
+                  onChange={(color) => onLayerDataUpdate("color", color)}
                   onInputChange={(color) =>
                     setFieldValue("layer_data.color", color)
                   }

@@ -6,7 +6,7 @@ import styled from "styled-components/macro";
 import { ReactSortable } from "react-sortablejs";
 import { spacing } from "@material-ui/system";
 
-import { MouseModes } from "constant";
+import { MouseModes, LayerTypes } from "constant";
 import {
   updateLayer,
   setCurrent as setCurrentLayer,
@@ -79,6 +79,7 @@ const PartGroup = (props) => {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(true);
   const currentLayer = useSelector((state) => state.layerReducer.current);
+  const user = useSelector((state) => state.authReducer.user);
   const {
     layerList,
     title,
@@ -158,6 +159,11 @@ const PartGroup = (props) => {
     },
     [onChangeHoverJSONItem]
   );
+  const layerName = useCallback((name, type) => {
+    if (type === LayerTypes.UPLOAD && name.indexOf(user.id.toString()) === 0)
+      return name.slice(user.id.toString().length + 1);
+    return name;
+  }, []);
 
   return (
     <Box mb={2}>
@@ -205,7 +211,7 @@ const PartGroup = (props) => {
             >
               {sortedList.map((item) => (
                 <PartItem
-                  text={item.layer_data.name}
+                  text={layerName(item.layer_data.name, item.layer_type)}
                   layer_visible={item.layer_visible}
                   layer_locked={item.layer_locked}
                   key={item.id}

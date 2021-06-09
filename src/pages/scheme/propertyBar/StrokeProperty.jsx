@@ -23,6 +23,7 @@ const StrokeProperty = (props) => {
     setFieldValue,
     touched,
     values,
+    onLayerDataUpdate,
   } = props;
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
@@ -55,9 +56,7 @@ const StrokeProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.scolor}
-                  onChange={(color) =>
-                    setFieldValue("layer_data.scolor", color)
-                  }
+                  onChange={(color) => onLayerDataUpdate("scolor", color)}
                   onInputChange={(color) =>
                     setFieldValue("layer_data.scolor", color)
                   }

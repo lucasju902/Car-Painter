@@ -29,6 +29,7 @@ const FontProperty = (props) => {
     touched,
     values,
     fontList,
+    onLayerDataUpdate,
   } = props;
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
@@ -52,9 +53,7 @@ const FontProperty = (props) => {
               <InputLabel id="font-select-label">Font</InputLabel>
               <FontSelect
                 value={values.layer_data.font}
-                onChange={(e) =>
-                  setFieldValue("layer_data.font", e.target.value)
-                }
+                onChange={(e) => onLayerDataUpdate("font", e.target.value)}
                 fontList={fontList}
               />
             </FormControl>
@@ -71,7 +70,7 @@ const FontProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.color}
-                  onChange={(color) => setFieldValue("layer_data.color", color)}
+                  onChange={(color) => onLayerDataUpdate("color", color)}
                   onInputChange={(color) =>
                     setFieldValue("layer_data.color", color)
                   }

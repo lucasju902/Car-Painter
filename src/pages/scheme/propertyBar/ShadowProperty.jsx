@@ -32,6 +32,7 @@ const ShadowProperty = (props) => {
     setFieldValue,
     touched,
     values,
+    onLayerDataUpdate,
   } = props;
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
@@ -42,16 +43,17 @@ const ShadowProperty = (props) => {
     [values]
   );
   const handleColorChange = useCallback(
-    (value) => {
+    (value, applyNow = true) => {
       if (
         !values.layer_data.shadowColor ||
         values.layer_data.shadowColor === "transparent"
       ) {
         setFieldValue("layer_data.shadowBlur", DefaultBlurToSet);
       }
-      setFieldValue("layer_data.shadowColor", value);
+      if (applyNow) onLayerDataUpdate("shadowColor", value);
+      else setFieldValue("layer_data.shadowColor", value);
     },
-    [setFieldValue]
+    [setFieldValue, onLayerDataUpdate, values.layer_data.shadowColor]
   );
 
   if (
@@ -80,7 +82,7 @@ const ShadowProperty = (props) => {
                 <ColorPickerInput
                   value={values.layer_data.shadowColor}
                   onChange={(color) => handleColorChange(color)}
-                  onInputChange={(color) => handleColorChange(color)}
+                  onInputChange={(color) => handleColorChange(color, false)}
                   error={Boolean(
                     errors.layer_data && errors.layer_data.shadowColor
                   )}

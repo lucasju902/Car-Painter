@@ -5,7 +5,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import _ from "lodash";
 
-import { updateLayer } from "redux/reducers/layerReducer";
+import { updateLayer, cloneLayer } from "redux/reducers/layerReducer";
 import { AllowedLayerProps, LayerTypes, DefaultLayer } from "constant";
 import { colorValidator } from "helper";
 
@@ -19,6 +19,7 @@ import ColorProperty from "./ColorProperty";
 import RotationProperty from "./RotationProperty";
 import ShadowProperty from "./ShadowProperty";
 import CornerProperty from "./CornerProperty";
+import ExtraProperty from "./ExtraProperty";
 
 const Wrapper = styled(Box)`
   width: 350px;
@@ -37,6 +38,8 @@ const InnerForm = React.memo(
     toggleLayerDataField,
     currentLayer,
     pressedKey,
+    onClone,
+    onLayerDataUpdate,
     ...formProps
   }) => {
     const isDirty = useMemo(() => {
@@ -74,9 +77,17 @@ const InnerForm = React.memo(
           )}
         </Box>
         <GeneralProperty {...formProps} toggleField={toggleField} />
-        <FontProperty {...formProps} fontList={fontList} />
-        <ColorProperty {...formProps} />
-        <StrokeProperty {...formProps} />
+        <FontProperty
+          {...formProps}
+          fontList={fontList}
+          onLayerDataUpdate={onLayerDataUpdate}
+        />
+        <ColorProperty {...formProps} onLayerDataUpdate={onLayerDataUpdate} />
+        <StrokeProperty
+          {...formProps}
+          onLayerDataUpdate={onLayerDataUpdate}
+          onLayerDataUpdate={onLayerDataUpdate}
+        />
         <SizeProperty
           {...formProps}
           toggleLayerDataField={toggleLayerDataField}
@@ -84,9 +95,14 @@ const InnerForm = React.memo(
           pressedKey={pressedKey}
         />
         <PositionProperty {...formProps} />
-        <RotationProperty {...formProps} toggleField={toggleField} />
-        <ShadowProperty {...formProps} />
+        <RotationProperty
+          {...formProps}
+          toggleField={toggleField}
+          onLayerDataUpdate={onLayerDataUpdate}
+        />
+        <ShadowProperty {...formProps} onLayerDataUpdate={onLayerDataUpdate} />
         <CornerProperty {...formProps} />
+        <ExtraProperty {...formProps} onClone={onClone} />
       </Form>
     );
   }
@@ -125,7 +141,9 @@ const PropertyBar = () => {
       ),
     [AllowedLayerTypes]
   );
-
+  const handleClone = useCallback(() => {
+    if (currentLayer) dispatch(cloneLayer(currentLayer));
+  }, [dispatch, currentLayer]);
   const handleApply = useCallback(
     (values) => {
       dispatch(updateLayer(values));
@@ -138,6 +156,20 @@ const PropertyBar = () => {
         updateLayer({
           ...currentLayer,
           [field]: currentLayer[field] ? 0 : 1,
+        })
+      );
+    },
+    [dispatch, currentLayer]
+  );
+  const handleLayerDataUpdate = useCallback(
+    (key, value) => {
+      dispatch(
+        updateLayer({
+          ...currentLayer,
+          layer_data: {
+            ...currentLayer.layer_data,
+            [key]: value,
+          },
         })
       );
     },
@@ -280,6 +312,8 @@ const PropertyBar = () => {
               toggleLayerDataField={toggleLayerDataField}
               currentLayer={currentLayer}
               pressedKey={pressedKey}
+              onClone={handleClone}
+              onLayerDataUpdate={handleLayerDataUpdate}
             />
           )}
         </Formik>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components/macro";
@@ -72,31 +72,51 @@ const UploadDialog = (props) => {
   const [dropZoneKey, setDropZoneKey] = useState(1);
   const { uploads, onCancel, open, onOpenUpload } = props;
 
-  const increaseData = () => {
+  const increaseData = useCallback(() => {
     setLimit(limit + step);
-  };
-  const getNameFromFileName = (file_name) => {
-    return file_name.substring(
-      file_name.lastIndexOf("uploads/") + "uploads/".length,
-      file_name.lastIndexOf(".")
-    );
-  };
-  const handleDropZoneChange = (files_up) => {
-    setFiles(files_up);
-    console.log(files_up);
-  };
-  const handleUploadFiles = () => {
+  }, [setLimit, limit]);
+  const getNameFromFileName = useCallback(
+    (file_name) => {
+      let temp = file_name.substring(
+        file_name.lastIndexOf("uploads/") + "uploads/".length,
+        file_name.lastIndexOf(".")
+      );
+      if (temp.indexOf(user.id.toString()) === 0)
+        return temp.slice(user.id.toString().length + 1);
+      return temp;
+    },
+    [user.id]
+  );
+  const handleDropZoneChange = useCallback(
+    (files_up) => {
+      setFiles(files_up);
+      console.log(files_up);
+    },
+    [setFiles]
+  );
+  const handleUploadFiles = useCallback(() => {
     console.log(files);
     dispatch(uploadFiles(user.id, currentScheme.id, files));
     setFiles([]);
     setDropZoneKey(dropZoneKey + 1);
-  };
-  const handleClickDeleteUpload = (event, uploadItem) => {
-    event.stopPropagation();
-    event.nativeEvent.stopImmediatePropagation();
-    setUploadToDelete(uploadItem);
-  };
-  const handleDeleteUploadConfirm = async () => {
+  }, [
+    dispatch,
+    user.id,
+    currentScheme.id,
+    files,
+    setFiles,
+    dropZoneKey,
+    setDropZoneKey,
+  ]);
+  const handleClickDeleteUpload = useCallback(
+    (event, uploadItem) => {
+      event.stopPropagation();
+      event.nativeEvent.stopImmediatePropagation();
+      setUploadToDelete(uploadItem);
+    },
+    [setUploadToDelete]
+  );
+  const handleDeleteUploadConfirm = useCallback(async () => {
     console.log("Deleting: ", uploadToDelete);
     try {
       let schemes = await SchemeService.getSchemeListByUploadID(
@@ -112,17 +132,20 @@ const UploadDialog = (props) => {
       dispatch(setMessage({ message: err.message }));
       setUploadToDelete(null);
     }
-  };
+  }, [dispatch, uploadToDelete, setAssociatedSchemes, setUploadToDelete]);
 
-  const handleDeleteUploadFinally = (deleteFromAll = true) => {
-    if (deleteFromAll) {
-      dispatch(deleteLayerItemsByUploadID(uploadToDelete.id));
-      dispatch(setCurrentLayer(null));
-    }
-    dispatch(deleteUpload(uploadToDelete, deleteFromAll));
-    setUploadToDelete(null);
-    setAssociatedSchemes([]);
-  };
+  const handleDeleteUploadFinally = useCallback(
+    (deleteFromAll = true) => {
+      if (deleteFromAll) {
+        dispatch(deleteLayerItemsByUploadID(uploadToDelete.id));
+        dispatch(setCurrentLayer(null));
+      }
+      dispatch(deleteUpload(uploadToDelete, deleteFromAll));
+      setUploadToDelete(null);
+      setAssociatedSchemes([]);
+    },
+    [dispatch, uploadToDelete, setUploadToDelete, setAssociatedSchemes]
+  );
 
   return (
     <Dialog aria-labelledby="upload-title" open={open} onClose={onCancel}>

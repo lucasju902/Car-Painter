@@ -31,6 +31,7 @@ const RotationProperty = (props) => {
     toggleField,
     touched,
     values,
+    onLayerDataUpdate,
   } = props;
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
@@ -77,10 +78,7 @@ const RotationProperty = (props) => {
               </Typography>
               <IconButton
                 onClick={() =>
-                  setFieldValue(
-                    "layer_data.flop",
-                    values.layer_data.flop ? 0 : 1
-                  )
+                  onLayerDataUpdate("flop", values.layer_data.flop ? 0 : 1)
                 }
                 size="small"
               >
@@ -111,10 +109,7 @@ const RotationProperty = (props) => {
               </Typography>
               <IconButton
                 onClick={() =>
-                  setFieldValue(
-                    "layer_data.flip",
-                    values.layer_data.flip ? 0 : 1
-                  )
+                  onLayerDataUpdate("flip", values.layer_data.flip ? 0 : 1)
                 }
                 size="small"
               >

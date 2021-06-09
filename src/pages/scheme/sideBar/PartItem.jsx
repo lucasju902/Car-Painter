@@ -16,7 +16,7 @@ const Wrapper = styled(Box)`
     background: rgba(255, 255, 255, 0.2);
   }
   &.activeItem {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5) !important;
   }
   &.hoveredItem {
     background: rgba(0, 0, 0, 0.2);

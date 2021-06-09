@@ -126,6 +126,7 @@ export const AllowedLayerProps = {
   [LayerTypes.TEXT]: [
     "layer_visible",
     "layer_locked",
+    "clone",
     "layer_data",
     "layer_data.name",
     "layer_data.text",
@@ -154,6 +155,7 @@ export const AllowedLayerProps = {
   [LayerTypes.LOGO]: [
     "layer_visible",
     "layer_locked",
+    "clone",
     "layer_data",
     "layer_data.name",
     "layer_data.width",
@@ -174,6 +176,7 @@ export const AllowedLayerProps = {
   [LayerTypes.OVERLAY]: [
     "layer_visible",
     "layer_locked",
+    "clone",
     "layer_data",
     "layer_data.name",
     "layer_data.width",
@@ -196,6 +199,7 @@ export const AllowedLayerProps = {
     [MouseModes.RECT]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -224,6 +228,7 @@ export const AllowedLayerProps = {
     [MouseModes.CIRCLE]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -247,6 +252,7 @@ export const AllowedLayerProps = {
     [MouseModes.ELLIPSE]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -271,6 +277,7 @@ export const AllowedLayerProps = {
     [MouseModes.STAR]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -296,6 +303,7 @@ export const AllowedLayerProps = {
     [MouseModes.RING]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -320,6 +328,7 @@ export const AllowedLayerProps = {
     [MouseModes.REGULARPOLYGON]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -344,6 +353,7 @@ export const AllowedLayerProps = {
     [MouseModes.WEDGE]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -368,6 +378,7 @@ export const AllowedLayerProps = {
     [MouseModes.ARC]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -393,6 +404,7 @@ export const AllowedLayerProps = {
     [MouseModes.LINE]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -417,6 +429,7 @@ export const AllowedLayerProps = {
     [MouseModes.POLYGON]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -442,6 +455,7 @@ export const AllowedLayerProps = {
     [MouseModes.ARROW]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -469,6 +483,7 @@ export const AllowedLayerProps = {
     [MouseModes.PEN]: [
       "layer_visible",
       "layer_locked",
+      "clone",
       "layer_data",
       "layer_data.name",
       "layer_data.type",
@@ -494,6 +509,7 @@ export const AllowedLayerProps = {
   [LayerTypes.UPLOAD]: [
     "layer_visible",
     "layer_locked",
+    "clone",
     "layer_data",
     "layer_data.name",
     "layer_data.width",
