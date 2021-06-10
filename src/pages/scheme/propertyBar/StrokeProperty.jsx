@@ -96,7 +96,9 @@ const StrokeProperty = (props) => {
                   name="layer_data.strokeType"
                   variant="outlined"
                   value={values.layer_data.strokeType}
-                  onChange={handleChange}
+                  onChange={(event) =>
+                    onLayerDataUpdate("strokeType", event.target.value)
+                  }
                   fullWidth
                 >
                   <MenuItem value="inside">Inside</MenuItem>

@@ -139,6 +139,11 @@ const Shapes = (props) => {
             strokeWidth={layer.layer_data.stroke}
             stroke={layer.layer_data.scolor}
             strokeEnabled={true}
+            globalCompositeOperation={
+              layer.layer_data.blendType === "normal"
+                ? null
+                : layer.layer_data.blendType
+            }
             name={layer.id.toString()}
             visible={layer.layer_visible ? true : false}
             layer_data={layer.layer_data}

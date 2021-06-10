@@ -6,6 +6,8 @@ import {
   Box,
   Typography,
   Grid,
+  Select,
+  MenuItem,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -36,13 +38,14 @@ const ColorProperty = (props) => {
 
   if (
     !AllowedLayerTypes.includes("layer_data.color") &&
-    !AllowedLayerTypes.includes("layer_data.opacity")
+    !AllowedLayerTypes.includes("layer_data.opacity") &&
+    !AllowedLayerTypes.includes("layer_data.blendType")
   )
     return <></>;
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Color/Opacity</Typography>
+        <Typography>Colors</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
@@ -70,14 +73,52 @@ const ColorProperty = (props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.opacity") ? (
-            <SliderInput
-              label="Opacity"
-              min={0}
-              max={1}
-              step={0.01}
-              value={values.layer_data.opacity}
-              setValue={(value) => setFieldValue("layer_data.opacity", value)}
-            />
+            <Box mb={2}>
+              <SliderInput
+                label="Opacity"
+                min={0}
+                max={1}
+                step={0.01}
+                value={values.layer_data.opacity}
+                setValue={(value) => setFieldValue("layer_data.opacity", value)}
+              />
+            </Box>
+          ) : (
+            <></>
+          )}
+          {AllowedLayerTypes.includes("layer_data.blendType") ? (
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="body1" color="textSecondary" mr={2}>
+                  Blend Type
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Select
+                  name="layer_data.blendType"
+                  variant="outlined"
+                  value={values.layer_data.blendType}
+                  onChange={(event) =>
+                    onLayerDataUpdate("blendType", event.target.value)
+                  }
+                  fullWidth
+                >
+                  <MenuItem value="normal">Normal</MenuItem>
+
+                  <MenuItem value="multiply">Multiply</MenuItem>
+                  <MenuItem value="darken">Darken</MenuItem>
+                  <MenuItem value="lighten">Lighten</MenuItem>
+                  <MenuItem value="color-burn">Color Burn</MenuItem>
+                  <MenuItem value="color">Color</MenuItem>
+                  <MenuItem value="screen">Screen</MenuItem>
+                  <MenuItem value="overlay">Overlay</MenuItem>
+                  <MenuItem value="hue">Hue</MenuItem>
+                  <MenuItem value="saturation">Saturation</MenuItem>
+                  <MenuItem value="luminosity">Luminosity</MenuItem>
+                  <MenuItem value="xor">Xor</MenuItem>
+                </Select>
+              </Grid>
+            </Grid>
           ) : (
             <></>
           )}
