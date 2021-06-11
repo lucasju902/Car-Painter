@@ -262,8 +262,16 @@ const Board = ({
             layer_data: {
               ...drawingLayerRef.current.layer_data,
               points: [...drawingLayerRef.current.layer_data.points],
-              width: width,
-              height: height,
+              width:
+                MouseModes.ELLIPSE !== drawingLayerRef.current.layer_type &&
+                width > 0
+                  ? width
+                  : 0,
+              height:
+                MouseModes.ELLIPSE !== drawingLayerRef.current.layer_type &&
+                height > 0
+                  ? height
+                  : 0,
               radius: Math.abs(width),
               innerRadius: Math.abs(width) / 2.5,
               outerRadius: Math.abs(width),

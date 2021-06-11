@@ -27,6 +27,7 @@ const Shape = ({
   points,
   lineCap,
   lineJoin,
+  offsetsFromStroke,
   pointerLength,
   pointerWidth,
   innerRadius,
@@ -56,8 +57,8 @@ const Shape = ({
       onChange(
         _.pick(
           {
-            left: mathRound2(e.target.x()),
-            top: mathRound2(e.target.y()),
+            left: mathRound2(e.target.x() - offsetsFromStroke.x),
+            top: mathRound2(e.target.y() - offsetsFromStroke.y),
           },
           AllowedLayerTypes.filter((item) =>
             item.includes("layer_data.")
@@ -86,18 +87,31 @@ const Shape = ({
       onChange(
         _.pick(
           {
-            left: mathRound2(node.x()),
-            top: mathRound2(node.y()),
-            width: mathRound2(Math.max(1, width * Math.abs(scaleX))),
-            height: mathRound2(Math.max(1, height * Math.abs(scaleY))),
+            left: mathRound2(node.x() - offsetsFromStroke.x),
+            top: mathRound2(node.y() - offsetsFromStroke.y),
+            width: mathRound2(
+              Math.max(1, width * Math.abs(scaleX)) - offsetsFromStroke.width
+            ),
+            height: mathRound2(
+              Math.max(1, height * Math.abs(scaleY)) - offsetsFromStroke.height
+            ),
             radius: node.radius
-              ? mathRound2(Math.max(1, node.radius() * Math.abs(scaleY)))
+              ? mathRound2(
+                  Math.max(1, node.radius() * Math.abs(scaleY)) -
+                    offsetsFromStroke.radius
+                )
               : 0,
             innerRadius: node.innerRadius
-              ? mathRound2(Math.max(1, node.innerRadius() * Math.abs(scaleY)))
+              ? mathRound2(
+                  Math.max(1, node.innerRadius() * Math.abs(scaleY)) -
+                    offsetsFromStroke.innerRadius
+                )
               : 0,
             outerRadius: node.outerRadius
-              ? mathRound2(Math.max(1, node.outerRadius() * Math.abs(scaleY)))
+              ? mathRound2(
+                  Math.max(1, node.outerRadius() * Math.abs(scaleY)) -
+                    offsetsFromStroke.outerRadius
+                )
               : 0,
             rotation: mathRound2(node.rotation()) || 0,
             flop: scaleX > 0 ? 0 : 1,

@@ -95,29 +95,34 @@ const Shapes = (props) => {
             type={layer.layer_data.type}
             x={parseFloat(layer.layer_data.left + offsetsFromStroke.x || 0)}
             y={parseFloat(layer.layer_data.top + offsetsFromStroke.y || 0)}
-            width={layer.layer_data.width + offsetsFromStroke.width}
-            height={layer.layer_data.height + offsetsFromStroke.height}
-            radius={layer.layer_data.radius + offsetsFromStroke.radius}
+            width={Math.abs(layer.layer_data.width + offsetsFromStroke.width)}
+            height={Math.abs(
+              layer.layer_data.height + offsetsFromStroke.height
+            )}
+            radius={Math.abs(
+              layer.layer_data.radius + offsetsFromStroke.radius
+            )}
+            offsetsFromStroke={offsetsFromStroke}
             points={
               layer.layer_data.points
                 ? removeDuplicatedPointFromEnd(layer.layer_data.points)
                 : []
             }
             loadedStatus={loadedStatuses[layer.id]}
-            pointerLength={
+            pointerLength={Math.abs(
               layer.layer_data.pointerLength + offsetsFromStroke.pointerLength
-            }
-            pointerWidth={
+            )}
+            pointerWidth={Math.abs(
               layer.layer_data.pointerWidth + offsetsFromStroke.pointerWidth
-            }
+            )}
             lineCap={layer.layer_data.lineCap}
             lineJoin={layer.layer_data.lineJoin}
-            innerRadius={
+            innerRadius={Math.abs(
               layer.layer_data.innerRadius + offsetsFromStroke.innerRadius
-            }
-            outerRadius={
+            )}
+            outerRadius={Math.abs(
               layer.layer_data.outerRadius + offsetsFromStroke.outerRadius
-            }
+            )}
             numPoints={layer.layer_data.numPoints}
             cornerRadius={[
               layer.layer_data.cornerTopLeft,
@@ -163,7 +168,7 @@ const Shapes = (props) => {
           y={parseFloat(drawingLayer.layer_data.top || 0)}
           width={drawingLayer.layer_data.width}
           height={drawingLayer.layer_data.height}
-          radius={drawingLayer.layer_data.radius}
+          radius={Math.abs(drawingLayer.layer_data.radius)}
           angle={drawingLayer.layer_data.angle}
           points={
             drawingLayer.layer_data.points
@@ -174,8 +179,8 @@ const Shapes = (props) => {
           pointerWidth={drawingLayer.layer_data.pointerWidth}
           lineCap={drawingLayer.layer_data.lineCap}
           lineJoin={drawingLayer.layer_data.lineJoin}
-          innerRadius={drawingLayer.layer_data.innerRadius}
-          outerRadius={drawingLayer.layer_data.outerRadius}
+          innerRadius={Math.abs(drawingLayer.layer_data.innerRadius)}
+          outerRadius={Math.abs(drawingLayer.layer_data.outerRadius)}
           numPoints={drawingLayer.layer_data.numPoints}
           fill={drawingLayer.layer_data.color}
           strokeWidth={drawingLayer.layer_data.stroke}
