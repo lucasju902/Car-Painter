@@ -48,7 +48,13 @@ const ZoomButton = styled(Button)`
 `;
 
 const Toolbar = React.memo((props) => {
-  const { onZoomIn, onZoomOut, onZoomFit, onChangePaintingGuides } = props;
+  const {
+    onZoomIn,
+    onZoomOut,
+    onZoomFit,
+    onChangePaintingGuides,
+    onDownloadTGA,
+  } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
   const dispatch = useDispatch();
@@ -140,6 +146,9 @@ const Toolbar = React.memo((props) => {
           </ToggleButtonGroup>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
+          <Button variant="outlined" onClick={onDownloadTGA}>
+            Download TGA
+          </Button>
           <LightTooltip title="Undo" arrow>
             <IconButton
               disabled={actionHistoryIndex === -1}

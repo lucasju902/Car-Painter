@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import Helmet from "react-helmet";
 import { useParams } from "react-router";
+import TGA from "utils/tga";
 
 import { Box } from "@material-ui/core";
 
@@ -55,6 +56,7 @@ const Scheme = () => {
   const [confirmMessage, setConfirmMessage] = useState("");
   const [dialog, setDialog] = useState(null);
   const [hoveredJSON, setHoveredJSON] = useState({});
+  const pixelRatio = 0.5;
 
   const tick = useRef(0);
   const prevTick = useRef(0);
@@ -328,10 +330,9 @@ const Scheme = () => {
   }, [dispatch, currentLayer, setConfirmMessage]);
 
   const takeScreenshot = useCallback(
-    async (enableCarMask = true) => {
+    async (isPNG = true) => {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
-      const pixelRatio = 0.5;
 
       let width = frameSizeRef.current.width * pixelRatio;
       let height = frameSizeRef.current.height * pixelRatio;
@@ -358,7 +359,7 @@ const Scheme = () => {
         let mainLayerURL = mainLayerRef.current.toDataURL({ pixelRatio });
         mainLayerImg = await addImageProcess(mainLayerURL);
       }
-      if (carMaskLayerRef.current && enableCarMask) {
+      if (carMaskLayerRef.current && isPNG) {
         let carMaskLayerURL = carMaskLayerRef.current.toDataURL({
           pixelRatio,
         });
@@ -397,7 +398,9 @@ const Scheme = () => {
           carMaskLayerImg.height
         );
       }
-      return canvas.toDataURL("image/png");
+      if (isPNG) return canvas.toDataURL("image/png");
+      var imageData = ctx.getImageData(0, 0, width, height);
+      return imageData;
     },
     [
       frameSizeRef.current,
@@ -429,6 +432,40 @@ const Scheme = () => {
 
         await SchemeService.uploadThumbnail(formData);
       } catch (err) {
+        dispatch(setMessage({ message: err.message }));
+      }
+    }
+  }, [
+    dispatch,
+    currentSchemeRef.current && currentSchemeRef.current.id,
+    !stageRef.current,
+    takeScreenshot,
+  ]);
+
+  const handleDownloadTGA = useCallback(async () => {
+    if (stageRef.current && currentSchemeRef.current) {
+      try {
+        dispatch(setSaving(true));
+        let imageData = await takeScreenshot(false);
+        dispatch(setSaving(false));
+        var tga = new TGA({
+          width: frameSizeRef.current.width * pixelRatio,
+          height: frameSizeRef.current.height * pixelRatio,
+          imageType: TGA.Type.RLE_RGB,
+        });
+        tga.setImageData(imageData);
+
+        // get a blob url which can be used to download the file
+        var url = tga.getBlobURL();
+
+        var a = document.createElement("a");
+        a.style = "display: none";
+        a.href = url;
+        a.download = `${currentSchemeRef.current.id}.tga`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch (err) {
+        console.log(err);
         dispatch(setMessage({ message: err.message }));
       }
     }
@@ -533,6 +570,7 @@ const Scheme = () => {
             onZoomOut={handleZoomOut}
             onZoomFit={handleZoomFit}
             onChangePaintingGuides={handleChangePaintingGuides}
+            onDownloadTGA={handleDownloadTGA}
           />
         </Box>
       )}
