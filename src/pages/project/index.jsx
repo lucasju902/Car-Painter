@@ -92,7 +92,7 @@ const Scheme = () => {
   const [limit, setLimit] = useState(step);
   const [search, setSearch] = useState("");
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [sortBy, setSortBy] = useState(1);
+  const [sortBy, setSortBy] = useState(3);
 
   let sortedCarMakesList = useMemo(
     () => _.orderBy([...carMakeList], ["name", "car_type"], ["asc", "asc"]),

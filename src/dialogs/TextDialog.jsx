@@ -210,7 +210,15 @@ const InnerForm = React.memo((props) => {
 });
 
 const TextDialog = (props) => {
-  const { fontList, onCancel, open, baseColor, onCreate } = props;
+  const {
+    fontList,
+    onCancel,
+    open,
+    baseColor,
+    defaultColor,
+    defaultStrokeColor,
+    onCreate,
+  } = props;
 
   return (
     <Dialog aria-labelledby="insert-text-title" open={open} onClose={onCancel}>
@@ -220,9 +228,9 @@ const TextDialog = (props) => {
           text: "",
           font: 1,
           size: 14,
-          color: "#000000",
+          color: defaultColor || "#000000",
           stroke: 0,
-          scolor: "#000000",
+          scolor: defaultStrokeColor || "#000000",
           rotation: 0,
         }}
         validationSchema={Yup.object().shape({

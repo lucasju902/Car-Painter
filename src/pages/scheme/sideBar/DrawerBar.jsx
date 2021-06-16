@@ -321,6 +321,8 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
         open={dialog === DialogTypes.TEXT}
         fontList={fontList}
         baseColor={currentScheme.base_color}
+        defaultColor={currentScheme.guide_data.default_shape_color}
+        defaultStrokeColor={currentScheme.guide_data.default_shape_scolor}
         onCreate={handleCreateText}
         onCancel={() => setDialog(null)}
       />

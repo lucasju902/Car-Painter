@@ -52,6 +52,15 @@ const TitleBar = () => {
   const handleSaveName = useCallback(() => {
     dispatch(changeName(currentScheme.id, name));
   }, [dispatch, currentScheme && currentScheme.id, name]);
+  const handleNameKeyDown = useCallback(
+    (event) => {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        handleSaveName();
+      }
+    },
+    [handleSaveName]
+  );
 
   const handleDiscardName = useCallback(() => {
     setName(currentScheme.name);
@@ -91,6 +100,7 @@ const TitleBar = () => {
       <NameInput
         value={name}
         onChange={handleNameChange}
+        onKeyDown={handleNameKeyDown}
         width={currentScheme && name !== currentScheme.name ? "105px" : "185px"}
       />
       <Box display="flex">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components/macro";
 import {
   Popover,
@@ -29,12 +29,18 @@ const ZoomPopover = ({
   onZoomFit,
   onClose,
 }) => {
-  const handleZoomChange = (event) => {
-    setZoom(parseInt(event.target.value || 0) / 100.0);
-  };
-  const handleZoom100 = () => {
+  const handleZoomChange = useCallback(
+    (event) => {
+      setZoom(parseInt(event.target.value || 0) / 100.0);
+    },
+    [setZoom]
+  );
+
+  const handleFocus = useCallback((event) => event.target.select(), []);
+
+  const handleZoom100 = useCallback(() => {
     setZoom(1);
-  };
+  }, [setZoom]);
 
   return (
     <Popover
@@ -76,6 +82,7 @@ const ZoomPopover = ({
           id="zoom-value"
           value={zoom * 100}
           onChange={handleZoomChange}
+          onFocus={handleFocus}
           endAdornment={<InputAdornment position="end">%</InputAdornment>}
           labelWidth={0}
           autoFocus={true}

@@ -120,28 +120,44 @@ const Toolbar = React.memo((props) => {
             aria-label="Painting Guides"
           >
             <ToggleButton value={PaintingGuides.CARMASK} aria-label="car-mask">
-              <Typography variant="caption">car mask</Typography>
+              <LightTooltip title="Toggle Car Mask Guide (HotKey: 1)" arrow>
+                <Typography variant="caption">car mask</Typography>
+              </LightTooltip>
             </ToggleButton>
             <ToggleButton
               value={PaintingGuides.WIREFRAME}
               aria-label="wireframe"
             >
-              <Typography variant="caption">wireframe</Typography>
+              <LightTooltip title="Toggle Wireframe Guide (HotKey: 2)" arrow>
+                <Typography variant="caption">wireframe</Typography>
+              </LightTooltip>
             </ToggleButton>
             <ToggleButton
               value={PaintingGuides.SPONSORBLOCKS}
               aria-label="sponsor-blocks"
             >
-              <Typography variant="caption">sponsor blocks</Typography>
+              <LightTooltip
+                title="Toggle Sponsor Blocks Guide (HotKey: 3)"
+                arrow
+              >
+                <Typography variant="caption">sponsor blocks</Typography>
+              </LightTooltip>
             </ToggleButton>
             <ToggleButton
               value={PaintingGuides.NUMBERBLOCKS}
               aria-label="number-blocks"
             >
-              <Typography variant="caption">number blocks</Typography>
+              <LightTooltip
+                title="Toggle Number Blocks Guide (HotKey: 4)"
+                arrow
+              >
+                <Typography variant="caption">number blocks</Typography>
+              </LightTooltip>
             </ToggleButton>
             <ToggleButton value={PaintingGuides.GRID} aria-label="grid">
-              <Typography variant="caption">grid</Typography>
+              <LightTooltip title="Toggle Grid Guide (HotKey: 5)" arrow>
+                <Typography variant="caption">grid</Typography>
+              </LightTooltip>
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
