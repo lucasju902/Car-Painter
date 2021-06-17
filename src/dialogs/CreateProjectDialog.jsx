@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import _ from "lodash";
 
 import styled from "styled-components/macro";
@@ -26,9 +26,24 @@ const NameField = styled(TextField)`
 `;
 
 const ProjectSelectDialog = (props) => {
+  const {
+    onContinue,
+    onCancel,
+    open,
+    carMakeList,
+    predefinedCarMakeID,
+  } = props;
   const [carMake, setCarMake] = useState(null);
   const [name, setName] = useState("");
-  const { onContinue, onCancel, open, carMakeList } = props;
+
+  useEffect(() => {
+    if (predefinedCarMakeID) {
+      const make = carMakeList.find(
+        (item) => item.id.toString() === predefinedCarMakeID
+      );
+      setCarMake(make);
+    }
+  }, [predefinedCarMakeID]);
 
   let sortedCarMakesList = _.orderBy(
     [...carMakeList],
@@ -43,6 +58,7 @@ const ProjectSelectDialog = (props) => {
           {carMakeList && carMakeList.length ? (
             <Autocomplete
               id="car-make-select"
+              value={carMake}
               options={sortedCarMakesList}
               groupBy={(option) => option.car_type}
               getOptionLabel={(option) => option.name}

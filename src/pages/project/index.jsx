@@ -29,11 +29,7 @@ import SearchBox from "components/SearchBox";
 
 import { getDifferenceFromToday } from "helper";
 
-import {
-  getSchemeList,
-  createScheme,
-  getScheme,
-} from "redux/reducers/schemeReducer";
+import { getSchemeList, createScheme } from "redux/reducers/schemeReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 
 const Button = styled(MuiButton)(spacing);
@@ -83,7 +79,6 @@ const Scheme = () => {
   const user = useSelector((state) => state.authReducer.user);
   const carMakeList = useSelector((state) => state.carMakeReducer.list);
   const schemeList = useSelector((state) => state.schemeReducer.list);
-  const currentScheme = useSelector((state) => state.schemeReducer.current);
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
 
@@ -93,6 +88,7 @@ const Scheme = () => {
   const [search, setSearch] = useState("");
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [sortBy, setSortBy] = useState(3);
+  const [predefinedCarMakeID, setPredefinedCarMakeID] = useState();
 
   let sortedCarMakesList = useMemo(
     () => _.orderBy([...carMakeList], ["name", "car_type"], ["asc", "asc"]),
@@ -122,21 +118,19 @@ const Scheme = () => {
     if (user) {
       if (!schemeList.length) dispatch(getSchemeList(user.id));
       if (!carMakeList.length) dispatch(getCarMakeList());
+
+      const url = new URL(window.location.href);
+      const makeID = url.searchParams.get("make");
+      if (makeID) {
+        setPredefinedCarMakeID(makeID);
+        setDialog("CreateProjectDialog");
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  useEffect(() => {
-    if (currentScheme) {
-      history.push(`/scheme/${currentScheme.id}`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentScheme]);
-
   const openScheme = (schemeID) => {
-    console.log("Opening scheme: ", schemeID);
-    dispatch(getScheme(schemeID));
-    setDialog(null);
+    history.push(`/scheme/${schemeID}`);
   };
 
   const createSchemeFromCarMake = (carMake, name) => {
@@ -212,7 +206,7 @@ const Scheme = () => {
               </CustomFormControl>
               {carMakeList && carMakeList.length ? (
                 <CustomAutocomplete
-                  id="car-make-select"
+                  id="car-make-filter"
                   options={sortedCarMakesList}
                   groupBy={(option) => option.car_type}
                   getOptionLabel={(option) => option.name}
@@ -276,6 +270,7 @@ const Scheme = () => {
           </Wrapper>
           <CreateProjectDialog
             carMakeList={carMakeList}
+            predefinedCarMakeID={predefinedCarMakeID}
             open={dialog === "CreateProjectDialog"}
             onContinue={(carMake, name) =>
               createSchemeFromCarMake(carMake, name)

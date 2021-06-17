@@ -140,6 +140,8 @@ const Shapes = (props) => {
             shadowOpacity={layer.layer_data.shadowOpacity}
             shadowOffsetX={shadowOffset.x}
             shadowOffsetY={shadowOffset.y}
+            skewX={layer.layer_data.skewX}
+            skewY={layer.layer_data.skewY}
             fill={layer.layer_data.color}
             strokeWidth={layer.layer_data.stroke}
             stroke={layer.layer_data.scolor}

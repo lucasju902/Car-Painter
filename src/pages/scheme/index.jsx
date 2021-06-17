@@ -334,8 +334,12 @@ const Scheme = () => {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
 
-      let width = frameSizeRef.current.width * pixelRatio;
-      let height = frameSizeRef.current.height * pixelRatio;
+      let width = isPNG
+        ? frameSizeRef.current.width * pixelRatio
+        : frameSizeRef.current.width;
+      let height = isPNG
+        ? frameSizeRef.current.height * pixelRatio
+        : frameSizeRef.current.height;
       let baseLayerImg, mainLayerImg, carMaskLayerImg;
       let attrs = { ...stageRef.current.attrs };
       stageRef.current.setAttrs({
@@ -449,8 +453,8 @@ const Scheme = () => {
         let imageData = await takeScreenshot(false);
         dispatch(setSaving(false));
         var tga = new TGA({
-          width: frameSizeRef.current.width * pixelRatio,
-          height: frameSizeRef.current.height * pixelRatio,
+          width: frameSizeRef.current.width,
+          height: frameSizeRef.current.height,
           imageType: TGA.Type.RLE_RGB,
         });
         tga.setImageData(imageData);

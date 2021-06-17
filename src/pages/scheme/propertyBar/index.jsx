@@ -20,6 +20,7 @@ import RotationProperty from "./RotationProperty";
 import ShadowProperty from "./ShadowProperty";
 import CornerProperty from "./CornerProperty";
 import ExtraProperty from "./ExtraProperty";
+import SkewProperty from "./SkewProperty";
 
 const Wrapper = styled(Box)`
   width: 350px;
@@ -100,6 +101,7 @@ const InnerForm = React.memo(
           toggleField={toggleField}
           onLayerDataUpdate={onLayerDataUpdate}
         />
+        <SkewProperty {...formProps} />
         <ShadowProperty {...formProps} onLayerDataUpdate={onLayerDataUpdate} />
         <CornerProperty {...formProps} />
         <ExtraProperty {...formProps} onClone={onClone} />
@@ -267,6 +269,8 @@ const PropertyBar = () => {
                   shadowOpacity: Yup.number(),
                   shadowOffsetX: Yup.number(),
                   shadowOffsetY: Yup.number(),
+                  skewX: Yup.number(),
+                  skewY: Yup.number(),
                   cornerTopLeft: Yup.number(),
                   cornerTopRight: Yup.number(),
                   cornerBottomLeft: Yup.number(),
