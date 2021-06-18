@@ -58,6 +58,9 @@ const SkewProperty = (props) => {
                   label="SkewX"
                   variant="outlined"
                   type="number"
+                  inputProps={{
+                    step: 0.1,
+                  }}
                   value={mathRound2(values.layer_data.skewX)}
                   error={Boolean(
                     touched.layer_data &&
@@ -91,6 +94,9 @@ const SkewProperty = (props) => {
                   label="SkewY"
                   variant="outlined"
                   type="number"
+                  inputProps={{
+                    step: 0.1,
+                  }}
                   value={mathRound2(values.layer_data.skewY)}
                   error={Boolean(
                     touched.layer_data &&

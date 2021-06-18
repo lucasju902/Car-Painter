@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { LayerTypes } from "constant";
 
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, Typography } from "@material-ui/core";
 
 import TitleBar from "./TitleBar";
 import PartGroup from "./PartGroup";
@@ -11,6 +11,7 @@ import DrawerBar from "./DrawerBar";
 
 import { changeBaseColor } from "redux/reducers/schemeReducer";
 import ColorPickerInput from "components/ColorPickerInput";
+import { colorValidator } from "helper";
 
 const LayerWrapper = styled(Box)`
   width: 300px;
@@ -147,13 +148,17 @@ const Sidebar = (props) => {
                   onChange={handleChangeBasePaintColor}
                   onInputChange={handleChangeBasePaintColorInput}
                 />
-                {colorDirty ? (
+                {colorDirty && colorValidator(colorInput) ? (
                   <ColorApplyButton
                     onClick={handleApplyBasePaintColor}
                     variant="outlined"
                   >
                     Apply
                   </ColorApplyButton>
+                ) : !colorValidator(colorInput) ? (
+                  <Typography color="secondary" variant="body2">
+                    Invalid Color
+                  </Typography>
                 ) : (
                   <></>
                 )}

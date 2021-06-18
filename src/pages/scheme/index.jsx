@@ -56,7 +56,6 @@ const Scheme = () => {
   const [confirmMessage, setConfirmMessage] = useState("");
   const [dialog, setDialog] = useState(null);
   const [hoveredJSON, setHoveredJSON] = useState({});
-  const pixelRatio = 0.5;
 
   const tick = useRef(0);
   const prevTick = useRef(0);
@@ -333,13 +332,10 @@ const Scheme = () => {
     async (isPNG = true) => {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
+      const pixelRatio = isPNG ? 0.5 : 1;
 
-      let width = isPNG
-        ? frameSizeRef.current.width * pixelRatio
-        : frameSizeRef.current.width;
-      let height = isPNG
-        ? frameSizeRef.current.height * pixelRatio
-        : frameSizeRef.current.height;
+      let width = frameSizeRef.current.width * pixelRatio;
+      let height = frameSizeRef.current.height * pixelRatio;
       let baseLayerImg, mainLayerImg, carMaskLayerImg;
       let attrs = { ...stageRef.current.attrs };
       stageRef.current.setAttrs({
@@ -393,7 +389,7 @@ const Scheme = () => {
           mainLayerImg.height
         );
       }
-      if (carMaskLayerImg) {
+      if (carMaskLayerImg && isPNG) {
         ctx.drawImage(
           carMaskLayerImg,
           0,
