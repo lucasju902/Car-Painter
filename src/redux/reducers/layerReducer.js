@@ -336,8 +336,10 @@ export const cloneLayer = (
     try {
       const layer = await LayerService.createLayer({
         ..._.omit(layerToClone, ["id"]),
+        layer_order: 0,
         layer_data: JSON.stringify({
           ...layerToClone.layer_data,
+          name: layerToClone.layer_data.name + " copy",
           left: samePosition
             ? layerToClone.layer_data.left
             : frameSize.width / 2 -

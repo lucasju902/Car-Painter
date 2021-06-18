@@ -23,7 +23,30 @@ class LayerService {
   }
 
   static async create(payload) {
-    const layer = await Layer.forge(payload).save();
+    let scheme_layers = await Layer.where({
+      scheme_id: payload.scheme_id,
+    }).fetchAll();
+    scheme_layers = scheme_layers.toJSON();
+    let layer_data = JSON.parse(payload.layer_data);
+    let layerName = layer_data.name;
+    let number = 0;
+
+    for (let layerItem of scheme_layers) {
+      let item_layer_data = JSON.parse(layerItem.layer_data);
+      if (item_layer_data.name.includes(layerName)) {
+        const extraIndex = parseInt(
+          item_layer_data.name.substr(layerName.length)
+        );
+        if (!extraIndex) number = 1;
+        else if (extraIndex >= number) number = extraIndex + 1;
+      }
+    }
+    if (number) layerName = `${layerName} ${number}`;
+    layer_data.name = layerName;
+    const layer = await Layer.forge({
+      ...payload,
+      layer_data: JSON.stringify(layer_data),
+    }).save();
     return layer;
   }
 
