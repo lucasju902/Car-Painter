@@ -5,6 +5,7 @@ import { mathRound2 } from "helper";
 
 import {
   Box,
+  Button,
   TextField,
   Typography,
   Grid,
@@ -23,12 +24,15 @@ const CustomeTextField = styled(TextField)`
 const PositionProperty = (props) => {
   const {
     errors,
+    isValid,
+    checkLayerDataDirty,
     handleBlur,
     handleChange,
     setFieldValue,
     touched,
     values,
   } = props;
+  const layerDataProperties = ["left", "top"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -39,8 +43,9 @@ const PositionProperty = (props) => {
   );
 
   if (
-    !AllowedLayerTypes.includes("layer_data.left") &&
-    !AllowedLayerTypes.includes("layer_data.top")
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
   )
     return <></>;
   return (
@@ -118,6 +123,20 @@ const PositionProperty = (props) => {
               )}
             </Grid>
           </Grid>
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>

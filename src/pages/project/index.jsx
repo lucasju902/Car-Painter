@@ -3,14 +3,12 @@ import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
-import config from "config";
 import styled from "styled-components/macro";
 import { spacing } from "@material-ui/system";
 
 import {
   Box,
   Button as MuiButton,
-  Typography,
   Grid,
   TextField,
   FormControl,
@@ -26,10 +24,13 @@ import Loader from "components/Loader";
 import ScreenLoader from "components/ScreenLoader";
 import CreateProjectDialog from "dialogs/CreateProjectDialog";
 import SearchBox from "components/SearchBox";
+import ProjectItem from "./ProjectItem";
 
-import { getDifferenceFromToday } from "helper";
-
-import { getSchemeList, createScheme } from "redux/reducers/schemeReducer";
+import {
+  getSchemeList,
+  createScheme,
+  deleteScheme,
+} from "redux/reducers/schemeReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 
 const Button = styled(MuiButton)(spacing);
@@ -57,19 +58,9 @@ const CustomInfiniteScroll = styled(InfiniteScroll)`
     overflow: hidden !important;
   }
 `;
-const CustomImg = styled.img`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  object-fit: contain;
-`;
 const Wrapper = styled(Box)`
   background-color: #444;
   border-radius: 10px;
-`;
-const ItemWrapper = styled(Box)`
-  border: 1px solid grey;
-  cursor: pointer;
 `;
 
 const Scheme = () => {
@@ -141,13 +132,12 @@ const Scheme = () => {
   const handleCreateNew = () => {
     setDialog("CreateProjectDialog");
   };
+  const handleDeleteProject = (schemeID) => {
+    dispatch(deleteScheme(schemeID));
+  };
 
   const increaseData = () => {
     setLimit(limit + step);
-  };
-
-  const schemeThumbnailURL = (id) => {
-    return `${config.assetsURL}/scheme_thumbnails/${id}.png`;
   };
 
   return (
@@ -244,24 +234,11 @@ const Scheme = () => {
                       md={4}
                       lg={3}
                       xl={3}
-                      onClick={() => openScheme(scheme.id)}
                     >
-                      <ItemWrapper display="flex" flexDirection="column">
-                        <CustomImg
-                          src={schemeThumbnailURL(scheme.id)}
-                          alt={scheme.name}
-                        />
-                        <Box display="flex" flexDirection="column" p={4}>
-                          <Typography variant="body1">{scheme.name}</Typography>
-                          <Typography variant="body2">
-                            Edited{" "}
-                            {getDifferenceFromToday(scheme.date_modified)}
-                          </Typography>
-                          <Typography variant="body2">
-                            {scheme.carMake.name}
-                          </Typography>
-                        </Box>
-                      </ItemWrapper>
+                      <ProjectItem
+                        scheme={scheme}
+                        onDelete={handleDeleteProject}
+                      />
                     </Grid>
                   ))}
                 </Grid>

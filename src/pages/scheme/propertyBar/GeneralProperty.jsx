@@ -5,6 +5,7 @@ import { AllowedLayerProps, LayerTypes } from "constant";
 import SliderInput from "components/SliderInput";
 import {
   Box,
+  Button,
   TextField,
   Typography,
   IconButton,
@@ -29,6 +30,8 @@ const CustomeTextField = styled(TextField)`
 const GeneralProperty = (props) => {
   const {
     errors,
+    isValid,
+    checkLayerDataDirty,
     handleBlur,
     handleChange,
     setFieldValue,
@@ -36,7 +39,7 @@ const GeneralProperty = (props) => {
     values,
     toggleField,
   } = props;
-
+  const layerDataProperties = ["name", "text", "numPoints", "angle"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -50,10 +53,9 @@ const GeneralProperty = (props) => {
   }
 
   if (
-    !AllowedLayerTypes.includes("layer_data.name") &&
-    !AllowedLayerTypes.includes("layer_data.text") &&
-    !AllowedLayerTypes.includes("layer_data.numPoints") &&
-    !AllowedLayerTypes.includes("layer_data.angle")
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
   )
     return <></>;
   return (
@@ -205,6 +207,20 @@ const GeneralProperty = (props) => {
               >
                 {values.layer_locked ? <LockIcon /> : <LockOpenIcon />}
               </IconButton>
+            </Box>
+          ) : (
+            <></>
+          )}
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
             </Box>
           ) : (
             <></>

@@ -4,6 +4,7 @@ import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
+  Button,
   Typography,
   Grid,
   Select,
@@ -22,11 +23,14 @@ const ColorProperty = (props) => {
     errors,
     handleBlur,
     handleChange,
+    isValid,
+    checkLayerDataDirty,
     setFieldValue,
     touched,
     values,
     onLayerDataUpdate,
   } = props;
+  const layerDataProperties = ["color", "opacity", "blendType"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -37,9 +41,9 @@ const ColorProperty = (props) => {
   );
 
   if (
-    !AllowedLayerTypes.includes("layer_data.color") &&
-    !AllowedLayerTypes.includes("layer_data.opacity") &&
-    !AllowedLayerTypes.includes("layer_data.blendType")
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
   )
     return <></>;
   return (
@@ -119,6 +123,20 @@ const ColorProperty = (props) => {
                 </Select>
               </Grid>
             </Grid>
+          ) : (
+            <></>
+          )}
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
+            </Box>
           ) : (
             <></>
           )}

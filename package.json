@@ -29,6 +29,7 @@
     "babel-watch": "^7.4.1",
     "body-parser": "^1.19.0",
     "bookshelf": "^1.2.0",
+    "bookshelf-cascade-delete": "^2.0.1",
     "bookshelf-uuid": "^1.0.1",
     "canvg": "^3.0.7",
     "clsx": "^1.1.1",

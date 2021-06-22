@@ -460,10 +460,10 @@ const Board = ({
         scaleX={zoom || 1}
         scaleY={zoom || 1}
         rotation={boardRotate}
-        x={width - frameSize.width / 2}
-        y={height - frameSize.height / 2}
-        offsetX={width / 2}
-        offsetY={height / 2}
+        x={width / 2}
+        y={height / 2}
+        offsetX={frameSize.width / 2}
+        offsetY={frameSize.height / 2}
         ref={stageRef}
         draggable={mouseMode === MouseModes.DEFAULT}
         style={{

@@ -59,6 +59,9 @@ export const slice = createSlice({
         state.list = schemeList;
       }
     },
+    deleteListItem: (state, action) => {
+      state.list = state.list.filter((item) => item.id !== action.payload);
+    },
     setCurrent: (state, action) => {
       let scheme = { ...state.current, ...action.payload };
       if (
@@ -87,7 +90,13 @@ export const slice = createSlice({
   },
 });
 
-const { setLoading, setList, insertToList, updateListItem } = slice.actions;
+const {
+  setLoading,
+  setList,
+  insertToList,
+  updateListItem,
+  deleteListItem,
+} = slice.actions;
 export const {
   setSaving,
   setLoaded,
@@ -202,6 +211,22 @@ export const changeBaseColor = (id, color) => async (dispatch, getState) => {
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
+};
+
+export const deleteScheme = (schemeID) => async (dispatch) => {
+  // dispatch(setLoading(true));
+
+  try {
+    dispatch(deleteListItem(schemeID));
+    await SchemeService.deleteScheme(schemeID);
+
+    dispatch(
+      setMessage({ message: "Deleted Project successfully!", type: "success" })
+    );
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  // dispatch(setLoading(false));
 };
 
 export default slice.reducer;

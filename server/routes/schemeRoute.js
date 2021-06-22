@@ -12,7 +12,8 @@ router
 router
   .route("/:id")
   .get(isAuthenticated, SchemeController.getByID)
-  .put(isAuthenticated, SchemeController.update);
+  .put(isAuthenticated, SchemeController.update)
+  .delete(isAuthenticated, SchemeController.delete);
 
 router
   .route("/byUpload/:id")

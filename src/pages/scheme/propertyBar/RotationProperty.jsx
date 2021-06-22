@@ -4,10 +4,8 @@ import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
-  Checkbox,
+  Button,
   Typography,
-  FormControl,
-  FormControlLabel,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -25,6 +23,8 @@ import SliderInput from "components/SliderInput";
 const RotationProperty = (props) => {
   const {
     errors,
+    isValid,
+    checkLayerDataDirty,
     handleBlur,
     handleChange,
     setFieldValue,
@@ -33,6 +33,7 @@ const RotationProperty = (props) => {
     values,
     onLayerDataUpdate,
   } = props;
+  const layerDataProperties = ["rotation", "flip", "flop"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -43,9 +44,9 @@ const RotationProperty = (props) => {
   );
 
   if (
-    !AllowedLayerTypes.includes("layer_data.rotation") &&
-    !AllowedLayerTypes.includes("layer_data.flip") &&
-    !AllowedLayerTypes.includes("layer_data.flop")
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
   )
     return <></>;
   return (
@@ -124,6 +125,20 @@ const RotationProperty = (props) => {
                   </>
                 )}
               </IconButton>
+            </Box>
+          ) : (
+            <></>
+          )}
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
             </Box>
           ) : (
             <></>

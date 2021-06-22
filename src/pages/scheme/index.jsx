@@ -96,7 +96,8 @@ const Scheme = () => {
 
   const setHoveredJSONItem = useCallback(
     (key, value) => {
-      setHoveredJSON((origin) => ({ ...origin, [key]: value }));
+      if (value === true) setHoveredJSON({ [key]: value });
+      else setHoveredJSON((origin) => ({ ...origin, [key]: value }));
     },
     [setHoveredJSON]
   );
@@ -113,10 +114,8 @@ const Scheme = () => {
     const newZoom = mathRound4(
       Math.min(width / frameSize.width, height / frameSize.height)
     );
-    stageRef.current.x((width / 2 - frameSize.width / 2) * newZoom + width / 2);
-    stageRef.current.y(
-      (height / 2 - frameSize.height / 2) * newZoom + height / 2
-    );
+    stageRef.current.x(width / 2);
+    stageRef.current.y(height / 2);
     dispatch(setZoom(newZoom));
   }, [
     dispatch,

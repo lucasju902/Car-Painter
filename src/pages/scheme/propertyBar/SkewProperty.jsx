@@ -5,6 +5,7 @@ import { mathRound2 } from "helper";
 
 import {
   Box,
+  Button,
   TextField,
   Typography,
   Accordion,
@@ -23,12 +24,15 @@ const CustomeTextField = styled(TextField)`
 const SkewProperty = (props) => {
   const {
     errors,
+    isValid,
+    checkLayerDataDirty,
     handleBlur,
     handleChange,
     setFieldValue,
     touched,
     values,
   } = props;
+  const layerDataProperties = ["skewX", "skewY"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -39,8 +43,9 @@ const SkewProperty = (props) => {
   );
 
   if (
-    !AllowedLayerTypes.includes("layer_data.skewX") &&
-    !AllowedLayerTypes.includes("layer_data.skewY")
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
   )
     return <></>;
   return (
@@ -124,6 +129,20 @@ const SkewProperty = (props) => {
               )}
             </Grid>
           </Grid>
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>

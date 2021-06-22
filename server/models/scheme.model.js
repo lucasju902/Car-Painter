@@ -18,6 +18,7 @@ const Scheme = bookshelf.model("Scheme", {
   uploads() {
     return this.hasMany("Upload", "scheme_id");
   },
+  dependents: ["layers"],
 });
 
 module.exports = Scheme;

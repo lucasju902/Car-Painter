@@ -5,6 +5,7 @@ import { mathRound2 } from "helper";
 
 import {
   Box,
+  Button,
   Typography,
   Grid,
   Accordion,
@@ -27,6 +28,8 @@ const ShadowProperty = (props) => {
   const DefaultBlurToSet = 5;
   const {
     errors,
+    isValid,
+    checkLayerDataDirty,
     handleBlur,
     handleChange,
     setFieldValue,
@@ -34,6 +37,13 @@ const ShadowProperty = (props) => {
     values,
     onLayerDataUpdate,
   } = props;
+  const layerDataProperties = [
+    "shadowColor",
+    "shadowBlur",
+    "shadowOpacity",
+    "shadowOffsetX",
+    "shadowOffsetY",
+  ];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -57,11 +67,9 @@ const ShadowProperty = (props) => {
   );
 
   if (
-    !AllowedLayerTypes.includes("layer_data.shadowColor") &&
-    !AllowedLayerTypes.includes("layer_data.shadowBlur") &&
-    !AllowedLayerTypes.includes("layer_data.shadowOpacity") &&
-    !AllowedLayerTypes.includes("layer_data.shadowOffsetX") &&
-    !AllowedLayerTypes.includes("layer_data.shadowOffsetY")
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
   )
     return <></>;
   return (
@@ -208,6 +216,20 @@ const ShadowProperty = (props) => {
               )}
             </Grid>
           </Grid>
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>

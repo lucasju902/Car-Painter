@@ -65,6 +65,12 @@ class SchemeService {
     await scheme.save(payload);
     return scheme;
   }
+
+  static async deleteById(id) {
+    const scheme = await this.getById(id);
+    await scheme.destroy();
+    return true;
+  }
 }
 
 module.exports = SchemeService;

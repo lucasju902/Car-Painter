@@ -43,19 +43,18 @@ const InnerForm = React.memo(
     onLayerDataUpdate,
     ...formProps
   }) => {
-    const isDirty = useMemo(() => {
-      for (let i in formProps.values.layer_data) {
-        if (formProps.values.layer_data[i] != currentLayer.layer_data[i]) {
-          return true;
+    const checkLayerDataDirty = useCallback(
+      (params) => {
+        for (let param of params) {
+          if (
+            formProps.values.layer_data[param] != currentLayer.layer_data[param]
+          )
+            return true;
         }
-      }
-      for (let i in formProps.values) {
-        if (i != "layer_data" && formProps.values[i] != currentLayer[i]) {
-          return true;
-        }
-      }
-      return false;
-    }, [formProps.values, currentLayer]);
+        return false;
+      },
+      [formProps.values, currentLayer]
+    );
 
     return (
       <Form onSubmit={formProps.handleSubmit} noValidate>
@@ -69,23 +68,26 @@ const InnerForm = React.memo(
           <Typography variant="h5" noWrap>
             Properties
           </Typography>
-          {formProps.isValid && isDirty ? (
-            <Button type="submit" color="primary" variant="outlined">
-              Apply
-            </Button>
-          ) : (
-            <></>
-          )}
         </Box>
-        <GeneralProperty {...formProps} toggleField={toggleField} />
+        <GeneralProperty
+          {...formProps}
+          toggleField={toggleField}
+          checkLayerDataDirty={checkLayerDataDirty}
+        />
         <FontProperty
           {...formProps}
           fontList={fontList}
           onLayerDataUpdate={onLayerDataUpdate}
+          checkLayerDataDirty={checkLayerDataDirty}
         />
-        <ColorProperty {...formProps} onLayerDataUpdate={onLayerDataUpdate} />
+        <ColorProperty
+          {...formProps}
+          onLayerDataUpdate={onLayerDataUpdate}
+          checkLayerDataDirty={checkLayerDataDirty}
+        />
         <StrokeProperty
           {...formProps}
+          checkLayerDataDirty={checkLayerDataDirty}
           onLayerDataUpdate={onLayerDataUpdate}
           onLayerDataUpdate={onLayerDataUpdate}
         />
@@ -94,16 +96,31 @@ const InnerForm = React.memo(
           toggleLayerDataField={toggleLayerDataField}
           currentLayer={currentLayer}
           pressedKey={pressedKey}
+          checkLayerDataDirty={checkLayerDataDirty}
         />
-        <PositionProperty {...formProps} />
+        <PositionProperty
+          {...formProps}
+          checkLayerDataDirty={checkLayerDataDirty}
+        />
         <RotationProperty
           {...formProps}
           toggleField={toggleField}
+          checkLayerDataDirty={checkLayerDataDirty}
           onLayerDataUpdate={onLayerDataUpdate}
         />
-        <SkewProperty {...formProps} />
-        <ShadowProperty {...formProps} onLayerDataUpdate={onLayerDataUpdate} />
-        <CornerProperty {...formProps} />
+        <SkewProperty
+          {...formProps}
+          checkLayerDataDirty={checkLayerDataDirty}
+        />
+        <ShadowProperty
+          {...formProps}
+          checkLayerDataDirty={checkLayerDataDirty}
+          onLayerDataUpdate={onLayerDataUpdate}
+        />
+        <CornerProperty
+          {...formProps}
+          checkLayerDataDirty={checkLayerDataDirty}
+        />
         <ExtraProperty {...formProps} onClone={onClone} />
       </Form>
     );

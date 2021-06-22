@@ -49,6 +49,7 @@ export const DialogTypes = {
   LOGO: "LOGO",
   UPLOAD: "UPLOAD",
   TEXT: "TEXT",
+  DEFAULT_SHAPE_SETTINGS: "DEFAULT_SHAPE_SETTINGS",
 };
 
 export const DefaultLayer = {

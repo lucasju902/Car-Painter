@@ -4,6 +4,7 @@ import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
+  Button,
   FormControl as MuiFormControl,
   Typography,
   InputLabel,
@@ -23,6 +24,8 @@ const FormControl = styled(MuiFormControl)(spacing);
 const FontProperty = (props) => {
   const {
     errors,
+    isValid,
+    checkLayerDataDirty,
     handleBlur,
     handleChange,
     setFieldValue,
@@ -31,6 +34,7 @@ const FontProperty = (props) => {
     fontList,
     onLayerDataUpdate,
   } = props;
+  const layerDataProperties = ["font"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -40,7 +44,12 @@ const FontProperty = (props) => {
     [values]
   );
 
-  if (!AllowedLayerTypes.includes("layer_data.font")) return <></>;
+  if (
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
+  )
+    return <></>;
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -90,6 +99,20 @@ const FontProperty = (props) => {
               value={values.layer_data.size}
               setValue={(value) => setFieldValue("layer_data.size", value)}
             />
+          ) : (
+            <></>
+          )}
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
+            </Box>
           ) : (
             <></>
           )}

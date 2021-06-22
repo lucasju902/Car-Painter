@@ -119,10 +119,6 @@ const SchemeSettingsDialog = (props) => {
           grid_opacity: guide_data.grid_opacity || 1,
           grid_padding: guide_data.grid_padding || 10,
           grid_stroke: guide_data.grid_stroke || 0.1,
-          default_shape_color: guide_data.default_shape_color || "#000000",
-          default_shape_opacity: guide_data.default_shape_opacity || 1,
-          default_shape_scolor: guide_data.default_shape_scolor || "#000000",
-          default_shape_stroke: guide_data.default_shape_stroke || 1,
         }}
         validationSchema={Yup.object().shape({
           carmask_color: Yup.string()
@@ -138,12 +134,6 @@ const SchemeSettingsDialog = (props) => {
             .nullable()
             .test("color-validation", "Incorrect Color Format", colorValidator),
           grid_color: Yup.string()
-            .nullable()
-            .test("color-validation", "Incorrect Color Format", colorValidator),
-          default_shape_color: Yup.string()
-            .nullable()
-            .test("color-validation", "Incorrect Color Format", colorValidator),
-          default_shape_scolor: Yup.string()
             .nullable()
             .test("color-validation", "Incorrect Color Format", colorValidator),
         })}
@@ -208,63 +198,6 @@ const SchemeSettingsDialog = (props) => {
                         value={formProps.values.grid_stroke}
                         setValue={(value) =>
                           formProps.setFieldValue("grid_stroke", value)
-                        }
-                      />
-                    </Grid>
-                  </Grid>
-                }
-              />
-              <SubForm
-                label="Default Shapes"
-                colorKey="default_shape_color"
-                opacityKey="default_shape_opacity"
-                {...formProps}
-                extraChildren={
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <Box
-                        display="flex"
-                        flexDirection="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        <Typography
-                          variant="body1"
-                          color="textSecondary"
-                          mr={2}
-                        >
-                          Stroke Color
-                        </Typography>
-                        <ColorPickerInput
-                          value={formProps.values["default_shape_scolor"]}
-                          onChange={(color) =>
-                            formProps.setFieldValue(
-                              "default_shape_scolor",
-                              color
-                            )
-                          }
-                          onInputChange={(color) =>
-                            formProps.setFieldValue(
-                              "default_shape_scolor",
-                              color
-                            )
-                          }
-                          error={Boolean(
-                            formProps.errors["default_shape_scolor"]
-                          )}
-                          helperText={formProps.errors["default_shape_scolor"]}
-                        />
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <SliderInput
-                        label="Stroke Width"
-                        min={0}
-                        max={1}
-                        step={0.01}
-                        value={formProps.values["default_shape_stroke"]}
-                        setValue={(value) =>
-                          formProps.setFieldValue("default_shape_stroke", value)
                         }
                       />
                     </Grid>

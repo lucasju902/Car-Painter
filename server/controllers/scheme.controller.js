@@ -143,6 +143,18 @@ class SchemeController {
       });
     }
   }
+
+  static async delete(req, res) {
+    try {
+      await SchemeService.deleteById(req.params.id);
+      res.json({});
+    } catch (err) {
+      logger.log("error", err.stack);
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
 }
 
 module.exports = SchemeController;

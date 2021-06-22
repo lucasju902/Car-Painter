@@ -116,3 +116,9 @@ export const addImageProcess = (src) => {
     img.src = src;
   });
 };
+
+export const alphaToHex = (alpha) => {
+  let s = Math.floor(alpha * 255).toString(16);
+  if (s.length === 1) s = "0" + s;
+  return s;
+};

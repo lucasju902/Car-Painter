@@ -36,7 +36,9 @@ import {
   createLayerFromUpload,
   createTextLayer,
 } from "redux/reducers/layerReducer";
+import { updateScheme } from "redux/reducers/schemeReducer";
 
+import { alphaToHex } from "helper";
 import { DialogTypes, MouseModes } from "constant";
 
 import BasePaintDialog from "dialogs/BasePaintDialog";
@@ -44,6 +46,7 @@ import ShapeDialog from "dialogs/ShapeDialog";
 import LogoDialog from "dialogs/LogoDialog";
 import UploadDialog from "dialogs/UploadDialog";
 import TextDialog from "dialogs/TextDialog";
+import DefaultSettingsDialog from "dialogs/DefaultSettingsDialog";
 import LightTooltip from "components/LightTooltip";
 
 const Divider = styled(MuiDivider)(spacing);
@@ -67,6 +70,11 @@ const CustomItem = styled(MenuItem)`
 const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
   transform: ${(props) =>
     props.isstretch === "true" ? "scaleX(1.2) scaleY(0.8)" : "none"};
+`;
+
+const DefaultSettingsButton = styled(Box)`
+  outline: ${(props) => props.outline};
+  cursor: pointer;
 `;
 
 const modes = [
@@ -256,6 +264,19 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
     ]
   );
 
+  const handleApplySettings = useCallback(
+    (guide_data) => {
+      dispatch(
+        updateScheme({
+          ...currentScheme,
+          guide_data: guide_data,
+        })
+      );
+      setDialog(null);
+    },
+    [dispatch, currentScheme, setDialog]
+  );
+
   return (
     <Wrapper>
       <ToolWrapper>
@@ -291,6 +312,26 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
             </CustomItem>
           </LightTooltip>
         ))}
+        <Divider my={1} />
+        <Box display="flex" justifyContent="center">
+          <LightTooltip title="Default Shape Settings" arrow placement="right">
+            <Box bgcolor="#FFFFFF">
+              <DefaultSettingsButton
+                width="25px"
+                height="25px"
+                bgcolor={
+                  currentScheme.guide_data.default_shape_color +
+                  alphaToHex(currentScheme.guide_data.default_shape_opacity)
+                }
+                outline={`2px solid ${
+                  currentScheme.guide_data.default_shape_scolor +
+                  alphaToHex(currentScheme.guide_data.default_shape_stroke)
+                }`}
+                onClick={() => setDialog(DialogTypes.DEFAULT_SHAPE_SETTINGS)}
+              />
+            </Box>
+          </LightTooltip>
+        </Box>
       </ToolWrapper>
 
       <BasePaintDialog
@@ -324,6 +365,11 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
         defaultColor={currentScheme.guide_data.default_shape_color}
         defaultStrokeColor={currentScheme.guide_data.default_shape_scolor}
         onCreate={handleCreateText}
+        onCancel={() => setDialog(null)}
+      />
+      <DefaultSettingsDialog
+        open={dialog === DialogTypes.DEFAULT_SHAPE_SETTINGS}
+        onApply={handleApplySettings}
         onCancel={() => setDialog(null)}
       />
     </Wrapper>

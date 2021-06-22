@@ -4,6 +4,7 @@ import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
+  Button,
   Typography,
   Grid,
   Accordion,
@@ -20,6 +21,8 @@ import SliderInput from "components/SliderInput";
 const StrokeProperty = (props) => {
   const {
     errors,
+    isValid,
+    checkLayerDataDirty,
     handleBlur,
     handleChange,
     setFieldValue,
@@ -27,6 +30,7 @@ const StrokeProperty = (props) => {
     values,
     onLayerDataUpdate,
   } = props;
+  const layerDataProperties = ["stroke", "scolor", "strokeType"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -37,9 +41,9 @@ const StrokeProperty = (props) => {
   );
 
   if (
-    !AllowedLayerTypes.includes("layer_data.stroke") &&
-    !AllowedLayerTypes.includes("layer_data.scolor") &&
-    !AllowedLayerTypes.includes("layer_data.strokeType")
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
   )
     return <></>;
   return (
@@ -107,6 +111,20 @@ const StrokeProperty = (props) => {
                 </Select>
               </Grid>
             </Grid>
+          ) : (
+            <></>
+          )}
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
+            </Box>
           ) : (
             <></>
           )}

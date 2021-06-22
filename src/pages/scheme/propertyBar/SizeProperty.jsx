@@ -5,6 +5,7 @@ import { mathRound2 } from "helper";
 
 import {
   Box,
+  Button,
   TextField,
   Typography,
   Accordion,
@@ -31,6 +32,8 @@ const CustomIconButton = styled(IconButton)`
 const SizeProperty = (props) => {
   const {
     errors,
+    isValid,
+    checkLayerDataDirty,
     handleBlur,
     handleChange,
     setFieldValue,
@@ -40,6 +43,17 @@ const SizeProperty = (props) => {
     currentLayer,
     pressedKey,
   } = props;
+  const layerDataProperties = [
+    "width",
+    "height",
+    "scaleX",
+    "scaleY",
+    "radius",
+    "innerRadius",
+    "outerRadius",
+    "pointerLength",
+    "pointerWidth",
+  ];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -166,15 +180,9 @@ const SizeProperty = (props) => {
     ]
   );
   if (
-    !AllowedLayerTypes.includes("layer_data.width") &&
-    !AllowedLayerTypes.includes("layer_data.height") &&
-    !AllowedLayerTypes.includes("layer_data.scaleX") &&
-    !AllowedLayerTypes.includes("layer_data.scaleY") &&
-    !AllowedLayerTypes.includes("layer_data.radius") &&
-    !AllowedLayerTypes.includes("layer_data.innerRadius") &&
-    !AllowedLayerTypes.includes("layer_data.outerRadius") &&
-    !AllowedLayerTypes.includes("layer_data.pointerLength") &&
-    !AllowedLayerTypes.includes("layer_data.pointerWidth")
+    layerDataProperties.every(
+      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    )
   )
     return <></>;
   return (
@@ -531,6 +539,20 @@ const SizeProperty = (props) => {
                 shrink: true,
               }}
             />
+          ) : (
+            <></>
+          )}
+          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+            <Box mt={2} width="100%">
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                fullWidth
+              >
+                Apply
+              </Button>
+            </Box>
           ) : (
             <></>
           )}
