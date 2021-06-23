@@ -7,6 +7,8 @@ import styled from "styled-components/macro";
 
 import { Box, IconButton, Typography, Menu, MenuItem } from "@material-ui/core";
 import { MoreVert as ActionIcon } from "@material-ui/icons";
+import ConfirmDialog from "dialogs/ConfirmDialog";
+
 import { getDifferenceFromToday } from "helper";
 
 const CustomImg = styled.img`
@@ -26,8 +28,9 @@ const StyledMenu = styled(Menu)`
 `;
 
 const ProjectItem = (props) => {
-  const { scheme, onDelete } = props;
+  const { scheme, onDelete, onCloneProject } = props;
   const [actionMenuEl, setActionMenuEl] = useState(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const history = useHistory();
 
   const handleActionMenuClick = (event) => {
@@ -38,6 +41,10 @@ const ProjectItem = (props) => {
   };
   const handleDeleteItem = () => {
     onDelete(scheme.id);
+    handleActionMenuClose();
+  };
+  const handleCloneProject = () => {
+    onCloneProject(scheme.id);
     handleActionMenuClose();
   };
   const openScheme = (schemeID) => {
@@ -87,10 +94,19 @@ const ProjectItem = (props) => {
             open={Boolean(actionMenuEl)}
             onClose={handleActionMenuClose}
           >
-            <MenuItem onClick={handleDeleteItem}>Delete</MenuItem>
+            <MenuItem onClick={handleCloneProject}>Clone</MenuItem>
+            <MenuItem onClick={() => setShowDeleteDialog(true)}>
+              Delete
+            </MenuItem>
           </StyledMenu>
         </Box>
       </Box>
+      <ConfirmDialog
+        text={`Are you sure to delete "${scheme.name}"?`}
+        open={showDeleteDialog}
+        onCancel={() => setShowDeleteDialog(false)}
+        onConfirm={handleDeleteItem}
+      />
     </ItemWrapper>
   );
 };

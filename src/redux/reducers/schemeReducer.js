@@ -40,7 +40,7 @@ export const slice = createSlice({
       state.list = list;
     },
     insertToList: (state, action) => {
-      let scheme = [...action.payload];
+      let scheme = { ...action.payload };
       if (
         scheme &&
         (typeof scheme.guide_data === "string" || !scheme.guide_data)
@@ -214,7 +214,7 @@ export const changeBaseColor = (id, color) => async (dispatch, getState) => {
 };
 
 export const deleteScheme = (schemeID) => async (dispatch) => {
-  // dispatch(setLoading(true));
+  dispatch(setLoading(true));
 
   try {
     dispatch(deleteListItem(schemeID));
@@ -226,7 +226,22 @@ export const deleteScheme = (schemeID) => async (dispatch) => {
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  // dispatch(setLoading(false));
+  dispatch(setLoading(false));
+};
+
+export const cloneScheme = (schemeID) => async (dispatch) => {
+  dispatch(setLoading(true));
+
+  try {
+    const scheme = await SchemeService.cloneScheme(schemeID);
+    dispatch(insertToList(scheme));
+    dispatch(
+      setMessage({ message: "Cloned Project successfully!", type: "success" })
+    );
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
 };
 
 export default slice.reducer;

@@ -1,4 +1,5 @@
 const UploadService = require("../services/uploadService");
+const FileService = require("../services/fileService");
 const LayerService = require("../services/layerService");
 const logger = require("../config/winston");
 const config = require("../config");
@@ -56,9 +57,9 @@ class UploadController {
     try {
       let uploadFiles;
       if (config.bucketURL) {
-        uploadFiles = UploadService.uploadFilesToS3("upload");
+        uploadFiles = FileService.uploadFilesToS3("upload");
       } else {
-        uploadFiles = UploadService.uploadFiles("upload");
+        uploadFiles = FileService.uploadFiles("upload");
       }
       uploadFiles(req, res, async function (err) {
         if (err) {
@@ -107,7 +108,7 @@ class UploadController {
       let upload = await UploadService.getById(req.params.id);
       upload = upload.toJSON();
       if (deleteFromAll) {
-        await UploadService.deleteFileFromS3(upload.file_name);
+        await FileService.deleteFileFromS3(upload.file_name);
         let layers = await LayerService.getListByUploadID(req.params.id);
         layers = layers.toJSON();
         let promises = [];

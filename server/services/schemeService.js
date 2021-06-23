@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const Layer = require("../models/layer.model");
 const Scheme = require("../models/scheme.model");
 
 class SchemeService {
@@ -70,6 +71,27 @@ class SchemeService {
     const scheme = await this.getById(id);
     await scheme.destroy();
     return true;
+  }
+
+  static async cloneById(id) {
+    let originalScheme = await this.getById(id);
+    originalScheme = originalScheme.toJSON();
+
+    let scheme = await Scheme.forge({
+      ..._.omit(originalScheme, ["id", "carMake", "layers"]),
+      name: originalScheme.name + " copy",
+      date_created: Math.round(new Date().getTime() / 1000),
+      date_modified: Math.round(new Date().getTime() / 1000),
+    }).save();
+    let schemeData = scheme.toJSON();
+    for (let layer of originalScheme.layers) {
+      Layer.forge({
+        ..._.omit(layer, ["id"]),
+        scheme_id: schemeData.id,
+      }).save();
+    }
+    scheme = await this.getById(schemeData.id);
+    return scheme;
   }
 }
 

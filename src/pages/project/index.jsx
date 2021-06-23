@@ -30,6 +30,7 @@ import {
   getSchemeList,
   createScheme,
   deleteScheme,
+  cloneScheme,
 } from "redux/reducers/schemeReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 
@@ -135,6 +136,9 @@ const Scheme = () => {
   const handleDeleteProject = (schemeID) => {
     dispatch(deleteScheme(schemeID));
   };
+  const handleCloneProject = (schemeID) => {
+    dispatch(cloneScheme(schemeID));
+  };
 
   const increaseData = () => {
     setLimit(limit + step);
@@ -142,81 +146,83 @@ const Scheme = () => {
 
   return (
     <Box width="100%" height="100%" display="flex" flexDirection="column">
-      {schemeLoading || carMakeLoading || !schemeList || !carMakeList ? (
-        <ScreenLoader />
-      ) : (
-        <>
-          <Wrapper
+      <>
+        <Wrapper
+          display="flex"
+          flexDirection="column"
+          justifyContent="flex-start"
+          m={2}
+          p={5}
+          height="calc(100% - 16px)"
+        >
+          <Box
             display="flex"
-            flexDirection="column"
-            justifyContent="flex-start"
-            m={2}
-            p={5}
-            height="calc(100% - 16px)"
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
+            mb={3}
           >
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              width="100%"
-              mb={3}
+            <SearchBox value={search} onChange={(value) => setSearch(value)} />
+            <Button
+              onClick={handleCreateNew}
+              color="default"
+              variant="outlined"
+              startIcon={<AddIcon />}
             >
-              <SearchBox
-                value={search}
-                onChange={(value) => setSearch(value)}
-              />
-              <Button
-                onClick={handleCreateNew}
-                color="default"
-                variant="outlined"
-                startIcon={<AddIcon />}
+              New
+            </Button>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="flex-start"
+            alignItems="center"
+            width="100%"
+            mb={3}
+          >
+            <CustomFormControl variant="outlined">
+              <InputLabel id="sort-label">Sort By</InputLabel>
+              <Select
+                labelId="sort-label"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                label="Sort By"
               >
-                New
-              </Button>
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="flex-start"
-              alignItems="center"
-              width="100%"
-              mb={3}
-            >
-              <CustomFormControl variant="outlined">
-                <InputLabel id="sort-label">Sort By</InputLabel>
-                <Select
-                  labelId="sort-label"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  label="Sort By"
-                >
-                  <MenuItem value={1}>Project Name</MenuItem>
-                  <MenuItem value={2}>Vehicle Name</MenuItem>
-                  <MenuItem value={3}>Last Modified</MenuItem>
-                </Select>
-              </CustomFormControl>
-              {carMakeList && carMakeList.length ? (
-                <CustomAutocomplete
-                  id="car-make-filter"
-                  options={sortedCarMakesList}
-                  groupBy={(option) => option.car_type}
-                  getOptionLabel={(option) => option.name}
-                  style={{ width: 500 }}
-                  onChange={(event, newValue) => {
-                    setSelectedVehicle(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Filter By Vehicle"
-                      variant="outlined"
-                    />
-                  )}
-                />
-              ) : (
-                <></>
-              )}
-            </Box>
-            <Box id="scheme-list-content" overflow="auto" position="relative">
+                <MenuItem value={1}>Project Name</MenuItem>
+                <MenuItem value={2}>Vehicle Name</MenuItem>
+                <MenuItem value={3}>Last Modified</MenuItem>
+              </Select>
+            </CustomFormControl>
+            {carMakeList && carMakeList.length ? (
+              <CustomAutocomplete
+                id="car-make-filter"
+                options={sortedCarMakesList}
+                groupBy={(option) => option.car_type}
+                getOptionLabel={(option) => option.name}
+                style={{ width: 500 }}
+                onChange={(event, newValue) => {
+                  setSelectedVehicle(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Filter By Vehicle"
+                    variant="outlined"
+                  />
+                )}
+              />
+            ) : (
+              <></>
+            )}
+          </Box>
+          <Box
+            id="scheme-list-content"
+            overflow="auto"
+            position="relative"
+            height="100%"
+          >
+            {schemeLoading || carMakeLoading || !schemeList || !carMakeList ? (
+              <ScreenLoader />
+            ) : (
               <CustomInfiniteScroll
                 dataLength={limit} //This is important field to render the next data
                 next={increaseData}
@@ -238,24 +244,23 @@ const Scheme = () => {
                       <ProjectItem
                         scheme={scheme}
                         onDelete={handleDeleteProject}
+                        onCloneProject={handleCloneProject}
                       />
                     </Grid>
                   ))}
                 </Grid>
               </CustomInfiniteScroll>
-            </Box>
-          </Wrapper>
-          <CreateProjectDialog
-            carMakeList={carMakeList}
-            predefinedCarMakeID={predefinedCarMakeID}
-            open={dialog === "CreateProjectDialog"}
-            onContinue={(carMake, name) =>
-              createSchemeFromCarMake(carMake, name)
-            }
-            onCancel={() => setDialog(null)}
-          />
-        </>
-      )}
+            )}
+          </Box>
+        </Wrapper>
+        <CreateProjectDialog
+          carMakeList={carMakeList}
+          predefinedCarMakeID={predefinedCarMakeID}
+          open={dialog === "CreateProjectDialog"}
+          onContinue={(carMake, name) => createSchemeFromCarMake(carMake, name)}
+          onCancel={() => setDialog(null)}
+        />
+      </>
     </Box>
   );
 };

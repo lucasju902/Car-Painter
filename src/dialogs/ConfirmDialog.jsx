@@ -28,7 +28,7 @@ const ConfirmDialog = React.memo((props) => {
         </Button>
         <Button
           onClick={onConfirm}
-          color="default"
+          color="secondary"
           variant="outlined"
           autoFocus
         >

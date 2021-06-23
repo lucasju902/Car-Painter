@@ -19,6 +19,8 @@ router
   .route("/byUpload/:id")
   .get(isAuthenticated, SchemeController.getListByUploadID);
 
+router.route("/clone/:id").post(isAuthenticated, SchemeController.clone);
+
 router
   .route("/thumbnail")
   .post(isAuthenticated, SchemeController.uploadThumbnail);

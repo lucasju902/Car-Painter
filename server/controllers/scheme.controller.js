@@ -1,7 +1,7 @@
 const config = require("../config");
 const SchemeService = require("../services/schemeService");
 const LayerService = require("../services/layerService");
-const UploadService = require("../services/uploadService");
+const FileService = require("../services/fileService");
 const CarMakeService = require("../services/carMakeService");
 const logger = require("../config/winston");
 
@@ -119,9 +119,9 @@ class SchemeController {
     try {
       let uploadFiles;
       if (config.bucketURL) {
-        uploadFiles = UploadService.uploadFilesToS3("thumbnail");
+        uploadFiles = FileService.uploadFilesToS3("thumbnail");
       } else {
-        uploadFiles = UploadService.uploadFiles("thumbnail");
+        uploadFiles = FileService.uploadFiles("thumbnail");
       }
       uploadFiles(req, res, async function (err) {
         if (err) {
@@ -148,6 +148,23 @@ class SchemeController {
     try {
       await SchemeService.deleteById(req.params.id);
       res.json({});
+    } catch (err) {
+      logger.log("error", err.stack);
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
+
+  static async clone(req, res) {
+    try {
+      let scheme = await SchemeService.cloneById(req.params.id);
+      scheme = scheme.toJSON();
+      await FileService.cloneFileOnS3(
+        `scheme_thumbnails/${req.params.id}.png`,
+        `scheme_thumbnails/${scheme.id}.png`
+      );
+      res.json(scheme);
     } catch (err) {
       logger.log("error", err.stack);
       res.status(500).json({
