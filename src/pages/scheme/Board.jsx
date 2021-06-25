@@ -485,6 +485,7 @@ const Board = ({
             listening={false}
           />
           <BasePaints
+            legacyMode={currentScheme.legacy_mode}
             carMake={currentCarMake}
             layers={layerList}
             loadedStatuses={loadedStatuses}
@@ -494,7 +495,8 @@ const Board = ({
         </Layer>
         <Layer listening={false}>
           <PaintingGuideBottom
-            currentCarMake={currentCarMake}
+            legacyMode={currentScheme.legacy_mode}
+            carMake={currentCarMake}
             paintingGuides={paintingGuides}
             guideData={currentScheme.guide_data}
             loadedStatuses={loadedStatuses}
@@ -505,7 +507,8 @@ const Board = ({
         <Layer ref={mainLayerRef}>
           <CarParts
             layers={layerList}
-            currentCarMake={currentCarMake}
+            legacyMode={currentScheme.legacy_mode}
+            carMake={currentCarMake}
             loadedStatuses={loadedStatuses}
             handleImageSize={handleImageSize}
             onLoadLayer={handleLoadLayer}
@@ -553,7 +556,8 @@ const Board = ({
         </Layer>
         <Layer ref={carMaskLayerRef} listening={false}>
           <PaintingGuideCarMask
-            currentCarMake={currentCarMake}
+            legacyMode={currentScheme.legacy_mode}
+            carMake={currentCarMake}
             paintingGuides={paintingGuides}
             loadedStatuses={loadedStatuses}
             guideData={currentScheme.guide_data}
@@ -563,7 +567,8 @@ const Board = ({
         </Layer>
         <Layer>
           <PaintingGuideTop
-            currentCarMake={currentCarMake}
+            legacyMode={currentScheme.legacy_mode}
+            carMake={currentCarMake}
             paintingGuides={paintingGuides}
             loadedStatuses={loadedStatuses}
             frameSize={frameSize}

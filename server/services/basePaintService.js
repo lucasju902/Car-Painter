@@ -1,5 +1,4 @@
 const Base = require("../models/base.model");
-const LayerService = require("../services/layerService");
 
 class BasePaintService {
   static async getList() {

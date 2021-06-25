@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import styled from "styled-components/macro";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -14,7 +14,7 @@ import {
   GridListTile,
   GridListTileBar,
 } from "@material-ui/core";
-import { basePaintAssetURL } from "helper";
+import { basePaintAssetURL, legacyBasePaintAssetURL } from "helper";
 
 const Button = styled(MuiButton)(spacing);
 
@@ -41,11 +41,45 @@ const CustomImg = styled.img`
 const BasePaintDialog = React.memo((props) => {
   const step = 15;
   const [limit, setLimit] = useState(step);
-  const { carMake, onCancel, open, onOpenBase } = props;
+  const { legacyMode, basePaints, carMake, onCancel, open, onOpenBase } = props;
+  const bases = useMemo(
+    () =>
+      legacyMode
+        ? basePaints
+        : Array.from({ length: carMake.total_bases }, (_, i) => i + 1),
+    [legacyMode, basePaints, carMake]
+  );
+  const hasMore = useMemo(
+    () =>
+      legacyMode ? limit < basePaints.length : limit < carMake.total_bases,
+    [legacyMode, limit, basePaints, carMake]
+  );
+
+  const getPreviewURL = useCallback(
+    (base) => {
+      return legacyMode
+        ? legacyBasePaintAssetURL(base) + "preview.jpg" // For Legacy basepaint
+        : basePaintAssetURL(carMake, base) + "preview.jpg";
+    },
+    [legacyMode, carMake]
+  );
+  const getTitle = useCallback(
+    (base) => {
+      return legacyMode ? base.base_name : `Base Paint ${base}`;
+    },
+    [legacyMode]
+  );
+  const getDescription = useCallback(
+    (base) => {
+      return legacyMode ? base.base_description : carMake.name_short;
+    },
+    [legacyMode, carMake]
+  );
 
   const increaseData = () => {
     setLimit(limit + step);
   };
+
   return (
     <Dialog aria-labelledby="base-paints-title" open={open} onClose={onCancel}>
       <DialogTitle id="base-paints-title">Select Base Paint</DialogTitle>
@@ -53,30 +87,24 @@ const BasePaintDialog = React.memo((props) => {
         <CustomInfiniteScroll
           dataLength={limit} //This is important field to render the next data
           next={increaseData}
-          hasMore={limit < carMake.total_bases}
+          hasMore={hasMore}
           loader={<Loader />}
           scrollableTarget="base-paint-dialog-content"
         >
           <CustomGridList cellHeight={178} cols={3}>
-            {Array.from({ length: carMake.total_bases }, (_, i) => i + 1)
-              .slice(0, limit)
-              .map((index) => (
-                <CustomGridListTile
-                  key={index}
-                  cols={1}
-                  onClick={() => onOpenBase(index)}
-                >
-                  <CustomImg
-                    // src={`${config.assetsURL}/bases/${basepaint.id}/preview.jpg`} // For Legacy basepaint
-                    src={basePaintAssetURL(carMake, index) + "preview.jpg"}
-                    alt={`Base Paint ${index}`}
-                  />
-                  <GridListTileBar
-                    title={`Base Paint ${index}`}
-                    subtitle={carMake.name_short}
-                  />
-                </CustomGridListTile>
-              ))}
+            {bases.slice(0, limit).map((item, index) => (
+              <CustomGridListTile
+                key={index}
+                cols={1}
+                onClick={() => onOpenBase(item)}
+              >
+                <CustomImg src={getPreviewURL(item)} alt={getTitle(item)} />
+                <GridListTileBar
+                  title={getTitle(item)}
+                  subtitle={getDescription(item)}
+                />
+              </CustomGridListTile>
+            ))}
           </CustomGridList>
         </CustomInfiniteScroll>
       </DialogContent>

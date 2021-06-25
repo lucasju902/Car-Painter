@@ -10,11 +10,12 @@ export default class SchemeService extends BaseAPIService {
   static getSchemeListByUploadID = async (uploadID) => {
     return this.requestWithAuth(`/scheme/byUpload/${uploadID}`, "GET");
   };
-  static createScheme = async (carMakeID, name, userID) => {
+  static createScheme = async (carMakeID, name, userID, legacy_mode) => {
     return this.requestWithAuth(`/scheme`, "POST", {
       carMakeID,
       name,
       userID,
+      legacy_mode,
     });
   };
   static getScheme = async (schemeID) => {

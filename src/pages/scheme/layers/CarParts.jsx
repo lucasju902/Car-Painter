@@ -1,14 +1,15 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
 import { LayerTypes } from "constant";
-import config from "config";
+import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
 
 const CarParts = (props) => {
   const {
     layers,
-    currentCarMake,
+    legacyMode,
+    carMake,
     loadedStatuses,
     handleImageSize,
     onLoadLayer,
@@ -23,6 +24,16 @@ const CarParts = (props) => {
       ),
     [layers]
   );
+  const getCarMakeImage = useCallback(
+    (image) => {
+      return (
+        (legacyMode
+          ? legacyCarMakeAssetURL(carMake)
+          : carMakeAssetURL(carMake)) + image
+      );
+    },
+    [legacyMode, carMake]
+  );
 
   return (
     <>
@@ -30,12 +41,7 @@ const CarParts = (props) => {
         <URLImage
           key={layer.id}
           id={layer.id}
-          src={
-            config.assetsURL +
-            "/templates/" +
-            currentCarMake.folder_directory.replace(" ", "_") +
-            `/${layer.layer_data.img}`
-          }
+          src={getCarMakeImage(layer.layer_data.img)}
           filterColor={layer.layer_data.color}
           listening={false}
           visible={layer.layer_visible ? true : false}

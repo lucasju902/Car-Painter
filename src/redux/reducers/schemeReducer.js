@@ -6,7 +6,7 @@ import SchemeService from "services/schemeService";
 import { setMessage } from "./messageReducer";
 import { setCurrent as setCurrentCarMake } from "./carMakeReducer";
 import { setList as setLayerList, setLoadedStatusAll } from "./layerReducer";
-// import { setList as setBasePaintList } from "./basePaintReducer";
+import { setList as setBasePaintList } from "./basePaintReducer";
 import { pushToActionHistory } from "./boardReducer";
 
 const initialState = {
@@ -117,12 +117,21 @@ export const getSchemeList = (userID) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const createScheme = (carMake, name, userID, onOpen) => async (
-  dispatch
-) => {
+export const createScheme = (
+  carMake,
+  name,
+  userID,
+  legacy_mode = 0,
+  onOpen = null
+) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const result = await SchemeService.createScheme(carMake.id, name, userID);
+    const result = await SchemeService.createScheme(
+      carMake.id,
+      name,
+      userID,
+      legacy_mode
+    );
     console.log("result: ", result);
     if (onOpen) onOpen(result.scheme.id);
   } catch (err) {
@@ -148,7 +157,7 @@ export const getScheme = (schemeID) => async (dispatch) => {
     });
     dispatch(setLoadedStatusAll(loadedStatuses));
     dispatch(setLayerList(result.layers));
-    // dispatch(setBasePaintList(result.basePaints));
+    dispatch(setBasePaintList(result.basePaints));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

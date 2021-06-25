@@ -44,12 +44,26 @@ class SchemeController {
 
   static async create(req, res) {
     try {
-      const { carMakeID, userID, name } = req.body;
+      const { carMakeID, userID, name, legacy_mode } = req.body;
       let carMake = await CarMakeService.getById(carMakeID);
       carMake = carMake.toJSON();
-      let scheme = await SchemeService.create(userID, carMake.id, name);
+      let legacyMode =
+        legacy_mode ||
+        !carMake.total_bases ||
+        !carMake.builder_layers_2048 ||
+        !carMake.builder_layers_2048.length
+          ? 1
+          : 0;
+      let scheme = await SchemeService.create(
+        userID,
+        carMake.id,
+        name,
+        legacyMode
+      );
       scheme = scheme.toJSON();
-      let carMake_builder_layers = JSON.parse(carMake.builder_layers);
+      let carMake_builder_layers = JSON.parse(
+        legacyMode ? carMake.builder_layers : carMake.builder_layers_2048
+      );
       let layer_index = 1;
       let builder_layers = [];
       for (let layer of carMake_builder_layers) {

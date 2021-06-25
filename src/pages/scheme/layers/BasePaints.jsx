@@ -1,13 +1,13 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
 import URLImage from "components/URLImage";
 import { LayerTypes } from "constant";
-import config from "config";
-import { basePaintAssetURL } from "helper";
+import { basePaintAssetURL, legacyBasePaintAssetURL } from "helper";
 
 const BasePaints = (props) => {
   const {
+    legacyMode,
     layers,
     carMake,
     loadedStatuses,
@@ -23,6 +23,15 @@ const BasePaints = (props) => {
       ),
     [layers]
   );
+  const getLayerImage = useCallback(
+    (layer) => {
+      return legacyMode
+        ? legacyBasePaintAssetURL(layer.layer_data) + layer.layer_data.img
+        : basePaintAssetURL(carMake, layer.layer_data.basePaintIndex) +
+            layer.layer_data.img;
+    },
+    [legacyMode, carMake]
+  );
 
   return (
     <>
@@ -30,12 +39,7 @@ const BasePaints = (props) => {
         <URLImage
           key={layer.id}
           id={layer.id}
-          src={
-            layer.layer_data.id
-              ? `${config.assetsURL}/bases/${layer.layer_data.id}/${layer.layer_data.img}`
-              : basePaintAssetURL(carMake, layer.layer_data.basePaintIndex) +
-                layer.layer_data.img
-          }
+          src={getLayerImage(layer)}
           opacity={layer.layer_data.opacity}
           filterColor={layer.layer_data.color}
           listening={false}

@@ -1,34 +1,41 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { Line } from "react-konva";
 import { PaintingGuides } from "constant";
 
 import URLImage from "components/URLImage";
-import config from "config";
+import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
 
 const PaintingGuideTop = (props) => {
   const {
+    legacyMode,
     paintingGuides,
-    currentCarMake,
+    carMake,
     handleImageSize,
     frameSize,
     guideData,
     loadedStatuses,
     onLoadLayer,
   } = props;
-  const gridPadding = guideData.grid_padding || 10;
-  const gridStroke = guideData.grid_stroke || 0.1;
+  const gridPadding = useMemo(() => guideData.grid_padding || 10, [guideData]);
+  const gridStroke = useMemo(() => guideData.grid_stroke || 0.1, [guideData]);
+
+  const getCarMakeImage = useCallback(
+    (image) => {
+      return (
+        (legacyMode
+          ? legacyCarMakeAssetURL(carMake)
+          : carMakeAssetURL(carMake)) + image
+      );
+    },
+    [legacyMode, carMake]
+  );
 
   return (
     <>
       <URLImage
         id="guide-wireframe"
         loadedStatus={loadedStatuses["guide-wireframe"]}
-        src={`${
-          config.assetsURL
-        }/templates/${currentCarMake.folder_directory.replace(
-          " ",
-          "_"
-        )}/wireframe.png`}
+        src={getCarMakeImage("wireframe.png")}
         tellSize={handleImageSize}
         filterColor={guideData.wireframe_color}
         opacity={guideData.wireframe_opacity}

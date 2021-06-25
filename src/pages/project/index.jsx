@@ -127,7 +127,7 @@ const Scheme = () => {
 
   const createSchemeFromCarMake = (carMake, name) => {
     setDialog(null);
-    dispatch(createScheme(carMake, name, user.id, openScheme));
+    dispatch(createScheme(carMake, name, user.id, 0, openScheme));
   };
 
   const handleCreateNew = () => {

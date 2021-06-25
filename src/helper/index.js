@@ -124,9 +124,26 @@ export const alphaToHex = (alpha) => {
   return s;
 };
 
+export const legacyBasePaintAssetURL = (basepaint) => {
+  return `${config.assetsURL}/bases/${basepaint.id}/`;
+};
+
 export const basePaintAssetURL = (carMake, index) => {
-  return `${config.assetsURL}/templates/${carMake.folder_directory.replace(
+  return `${config.assetsURL}/templates2048/${carMake.folder_directory.replace(
     " ",
     "_"
   )}/bases/${index}/`;
+};
+
+export const legacyCarMakeAssetURL = (carMake) => {
+  return `${config.assetsURL}/templates/${carMake.folder_directory.replace(
+    " ",
+    "_"
+  )}/`;
+};
+export const carMakeAssetURL = (carMake) => {
+  return `${config.assetsURL}/templates2048/${carMake.folder_directory.replace(
+    " ",
+    "_"
+  )}/`;
 };

@@ -1,30 +1,37 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { PaintingGuides } from "constant";
 
 import URLImage from "components/URLImage";
-import config from "config";
+import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
 
 const PaintingGuideBottom = (props) => {
   const {
+    legacyMode,
     paintingGuides,
-    currentCarMake,
+    carMake,
     handleImageSize,
     guideData,
     loadedStatuses,
     onLoadLayer,
   } = props;
 
+  const getCarMakeImage = useCallback(
+    (image) => {
+      return (
+        (legacyMode
+          ? legacyCarMakeAssetURL(carMake)
+          : carMakeAssetURL(carMake)) + image
+      );
+    },
+    [legacyMode, carMake]
+  );
+
   return (
     <>
       <URLImage
         id="guide-sponsorblocks"
         loadedStatus={loadedStatuses["guide-sponsorblocks"]}
-        src={`${
-          config.assetsURL
-        }/templates/${currentCarMake.folder_directory.replace(
-          " ",
-          "_"
-        )}/sponsor_blocks.png`}
+        src={getCarMakeImage("sponsor_blocks.png")}
         tellSize={handleImageSize}
         filterColor={guideData.sponsor_color}
         opacity={guideData.sponsor_opacity}
@@ -38,12 +45,7 @@ const PaintingGuideBottom = (props) => {
       <URLImage
         id="guide-numberblocks"
         loadedStatus={loadedStatuses["guide-numberblocks"]}
-        src={`${
-          config.assetsURL
-        }/templates/${currentCarMake.folder_directory.replace(
-          " ",
-          "_"
-        )}/number_blocks.png`}
+        src={getCarMakeImage("number_blocks.png")}
         tellSize={handleImageSize}
         filterColor={guideData.numberblock_color}
         opacity={guideData.numberblock_opacity}

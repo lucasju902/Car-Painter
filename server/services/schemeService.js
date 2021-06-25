@@ -26,7 +26,7 @@ class SchemeService {
     return scheme;
   }
 
-  static async create(userID, carMakeID, name) {
+  static async create(userID, carMakeID, name, legacy_mode) {
     let schemeName = name;
     if (!name || !name.length) {
       let schemeList = await this.getListByUserID(userID);
@@ -57,6 +57,7 @@ class SchemeService {
       base_id: 0,
       finished: 0,
       avail: 1,
+      legacy_mode,
     }).save();
     return scheme;
   }
