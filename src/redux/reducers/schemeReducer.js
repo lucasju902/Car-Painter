@@ -6,7 +6,7 @@ import SchemeService from "services/schemeService";
 import { setMessage } from "./messageReducer";
 import { setCurrent as setCurrentCarMake } from "./carMakeReducer";
 import { setList as setLayerList, setLoadedStatusAll } from "./layerReducer";
-import { setList as setBasePaintList } from "./basePaintReducer";
+// import { setList as setBasePaintList } from "./basePaintReducer";
 import { pushToActionHistory } from "./boardReducer";
 
 const initialState = {
@@ -148,7 +148,7 @@ export const getScheme = (schemeID) => async (dispatch) => {
     });
     dispatch(setLoadedStatusAll(loadedStatuses));
     dispatch(setLayerList(result.layers));
-    dispatch(setBasePaintList(result.basePaints));
+    // dispatch(setBasePaintList(result.basePaints));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

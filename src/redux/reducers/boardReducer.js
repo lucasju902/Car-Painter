@@ -14,8 +14,8 @@ import LayerService from "services/layerService";
 
 const initialState = {
   frameSize: {
-    width: 700,
-    height: 500,
+    width: 1024,
+    height: 1024,
   },
   paintingGuides: ["car-mask"],
   zoom: 1,
@@ -33,11 +33,8 @@ export const slice = createSlice({
     setFrameSize: (state, action) => {
       state.frameSize = action.payload;
     },
-    setPressedKey: (state, action) => {
-      state.pressedKey = action.payload;
-    },
-    setBoardRotate: (state, action) => {
-      state.boardRotate = action.payload;
+    clearFrameSize: (state, action) => {
+      state.frameSize = initialState.frameSize;
     },
     setFrameSizeToMax: (state, action) => {
       let size = action.payload;
@@ -46,6 +43,12 @@ export const slice = createSlice({
         width: Math.max(size.width, originSize.width),
         height: Math.max(size.height, originSize.height),
       };
+    },
+    setPressedKey: (state, action) => {
+      state.pressedKey = action.payload;
+    },
+    setBoardRotate: (state, action) => {
+      state.boardRotate = action.payload;
     },
     setPaintingGuides: (state, action) => {
       state.paintingGuides = [...action.payload];
@@ -74,6 +77,7 @@ export const slice = createSlice({
 
 export const {
   setFrameSize,
+  clearFrameSize,
   setFrameSizeToMax,
   setPaintingGuides,
   setZoom,

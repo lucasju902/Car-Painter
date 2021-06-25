@@ -140,23 +140,25 @@ export const {
 
 export default slice.reducer;
 
-export const createLayersFromBasePaint = (schemeID, base) => async (
+export const createLayersFromBasePaint = (schemeID, basePaintIndex) => async (
   dispatch
 ) => {
   dispatch(setLoading(true));
 
   try {
     // let layer_order = order;
-    for (let base_item of base.base_data) {
+
+    /* There are 3 basepaints for each carMake. */
+    for (let i = 1; i <= 3; i++) {
       const layer = await LayerService.createLayer({
         ...DefaultLayer,
         layer_type: LayerTypes.BASE,
         scheme_id: schemeID,
         layer_data: JSON.stringify({
           ...DefaultLayer.layer_data,
-          ...base_item,
-          // color: undefined,
-          id: base.id,
+          name: `Base Pattern ${i}`,
+          basePaintIndex: basePaintIndex,
+          img: `${i}.png`,
           opacity: 1,
         }),
       });

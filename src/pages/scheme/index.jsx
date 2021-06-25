@@ -513,7 +513,7 @@ const Scheme = () => {
       dispatch(setLoaded(true));
       handleZoomFit();
     }
-  }, [loadedStatuses]);
+  }, [loadedStatuses, schemeLoaded]);
 
   useEffect(() => {
     currentSchemeRef.current = currentScheme;

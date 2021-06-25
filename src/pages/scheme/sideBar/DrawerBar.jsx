@@ -177,12 +177,13 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   const dispatch = useDispatch();
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   const overlayList = useSelector((state) => state.overlayReducer.list);
   const logoList = useSelector((state) => state.logoReducer.list);
   const uploadList = useSelector((state) => state.uploadReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
   const frameSize = useSelector((state) => state.boardReducer.frameSize);
-  const basePaints = useSelector((state) => state.basePaintReducer.list);
+  // const basePaints = useSelector((state) => state.basePaintReducer.list);
 
   const handleModeChange = useCallback(
     (value) => {
@@ -195,9 +196,9 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   );
 
   const handleOpenBase = useCallback(
-    (base) => {
+    (basePaintIndex) => {
       dispatch(setMouseMode(MouseModes.DEFAULT));
-      dispatch(createLayersFromBasePaint(currentScheme.id, base));
+      dispatch(createLayersFromBasePaint(currentScheme.id, basePaintIndex));
       setDialog(null);
       focusBoard();
     },
@@ -336,7 +337,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
 
       <BasePaintDialog
         open={dialog === DialogTypes.BASEPAINT}
-        basePaints={basePaints}
+        carMake={currentCarMake}
         onOpenBase={handleOpenBase}
         onCancel={() => setDialog(null)}
       />

@@ -7,7 +7,9 @@ import {
   changeName,
   updateScheme,
   clearCurrent as clearCurrentScheme,
+  setLoaded as setSchemeLoaded,
 } from "redux/reducers/schemeReducer";
+import { clearFrameSize } from "redux/reducers/boardReducer";
 
 import { Box, IconButton, TextField } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -67,6 +69,8 @@ const TitleBar = () => {
   }, [setName, currentScheme && currentScheme.name]);
 
   const handleGoBack = useCallback(() => {
+    dispatch(clearFrameSize());
+    dispatch(setSchemeLoaded(false));
     dispatch(clearCurrentScheme());
     history.push("/");
   }, [history, dispatch]);

@@ -14,7 +14,7 @@ import {
   GridListTile,
   GridListTileBar,
 } from "@material-ui/core";
-import config from "config";
+import { basePaintAssetURL } from "helper";
 
 const Button = styled(MuiButton)(spacing);
 
@@ -41,7 +41,7 @@ const CustomImg = styled.img`
 const BasePaintDialog = React.memo((props) => {
   const step = 15;
   const [limit, setLimit] = useState(step);
-  const { basePaints, onCancel, open, onOpenBase } = props;
+  const { carMake, onCancel, open, onOpenBase } = props;
 
   const increaseData = () => {
     setLimit(limit + step);
@@ -53,27 +53,30 @@ const BasePaintDialog = React.memo((props) => {
         <CustomInfiniteScroll
           dataLength={limit} //This is important field to render the next data
           next={increaseData}
-          hasMore={limit < basePaints.length}
+          hasMore={limit < carMake.total_bases}
           loader={<Loader />}
           scrollableTarget="base-paint-dialog-content"
         >
           <CustomGridList cellHeight={178} cols={3}>
-            {basePaints.slice(0, limit).map((basepaint) => (
-              <CustomGridListTile
-                key={basepaint.id}
-                cols={1}
-                onClick={() => onOpenBase(basepaint)}
-              >
-                <CustomImg
-                  src={`${config.assetsURL}/bases/${basepaint.id}/preview.jpg`}
-                  alt={basepaint.base_description}
-                />
-                <GridListTileBar
-                  title={basepaint.base_name}
-                  subtitle={basepaint.base_description}
-                />
-              </CustomGridListTile>
-            ))}
+            {Array.from({ length: carMake.total_bases }, (_, i) => i + 1)
+              .slice(0, limit)
+              .map((index) => (
+                <CustomGridListTile
+                  key={index}
+                  cols={1}
+                  onClick={() => onOpenBase(index)}
+                >
+                  <CustomImg
+                    // src={`${config.assetsURL}/bases/${basepaint.id}/preview.jpg`} // For Legacy basepaint
+                    src={basePaintAssetURL(carMake, index) + "preview.jpg"}
+                    alt={`Base Paint ${index}`}
+                  />
+                  <GridListTileBar
+                    title={`Base Paint ${index}`}
+                    subtitle={carMake.name_short}
+                  />
+                </CustomGridListTile>
+              ))}
           </CustomGridList>
         </CustomInfiniteScroll>
       </DialogContent>

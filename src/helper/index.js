@@ -1,5 +1,6 @@
 import _ from "lodash";
-import validateColor from "validate-color";
+import config from "config";
+// import validateColor from "validate-color";
 
 export const getDifferenceFromToday = (past_date) => {
   const difference_In_Second =
@@ -121,4 +122,11 @@ export const alphaToHex = (alpha) => {
   let s = Math.floor(alpha * 255).toString(16);
   if (s.length === 1) s = "0" + s;
   return s;
+};
+
+export const basePaintAssetURL = (carMake, index) => {
+  return `${config.assetsURL}/templates/${carMake.folder_directory.replace(
+    " ",
+    "_"
+  )}/bases/${index}/`;
 };

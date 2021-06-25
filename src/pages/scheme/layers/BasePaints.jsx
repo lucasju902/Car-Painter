@@ -4,9 +4,16 @@ import _ from "lodash";
 import URLImage from "components/URLImage";
 import { LayerTypes } from "constant";
 import config from "config";
+import { basePaintAssetURL } from "helper";
 
 const BasePaints = (props) => {
-  const { layers, loadedStatuses, handleImageSize, onLoadLayer } = props;
+  const {
+    layers,
+    carMake,
+    loadedStatuses,
+    handleImageSize,
+    onLoadLayer,
+  } = props;
 
   const filteredLayers = useMemo(
     () =>
@@ -23,7 +30,12 @@ const BasePaints = (props) => {
         <URLImage
           key={layer.id}
           id={layer.id}
-          src={`${config.assetsURL}/bases/${layer.layer_data.id}/${layer.layer_data.img}`}
+          src={
+            layer.layer_data.id
+              ? `${config.assetsURL}/bases/${layer.layer_data.id}/${layer.layer_data.img}`
+              : basePaintAssetURL(carMake, layer.layer_data.basePaintIndex) +
+                layer.layer_data.img
+          }
           opacity={layer.layer_data.opacity}
           filterColor={layer.layer_data.color}
           listening={false}

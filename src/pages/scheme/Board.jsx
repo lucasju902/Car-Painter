@@ -485,6 +485,7 @@ const Board = ({
             listening={false}
           />
           <BasePaints
+            carMake={currentCarMake}
             layers={layerList}
             loadedStatuses={loadedStatuses}
             handleImageSize={handleImageSize}
