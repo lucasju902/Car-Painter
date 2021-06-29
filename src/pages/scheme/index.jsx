@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useReducerRef } from "hooks";
 import _ from "lodash";
 import styled from "styled-components/macro";
 import { useSelector, useDispatch } from "react-redux";
@@ -65,7 +66,12 @@ const Scheme = () => {
   const carMaskLayerRef = useRef(null);
 
   const user = useSelector((state) => state.authReducer.user);
-  const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const [currentScheme, currentSchemeRef] = useReducerRef(
+    useSelector((state) => state.schemeReducer.current)
+  );
+  const [currentCarMake, currentCarMakeRef] = useReducerRef(
+    useSelector((state) => state.carMakeReducer.current)
+  );
   const schemeLoaded = useSelector((state) => state.schemeReducer.loaded);
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const clipboardLayer = useSelector((state) => state.layerReducer.clipboard);
@@ -78,14 +84,16 @@ const Scheme = () => {
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
-  const frameSize = useSelector((state) => state.boardReducer.frameSize);
+  const [frameSize, frameSizeRef] = useReducerRef(
+    useSelector((state) => state.boardReducer.frameSize)
+  );
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
   );
 
-  const currentSchemeRef = useRef(null);
-  const frameSizeRef = useRef(null);
+  // const currentSchemeRef = useRef(null);
+  // const frameSizeRef = useRef(null);
 
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
@@ -331,7 +339,9 @@ const Scheme = () => {
     async (isPNG = true) => {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
-      const pixelRatio = isPNG ? 0.5 : 1;
+      const targetWidth =
+        isPNG || currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
+      const pixelRatio = targetWidth / frameSizeRef.current.width;
 
       let width = frameSizeRef.current.width * pixelRatio;
       let height = frameSizeRef.current.height * pixelRatio;
@@ -371,31 +381,13 @@ const Scheme = () => {
       canvas.height = height;
 
       if (baseLayerImg) {
-        ctx.drawImage(
-          baseLayerImg,
-          0,
-          0,
-          baseLayerImg.width,
-          baseLayerImg.height
-        );
+        ctx.drawImage(baseLayerImg, 0, 0, width, height);
       }
       if (mainLayerImg) {
-        ctx.drawImage(
-          mainLayerImg,
-          0,
-          0,
-          mainLayerImg.width,
-          mainLayerImg.height
-        );
+        ctx.drawImage(mainLayerImg, 0, 0, width, height);
       }
       if (carMaskLayerImg && isPNG) {
-        ctx.drawImage(
-          carMaskLayerImg,
-          0,
-          0,
-          carMaskLayerImg.width,
-          carMaskLayerImg.height
-        );
+        ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
       }
       if (isPNG) return canvas.toDataURL("image/png");
       var imageData = ctx.getImageData(0, 0, width, height);
@@ -403,6 +395,7 @@ const Scheme = () => {
     },
     [
       frameSizeRef.current,
+      currentCarMakeRef.current,
       stageRef.current,
       baseLayerRef.current,
       mainLayerRef.current,
@@ -434,12 +427,7 @@ const Scheme = () => {
         dispatch(setMessage({ message: err.message }));
       }
     }
-  }, [
-    dispatch,
-    currentSchemeRef.current && currentSchemeRef.current.id,
-    !stageRef.current,
-    takeScreenshot,
-  ]);
+  }, [dispatch, currentSchemeRef.current, !stageRef.current, takeScreenshot]);
 
   const handleDownloadTGA = useCallback(async () => {
     if (stageRef.current && currentSchemeRef.current) {
@@ -447,9 +435,13 @@ const Scheme = () => {
         dispatch(setSaving(true));
         let imageData = await takeScreenshot(false);
         dispatch(setSaving(false));
+        const width =
+          currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
+        const height =
+          currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
         var tga = new TGA({
-          width: frameSizeRef.current.width,
-          height: frameSizeRef.current.height,
+          width: width,
+          height: height,
           imageType: TGA.Type.RLE_RGB,
         });
         tga.setImageData(imageData);
@@ -470,7 +462,9 @@ const Scheme = () => {
     }
   }, [
     dispatch,
-    currentSchemeRef.current && currentSchemeRef.current.id,
+    currentSchemeRef.current,
+    currentCarMakeRef.current,
+    frameSizeRef.current,
     !stageRef.current,
     takeScreenshot,
   ]);
@@ -515,13 +509,13 @@ const Scheme = () => {
     }
   }, [loadedStatuses, schemeLoaded]);
 
-  useEffect(() => {
-    currentSchemeRef.current = currentScheme;
-  }, [currentScheme]);
+  // useEffect(() => {
+  //   currentSchemeRef.current = currentScheme;
+  // }, [currentScheme]);
 
-  useEffect(() => {
-    frameSizeRef.current = frameSize;
-  }, [frameSize]);
+  // useEffect(() => {
+  //   frameSizeRef.current = frameSize;
+  // }, [frameSize]);
 
   return (
     <>

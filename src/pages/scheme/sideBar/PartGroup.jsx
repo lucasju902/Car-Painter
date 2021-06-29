@@ -159,11 +159,14 @@ const PartGroup = (props) => {
     },
     [onChangeHoverJSONItem]
   );
-  const layerName = useCallback((name, type) => {
-    if (type === LayerTypes.UPLOAD && name.indexOf(user.id.toString()) === 0)
-      return name.slice(user.id.toString().length + 1);
-    return name;
-  }, []);
+  const layerName = useCallback(
+    (name, type) => {
+      if (type === LayerTypes.UPLOAD && name.indexOf(user.id.toString()) === 0)
+        return name.slice(user.id.toString().length + 1);
+      return name;
+    },
+    [user]
+  );
 
   return (
     <Box mb={2}>

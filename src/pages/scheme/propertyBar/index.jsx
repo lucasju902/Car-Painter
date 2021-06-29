@@ -9,7 +9,7 @@ import { updateLayer, cloneLayer } from "redux/reducers/layerReducer";
 import { AllowedLayerProps, LayerTypes, DefaultLayer } from "constant";
 import { colorValidator } from "helper";
 
-import { Box, Typography, Button } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import GeneralProperty from "./GeneralProperty";
 import SizeProperty from "./SizeProperty";
 import PositionProperty from "./PositionProperty";
@@ -34,6 +34,7 @@ const Wrapper = styled(Box)`
 
 const InnerForm = React.memo(
   ({
+    user,
     fontList,
     toggleField,
     toggleLayerDataField,
@@ -71,6 +72,7 @@ const InnerForm = React.memo(
         </Box>
         <GeneralProperty
           {...formProps}
+          user={user}
           toggleField={toggleField}
           checkLayerDataDirty={checkLayerDataDirty}
         />
@@ -132,6 +134,7 @@ const PropertyBar = () => {
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
+  const user = useSelector((state) => state.authReducer.user);
   const AllowedLayerTypes = useMemo(
     () =>
       !currentLayer
@@ -328,6 +331,7 @@ const PropertyBar = () => {
           {(formProps) => (
             <InnerForm
               {...formProps}
+              user={user}
               fontList={fontList}
               toggleField={toggleField}
               toggleLayerDataField={toggleLayerDataField}

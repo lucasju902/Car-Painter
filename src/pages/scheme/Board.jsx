@@ -164,7 +164,7 @@ const Board = ({
               opacity: currentScheme.guide_data.default_shape_opacity || 1,
               scolor:
                 currentScheme.guide_data.default_shape_scolor || "#000000",
-              stroke: currentScheme.guide_data.default_shape_stroke || 1,
+              stroke: currentScheme.guide_data.default_shape_stroke || 0,
             },
           };
 
@@ -210,6 +210,7 @@ const Board = ({
     },
     [
       mouseMode,
+      currentScheme.guide_data,
       getRelativePointerPosition,
       drawingLayerRef.current,
       stageRef.current,

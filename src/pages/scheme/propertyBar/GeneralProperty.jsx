@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 
@@ -29,6 +29,7 @@ const CustomeTextField = styled(TextField)`
 
 const GeneralProperty = (props) => {
   const {
+    user,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -47,6 +48,14 @@ const GeneralProperty = (props) => {
         ? AllowedLayerProps[values.layer_type]
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
+  );
+  const layerName = useCallback(
+    (name, type) => {
+      if (type === LayerTypes.UPLOAD && name.indexOf(user.id.toString()) === 0)
+        return name.slice(user.id.toString().length + 1);
+      return name;
+    },
+    [user]
   );
   if (JSON.stringify(errors) !== "{}") {
     console.log(errors);
@@ -70,7 +79,7 @@ const GeneralProperty = (props) => {
               name="layer_data.name"
               label="Name"
               variant="outlined"
-              value={values.layer_data.name}
+              value={layerName(values.layer_data.name, values.layer_type)}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.name &&

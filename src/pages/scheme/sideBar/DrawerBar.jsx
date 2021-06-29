@@ -320,19 +320,28 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
           </LightTooltip>
         ))}
         <Divider my={1} />
-        <Box display="flex" justifyContent="center">
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="45px"
+          height="45px"
+          alignItems="center"
+        >
           <LightTooltip title="Default Shape Settings" arrow placement="right">
-            <Box bgcolor="#FFFFFF">
+            <Box bgcolor="#FFFFFF" height="25px">
               <DefaultSettingsButton
                 width="25px"
                 height="25px"
                 bgcolor={
-                  currentScheme.guide_data.default_shape_color +
-                  alphaToHex(currentScheme.guide_data.default_shape_opacity)
+                  (currentScheme.guide_data.default_shape_color || "#000000") +
+                  alphaToHex(
+                    currentScheme.guide_data.default_shape_opacity || 1
+                  )
                 }
-                outline={`2px solid ${
-                  currentScheme.guide_data.default_shape_scolor +
-                  alphaToHex(currentScheme.guide_data.default_shape_stroke)
+                outline={`${
+                  currentScheme.guide_data.default_shape_stroke || 0
+                }px solid ${
+                  currentScheme.guide_data.default_shape_scolor || "#000000"
                 }`}
                 onClick={() => setDialog(DialogTypes.DEFAULT_SHAPE_SETTINGS)}
               />

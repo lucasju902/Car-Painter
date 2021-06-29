@@ -29,6 +29,15 @@ const ZoomPopover = ({
   onZoomFit,
   onClose,
 }) => {
+  const handleZoomKeyDown = useCallback(
+    (event) => {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        onClose();
+      }
+    },
+    [onClose]
+  );
   const handleZoomChange = useCallback(
     (event) => {
       setZoom(parseInt(event.target.value || 0) / 100.0);
@@ -83,6 +92,7 @@ const ZoomPopover = ({
           value={zoom * 100}
           onChange={handleZoomChange}
           onFocus={handleFocus}
+          onKeyDown={handleZoomKeyDown}
           endAdornment={<InputAdornment position="end">%</InputAdornment>}
           labelWidth={0}
           autoFocus={true}
