@@ -33,6 +33,7 @@ const Sidebar = (props) => {
   const {
     dialog,
     setDialog,
+    stageRef,
     focusBoard,
     hoveredLayerJSON,
     onChangeHoverJSONItem,
@@ -89,6 +90,7 @@ const Sidebar = (props) => {
         <DrawerBar
           dialog={dialog}
           setDialog={setDialog}
+          stageRef={stageRef}
           focusBoard={focusBoard}
         />
         <LayerWrapper pr={3} pb={2}>

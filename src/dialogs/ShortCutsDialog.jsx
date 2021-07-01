@@ -23,6 +23,7 @@ const ShortCuts = {
   S: "Insert Overlay",
   L: "Insert Logo",
   B: "Insert Basepaint",
+  H: "Hide Transformer",
   "↑": "Move Layer Up",
   "↓": "Move Layer Down",
   "←": "Move Lyer Left",

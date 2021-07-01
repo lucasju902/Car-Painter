@@ -5,7 +5,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import _ from "lodash";
 
-import { updateLayer, cloneLayer } from "redux/reducers/layerReducer";
+import { updateLayer } from "redux/reducers/layerReducer";
 import { AllowedLayerProps, LayerTypes, DefaultLayer } from "constant";
 import { colorValidator } from "helper";
 
@@ -16,6 +16,7 @@ import PositionProperty from "./PositionProperty";
 import FontProperty from "./FontProperty";
 import StrokeProperty from "./StrokeProperty";
 import ColorProperty from "./ColorProperty";
+import BackgroundProperty from "./BackgroundProperty";
 import RotationProperty from "./RotationProperty";
 import ShadowProperty from "./ShadowProperty";
 import CornerProperty from "./CornerProperty";
@@ -87,6 +88,11 @@ const InnerForm = React.memo(
           onLayerDataUpdate={onLayerDataUpdate}
           checkLayerDataDirty={checkLayerDataDirty}
         />
+        <BackgroundProperty
+          {...formProps}
+          onLayerDataUpdate={onLayerDataUpdate}
+          checkLayerDataDirty={checkLayerDataDirty}
+        />
         <StrokeProperty
           {...formProps}
           checkLayerDataDirty={checkLayerDataDirty}
@@ -129,7 +135,8 @@ const InnerForm = React.memo(
   }
 );
 
-const PropertyBar = () => {
+const PropertyBar = (props) => {
+  const { onClone } = props;
   const dispatch = useDispatch();
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
@@ -164,8 +171,8 @@ const PropertyBar = () => {
     [AllowedLayerTypes]
   );
   const handleClone = useCallback(() => {
-    if (currentLayer) dispatch(cloneLayer(currentLayer));
-  }, [dispatch, currentLayer]);
+    if (currentLayer) onClone(currentLayer);
+  }, [onClone, currentLayer]);
   const handleApply = useCallback(
     (values) => {
       dispatch(updateLayer(values));

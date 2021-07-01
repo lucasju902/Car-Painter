@@ -44,7 +44,12 @@ import {
   historyActionBack,
 } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
-import { mathRound4, dataURItoBlob, addImageProcess } from "helper";
+import {
+  mathRound4,
+  dataURItoBlob,
+  addImageProcess,
+  getZoomedCenterPosition,
+} from "helper";
 import SchemeService from "services/schemeService";
 
 const Wrapper = styled(Box)`
@@ -154,6 +159,20 @@ const Scheme = () => {
     setTimeout(() => document.activeElement.blur(), 1000);
   }, []);
 
+  const handleCloneLayer = useCallback(
+    (layer, samePosition = false, pushingToHistory = true) => {
+      dispatch(
+        cloneLayer(
+          layer,
+          samePosition,
+          pushingToHistory,
+          getZoomedCenterPosition(stageRef, frameSize, zoom)
+        )
+      );
+    },
+    [dispatch, getZoomedCenterPosition, stageRef, frameSize, zoom]
+  );
+
   const handleKeyEvent = useCallback(
     (key, event) => {
       // Delete Selected Layer
@@ -217,7 +236,7 @@ const Scheme = () => {
           (event.ctrlKey || event.metaKey) &&
           clipboardLayer
         ) {
-          dispatch(cloneLayer(clipboardLayer));
+          handleCloneLayer(clipboardLayer);
         } else if (event.key === "z" && (event.ctrlKey || event.metaKey)) {
           dispatch(historyActionBack());
         } else if (event.key === "y" && (event.ctrlKey || event.metaKey)) {
@@ -328,6 +347,7 @@ const Scheme = () => {
       clipboardLayer,
       prevTick.current,
       tick.current,
+      handleCloneLayer,
     ]
   );
   const handleConfirm = useCallback(() => {
@@ -539,6 +559,7 @@ const Scheme = () => {
               setDialog={setDialog}
               focusBoard={focusBoard}
               hoveredLayerJSON={hoveredJSON}
+              stageRef={stageRef}
               onChangeHoverJSONItem={setHoveredJSONItem}
             />
             <Wrapper
@@ -556,7 +577,7 @@ const Scheme = () => {
                 carMaskLayerRef={carMaskLayerRef}
               />
             </Wrapper>
-            <PropertyBar />
+            <PropertyBar onClone={handleCloneLayer} />
           </Box>
           <Toolbar
             onZoomIn={handleZoomIn}

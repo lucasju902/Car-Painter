@@ -35,21 +35,24 @@ const Shape = ({
   cornerRadius,
   numPoints,
   angle,
-  onSelect,
-  onChange,
-  onHover,
   shadowColor,
   shadowBlur,
   shadowOpacity,
   shadowOffsetX,
   shadowOffsetY,
   layer_data,
+  onSelect,
+  onChange,
+  onHover,
+  onDragStart,
+  onDragEnd,
   onLoadLayer,
   ...props
 }) => {
   const shapeRef = useRef();
   const handleDragStart = (e) => {
     onSelect();
+    if (onDragStart) onDragStart();
   };
   const handleDragEnd = (e) => {
     if (onChange) {
@@ -66,6 +69,7 @@ const Shape = ({
         )
       );
     }
+    if (onDragEnd) onDragEnd();
   };
   const handleTransformEnd = (e) => {
     if (onChange) {

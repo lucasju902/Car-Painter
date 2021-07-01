@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
-import URLImage from "components/URLImage";
+import GroupedURLImage from "components/GroupedURLImage";
 import { LayerTypes, MouseModes } from "constant";
 import config from "config";
 import { getRelativeShadowOffset } from "helper";
@@ -17,6 +17,8 @@ const Overlays = (props) => {
     onChange,
     onHover,
     onLoadLayer,
+    onDragStart,
+    onDragEnd,
   } = props;
 
   const filteredLayers = useMemo(
@@ -44,7 +46,7 @@ const Overlays = (props) => {
         let shadowOffset = getShadowOffset(layer);
 
         return (
-          <URLImage
+          <GroupedURLImage
             key={layer.id}
             id={layer.id}
             name={layer.id.toString()}
@@ -63,6 +65,9 @@ const Overlays = (props) => {
             scaleY={layer.layer_data.flip === 1 ? -1 : 1}
             skewX={layer.layer_data.skewX}
             skewY={layer.layer_data.skewY}
+            bgColor={layer.layer_data.bgColor}
+            paddingX={layer.layer_data.paddingX}
+            paddingY={layer.layer_data.paddingY}
             shadowColor={layer.layer_data.shadowColor}
             shadowBlur={layer.layer_data.shadowBlur}
             shadowOpacity={layer.layer_data.shadowOpacity}
@@ -76,6 +81,8 @@ const Overlays = (props) => {
             onHover={(flag) => onHover(layer, flag)}
             visible={layer.layer_visible ? true : false}
             onLoadLayer={onLoadLayer}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
           />
         );
       })}

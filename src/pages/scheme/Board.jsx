@@ -27,6 +27,7 @@ import ScreenLoader from "components/ScreenLoader";
 import {
   setFrameSizeToMax,
   setMouseMode,
+  setPaintingGuides,
   setZoom,
 } from "redux/reducers/boardReducer";
 import { insertToLoadedList as insertToLoadedFontList } from "redux/reducers/fontReducer";
@@ -38,7 +39,7 @@ import {
   DrawingStatus,
   setLoadedStatus,
 } from "redux/reducers/layerReducer";
-import { MouseModes, LayerTypes, DefaultLayer } from "constant";
+import { MouseModes, LayerTypes, DefaultLayer, PaintingGuides } from "constant";
 import {
   getRelativePointerPosition,
   removeDuplicatedPointFromEnd,
@@ -68,6 +69,7 @@ const Board = ({
   const prevTick = useRef(0);
   const currentTick = useRef(0);
   const [tick, setTick] = useState(0);
+  const [helpingSponsor, setHelpingSponsor] = useState(false);
 
   const dispatch = useDispatch();
   const { width, height, ref } = useResizeDetector();
@@ -434,6 +436,54 @@ const Board = ({
     [dispatch]
   );
 
+  const showSponsorBlock = useCallback(
+    (show = true) => {
+      console.log(show, paintingGuides);
+      if (show && !paintingGuides.includes(PaintingGuides.SPONSORBLOCKS)) {
+        dispatch(
+          setPaintingGuides([...paintingGuides, PaintingGuides.SPONSORBLOCKS])
+        );
+      }
+      if (!show && paintingGuides.includes(PaintingGuides.SPONSORBLOCKS)) {
+        dispatch(
+          setPaintingGuides(
+            paintingGuides.filter(
+              (item) => item !== PaintingGuides.SPONSORBLOCKS
+            )
+          )
+        );
+      }
+    },
+    [dispatch, paintingGuides]
+  );
+  const handleLayerDragStart = useCallback(() => {
+    if (
+      currentScheme.guide_data.show_sponsor &&
+      !paintingGuides.includes(PaintingGuides.SPONSORBLOCKS)
+    ) {
+      showSponsorBlock(true);
+      setHelpingSponsor(true);
+    }
+  }, [
+    dispatch,
+    currentScheme,
+    helpingSponsor,
+    showSponsorBlock,
+    setHelpingSponsor,
+  ]);
+  const handleLayerDragEnd = useCallback(() => {
+    if (currentScheme.guide_data.show_sponsor && helpingSponsor) {
+      showSponsorBlock(false);
+      setHelpingSponsor(false);
+    }
+  }, [
+    dispatch,
+    currentScheme,
+    helpingSponsor,
+    showSponsorBlock,
+    setHelpingSponsor,
+  ]);
+
   return (
     <Box
       width="100%"
@@ -526,6 +576,8 @@ const Board = ({
             onChange={handleLayerDataChange}
             onHover={handleHoverLayer}
             onLoadLayer={handleLoadLayer}
+            onDragStart={handleLayerDragStart}
+            onDragEnd={handleLayerDragEnd}
           />
           <Shapes
             layers={layerList}
@@ -538,6 +590,8 @@ const Board = ({
             onChange={handleLayerDataChange}
             onHover={handleHoverLayer}
             onLoadLayer={handleLoadLayer}
+            onDragStart={handleLayerDragStart}
+            onDragEnd={handleLayerDragEnd}
           />
           <LogosAndTexts
             layers={layerList}
@@ -553,6 +607,8 @@ const Board = ({
             onFontLoad={handleAddFont}
             onHover={handleHoverLayer}
             onLoadLayer={handleLoadLayer}
+            onDragStart={handleLayerDragStart}
+            onDragEnd={handleLayerDragEnd}
           />
         </Layer>
         <Layer ref={carMaskLayerRef} listening={false}>

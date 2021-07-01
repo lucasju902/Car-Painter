@@ -18,6 +18,8 @@ import {
   DialogContent,
   DialogActions,
   Typography as MuiTypography,
+  FormControlLabel,
+  Checkbox,
   Grid,
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
@@ -29,6 +31,10 @@ const Typography = styled(MuiTypography)(spacing);
 const CustomAccordionSummary = styled(AccordionSummary)`
   background: #3f3f3f;
   border-radius: 5px;
+`;
+const CustomFormControlLabel = styled(FormControlLabel)`
+  margin-left: 0;
+  color: rgba(255, 255, 255, 0.5);
 `;
 
 const SubForm = (props) => {
@@ -119,6 +125,7 @@ const SchemeSettingsDialog = (props) => {
           grid_opacity: guide_data.grid_opacity || 1,
           grid_padding: guide_data.grid_padding || 10,
           grid_stroke: guide_data.grid_stroke || 0.1,
+          show_sponsor: guide_data.show_sponsor || false,
         }}
         validationSchema={Yup.object().shape({
           carmask_color: Yup.string()
@@ -163,6 +170,29 @@ const SchemeSettingsDialog = (props) => {
                 colorKey="sponsor_color"
                 opacityKey="sponsor_opacity"
                 {...formProps}
+                extraChildren={
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12}>
+                      <CustomFormControlLabel
+                        control={
+                          <Checkbox
+                            color="primary"
+                            name="show_sponsor"
+                            checked={formProps.values.show_sponsor}
+                            onChange={(event) =>
+                              formProps.setFieldValue(
+                                "show_sponsor",
+                                event.target.checked
+                              )
+                            }
+                          />
+                        }
+                        label="Show Sponsor Block for Repositioning"
+                        labelPlacement="start"
+                      />
+                    </Grid>
+                  </Grid>
+                }
               />
               <SubForm
                 label="Number Blocks"

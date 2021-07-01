@@ -2,11 +2,14 @@ import Canvg from "canvg";
 import React, { useRef, useState, useEffect } from "react";
 import Konva from "konva";
 import { mathRound2, hexToRgba } from "helper";
-import { Image } from "react-konva";
+import { Image, Group, Rect } from "react-konva";
 
-const URLImage = ({
+const GroupedURLImage = ({
   id,
   src,
+  bgColor = null,
+  paddingX = 0,
+  paddingY = 0,
   filterColor,
   frameSize,
   allowFit,
@@ -23,6 +26,7 @@ const URLImage = ({
 }) => {
   const imageRef = useRef(null);
   const shapeRef = useRef();
+  const imageshapeRef = useRef();
   const [image, setImage] = useState(null);
   const filters = [];
 
@@ -52,15 +56,15 @@ const URLImage = ({
   }, []);
 
   useEffect(() => {
-    if (shapeRef.current) {
+    if (imageshapeRef.current) {
       if (filterColor && filterColor.length) {
-        shapeRef.current.cache({
-          pixelRatio: getPixelRatio(shapeRef.current),
+        imageshapeRef.current.cache({
+          pixelRatio: getPixelRatio(imageshapeRef.current),
           imageSmoothingEnabled: true,
         });
-        // shapeRef.current.getLayer().batchDraw();
+        // imageshapeRef.current.getLayer().batchDraw();
       } else {
-        shapeRef.current.clearCache();
+        imageshapeRef.current.clearCache();
       }
     }
   }, [filterColor]);
@@ -111,11 +115,11 @@ const URLImage = ({
     }
 
     if (filterColor && filterColor.length) {
-      shapeRef.current.cache({
-        pixelRatio: getPixelRatio(shapeRef.current),
+      imageshapeRef.current.cache({
+        pixelRatio: getPixelRatio(imageshapeRef.current),
         imageSmoothingEnabled: true,
       });
-      // shapeRef.current.getLayer().batchDraw();
+      // imageshapeRef.current.getLayer().batchDraw();
     }
     if (tellSize) {
       tellSize({
@@ -172,45 +176,59 @@ const URLImage = ({
         shadowOffsetY: mathRound2(layer_data.shadowOffsetY * Math.abs(scaleY)),
       });
       if (filterColor && filterColor.length) {
-        node.cache({
+        const imageNode = imageshapeRef.current;
+        imageNode.cache({
           pixelRatio: getPixelRatio(shapeRef.current),
           imageSmoothingEnabled: true,
         });
-        // node.getLayer().batchDraw();
+        // imageNode.getLayer().batchDraw();
       } else {
-        node.clearCache();
+        imageshapeRef.current.clearCache();
       }
     }
   };
 
   return (
-    <Image
+    <Group
       {...props}
-      image={image}
+      ref={shapeRef}
       onClick={onSelect}
       onTap={onSelect}
-      ref={shapeRef}
       draggable={onChange}
-      filters={filters.length ? filters : null}
-      red={filterColor && filterColor.length ? hexToRgba(filterColor).r : null}
-      green={
-        filterColor && filterColor.length ? hexToRgba(filterColor).g : null
-      }
-      blue={filterColor && filterColor.length ? hexToRgba(filterColor).b : null}
-      alpha={
-        filterColor && filterColor.length
-          ? hexToRgba(filterColor).a / 255
-          : null
-      }
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}
-      perfectDrawEnabled={false}
-      shadowForStrokeEnabled={false}
       onMouseOver={() => props.listening && onHover && onHover(true)}
       onMouseOut={() => props.listening && onHover && onHover(false)}
-    />
+    >
+      <Rect width={props.width} height={props.height} fill={bgColor} />
+      <Image
+        x={paddingX}
+        y={paddingY}
+        width={props.width - 2 * paddingX}
+        height={props.height - 2 * paddingY}
+        image={image}
+        ref={imageshapeRef}
+        red={
+          filterColor && filterColor.length ? hexToRgba(filterColor).r : null
+        }
+        green={
+          filterColor && filterColor.length ? hexToRgba(filterColor).g : null
+        }
+        blue={
+          filterColor && filterColor.length ? hexToRgba(filterColor).b : null
+        }
+        alpha={
+          filterColor && filterColor.length
+            ? hexToRgba(filterColor).a / 255
+            : null
+        }
+        filters={filters.length ? filters : null}
+        perfectDrawEnabled={false}
+        shadowForStrokeEnabled={false}
+      />
+    </Group>
   );
 };
 
-export default URLImage;
+export default GroupedURLImage;

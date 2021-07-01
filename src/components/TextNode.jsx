@@ -19,6 +19,8 @@ const TextNode = ({
   onChange,
   onFontLoad,
   onHover,
+  onDragStart,
+  onDragEnd,
   ...props
 }) => {
   const [loadedFontFamily, setLoadedFontFamily] = useState(null);
@@ -52,6 +54,7 @@ const TextNode = ({
 
   const handleDragStart = (e) => {
     onSelect();
+    if (onDragStart) onDragStart();
   };
   const handleDragEnd = (e) => {
     if (onChange) {
@@ -63,6 +66,7 @@ const TextNode = ({
         height: mathRound2(Math.max(5, node.height())),
       });
     }
+    if (onDragEnd) onDragEnd();
   };
   const handleTransformEnd = (e) => {
     if (onChange) {

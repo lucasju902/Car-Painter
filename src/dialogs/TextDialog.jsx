@@ -36,7 +36,7 @@ const CustomeTextField = styled(TextField)`
 `;
 const TextPreviewWrapper = styled(Box)`
   overflow: auto;
-  background: #${(props) => props.backColor};
+  background: #${(props) => props.backcolor};
 `;
 const TextPreview = styled(Box)`
   color: ${(props) => props.color};
@@ -192,7 +192,7 @@ const InnerForm = React.memo((props) => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        backColor={baseColor}
+        backcolor={baseColor}
       >
         <TextPreview
           color={values.color}

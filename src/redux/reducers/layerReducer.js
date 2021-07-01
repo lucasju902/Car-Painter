@@ -188,7 +188,7 @@ export const createLayersFromBasePaint = (
   dispatch(setLoading(false));
 };
 
-export const createLayerFromShape = (schemeID, shape, frameSize) => async (
+export const createLayerFromOverlay = (schemeID, shape, position) => async (
   dispatch,
   getState
 ) => {
@@ -205,8 +205,8 @@ export const createLayerFromShape = (schemeID, shape, frameSize) => async (
         id: shape.id,
         name: shape.name,
         rotation: -boardRotate,
-        left: frameSize.width / 2,
-        top: frameSize.height / 2,
+        left: position.x,
+        top: position.y,
         source_file: shape.overlay_file,
         preview_file: shape.overlay_thumb,
       }),
@@ -225,7 +225,7 @@ export const createLayerFromShape = (schemeID, shape, frameSize) => async (
   dispatch(setLoading(false));
 };
 
-export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
+export const createLayerFromLogo = (schemeID, logo, position) => async (
   dispatch,
   getState
 ) => {
@@ -242,8 +242,8 @@ export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
         id: logo.id,
         name: logo.name,
         rotation: -boardRotate,
-        left: frameSize.width / 2,
-        top: frameSize.height / 2,
+        left: position.x,
+        top: position.y,
         source_file: logo.source_file,
         preview_file: logo.preview_file,
       }),
@@ -262,7 +262,7 @@ export const createLayerFromLogo = (schemeID, logo, frameSize) => async (
   dispatch(setLoading(false));
 };
 
-export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
+export const createLayerFromUpload = (schemeID, upload, position) => async (
   dispatch,
   getState
 ) => {
@@ -282,8 +282,8 @@ export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
           upload.file_name.lastIndexOf(".")
         ),
         rotation: -boardRotate,
-        left: frameSize.width / 2,
-        top: frameSize.height / 2,
+        left: position.x,
+        top: position.y,
         source_file: upload.file_name,
         preview_file: upload.file_name,
       }),
@@ -302,7 +302,7 @@ export const createLayerFromUpload = (schemeID, upload, frameSize) => async (
   dispatch(setLoading(false));
 };
 
-export const createTextLayer = (schemeID, textObj, frameSize) => async (
+export const createTextLayer = (schemeID, textObj, position) => async (
   dispatch,
   getState
 ) => {
@@ -319,8 +319,8 @@ export const createTextLayer = (schemeID, textObj, frameSize) => async (
         ...textObj,
         name: textObj.text,
         rotation: textObj.rotation - boardRotate,
-        left: frameSize.width / 2,
-        top: frameSize.height / 2,
+        left: position.x,
+        top: position.y,
       }),
     });
     dispatch(insertToList(layer));
@@ -340,10 +340,9 @@ export const createTextLayer = (schemeID, textObj, frameSize) => async (
 export const cloneLayer = (
   layerToClone,
   samePosition = false,
-  pushingToHistory = true
-) => async (dispatch, getState) => {
-  const frameSize = getState().boardReducer.frameSize;
-
+  pushingToHistory = true,
+  centerPosition
+) => async (dispatch) => {
   if (layerToClone) {
     dispatch(setLoading(true));
     try {
@@ -355,13 +354,13 @@ export const cloneLayer = (
           name: layerToClone.layer_data.name + " copy",
           left: samePosition
             ? layerToClone.layer_data.left
-            : frameSize.width / 2 -
+            : centerPosition.x -
               (layerToClone.layer_data.width
                 ? layerToClone.layer_data.width / 2
                 : 0),
           top: samePosition
             ? layerToClone.layer_data.top
-            : frameSize.height / 2 -
+            : centerPosition.y -
               (layerToClone.layer_data.height
                 ? layerToClone.layer_data.height / 2
                 : 0),

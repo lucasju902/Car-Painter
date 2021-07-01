@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
-import URLImage from "components/URLImage";
+import GroupedURLImage from "components/GroupedURLImage";
 import TextNode from "components/TextNode";
 import config from "config";
 import { LayerTypes, MouseModes } from "constant";
@@ -21,6 +21,8 @@ const LogosAndTexts = (props) => {
     onFontLoad,
     onHover,
     onLoadLayer,
+    onDragStart,
+    onDragEnd,
   } = props;
   const filteredLayers = useMemo(
     () =>
@@ -61,7 +63,7 @@ const LogosAndTexts = (props) => {
 
         if (layer.layer_type !== LayerTypes.TEXT) {
           return (
-            <URLImage
+            <GroupedURLImage
               key={layer.id}
               id={layer.id}
               name={layer.id.toString()}
@@ -78,6 +80,9 @@ const LogosAndTexts = (props) => {
               scaleX={layer.layer_data.flop === 1 ? -1 : 1}
               scaleY={layer.layer_data.flip === 1 ? -1 : 1}
               shadowColor={layer.layer_data.shadowColor}
+              bgColor={layer.layer_data.bgColor}
+              paddingX={layer.layer_data.paddingX}
+              paddingY={layer.layer_data.paddingY}
               shadowBlur={layer.layer_data.shadowBlur}
               shadowOpacity={layer.layer_data.shadowOpacity}
               shadowOffsetX={shadowOffset.x}
@@ -94,6 +99,8 @@ const LogosAndTexts = (props) => {
               onHover={(flag) => onHover(layer, flag)}
               visible={layer.layer_visible ? true : false}
               onLoadLayer={onLoadLayer}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
             />
           );
         }
@@ -147,6 +154,8 @@ const LogosAndTexts = (props) => {
             onChange={(values) => onChange(layer, values)}
             onHover={(flag) => onHover(layer, flag)}
             onLoadLayer={onLoadLayer}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
           />
         );
       })}

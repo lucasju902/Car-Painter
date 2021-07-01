@@ -31,18 +31,18 @@ import { setMouseMode } from "redux/reducers/boardReducer";
 import {
   setCurrent as setCurrentLayer,
   createLayersFromBasePaint,
-  createLayerFromShape,
+  createLayerFromOverlay,
   createLayerFromLogo,
   createLayerFromUpload,
   createTextLayer,
 } from "redux/reducers/layerReducer";
 import { updateScheme } from "redux/reducers/schemeReducer";
 
-import { alphaToHex } from "helper";
+import { alphaToHex, getZoomedCenterPosition } from "helper";
 import { DialogTypes, MouseModes } from "constant";
 
 import BasePaintDialog from "dialogs/BasePaintDialog";
-import ShapeDialog from "dialogs/ShapeDialog";
+import OverlayDialog from "dialogs/OverlayDialog";
 import LogoDialog from "dialogs/LogoDialog";
 import UploadDialog from "dialogs/UploadDialog";
 import TextDialog from "dialogs/TextDialog";
@@ -173,7 +173,7 @@ const dialog_modes = [
   },
 ];
 
-const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
+const DrawerBar = ({ dialog, setDialog, focusBoard, stageRef }) => {
   const dispatch = useDispatch();
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -183,6 +183,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
   const uploadList = useSelector((state) => state.uploadReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
   const frameSize = useSelector((state) => state.boardReducer.frameSize);
+  const zoom = useSelector((state) => state.boardReducer.zoom);
   const basePaints = useSelector((state) => state.basePaintReducer.list);
 
   const handleModeChange = useCallback(
@@ -210,10 +211,16 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
     },
     [dispatch, setDialog, focusBoard, currentScheme && currentScheme.id]
   );
-  const handleOpenShape = useCallback(
+  const handleOpenOverlay = useCallback(
     (shape) => {
       dispatch(setMouseMode(MouseModes.DEFAULT));
-      dispatch(createLayerFromShape(currentScheme.id, shape, frameSize));
+      dispatch(
+        createLayerFromOverlay(
+          currentScheme.id,
+          shape,
+          getZoomedCenterPosition(stageRef, frameSize, zoom)
+        )
+      );
       setDialog(null);
       focusBoard();
     },
@@ -222,13 +229,22 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
       setDialog,
       focusBoard,
       currentScheme && currentScheme.id,
+      getZoomedCenterPosition,
+      stageRef,
       frameSize,
+      zoom,
     ]
   );
   const handleOpenLogo = useCallback(
     (logo) => {
       dispatch(setMouseMode(MouseModes.DEFAULT));
-      dispatch(createLayerFromLogo(currentScheme.id, logo, frameSize));
+      dispatch(
+        createLayerFromLogo(
+          currentScheme.id,
+          logo,
+          getZoomedCenterPosition(stageRef, frameSize, zoom)
+        )
+      );
       setDialog(null);
       focusBoard();
     },
@@ -237,13 +253,22 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
       setDialog,
       focusBoard,
       currentScheme && currentScheme.id,
+      getZoomedCenterPosition,
+      stageRef,
       frameSize,
+      zoom,
     ]
   );
   const handleOpenUpload = useCallback(
     (upload) => {
       dispatch(setMouseMode(MouseModes.DEFAULT));
-      dispatch(createLayerFromUpload(currentScheme.id, upload, frameSize));
+      dispatch(
+        createLayerFromUpload(
+          currentScheme.id,
+          upload,
+          getZoomedCenterPosition(stageRef, frameSize, zoom)
+        )
+      );
       setDialog(null);
       focusBoard();
     },
@@ -252,13 +277,23 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
       setDialog,
       focusBoard,
       currentScheme && currentScheme.id,
+      getZoomedCenterPosition,
+      stageRef,
       frameSize,
+      zoom,
     ]
   );
   const handleCreateText = useCallback(
     (values) => {
       dispatch(setMouseMode(MouseModes.DEFAULT));
-      dispatch(createTextLayer(currentScheme.id, values, frameSize));
+      console.log(getZoomedCenterPosition(stageRef, frameSize, zoom));
+      dispatch(
+        createTextLayer(
+          currentScheme.id,
+          values,
+          getZoomedCenterPosition(stageRef, frameSize, zoom)
+        )
+      );
       setDialog(null);
       focusBoard();
     },
@@ -267,7 +302,10 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
       setDialog,
       focusBoard,
       currentScheme && currentScheme.id,
+      getZoomedCenterPosition,
+      stageRef,
       frameSize,
+      zoom,
     ]
   );
 
@@ -358,10 +396,10 @@ const DrawerBar = ({ dialog, setDialog, focusBoard }) => {
         onOpenBase={handleOpenBase}
         onCancel={() => setDialog(null)}
       />
-      <ShapeDialog
+      <OverlayDialog
         open={dialog === DialogTypes.SHAPE}
-        shapes={overlayList}
-        onOpenShape={handleOpenShape}
+        overlays={overlayList}
+        onOpenOverlay={handleOpenOverlay}
         onCancel={() => setDialog(null)}
       />
       <LogoDialog

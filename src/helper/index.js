@@ -124,6 +124,12 @@ export const alphaToHex = (alpha) => {
   return s;
 };
 
+export const correctColor = (color) => {
+  if (color.indexOf("#") === 0) return color;
+  if (color.length === 6) return "#" + color;
+  return null;
+};
+
 export const legacyBasePaintAssetURL = (basepaint) => {
   return `${config.assetsURL}/bases/${basepaint.id}/`;
 };
@@ -146,4 +152,17 @@ export const carMakeAssetURL = (carMake) => {
     " ",
     "_"
   )}/`;
+};
+
+export const getZoomedCenterPosition = (stageRef, frameSize, zoom) => {
+  const transform = stageRef.current.getTransform().m;
+  let width = stageRef.current.attrs.width;
+  let height = stageRef.current.attrs.height;
+  const fitZoom = mathRound4(
+    Math.min(width / frameSize.width, height / frameSize.height)
+  );
+  return {
+    x: -transform[4] / zoom + (frameSize.width * fitZoom) / zoom / 2,
+    y: -transform[5] / zoom + (frameSize.height * fitZoom) / zoom / 2,
+  };
 };

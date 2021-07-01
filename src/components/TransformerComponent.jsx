@@ -111,7 +111,7 @@ const TransformerComponent = ({
         ref={trRef}
         keepRatio={keepRatio}
         enabledAnchors={
-          hoveredTransform
+          hoveredTransform || pressedKey === "h"
             ? []
             : keepRatio
             ? ["top-left", "top-right", "bottom-left", "bottom-right"]
@@ -126,7 +126,8 @@ const TransformerComponent = ({
                 "bottom-right",
               ]
         }
-        rotateEnabled={!hoveredTransform}
+        borderEnabled={pressedKey !== "h"}
+        rotateEnabled={!hoveredTransform && pressedKey !== "h"}
         boundBoxFunc={boundBoxFunc}
         borderStroke={hoveredTransform ? "red" : null}
       />

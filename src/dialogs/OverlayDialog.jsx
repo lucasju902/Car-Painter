@@ -43,17 +43,17 @@ const CustomImg = styled.img`
   object-fit: contain;
 `;
 
-const ShapeDialog = (props) => {
+const OverlayDialog = (props) => {
   const step = 15;
   const [limit, setLimit] = useState(step);
   const [search, setSearch] = useState("");
-  const { shapes, onCancel, open, onOpenShape } = props;
+  const { overlays, onCancel, open, onOpenOverlay } = props;
 
   const increaseData = () => {
     setLimit(limit + step);
   };
 
-  const filteredShapes = shapes.filter(
+  const filteredOverlays = overlays.filter(
     (item) =>
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.description.toLowerCase().includes(search.toLowerCase())
@@ -61,7 +61,7 @@ const ShapeDialog = (props) => {
 
   return (
     <Dialog aria-labelledby="shape-title" open={open} onClose={onCancel}>
-      <DialogTitle id="shape-title">Insert Shape</DialogTitle>
+      <DialogTitle id="shape-title">Insert Overlay</DialogTitle>
       <CustomDialogContent dividers>
         <Box mb={2}>
           <SearchBox value={search} onChange={(value) => setSearch(value)} />
@@ -70,16 +70,16 @@ const ShapeDialog = (props) => {
           <CustomInfiniteScroll
             dataLength={limit} //This is important field to render the next data
             next={increaseData}
-            hasMore={limit < filteredShapes.length}
+            hasMore={limit < filteredOverlays.length}
             loader={<Loader />}
             scrollableTarget="shape-dialog-content"
           >
             <CustomGridList cellHeight={178} cols={3}>
-              {filteredShapes.slice(0, limit).map((shape) => (
+              {filteredOverlays.slice(0, limit).map((shape) => (
                 <CustomGridListTile
                   key={shape.id}
                   cols={1}
-                  onClick={() => onOpenShape(shape)}
+                  onClick={() => onOpenOverlay(shape)}
                 >
                   <CustomImg
                     src={`${config.assetsURL}/${shape.overlay_thumb}`}
@@ -104,4 +104,4 @@ const ShapeDialog = (props) => {
   );
 };
 
-export default React.memo(ShapeDialog);
+export default React.memo(OverlayDialog);

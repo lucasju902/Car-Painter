@@ -16,6 +16,8 @@ const Shapes = (props) => {
     onChange,
     onHover,
     onLoadLayer,
+    onDragStart,
+    onDragEnd,
   } = props;
 
   const filteredLayers = useMemo(
@@ -160,6 +162,8 @@ const Shapes = (props) => {
             onChange={(values) => onChange(layer, values)}
             onHover={(flag) => onHover(layer, flag)}
             onLoadLayer={onLoadLayer}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
           />
         );
       })}
