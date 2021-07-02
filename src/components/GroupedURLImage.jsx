@@ -153,6 +153,7 @@ const GroupedURLImage = ({
   const handleTransformEnd = (e) => {
     if (onChange) {
       const node = shapeRef.current;
+      const imageNode = imageshapeRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
       console.log("scaleX, scaleY: ", scaleX, scaleY);
@@ -171,19 +172,20 @@ const GroupedURLImage = ({
         rotation: mathRound2(node.rotation()) || 0,
         flop: scaleX > 0 ? 0 : 1,
         flip: scaleY > 0 ? 0 : 1,
-        shadowBlur: mathRound2(node.shadowBlur() * xyScale),
+        shadowBlur: mathRound2(imageNode.shadowBlur() * xyScale),
         shadowOffsetX: mathRound2(layer_data.shadowOffsetX * Math.abs(scaleX)),
         shadowOffsetY: mathRound2(layer_data.shadowOffsetY * Math.abs(scaleY)),
+        paddingX: mathRound2(layer_data.paddingX * Math.abs(scaleX)),
+        paddingY: mathRound2(layer_data.paddingY * Math.abs(scaleY)),
       });
       if (filterColor && filterColor.length) {
-        const imageNode = imageshapeRef.current;
         imageNode.cache({
-          pixelRatio: getPixelRatio(shapeRef.current),
+          pixelRatio: getPixelRatio(imageNode),
           imageSmoothingEnabled: true,
         });
         // imageNode.getLayer().batchDraw();
       } else {
-        imageshapeRef.current.clearCache();
+        imageNode.clearCache();
       }
     }
   };
@@ -201,12 +203,21 @@ const GroupedURLImage = ({
       onMouseOver={() => props.listening && onHover && onHover(true)}
       onMouseOut={() => props.listening && onHover && onHover(false)}
     >
-      <Rect width={props.width} height={props.height} fill={bgColor} />
+      <Rect
+        x={-paddingX}
+        y={-paddingY}
+        width={props.width + 2 * paddingX}
+        height={props.height + 2 * paddingY}
+        fill={bgColor}
+      />
       <Image
-        x={paddingX}
-        y={paddingY}
-        width={props.width - 2 * paddingX}
-        height={props.height - 2 * paddingY}
+        x={0}
+        y={0}
+        width={props.width}
+        height={props.height}
+        shadowBlur={props.shadowBlur}
+        shadowOffsetX={props.shadowOffsetX}
+        shadowOffsetY={props.shadowOffsetY}
         image={image}
         ref={imageshapeRef}
         red={
