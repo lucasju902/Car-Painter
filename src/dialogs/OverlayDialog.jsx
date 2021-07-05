@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import styled from "styled-components/macro";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -49,14 +49,18 @@ const OverlayDialog = (props) => {
   const [search, setSearch] = useState("");
   const { overlays, onCancel, open, onOpenOverlay } = props;
 
-  const increaseData = () => {
+  const increaseData = useCallback(() => {
     setLimit(limit + step);
-  };
+  }, [limit, step, setLimit]);
 
-  const filteredOverlays = overlays.filter(
-    (item) =>
-      item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.description.toLowerCase().includes(search.toLowerCase())
+  const filteredOverlays = useMemo(
+    () =>
+      overlays.filter(
+        (item) =>
+          item.name.toLowerCase().includes(search.toLowerCase()) ||
+          item.description.toLowerCase().includes(search.toLowerCase())
+      ),
+    [overlays, search]
   );
 
   return (

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import _ from "lodash";
 import {
   Rect,
@@ -50,106 +50,121 @@ const Shape = ({
   ...props
 }) => {
   const shapeRef = useRef();
-  const handleDragStart = (e) => {
-    onSelect();
-    if (onDragStart) onDragStart();
-  };
-  const handleDragEnd = (e) => {
-    if (onChange) {
-      const AllowedLayerTypes = AllowedLayerProps[LayerTypes.SHAPE][type];
-      onChange(
-        _.pick(
-          {
-            left: mathRound2(e.target.x() - offsetsFromStroke.x),
-            top: mathRound2(e.target.y() - offsetsFromStroke.y),
-          },
-          AllowedLayerTypes.filter((item) =>
-            item.includes("layer_data.")
-          ).map((item) => item.replace("layer_data.", ""))
-        )
-      );
-    }
-    if (onDragEnd) onDragEnd();
-  };
-  const handleTransformEnd = (e) => {
-    if (onChange) {
-      const AllowedLayerTypes = AllowedLayerProps[LayerTypes.SHAPE][type];
-      const node = shapeRef.current;
-      const scaleX = node.scaleX();
-      const scaleY = node.scaleY();
-      const width = type !== MouseModes.ELLIPSE ? node.width() : node.radiusX();
-      const height =
-        type !== MouseModes.ELLIPSE ? node.height() : node.radiusY();
-      const xyScale = Math.abs(
-        Math.abs(mathRound2(scaleY)) !== 1 ? scaleY : scaleX
-      );
+  const handleDragStart = useCallback(
+    (e) => {
+      onSelect();
+      if (onDragStart) onDragStart();
+    },
+    [onSelect, onDragStart]
+  );
+  const handleDragEnd = useCallback(
+    (e) => {
+      if (onChange) {
+        const AllowedLayerTypes = AllowedLayerProps[LayerTypes.SHAPE][type];
+        onChange(
+          _.pick(
+            {
+              left: mathRound2(e.target.x() - offsetsFromStroke.x),
+              top: mathRound2(e.target.y() - offsetsFromStroke.y),
+            },
+            AllowedLayerTypes.filter((item) =>
+              item.includes("layer_data.")
+            ).map((item) => item.replace("layer_data.", ""))
+          )
+        );
+      }
+      if (onDragEnd) onDragEnd();
+    },
+    [offsetsFromStroke, onChange, onDragEnd]
+  );
+  const handleTransformEnd = useCallback(
+    (e) => {
+      if (onChange) {
+        const AllowedLayerTypes = AllowedLayerProps[LayerTypes.SHAPE][type];
+        const node = shapeRef.current;
+        const scaleX = node.scaleX();
+        const scaleY = node.scaleY();
+        const width =
+          type !== MouseModes.ELLIPSE ? node.width() : node.radiusX();
+        const height =
+          type !== MouseModes.ELLIPSE ? node.height() : node.radiusY();
+        const xyScale = Math.abs(
+          Math.abs(mathRound2(scaleY)) !== 1 ? scaleY : scaleX
+        );
 
-      // we will reset it back
-      node.scaleX(scaleX > 0 ? 1 : -1);
-      node.scaleY(scaleY > 0 ? 1 : -1);
+        // we will reset it back
+        node.scaleX(scaleX > 0 ? 1 : -1);
+        node.scaleY(scaleY > 0 ? 1 : -1);
 
-      onChange(
-        _.pick(
-          {
-            left: mathRound2(node.x() - offsetsFromStroke.x),
-            top: mathRound2(node.y() - offsetsFromStroke.y),
-            width: mathRound2(
-              Math.max(1, width * Math.abs(scaleX)) - offsetsFromStroke.width
-            ),
-            height: mathRound2(
-              Math.max(1, height * Math.abs(scaleY)) - offsetsFromStroke.height
-            ),
-            radius: node.radius
-              ? mathRound2(
-                  Math.max(1, node.radius() * Math.abs(scaleY)) -
-                    offsetsFromStroke.radius
-                )
-              : 0,
-            innerRadius: node.innerRadius
-              ? mathRound2(
-                  Math.max(1, node.innerRadius() * Math.abs(scaleY)) -
-                    offsetsFromStroke.innerRadius
-                )
-              : 0,
-            outerRadius: node.outerRadius
-              ? mathRound2(
-                  Math.max(1, node.outerRadius() * Math.abs(scaleY)) -
-                    offsetsFromStroke.outerRadius
-                )
-              : 0,
-            rotation: mathRound2(node.rotation()) || 0,
-            flop: scaleX > 0 ? 0 : 1,
-            flip: scaleY > 0 ? 0 : 1,
-            stroke: mathRound2(node.strokeWidth() * xyScale),
-            shadowBlur: mathRound2(node.shadowBlur() * xyScale),
-            shadowOffsetX: mathRound2(
-              layer_data.shadowOffsetX * Math.abs(scaleX)
-            ),
-            shadowOffsetY: mathRound2(
-              layer_data.shadowOffsetY * Math.abs(scaleY)
-            ),
-            cornerTopLeft: mathRound2(layer_data.cornerTopLeft * xyScale),
-            cornerTopRight: mathRound2(layer_data.cornerTopRight * xyScale),
-            cornerBottomLeft: mathRound2(layer_data.cornerBottomLeft * xyScale),
-            cornerBottomRight: mathRound2(
-              layer_data.cornerBottomRight * xyScale
-            ),
-            points: points.map((point, index) =>
-              index % 2 === 0
-                ? mathRound2(point * Math.abs(scaleX))
-                : mathRound2(point * Math.abs(scaleY))
-            ),
-          },
-          AllowedLayerTypes.filter((item) =>
-            item.includes("layer_data.")
-          ).map((item) => item.replace("layer_data.", ""))
-        )
-      );
-    }
-  };
+        onChange(
+          _.pick(
+            {
+              left: mathRound2(node.x() - offsetsFromStroke.x),
+              top: mathRound2(node.y() - offsetsFromStroke.y),
+              width: mathRound2(
+                Math.max(1, width * Math.abs(scaleX)) - offsetsFromStroke.width
+              ),
+              height: mathRound2(
+                Math.max(1, height * Math.abs(scaleY)) -
+                  offsetsFromStroke.height
+              ),
+              radius: node.radius
+                ? mathRound2(
+                    Math.max(1, node.radius() * Math.abs(scaleY)) -
+                      offsetsFromStroke.radius
+                  )
+                : 0,
+              innerRadius: node.innerRadius
+                ? mathRound2(
+                    Math.max(1, node.innerRadius() * Math.abs(scaleY)) -
+                      offsetsFromStroke.innerRadius
+                  )
+                : 0,
+              outerRadius: node.outerRadius
+                ? mathRound2(
+                    Math.max(1, node.outerRadius() * Math.abs(scaleY)) -
+                      offsetsFromStroke.outerRadius
+                  )
+                : 0,
+              rotation: mathRound2(node.rotation()) || 0,
+              flop: scaleX > 0 ? 0 : 1,
+              flip: scaleY > 0 ? 0 : 1,
+              stroke: mathRound2(node.strokeWidth() * xyScale),
+              shadowBlur: mathRound2(node.shadowBlur() * xyScale),
+              shadowOffsetX: mathRound2(
+                layer_data.shadowOffsetX * Math.abs(scaleX)
+              ),
+              shadowOffsetY: mathRound2(
+                layer_data.shadowOffsetY * Math.abs(scaleY)
+              ),
+              cornerTopLeft: mathRound2(layer_data.cornerTopLeft * xyScale),
+              cornerTopRight: mathRound2(layer_data.cornerTopRight * xyScale),
+              cornerBottomLeft: mathRound2(
+                layer_data.cornerBottomLeft * xyScale
+              ),
+              cornerBottomRight: mathRound2(
+                layer_data.cornerBottomRight * xyScale
+              ),
+              points: points.map((point, index) =>
+                index % 2 === 0
+                  ? mathRound2(point * Math.abs(scaleX))
+                  : mathRound2(point * Math.abs(scaleY))
+              ),
+            },
+            AllowedLayerTypes.filter((item) =>
+              item.includes("layer_data.")
+            ).map((item) => item.replace("layer_data.", ""))
+          )
+        );
+      }
+    },
+    [type, offsetsFromStroke, layer_data, points, onChange]
+  );
+
   useEffect(() => {
     if (onLoadLayer && id) onLoadLayer(id, true);
   }, []);
+
   return (
     <>
       {type === MouseModes.RECT ? (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import styled from "styled-components/macro";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -107,26 +107,40 @@ const LogoDialog = (props) => {
   const [search, setSearch] = useState("");
   const { logos, onCancel, open, onOpenLogo } = props;
 
-  const increaseLogoData = () => {
-    setLogoLimit(logoLimit + step);
-  };
-  const increaseFlagData = () => {
-    setFlagLimit(flagLimit + step);
-  };
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-    setSearch("");
-  };
-
-  const filteredLogos = logos.filter(
-    (item) =>
-      item.name.toLowerCase().includes(search.toLowerCase()) &&
-      item.type !== "flag"
+  const filteredLogos = useMemo(
+    () =>
+      logos.filter(
+        (item) =>
+          item.name.toLowerCase().includes(search.toLowerCase()) &&
+          item.type !== "flag"
+      ),
+    [logos, search]
   );
-  const filteredFlags = logos.filter(
-    (item) =>
-      item.name.toLowerCase().includes(search.toLowerCase()) &&
-      item.type === "flag"
+
+  const filteredFlags = useMemo(
+    () =>
+      logos.filter(
+        (item) =>
+          item.name.toLowerCase().includes(search.toLowerCase()) &&
+          item.type === "flag"
+      ),
+    [logos, search]
+  );
+
+  const increaseLogoData = useCallback(() => {
+    setLogoLimit(logoLimit + step);
+  }, [logoLimit, step, setLogoLimit]);
+
+  const increaseFlagData = useCallback(() => {
+    setFlagLimit(flagLimit + step);
+  }, [flagLimit, step, setFlagLimit]);
+
+  const handleTabChange = useCallback(
+    (event, newValue) => {
+      setTabValue(newValue);
+      setSearch("");
+    },
+    [setTabValue, setSearch]
   );
 
   return (

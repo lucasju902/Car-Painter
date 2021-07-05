@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import _ from "lodash";
 
 import styled from "styled-components/macro";
@@ -36,6 +36,11 @@ const ProjectSelectDialog = (props) => {
   const [carMake, setCarMake] = useState(null);
   const [name, setName] = useState("");
 
+  let sortedCarMakesList = useMemo(
+    () => _.orderBy([...carMakeList], ["name", "car_type"], ["asc", "asc"]),
+    [carMakeList]
+  );
+
   useEffect(() => {
     if (predefinedCarMakeID) {
       const make = carMakeList.find(
@@ -45,11 +50,6 @@ const ProjectSelectDialog = (props) => {
     }
   }, [predefinedCarMakeID]);
 
-  let sortedCarMakesList = _.orderBy(
-    [...carMakeList],
-    ["name", "car_type"],
-    ["asc", "asc"]
-  );
   return (
     <Dialog aria-labelledby="project-select-title" open={open}>
       <DialogTitle id="project-select-title">Create a new paint</DialogTitle>

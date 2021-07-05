@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useCallback } from "react";
 
 import { MouseModes } from "constant";
 import { Transformer } from "react-konva";
@@ -26,7 +26,7 @@ const TransformerComponent = ({
     [selectedLayer, pressedKey]
   );
 
-  const checkNode = () => {
+  const checkNode = useCallback(() => {
     if (selectedLayer) {
       const stage = trRef.current.getStage();
 
@@ -42,12 +42,13 @@ const TransformerComponent = ({
       }
       trRef.current.getLayer().batchDraw();
     }
-  };
+  }, [selectedLayer]);
+
   useEffect(() => {
     checkNode();
-  });
+  }, [checkNode]);
 
-  const getCenter = (shape) => {
+  const getCenter = useCallback((shape) => {
     return {
       x:
         shape.x +
@@ -58,9 +59,9 @@ const TransformerComponent = ({
         (shape.height / 2) * Math.cos(shape.rotation) +
         (shape.width / 2) * Math.sin(shape.rotation),
     };
-  };
+  }, []);
 
-  const rotateAroundPoint = (shape, deltaDeg, point) => {
+  const rotateAroundPoint = useCallback((shape, deltaDeg, point) => {
     const x = Math.round(
       point.x +
         (shape.x - point.x) * Math.cos(deltaDeg) -
@@ -78,32 +79,39 @@ const TransformerComponent = ({
       x,
       y,
     };
-  };
+  }, []);
 
-  const rotateAroundCenter = (shape, deltaDeg) => {
-    const center = getCenter(shape);
-    return rotateAroundPoint(shape, deltaDeg, center);
-  };
+  const rotateAroundCenter = useCallback(
+    (shape, deltaDeg) => {
+      const center = getCenter(shape);
+      return rotateAroundPoint(shape, deltaDeg, center);
+    },
+    [getCenter, rotateAroundPoint]
+  );
 
-  const getSnapRotation = (rot) => {
+  const getSnapRotation = useCallback((rot) => {
     const rotation = rot < 0 ? 2 * Math.PI + rot : rot;
     const son = Math.PI / 12;
     return Math.round(rotation / son) * son;
-  };
-  const boundBoxFunc = (oldBoundBox, newBoundBox) => {
-    const closesSnap = getSnapRotation(newBoundBox.rotation);
-    const diff = closesSnap - oldBoundBox.rotation;
-    if (pressedKey === "shift") {
-      if (newBoundBox.rotation - oldBoundBox.rotation === 0) {
-        return newBoundBox;
+  }, []);
+
+  const boundBoxFunc = useCallback(
+    (oldBoundBox, newBoundBox) => {
+      const closesSnap = getSnapRotation(newBoundBox.rotation);
+      const diff = closesSnap - oldBoundBox.rotation;
+      if (pressedKey === "shift") {
+        if (newBoundBox.rotation - oldBoundBox.rotation === 0) {
+          return newBoundBox;
+        }
+        if (Math.abs(diff) > 0) {
+          return rotateAroundCenter(oldBoundBox, diff);
+        }
+        return oldBoundBox;
       }
-      if (Math.abs(diff) > 0) {
-        return rotateAroundCenter(oldBoundBox, diff);
-      }
-      return oldBoundBox;
-    }
-    return newBoundBox;
-  };
+      return newBoundBox;
+    },
+    [pressedKey, getSnapRotation]
+  );
 
   if (selectedLayer)
     return (

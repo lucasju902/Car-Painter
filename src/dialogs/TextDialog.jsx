@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useCallback } from "react";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
@@ -61,19 +61,22 @@ const InnerForm = React.memo((props) => {
   const dispatch = useDispatch();
   const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
 
-  const loadFont = (fontFamily, fontFile) => {
-    let fontObject = new FontFace(fontFamily, fontFile);
-    fontObject
-      .load()
-      .then(function (loaded_face) {
-        document.fonts.add(loaded_face);
-        dispatch(insertToLoadedFontList(fontFamily));
-      })
-      .catch(function (error) {
-        // error occurred
-        console.warn(error, fontFamily);
-      });
-  };
+  const loadFont = useCallback(
+    (fontFamily, fontFile) => {
+      let fontObject = new FontFace(fontFamily, fontFile);
+      fontObject
+        .load()
+        .then(function (loaded_face) {
+          document.fonts.add(loaded_face);
+          dispatch(insertToLoadedFontList(fontFamily));
+        })
+        .catch(function (error) {
+          // error occurred
+          console.warn(error, fontFamily);
+        });
+    },
+    [insertToLoadedFontList]
+  );
 
   useEffect(() => {
     let font = fontList.length

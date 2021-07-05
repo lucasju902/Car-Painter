@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { makeStyles, InputBase } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -42,9 +42,12 @@ const SearchBox = (props) => {
   const { value, onChange } = props;
 
   const classes = useStyles();
-  const handleChange = (event) => {
-    onChange(event.target.value);
-  };
+  const handleChange = useCallback(
+    (event) => {
+      onChange(event.target.value);
+    },
+    [onChange]
+  );
 
   return (
     <div className={classes.search}>

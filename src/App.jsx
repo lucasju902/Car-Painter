@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Helmet } from "react-helmet";
 import DateFnsUtils from "@date-io/date-fns";
@@ -23,12 +23,15 @@ function App() {
   const message = useSelector((state) => state.messageReducer);
   const theme = useSelector((state) => state.themeReducer);
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    dispatch(setMessage({ message: null }));
-  };
+  const handleClose = useCallback(
+    (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      dispatch(setMessage({ message: null }));
+    },
+    [dispatch]
+  );
 
   return (
     <React.Fragment>

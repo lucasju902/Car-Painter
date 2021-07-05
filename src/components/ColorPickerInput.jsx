@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { ColorPicker } from "material-ui-color";
 import { Box, TextField, Typography } from "@material-ui/core";
 import { Palette } from "constant";
@@ -11,11 +11,14 @@ const ColorInputField = styled(TextField)`
 const ColorPickerInput = (props) => {
   const { value, onChange, onInputChange, error, helperText } = props;
 
-  const handleInputKeyDown = (event) => {
-    if (event.key === "Enter") {
-      onChange(event.target.value);
-    }
-  };
+  const handleInputKeyDown = useCallback(
+    (event) => {
+      if (event.key === "Enter") {
+        onChange(event.target.value);
+      }
+    },
+    [onChange]
+  );
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">

@@ -82,6 +82,8 @@ export const DefaultLayer = {
     strokeType: "middle",
     font: 0,
     size: 0,
+    sizeLocked: true,
+    scaleLocked: true,
     scolor: null,
     color: null,
     bgColor: null,

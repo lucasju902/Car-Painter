@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components/macro";
 import { spacing } from "@material-ui/system";
 import {
@@ -30,13 +30,15 @@ const Wrapper = styled(Grid)`
 
 const SliderInput = (props) => {
   const { label, min, max, value, setValue, step } = props;
-  const handleBlur = () => {
+
+  const handleBlur = useCallback(() => {
     if (value < min) {
       setValue(min);
     } else if (value > max) {
       setValue(max);
     }
-  };
+  }, [value, min, max, setValue]);
+
   return (
     <Wrapper container>
       <Grid item xs={6}>

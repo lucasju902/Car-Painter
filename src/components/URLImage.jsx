@@ -1,5 +1,11 @@
 import Canvg from "canvg";
-import React, { useRef, useState, useEffect } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import Konva from "konva";
 import { mathRound2, hexToRgba } from "helper";
 import { Image } from "react-konva";
@@ -24,12 +30,12 @@ const URLImage = ({
   const imageRef = useRef(null);
   const shapeRef = useRef();
   const [image, setImage] = useState(null);
-  const filters = [];
+  const filters = useMemo(
+    () => (filterColor && filterColor.length ? [Konva.Filters.RGBA] : []),
+    [filterColor]
+  );
 
-  if (filterColor && filterColor.length) {
-    filters.push(Konva.Filters.RGBA);
-  }
-  const getPixelRatio = (node) => {
+  const getPixelRatio = useCallback((node) => {
     if (imageRef.current) {
       return Math.max(
         1,
@@ -38,7 +44,7 @@ const URLImage = ({
       );
     }
     return 1;
-  };
+  }, []);
 
   useEffect(() => {
     if (loadedStatus !== false && loadedStatus !== true && onLoadLayer && id)
@@ -65,7 +71,7 @@ const URLImage = ({
     }
   }, [filterColor]);
 
-  const handleLoad = async () => {
+  const handleLoad = useCallback(async () => {
     let originWidth =
       !allowFit ||
       (imageRef.current.width <= frameSize.width / 2 &&
@@ -91,7 +97,6 @@ const URLImage = ({
       const v = await Canvg.from(ctx, src, {
         enableRedraw: true,
       });
-      console.log(v);
       width = width || v.documentElement.node.width.baseVal.value || 200;
       height = height || v.documentElement.node.height.baseVal.value || 200;
       v.resize(width, height, "none");
@@ -124,64 +129,88 @@ const URLImage = ({
       });
     }
     if (onLoadLayer && id) onLoadLayer(id, true);
-  };
-  const loadImage = async () => {
+  }, [
+    frameSize,
+    allowFit,
+    props.width,
+    props.height,
+    tellSize,
+    onLoadLayer,
+    onChange,
+    setImage,
+    getPixelRatio,
+    mathRound2,
+  ]);
+  const loadImage = useCallback(async () => {
     const img = new window.Image();
     // img.src = src;
     img.src = src + `?timestamp=${new Date().toISOString()}`;
     img.crossOrigin = "anonymous";
     imageRef.current = img;
     imageRef.current.addEventListener("load", handleLoad);
-  };
-  const handleDragStart = (e) => {
-    onSelect();
-    if (onDragStart) onDragStart();
-  };
-  const handleDragEnd = (e) => {
-    if (onChange) {
-      onChange({
-        left: mathRound2(e.target.x()),
-        top: mathRound2(e.target.y()),
-      });
-    }
-    if (onDragEnd) onDragEnd();
-  };
-  const handleTransformEnd = (e) => {
-    if (onChange) {
-      const node = shapeRef.current;
-      const scaleX = node.scaleX();
-      const scaleY = node.scaleY();
-      console.log("scaleX, scaleY: ", scaleX, scaleY);
-      // we will reset it back
-      node.scaleX(scaleX > 0 ? 1 : -1);
-      node.scaleY(scaleY > 0 ? 1 : -1);
-      const xyScale = Math.abs(
-        Math.abs(mathRound2(scaleY)) !== 1 ? scaleY : scaleX
-      );
-      onChange({
-        left: mathRound2(node.x()),
-        top: mathRound2(node.y()),
-        // set minimal value
-        width: mathRound2(Math.max(1, node.width() * Math.abs(scaleX))),
-        height: mathRound2(Math.max(1, node.height() * Math.abs(scaleY))),
-        rotation: mathRound2(node.rotation()) || 0,
-        flop: scaleX > 0 ? 0 : 1,
-        flip: scaleY > 0 ? 0 : 1,
-        shadowBlur: mathRound2(node.shadowBlur() * xyScale),
-        shadowOffsetX: mathRound2(layer_data.shadowOffsetX * Math.abs(scaleX)),
-        shadowOffsetY: mathRound2(layer_data.shadowOffsetY * Math.abs(scaleY)),
-      });
-      if (filterColor && filterColor.length) {
-        node.cache({
-          pixelRatio: getPixelRatio(shapeRef.current),
-          imageSmoothingEnabled: true,
+  }, [handleLoad]);
+  const handleDragStart = useCallback(
+    (e) => {
+      onSelect();
+      if (onDragStart) onDragStart();
+    },
+    [onSelect, onDragStart]
+  );
+  const handleDragEnd = useCallback(
+    (e) => {
+      if (onChange) {
+        onChange({
+          left: mathRound2(e.target.x()),
+          top: mathRound2(e.target.y()),
         });
-        // node.getLayer().batchDraw();
-      } else {
-        node.clearCache();
       }
-    }
-  };
+      if (onDragEnd) onDragEnd();
+    },
+    [mathRound2, onChange, onDragEnd]
+  );
+  const handleTransformEnd = useCallback(
+    (e) => {
+      if (onChange) {
+        const node = shapeRef.current;
+        const scaleX = node.scaleX();
+        const scaleY = node.scaleY();
+
+        // we will reset it back
+        node.scaleX(scaleX > 0 ? 1 : -1);
+        node.scaleY(scaleY > 0 ? 1 : -1);
+        const xyScale = Math.abs(
+          Math.abs(mathRound2(scaleY)) !== 1 ? scaleY : scaleX
+        );
+        onChange({
+          left: mathRound2(node.x()),
+          top: mathRound2(node.y()),
+          // set minimal value
+          width: mathRound2(Math.max(1, node.width() * Math.abs(scaleX))),
+          height: mathRound2(Math.max(1, node.height() * Math.abs(scaleY))),
+          rotation: mathRound2(node.rotation()) || 0,
+          flop: scaleX > 0 ? 0 : 1,
+          flip: scaleY > 0 ? 0 : 1,
+          shadowBlur: mathRound2(node.shadowBlur() * xyScale),
+          shadowOffsetX: mathRound2(
+            layer_data.shadowOffsetX * Math.abs(scaleX)
+          ),
+          shadowOffsetY: mathRound2(
+            layer_data.shadowOffsetY * Math.abs(scaleY)
+          ),
+        });
+        if (filterColor && filterColor.length) {
+          node.cache({
+            pixelRatio: getPixelRatio(shapeRef.current),
+            imageSmoothingEnabled: true,
+          });
+          // node.getLayer().batchDraw();
+        } else {
+          node.clearCache();
+        }
+      }
+    },
+    [filterColor, mathRound2, getPixelRatio, onChange]
+  );
 
   return (
     <Image

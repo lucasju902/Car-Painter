@@ -76,9 +76,9 @@ const BasePaintDialog = React.memo((props) => {
     [legacyMode, carMake]
   );
 
-  const increaseData = () => {
+  const increaseData = useCallback(() => {
     setLimit(limit + step);
-  };
+  }, [limit, step, setLimit]);
 
   return (
     <Dialog aria-labelledby="base-paints-title" open={open} onClose={onCancel}>
