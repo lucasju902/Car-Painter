@@ -100,7 +100,7 @@ function a11yProps(index) {
 }
 
 const LogoDialog = (props) => {
-  const step = 15;
+  const step = 30;
   const [logoLimit, setLogoLimit] = useState(step);
   const [flagLimit, setFlagLimit] = useState(step);
   const [tabValue, setTabValue] = useState(0);

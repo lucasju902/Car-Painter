@@ -52,6 +52,7 @@ export const getRelativePointerPosition = (node) => {
   transform.invert();
   // get pointer (say mouse or touch) position
   var pos = node.getStage().getPointerPosition();
+  console.log("Mouse Pos: ", pos);
   // now we can find relative point
   return transform.point(pos);
 };

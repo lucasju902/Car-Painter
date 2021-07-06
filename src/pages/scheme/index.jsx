@@ -70,7 +70,9 @@ const Scheme = () => {
   const mainLayerRef = useRef(null);
   const carMaskLayerRef = useRef(null);
 
-  const user = useSelector((state) => state.authReducer.user);
+  const [user, userRef] = useReducerRef(
+    useSelector((state) => state.authReducer.user)
+  );
   const [currentScheme, currentSchemeRef] = useReducerRef(
     useSelector((state) => state.schemeReducer.current)
   );
@@ -115,12 +117,43 @@ const Scheme = () => {
     [setHoveredJSON]
   );
 
+  const handleZoom = useCallback(
+    (newScale) => {
+      if (currentLayer && currentLayer.layer_data) {
+        const stage = stageRef.current;
+        const oldScale = stage.scaleX();
+        const { left: pointerX, top: pointerY } = currentLayer.layer_data;
+        console.log("pointerX, pointerY: ", pointerX, pointerY);
+        const mousePointTo = {
+          x: (pointerX - stage.x()) / oldScale,
+          y: (pointerY - stage.y()) / oldScale,
+        };
+
+        dispatch(setZoom(newScale));
+
+        const newPos = {
+          x: pointerX - mousePointTo.x * newScale,
+          y: pointerY - mousePointTo.y * newScale,
+        };
+        console.log("newPos: ", newPos);
+        stage.position(newPos);
+        stage.batchDraw();
+      } else {
+        dispatch(setZoom(newScale));
+      }
+    },
+    [dispatch, currentLayer, stageRef.current]
+  );
+
   const handleZoomIn = useCallback(() => {
-    dispatch(setZoom(mathRound4(Math.max(Math.min(zoom * 1.25, 10), 0.25))));
-  }, [dispatch, zoom]);
+    const newScale = mathRound4(Math.max(Math.min(zoom * 1.25, 10), 0.25));
+    handleZoom(newScale);
+  }, [zoom, handleZoom]);
+
   const handleZoomOut = useCallback(() => {
-    dispatch(setZoom(mathRound4(Math.max(Math.min(zoom / 1.25, 10), 0.25))));
-  }, [dispatch, zoom]);
+    const newScale = mathRound4(Math.max(Math.min(zoom / 1.25, 10), 0.25));
+    handleZoom(newScale);
+  }, [zoom, handleZoom]);
   const handleZoomFit = useCallback(() => {
     let width = stageRef.current.attrs.width;
     let height = stageRef.current.attrs.height;
@@ -261,14 +294,13 @@ const Scheme = () => {
           setDialog(DialogTypes.BASEPAINT);
         } else if (key === "enter") {
           if (
-            [
-              MouseModes.DEFAULT,
-              MouseModes.LINE,
-              MouseModes.ARROW,
-              MouseModes.POLYGON,
-            ].includes(mouseMode)
+            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+              mouseMode
+            )
           ) {
             dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
+          } else if (currentLayer) {
+            dispatch(setCurrentLayer(null));
           }
         }
       }
@@ -472,7 +504,7 @@ const Scheme = () => {
         var a = document.createElement("a");
         a.style = "display: none";
         a.href = url;
-        a.download = `${currentSchemeRef.current.id}.tga`;
+        a.download = `car_${userRef.current.id}.tga`;
         a.click();
         window.URL.revokeObjectURL(url);
       } catch (err) {
@@ -483,6 +515,7 @@ const Scheme = () => {
   }, [
     dispatch,
     currentSchemeRef.current,
+    userRef.current,
     currentCarMakeRef.current,
     frameSizeRef.current,
     !stageRef.current,

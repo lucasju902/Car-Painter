@@ -60,7 +60,7 @@ const DeleteButton = styled(IconButton)`
 `;
 
 const UploadDialog = (props) => {
-  const step = 15;
+  const step = 30;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);

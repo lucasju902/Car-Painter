@@ -44,7 +44,7 @@ const CustomImg = styled.img`
 `;
 
 const OverlayDialog = (props) => {
-  const step = 15;
+  const step = 30;
   const [limit, setLimit] = useState(step);
   const [search, setSearch] = useState("");
   const { overlays, onCancel, open, onOpenOverlay } = props;

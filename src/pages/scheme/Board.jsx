@@ -347,6 +347,7 @@ const Board = ({
         const stage = stageRef.current;
         const oldScale = stage.scaleX();
         const { x: pointerX, y: pointerY } = stage.getPointerPosition();
+        console.log("pointerX, pointerY: ", pointerX, pointerY);
         const mousePointTo = {
           x: (pointerX - stage.x()) / oldScale,
           y: (pointerY - stage.y()) / oldScale,
@@ -363,6 +364,7 @@ const Board = ({
           x: pointerX - mousePointTo.x * newScale,
           y: pointerY - mousePointTo.y * newScale,
         };
+        console.log("newPos: ", newPos);
         stage.position(newPos);
         stage.batchDraw();
       }

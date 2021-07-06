@@ -1,0 +1,95 @@
+<svg version="1.1" id="arrow-logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 584 584" enable-background="new 0 0 584 584" xml:space="preserve">
+<g id="arrow-group">
+	<polygon id="red-arrow" fill="#FF1F3D" points="338,492 246,492 246,404.3 182.4,466.9 117.5,402 181,338 92,338 92,246 338,246 "/>
+	<polygon id="blue-arrow" fill="#279AF0" points="492,338 492,246 401.9,246 465.3,183.3 401,119 338,182.4 338,92 246,92 246,338 
+		"/>
+	<rect id="rect-mix" x="246" y="246" fill="#935D97" width="92" height="92"/>
+</g>
+<style>
+	#arrow-logo #red-arrow {
+		-webkit-animation: moveRed 1s ease-in-out 0s infinite alternate;
+		        animation: moveRed 1s ease-in-out 0s infinite alternate;
+	}
+
+	#arrow-logo #blue-arrow {
+		-webkit-animation: moveBlue 1s ease-in-out 0s infinite alternate;
+		        animation: moveBlue 1s ease-in-out 0s infinite alternate;
+	}
+
+	#arrow-logo #rect-mix {
+		-webkit-transform-origin: 292px 292px;
+		    -ms-transform-origin: 292px 292px;
+		        transform-origin: 292px 292px;
+		-webkit-animation: scaleBlend 1s ease-in-out 0s infinite alternate;
+		        animation: scaleBlend 1s ease-in-out 0s infinite alternate;
+	}
+
+	#arrow-logo #arrow-group {
+		-webkit-transform-origin: 292px 292px;
+		    -ms-transform-origin: 292px 292px;
+		        transform-origin: 292px 292px;
+		-webkit-transform: rotate(-360deg);
+		    -ms-transform: rotate(-360deg);
+		        transform: rotate(-360deg);
+		-webkit-animation: rotateArrow 2s ease-in-out 0s infinite;
+		        animation: rotateArrow 2s ease-in-out 0s infinite;
+	}
+
+	@-webkit-keyframes moveRed {
+		100% {
+			-webkit-transform: translate(-46px, 46px);
+			        transform: translate(-46px, 46px);
+		}
+	}
+
+	@keyframes moveRed {
+		100% {
+			-webkit-transform: translate(-46px, 46px);
+			        transform: translate(-46px, 46px);
+		}
+	}
+
+	@-webkit-keyframes moveBlue {
+		100% {
+			-webkit-transform: translate(46px, -46px);
+			        transform: translate(46px, -46px);
+		}
+	}
+
+	@keyframes moveBlue {
+		100% {
+			-webkit-transform: translate(46px, -46px);
+			        transform: translate(46px, -46px);
+		}
+	}
+
+	@-webkit-keyframes scaleBlend {
+		100% {
+			-webkit-transform: scale(0,0);
+			        transform: scale(0,0);
+		}
+	}
+
+	@keyframes scaleBlend {
+		100% {
+			-webkit-transform: scale(0,0);
+			        transform: scale(0,0);
+		}
+	}
+
+	@-webkit-keyframes rotateArrow {
+		100% {
+			-webkit-transform: rotate(0deg);
+			        transform: rotate(0deg);
+		}
+	}
+
+	@keyframes rotateArrow {
+		100% {
+			-webkit-transform: rotate(0deg);
+			        transform: rotate(0deg);
+		}
+	}
+</style>
+</svg>

@@ -39,7 +39,7 @@ const CustomImg = styled.img`
 `;
 
 const BasePaintDialog = React.memo((props) => {
-  const step = 15;
+  const step = 30;
   const [limit, setLimit] = useState(step);
   const { legacyMode, basePaints, carMake, onCancel, open, onOpenBase } = props;
   const bases = useMemo(

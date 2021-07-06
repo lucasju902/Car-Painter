@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Box } from "@material-ui/core";
-import Loader from "./Loader";
+import Loading from "assets/loading.svg";
 
 const ScreenLoader = () => {
   return (
@@ -12,7 +12,7 @@ const ScreenLoader = () => {
       alignItems="center"
       justifyContent="center"
     >
-      <Loader />
+      <img src={Loading} width="200px" height="200px" />
     </Box>
   );
 };
