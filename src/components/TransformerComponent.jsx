@@ -1,14 +1,15 @@
-import React, { useRef, useEffect, useMemo, useCallback } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 
 import { MouseModes } from "constant";
 import { Transformer } from "react-konva";
+import { getSnapRotation, rotateAroundCenter } from "helper";
 
 const TransformerComponent = ({
+  trRef,
   selectedLayer,
   pressedKey,
   hoveredTransform,
 }) => {
-  const trRef = useRef();
   const keepRatio = useMemo(
     () =>
       selectedLayer &&
@@ -48,53 +49,6 @@ const TransformerComponent = ({
     checkNode();
   }, [checkNode]);
 
-  const getCenter = useCallback((shape) => {
-    return {
-      x:
-        shape.x +
-        (shape.width / 2) * Math.cos(shape.rotation) +
-        (shape.height / 2) * Math.sin(-shape.rotation),
-      y:
-        shape.y +
-        (shape.height / 2) * Math.cos(shape.rotation) +
-        (shape.width / 2) * Math.sin(shape.rotation),
-    };
-  }, []);
-
-  const rotateAroundPoint = useCallback((shape, deltaDeg, point) => {
-    const x = Math.round(
-      point.x +
-        (shape.x - point.x) * Math.cos(deltaDeg) -
-        (shape.y - point.y) * Math.sin(deltaDeg)
-    );
-    const y = Math.round(
-      point.y +
-        (shape.x - point.x) * Math.sin(deltaDeg) +
-        (shape.y - point.y) * Math.cos(deltaDeg)
-    );
-
-    return {
-      ...shape,
-      rotation: shape.rotation + deltaDeg,
-      x,
-      y,
-    };
-  }, []);
-
-  const rotateAroundCenter = useCallback(
-    (shape, deltaDeg) => {
-      const center = getCenter(shape);
-      return rotateAroundPoint(shape, deltaDeg, center);
-    },
-    [getCenter, rotateAroundPoint]
-  );
-
-  const getSnapRotation = useCallback((rot) => {
-    const rotation = rot < 0 ? 2 * Math.PI + rot : rot;
-    const son = Math.PI / 12;
-    return Math.round(rotation / son) * son;
-  }, []);
-
   const boundBoxFunc = useCallback(
     (oldBoundBox, newBoundBox) => {
       const closesSnap = getSnapRotation(newBoundBox.rotation);
@@ -110,12 +64,13 @@ const TransformerComponent = ({
       }
       return newBoundBox;
     },
-    [pressedKey, getSnapRotation]
+    [pressedKey, getSnapRotation, rotateAroundCenter]
   );
 
   if (selectedLayer)
     return (
       <Transformer
+        id="defaultTransformer"
         ref={trRef}
         keepRatio={keepRatio}
         enabledAnchors={

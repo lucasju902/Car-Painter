@@ -83,7 +83,7 @@ const Scheme = () => {
   const [predefinedCarMakeID, setPredefinedCarMakeID] = useState();
 
   let sortedCarMakesList = useMemo(
-    () => _.orderBy([...carMakeList], ["name", "car_type"], ["asc", "asc"]),
+    () => _.orderBy([...carMakeList], ["car_type", "name"], ["asc", "asc"]),
     [carMakeList]
   );
 
@@ -254,7 +254,7 @@ const Scheme = () => {
           </Box>
         </Wrapper>
         <CreateProjectDialog
-          carMakeList={carMakeList}
+          carMakeList={sortedCarMakesList}
           predefinedCarMakeID={predefinedCarMakeID}
           open={dialog === "CreateProjectDialog"}
           onContinue={(carMake, name) => createSchemeFromCarMake(carMake, name)}

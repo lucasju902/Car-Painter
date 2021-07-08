@@ -36,6 +36,9 @@ const CustomFormControlLabel = styled(FormControlLabel)`
   margin-left: 0;
   color: rgba(255, 255, 255, 0.5);
 `;
+const CustomDialogContent = styled(DialogContent)`
+  padding-right: 0;
+`;
 
 const SubForm = (props) => {
   const {
@@ -59,35 +62,43 @@ const SubForm = (props) => {
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%" mb={1}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Box
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Typography variant="body1" color="textSecondary" mr={2}>
-                  Color
-                </Typography>
-                <ColorPickerInput
-                  value={values[colorKey]}
-                  onChange={(color) => setFieldValue(colorKey, color)}
-                  onInputChange={(color) => setFieldValue(colorKey, color)}
-                  error={Boolean(errors[colorKey])}
-                  helperText={errors[colorKey]}
+            {colorKey ? (
+              <Grid item xs={12} sm={6}>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Color
+                  </Typography>
+                  <ColorPickerInput
+                    value={values[colorKey]}
+                    onChange={(color) => setFieldValue(colorKey, color)}
+                    onInputChange={(color) => setFieldValue(colorKey, color)}
+                    error={Boolean(errors[colorKey])}
+                    helperText={errors[colorKey]}
+                  />
+                </Box>
+              </Grid>
+            ) : (
+              <></>
+            )}
+            {opacityKey ? (
+              <Grid item xs={12} sm={6}>
+                <SliderInput
+                  label="Opacity"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={values[opacityKey]}
+                  setValue={(value) => setFieldValue(opacityKey, value)}
                 />
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SliderInput
-                label="Opacity"
-                min={0}
-                max={1}
-                step={0.01}
-                value={values[opacityKey]}
-                setValue={(value) => setFieldValue(opacityKey, value)}
-              />
-            </Grid>
+              </Grid>
+            ) : (
+              <></>
+            )}
           </Grid>
           {extraChildren}
         </Box>
@@ -126,6 +137,7 @@ const SchemeSettingsDialog = (props) => {
           grid_padding: guide_data.grid_padding || 10,
           grid_stroke: guide_data.grid_stroke || 0.1,
           show_sponsor: guide_data.show_sponsor || false,
+          show_carparts_on_top: guide_data.show_carparts_on_top || false,
         }}
         validationSchema={Yup.object().shape({
           carmask_color: Yup.string()
@@ -152,89 +164,118 @@ const SchemeSettingsDialog = (props) => {
       >
         {(formProps) => (
           <Form onSubmit={formProps.handleSubmit} noValidate>
-            <DialogContent dividers id="insert-text-dialog-content">
-              <SubForm
-                label="Car Mask"
-                colorKey="carmask_color"
-                opacityKey="carmask_opacity"
-                {...formProps}
-              />
-              <SubForm
-                label="Wireframe"
-                colorKey="wireframe_color"
-                opacityKey="wireframe_opacity"
-                {...formProps}
-              />
-              <SubForm
-                label="Sponsor Blocks"
-                colorKey="sponsor_color"
-                opacityKey="sponsor_opacity"
-                {...formProps}
-                extraChildren={
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={12}>
-                      <CustomFormControlLabel
-                        control={
-                          <Checkbox
-                            color="primary"
-                            name="show_sponsor"
-                            checked={formProps.values.show_sponsor}
-                            onChange={(event) =>
-                              formProps.setFieldValue(
-                                "show_sponsor",
-                                event.target.checked
-                              )
-                            }
-                          />
-                        }
-                        label="Show Sponsor Block for Repositioning"
-                        labelPlacement="start"
-                      />
+            <CustomDialogContent dividers id="insert-text-dialog-content">
+              <Box maxHeight="70vh" pr={5} overflow="auto">
+                <SubForm
+                  label="Car Mask"
+                  colorKey="carmask_color"
+                  opacityKey="carmask_opacity"
+                  {...formProps}
+                />
+                <SubForm
+                  label="Wireframe"
+                  colorKey="wireframe_color"
+                  opacityKey="wireframe_opacity"
+                  {...formProps}
+                />
+                <SubForm
+                  label="Sponsor Blocks"
+                  colorKey="sponsor_color"
+                  opacityKey="sponsor_opacity"
+                  {...formProps}
+                  extraChildren={
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={12}>
+                        <CustomFormControlLabel
+                          control={
+                            <Checkbox
+                              color="primary"
+                              name="show_sponsor"
+                              checked={formProps.values.show_sponsor}
+                              onChange={(event) =>
+                                formProps.setFieldValue(
+                                  "show_sponsor",
+                                  event.target.checked
+                                )
+                              }
+                            />
+                          }
+                          label="Show Sponsor Block for Repositioning"
+                          labelPlacement="start"
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                }
-              />
-              <SubForm
-                label="Number Blocks"
-                colorKey="numberblock_color"
-                opacityKey="numberblock_opacity"
-                {...formProps}
-              />
-              <SubForm
-                label="Grid"
-                colorKey="grid_color"
-                opacityKey="grid_opacity"
-                {...formProps}
-                extraChildren={
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <SliderInput
-                        label="Column Size"
-                        min={5}
-                        max={50}
-                        step={1}
-                        value={formProps.values.grid_padding}
-                        setValue={(value) =>
-                          formProps.setFieldValue("grid_padding", value)
-                        }
-                      />
+                  }
+                />
+                <SubForm
+                  label="Number Blocks"
+                  colorKey="numberblock_color"
+                  opacityKey="numberblock_opacity"
+                  {...formProps}
+                />
+                <SubForm
+                  label="Grid"
+                  colorKey="grid_color"
+                  opacityKey="grid_opacity"
+                  {...formProps}
+                  extraChildren={
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <SliderInput
+                          label="Column Size"
+                          min={5}
+                          max={50}
+                          step={1}
+                          value={formProps.values.grid_padding}
+                          setValue={(value) =>
+                            formProps.setFieldValue("grid_padding", value)
+                          }
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <SliderInput
+                          label="Stroke Width"
+                          min={0.01}
+                          max={3}
+                          step={0.01}
+                          value={formProps.values.grid_stroke}
+                          setValue={(value) =>
+                            formProps.setFieldValue("grid_stroke", value)
+                          }
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <SliderInput
-                        label="Stroke Width"
-                        min={0.01}
-                        max={3}
-                        step={0.01}
-                        value={formProps.values.grid_stroke}
-                        setValue={(value) =>
-                          formProps.setFieldValue("grid_stroke", value)
-                        }
-                      />
+                  }
+                />
+                <SubForm
+                  label="Car Parts"
+                  {...formProps}
+                  extraChildren={
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={12}>
+                        <CustomFormControlLabel
+                          control={
+                            <Checkbox
+                              color="primary"
+                              name="show_carparts_on_top"
+                              checked={formProps.values.show_carparts_on_top}
+                              onChange={(event) =>
+                                formProps.setFieldValue(
+                                  "show_carparts_on_top",
+                                  event.target.checked
+                                )
+                              }
+                            />
+                          }
+                          label="Show Car Parts on top of other layers"
+                          labelPlacement="start"
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                }
-              />
-            </DialogContent>
+                  }
+                />
+              </Box>
+            </CustomDialogContent>
             <DialogActions>
               <Button onClick={onCancel} color="secondary">
                 Cancel

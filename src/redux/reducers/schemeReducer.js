@@ -126,14 +126,14 @@ export const createScheme = (
 ) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const result = await SchemeService.createScheme(
+    const scheme = await SchemeService.createScheme(
       carMake.id,
       name,
       userID,
       legacy_mode
     );
-    console.log("result: ", result);
-    if (onOpen) onOpen(result.scheme.id);
+    dispatch(insertToList(scheme));
+    if (onOpen) onOpen(scheme.id);
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

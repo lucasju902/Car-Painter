@@ -12,7 +12,6 @@ import {
   DialogActions,
   GridList,
   GridListTile,
-  GridListTileBar,
 } from "@material-ui/core";
 import { basePaintAssetURL, legacyBasePaintAssetURL } from "helper";
 
@@ -69,12 +68,6 @@ const BasePaintDialog = React.memo((props) => {
     },
     [legacyMode]
   );
-  const getDescription = useCallback(
-    (base) => {
-      return legacyMode ? base.base_description : carMake.name_short;
-    },
-    [legacyMode, carMake]
-  );
 
   const increaseData = useCallback(() => {
     setLimit(limit + step);
@@ -91,7 +84,7 @@ const BasePaintDialog = React.memo((props) => {
           loader={<Loader />}
           scrollableTarget="base-paint-dialog-content"
         >
-          <CustomGridList cellHeight={178} cols={3}>
+          <CustomGridList cellHeight={178} cols={3} spacing={8}>
             {bases.slice(0, limit).map((item, index) => (
               <CustomGridListTile
                 key={index}
@@ -99,10 +92,6 @@ const BasePaintDialog = React.memo((props) => {
                 onClick={() => onOpenBase(item)}
               >
                 <CustomImg src={getPreviewURL(item)} alt={getTitle(item)} />
-                <GridListTileBar
-                  title={getTitle(item)}
-                  subtitle={getDescription(item)}
-                />
               </CustomGridListTile>
             ))}
           </CustomGridList>

@@ -167,3 +167,56 @@ export const getZoomedCenterPosition = (stageRef, frameSize, zoom) => {
     y: -transform[5] / zoom + (frameSize.height * fitZoom) / zoom / 2,
   };
 };
+
+export const getCenter = (shape) => {
+  return {
+    x:
+      shape.x +
+      (shape.width / 2) * Math.cos(shape.rotation) +
+      (shape.height / 2) * Math.sin(-shape.rotation),
+    y:
+      shape.y +
+      (shape.height / 2) * Math.cos(shape.rotation) +
+      (shape.width / 2) * Math.sin(shape.rotation),
+  };
+};
+
+export const rotateAroundPoint = (shape, deltaDeg, point) => {
+  const x = Math.round(
+    point.x +
+      (shape.x - point.x) * Math.cos(deltaDeg) -
+      (shape.y - point.y) * Math.sin(deltaDeg)
+  );
+  const y = Math.round(
+    point.y +
+      (shape.x - point.x) * Math.sin(deltaDeg) +
+      (shape.y - point.y) * Math.cos(deltaDeg)
+  );
+
+  return {
+    ...shape,
+    rotation: shape.rotation + deltaDeg,
+    x,
+    y,
+  };
+};
+
+export const rotateAroundCenter = (shape, deltaDeg) => {
+  const center = getCenter(shape);
+  return rotateAroundPoint(shape, deltaDeg, center);
+};
+
+export const getSnapRotation = (rot) => {
+  const rotation = rot < 0 ? 2 * Math.PI + rot : rot;
+  const son = Math.PI / 12;
+  return Math.round(rotation / son) * son;
+};
+
+export const getTwoRandomNumbers = (limit) => {
+  let arr = [];
+  while (arr.length < 2) {
+    var r = Math.floor(Math.random() * limit);
+    if (arr.indexOf(r) === -1) arr.push(r);
+  }
+  return arr;
+};

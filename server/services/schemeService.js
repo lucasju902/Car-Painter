@@ -27,23 +27,20 @@ class SchemeService {
   }
 
   static async create(userID, carMakeID, name, legacy_mode) {
-    let schemeName = name;
-    if (!name || !name.length) {
-      let schemeList = await this.getListByUserID(userID);
-      schemeList = schemeList.toJSON();
-      let untitled = 0;
-      for (let item of schemeList) {
-        if (item.name.includes("Untitled Scheme")) {
-          const untitledIndex = parseInt(item.name.substr(15));
-          if (untitledIndex) {
-            if (untitledIndex >= untitled) untitled = untitledIndex + 1;
-          } else {
-            untitled = 1;
-          }
-        }
+    let schemeName = name && name.length ? name : "Untitled Scheme";
+
+    let schemeList = await this.getListByUserID(userID);
+    schemeList = schemeList.toJSON();
+    let number = 0;
+
+    for (let item of schemeList) {
+      if (item.name.includes(schemeName)) {
+        const extraIndex = parseInt(item.name.substr(schemeName.length));
+        if (!extraIndex) number = 1;
+        else if (extraIndex >= number) number = extraIndex + 1;
       }
-      schemeName = untitled ? `Untitled Scheme ${untitled}` : "Untitled Scheme";
     }
+    if (number) schemeName = `${schemeName} ${number}`;
 
     const scheme = await Scheme.forge({
       name: schemeName,

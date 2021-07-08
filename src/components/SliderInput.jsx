@@ -76,7 +76,7 @@ const SliderInput = (props) => {
             onChange={(event) =>
               setValue(
                 event.target.value === ""
-                  ? min || 0
+                  ? Math.max(min, 0)
                   : Number(event.target.value)
               )
             }

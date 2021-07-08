@@ -84,12 +84,8 @@ class SchemeController {
           })
         );
       }
-      res.json({
-        scheme: scheme,
-        carMake: carMake,
-        basePaints: carMake.bases,
-        layers: builder_layers,
-      });
+      scheme = await SchemeService.getById(scheme.id);
+      res.json(scheme);
     } catch (err) {
       logger.log("error", err.stack);
       res.status(500).json({

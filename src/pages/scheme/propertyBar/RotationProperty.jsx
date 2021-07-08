@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
-import { AllowedLayerProps, LayerTypes } from "constant";
+import { AllowedLayerProps, LayerTypes, MouseModes } from "constant";
+import { rotateAroundCenter } from "helper";
 
 import {
   Box,
@@ -25,6 +26,8 @@ const RotationProperty = (props) => {
     errors,
     isValid,
     checkLayerDataDirty,
+    stageRef,
+    currentLayer,
     handleBlur,
     handleChange,
     setFieldValue,
@@ -41,6 +44,45 @@ const RotationProperty = (props) => {
         ? AllowedLayerProps[values.layer_type]
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
+  );
+
+  const handleChangeRotation = useCallback(
+    (value) => {
+      if (
+        ![
+          MouseModes.CIRCLE,
+          MouseModes.ELLIPSE,
+          MouseModes.STAR,
+          MouseModes.RING,
+          MouseModes.REGULARPOLYGON,
+          MouseModes.WEDGE,
+          MouseModes.ARC,
+          MouseModes.ARROW,
+          MouseModes.PEN,
+        ].includes(currentLayer.layer_data.type)
+      ) {
+        const stage = stageRef.current;
+        const selectedNode = stage.findOne("." + currentLayer.id);
+        const newRot = (value / 180) * Math.PI;
+        const boundBox = {
+          x: selectedNode.x(),
+          y: selectedNode.y(),
+          width: selectedNode.width(),
+          height: selectedNode.height(),
+          rotation: (selectedNode.rotation() / 180) * Math.PI,
+        };
+
+        const newBoundBox = rotateAroundCenter(
+          boundBox,
+          newRot - boundBox.rotation
+        );
+
+        setFieldValue("layer_data.left", newBoundBox.x);
+        setFieldValue("layer_data.top", newBoundBox.y);
+      }
+      setFieldValue("layer_data.rotation", value);
+    },
+    [currentLayer, rotateAroundCenter]
   );
 
   if (
@@ -62,7 +104,7 @@ const RotationProperty = (props) => {
               min={-179}
               max={179}
               value={Math.round(values.layer_data.rotation)}
-              setValue={(value) => setFieldValue("layer_data.rotation", value)}
+              setValue={handleChangeRotation}
             />
           ) : (
             <></>

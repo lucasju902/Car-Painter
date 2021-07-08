@@ -36,6 +36,7 @@ const Wrapper = styled(Box)`
 const InnerForm = React.memo(
   ({
     user,
+    stageRef,
     fontList,
     toggleField,
     toggleLayerDataField,
@@ -112,6 +113,8 @@ const InnerForm = React.memo(
         />
         <RotationProperty
           {...formProps}
+          stageRef={stageRef}
+          currentLayer={currentLayer}
           toggleField={toggleField}
           checkLayerDataDirty={checkLayerDataDirty}
           onLayerDataUpdate={onLayerDataUpdate}
@@ -136,7 +139,7 @@ const InnerForm = React.memo(
 );
 
 const PropertyBar = (props) => {
-  const { onClone } = props;
+  const { stageRef, activeTransformerRef, onClone } = props;
   const dispatch = useDispatch();
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
@@ -339,6 +342,7 @@ const PropertyBar = (props) => {
             <InnerForm
               {...formProps}
               user={user}
+              stageRef={stageRef}
               fontList={fontList}
               toggleField={toggleField}
               toggleLayerDataField={toggleLayerDataField}

@@ -69,6 +69,8 @@ const Scheme = () => {
   const baseLayerRef = useRef(null);
   const mainLayerRef = useRef(null);
   const carMaskLayerRef = useRef(null);
+  const activeTransformerRef = useRef(null);
+  const hoveredTransformerRef = useRef(null);
 
   const [user, userRef] = useReducerRef(
     useSelector((state) => state.authReducer.user)
@@ -122,8 +124,9 @@ const Scheme = () => {
       if (currentLayer && currentLayer.layer_data) {
         const stage = stageRef.current;
         const oldScale = stage.scaleX();
-        const { left: pointerX, top: pointerY } = currentLayer.layer_data;
-        console.log("pointerX, pointerY: ", pointerX, pointerY);
+        const selectedNode = stage.findOne("." + currentLayer.id);
+
+        const { x: pointerX, y: pointerY } = selectedNode.getAbsolutePosition();
         const mousePointTo = {
           x: (pointerX - stage.x()) / oldScale,
           y: (pointerY - stage.y()) / oldScale,
@@ -135,7 +138,7 @@ const Scheme = () => {
           x: pointerX - mousePointTo.x * newScale,
           y: pointerY - mousePointTo.y * newScale,
         };
-        console.log("newPos: ", newPos);
+
         stage.position(newPos);
         stage.batchDraw();
       } else {
@@ -608,9 +611,11 @@ const Scheme = () => {
                 baseLayerRef={baseLayerRef}
                 mainLayerRef={mainLayerRef}
                 carMaskLayerRef={carMaskLayerRef}
+                activeTransformerRef={activeTransformerRef}
+                hoveredTransformerRef={hoveredTransformerRef}
               />
             </Wrapper>
-            <PropertyBar onClone={handleCloneLayer} />
+            <PropertyBar stageRef={stageRef} onClone={handleCloneLayer} />
           </Box>
           <Toolbar
             onZoomIn={handleZoomIn}

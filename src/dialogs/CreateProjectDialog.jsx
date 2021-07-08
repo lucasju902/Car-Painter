@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import _ from "lodash";
 
 import styled from "styled-components/macro";
@@ -13,6 +13,8 @@ import {
   Box,
 } from "@material-ui/core";
 import { Autocomplete as MuiAutocomplete } from "@material-ui/lab";
+import { funWords } from "constant";
+import { getTwoRandomNumbers } from "helper";
 
 const Button = styled(MuiButton)(spacing);
 const Autocomplete = styled(MuiAutocomplete)(spacing);
@@ -36,9 +38,21 @@ const ProjectSelectDialog = (props) => {
   const [carMake, setCarMake] = useState(null);
   const [name, setName] = useState("");
 
-  let sortedCarMakesList = useMemo(
-    () => _.orderBy([...carMakeList], ["name", "car_type"], ["asc", "asc"]),
-    [carMakeList]
+  const [placeHolderName, setPlaceHolderName] = useState("");
+
+  const handleSubmit = useCallback(() => {
+    const schemeName = name && name.length ? name : placeHolderName;
+    onContinue(carMake, schemeName);
+  }, [carMake, name, placeHolderName, onContinue]);
+
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (event.keyCode === 13 && carMake) {
+        event.preventDefault();
+        handleSubmit();
+      }
+    },
+    [carMake, handleSubmit]
   );
 
   useEffect(() => {
@@ -50,6 +64,15 @@ const ProjectSelectDialog = (props) => {
     }
   }, [predefinedCarMakeID]);
 
+  useEffect(() => {
+    if (open) {
+      const rands = getTwoRandomNumbers(funWords.length);
+      setPlaceHolderName(
+        funWords[rands[0]] + " " + funWords[rands[1]] + " Paint"
+      );
+    }
+  }, [open]);
+
   return (
     <Dialog aria-labelledby="project-select-title" open={open}>
       <DialogTitle id="project-select-title">Create a new paint</DialogTitle>
@@ -59,7 +82,7 @@ const ProjectSelectDialog = (props) => {
             <Autocomplete
               id="car-make-select"
               value={carMake}
-              options={sortedCarMakesList}
+              options={carMakeList}
               groupBy={(option) => option.car_type}
               getOptionLabel={(option) => option.name}
               style={{ width: 500 }}
@@ -67,6 +90,7 @@ const ProjectSelectDialog = (props) => {
               onChange={(event, newValue) => {
                 setCarMake(newValue);
               }}
+              onKeyDown={handleKeyDown}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -79,10 +103,11 @@ const ProjectSelectDialog = (props) => {
             <></>
           )}
           <NameField
-            label="Name"
+            label={placeHolderName}
             value={name}
             variant="outlined"
             onChange={(event) => setName(event.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </Box>
       </DialogContent>
@@ -91,7 +116,7 @@ const ProjectSelectDialog = (props) => {
           Cancel
         </Button>
         <Button
-          onClick={() => onContinue(carMake, name)}
+          onClick={handleSubmit}
           color="primary"
           variant="outlined"
           disabled={!carMake ? true : false}
