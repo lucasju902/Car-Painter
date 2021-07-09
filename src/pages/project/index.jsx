@@ -227,7 +227,7 @@ const Scheme = () => {
                 dataLength={limit} //This is important field to render the next data
                 next={increaseData}
                 hasMore={limit < filteredSchemeList.length}
-                loader={<Loader />}
+                loader={<ScreenLoader />}
                 scrollableTarget="scheme-list-content"
               >
                 <Grid container spacing={4}>

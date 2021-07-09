@@ -47,7 +47,9 @@ const ShadowProperty = (props) => {
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
-      values.layer_type !== LayerTypes.SHAPE
+      !values.layer_type
+        ? []
+        : values.layer_type !== LayerTypes.SHAPE
         ? AllowedLayerProps[values.layer_type]
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
@@ -63,7 +65,7 @@ const ShadowProperty = (props) => {
       if (applyNow) onLayerDataUpdate("shadowColor", value);
       else setFieldValue("layer_data.shadowColor", value);
     },
-    [setFieldValue, onLayerDataUpdate, values.layer_data.shadowColor]
+    [setFieldValue, onLayerDataUpdate, values.layer_data]
   );
 
   if (

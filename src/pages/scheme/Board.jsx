@@ -71,7 +71,7 @@ const Board = ({
   const prevTick = useRef(0);
   const currentTick = useRef(0);
   const [tick, setTick] = useState(0);
-  const [helpingSponsor, setHelpingSponsor] = useState(false);
+  const [previousGuide, setPreviousGuide] = useState([]);
 
   const dispatch = useDispatch();
   const { width, height, ref } = useResizeDetector();
@@ -438,53 +438,61 @@ const Board = ({
     [dispatch]
   );
 
-  const showSponsorBlock = useCallback(
+  const showGuideForRepositioning = useCallback(
     (show = true) => {
-      console.log(show, paintingGuides);
-      if (show && !paintingGuides.includes(PaintingGuides.SPONSORBLOCKS)) {
-        dispatch(
-          setPaintingGuides([...paintingGuides, PaintingGuides.SPONSORBLOCKS])
-        );
-      }
-      if (!show && paintingGuides.includes(PaintingGuides.SPONSORBLOCKS)) {
-        dispatch(
-          setPaintingGuides(
-            paintingGuides.filter(
-              (item) => item !== PaintingGuides.SPONSORBLOCKS
-            )
-          )
-        );
+      if (!show) {
+        dispatch(setPaintingGuides([...previousGuide]));
+        setPreviousGuide([]);
+      } else if (!previousGuide.length) {
+        setPreviousGuide([...paintingGuides]);
+        let newPaintingGuides = [...paintingGuides];
+        if (
+          currentScheme.guide_data.show_wireframe &&
+          !newPaintingGuides.includes(PaintingGuides.WIREFRAME)
+        ) {
+          newPaintingGuides.push(PaintingGuides.WIREFRAME);
+        }
+        if (
+          currentScheme.guide_data.show_numberBlocks &&
+          !newPaintingGuides.includes(PaintingGuides.NUMBERBLOCKS)
+        ) {
+          newPaintingGuides.push(PaintingGuides.NUMBERBLOCKS);
+        }
+        if (
+          currentScheme.guide_data.show_sponsor &&
+          !newPaintingGuides.includes(PaintingGuides.SPONSORBLOCKS)
+        ) {
+          newPaintingGuides.push(PaintingGuides.SPONSORBLOCKS);
+        }
+        if (
+          currentScheme.guide_data.show_grid &&
+          !newPaintingGuides.includes(PaintingGuides.GRID)
+        ) {
+          newPaintingGuides.push(PaintingGuides.GRID);
+        }
+        dispatch(setPaintingGuides(newPaintingGuides));
       }
     },
-    [dispatch, paintingGuides]
+    [dispatch, paintingGuides, previousGuide, setPreviousGuide, currentScheme]
   );
   const handleLayerDragStart = useCallback(() => {
     if (
-      currentScheme.guide_data.show_sponsor &&
-      !paintingGuides.includes(PaintingGuides.SPONSORBLOCKS)
-    ) {
-      showSponsorBlock(true);
-      setHelpingSponsor(true);
-    }
-  }, [
-    dispatch,
-    currentScheme,
-    helpingSponsor,
-    showSponsorBlock,
-    setHelpingSponsor,
-  ]);
+      currentScheme.guide_data.show_wireframe ||
+      currentScheme.guide_data.show_numberBlocks ||
+      currentScheme.guide_data.show_sponsor ||
+      currentScheme.guide_data.show_grid
+    )
+      showGuideForRepositioning(true);
+  }, [showGuideForRepositioning, currentScheme]);
   const handleLayerDragEnd = useCallback(() => {
-    if (currentScheme.guide_data.show_sponsor && helpingSponsor) {
-      showSponsorBlock(false);
-      setHelpingSponsor(false);
-    }
-  }, [
-    dispatch,
-    currentScheme,
-    helpingSponsor,
-    showSponsorBlock,
-    setHelpingSponsor,
-  ]);
+    if (
+      currentScheme.guide_data.show_wireframe ||
+      currentScheme.guide_data.show_numberBlocks ||
+      currentScheme.guide_data.show_sponsor ||
+      currentScheme.guide_data.show_grid
+    )
+      showGuideForRepositioning(false);
+  }, [showGuideForRepositioning, currentScheme]);
 
   return (
     <Box
@@ -691,14 +699,11 @@ const Board = ({
           position="absolute"
           left="0"
           top="0"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
         >
-          <Box
-            position="absolute"
-            top="calc(50% - 25px)"
-            right="calc(50% - 25px)"
-          >
-            <ScreenLoader />
-          </Box>
+          <ScreenLoader />
         </Box>
       ) : (
         <></>

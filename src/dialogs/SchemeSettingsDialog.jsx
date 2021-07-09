@@ -136,7 +136,10 @@ const SchemeSettingsDialog = (props) => {
           grid_opacity: guide_data.grid_opacity || 1,
           grid_padding: guide_data.grid_padding || 10,
           grid_stroke: guide_data.grid_stroke || 0.1,
+          show_wireframe: guide_data.show_wireframe || false,
           show_sponsor: guide_data.show_sponsor || false,
+          show_numberBlocks: guide_data.show_numberBlocks || false,
+          show_grid: guide_data.show_grid || false,
           show_carparts_on_top: guide_data.show_carparts_on_top || false,
         }}
         validationSchema={Yup.object().shape({
@@ -177,6 +180,29 @@ const SchemeSettingsDialog = (props) => {
                   colorKey="wireframe_color"
                   opacityKey="wireframe_opacity"
                   {...formProps}
+                  extraChildren={
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={12}>
+                        <CustomFormControlLabel
+                          control={
+                            <Checkbox
+                              color="primary"
+                              name="show_wireframe"
+                              checked={formProps.values.show_wireframe}
+                              onChange={(event) =>
+                                formProps.setFieldValue(
+                                  "show_wireframe",
+                                  event.target.checked
+                                )
+                              }
+                            />
+                          }
+                          label="Show Wireframe for Repositioning"
+                          labelPlacement="start"
+                        />
+                      </Grid>
+                    </Grid>
+                  }
                 />
                 <SubForm
                   label="Sponsor Blocks"
@@ -200,7 +226,7 @@ const SchemeSettingsDialog = (props) => {
                               }
                             />
                           }
-                          label="Show Sponsor Block for Repositioning"
+                          label="Show Sponsor Blocks for Repositioning"
                           labelPlacement="start"
                         />
                       </Grid>
@@ -212,6 +238,29 @@ const SchemeSettingsDialog = (props) => {
                   colorKey="numberblock_color"
                   opacityKey="numberblock_opacity"
                   {...formProps}
+                  extraChildren={
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={12}>
+                        <CustomFormControlLabel
+                          control={
+                            <Checkbox
+                              color="primary"
+                              name="show_numberBlocks"
+                              checked={formProps.values.show_numberBlocks}
+                              onChange={(event) =>
+                                formProps.setFieldValue(
+                                  "show_numberBlocks",
+                                  event.target.checked
+                                )
+                              }
+                            />
+                          }
+                          label="Show Number Blocks for Repositioning"
+                          labelPlacement="start"
+                        />
+                      </Grid>
+                    </Grid>
+                  }
                 />
                 <SubForm
                   label="Grid"
@@ -242,6 +291,25 @@ const SchemeSettingsDialog = (props) => {
                           setValue={(value) =>
                             formProps.setFieldValue("grid_stroke", value)
                           }
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={12}>
+                        <CustomFormControlLabel
+                          control={
+                            <Checkbox
+                              color="primary"
+                              name="show_grid"
+                              checked={formProps.values.show_grid}
+                              onChange={(event) =>
+                                formProps.setFieldValue(
+                                  "show_grid",
+                                  event.target.checked
+                                )
+                              }
+                            />
+                          }
+                          label="Show Grid for Repositioning"
+                          labelPlacement="start"
                         />
                       </Grid>
                     </Grid>

@@ -208,6 +208,12 @@ const Scheme = () => {
     },
     [dispatch, getZoomedCenterPosition, stageRef, frameSize, zoom]
   );
+  const handleDeleteLayer = useCallback(
+    (layer) => {
+      setConfirmMessage(`Are you sure to delete "${layer.layer_data.name}"?`);
+    },
+    [setConfirmMessage]
+  );
 
   const handleKeyEvent = useCallback(
     (key, event) => {
@@ -222,9 +228,7 @@ const Scheme = () => {
           currentLayer &&
           currentLayer.layer_type !== LayerTypes.CAR
         ) {
-          setConfirmMessage(
-            `Are you sure to delete "${currentLayer.layer_data.name}"?`
-          );
+          handleDeleteLayer(currentLayer);
         } else if (key === "esc" && currentLayer) {
           dispatch(setCurrentLayer(null));
         } else if (event.key === "+" && event.shiftKey) {
@@ -383,6 +387,7 @@ const Scheme = () => {
       prevTick.current,
       tick.current,
       handleCloneLayer,
+      handleDeleteLayer,
     ]
   );
   const handleConfirm = useCallback(() => {
@@ -589,7 +594,12 @@ const Scheme = () => {
             handleEventType="keyup"
             onKeyEvent={handleKeyEvent}
           />
-          <Box width="100%" height="calc(100% - 50px)" display="flex">
+          <Box
+            width="100%"
+            height="calc(100% - 50px)"
+            display="flex"
+            justifyContent="space-between"
+          >
             <Sidebar
               dialog={dialog}
               setDialog={setDialog}
@@ -598,11 +608,7 @@ const Scheme = () => {
               stageRef={stageRef}
               onChangeHoverJSONItem={setHoveredJSONItem}
             />
-            <Wrapper
-              width="calc(100% - 350px)"
-              background="#282828"
-              overflow="hidden"
-            >
+            <Wrapper background="#282828" overflow="hidden" flexGrow="1">
               <Board
                 hoveredLayerJSON={hoveredJSON}
                 onChangeHoverJSONItem={setHoveredJSONItem}
@@ -615,7 +621,11 @@ const Scheme = () => {
                 hoveredTransformerRef={hoveredTransformerRef}
               />
             </Wrapper>
-            <PropertyBar stageRef={stageRef} onClone={handleCloneLayer} />
+            <PropertyBar
+              stageRef={stageRef}
+              onClone={handleCloneLayer}
+              onDelete={handleDeleteLayer}
+            />
           </Box>
           <Toolbar
             onZoomIn={handleZoomIn}

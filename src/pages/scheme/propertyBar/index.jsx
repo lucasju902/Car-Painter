@@ -24,12 +24,8 @@ import ExtraProperty from "./ExtraProperty";
 import SkewProperty from "./SkewProperty";
 
 const Wrapper = styled(Box)`
-  width: 350px;
-  position: fixed;
-  right: 0;
-  top: 0;
+  width: 300px;
   background: #666666;
-  height: calc(100% - 50px);
   overflow: auto;
 `;
 
@@ -43,11 +39,13 @@ const InnerForm = React.memo(
     currentLayer,
     pressedKey,
     onClone,
+    onDelete,
     onLayerDataUpdate,
     ...formProps
   }) => {
     const checkLayerDataDirty = useCallback(
       (params) => {
+        if (!currentLayer) return false;
         for (let param of params) {
           if (
             formProps.values.layer_data[param] != currentLayer.layer_data[param]
@@ -132,14 +130,14 @@ const InnerForm = React.memo(
           {...formProps}
           checkLayerDataDirty={checkLayerDataDirty}
         />
-        <ExtraProperty {...formProps} onClone={onClone} />
+        <ExtraProperty {...formProps} onClone={onClone} onDelete={onDelete} />
       </Form>
     );
   }
 );
 
 const PropertyBar = (props) => {
-  const { stageRef, activeTransformerRef, onClone } = props;
+  const { stageRef, onClone, onDelete } = props;
   const dispatch = useDispatch();
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
@@ -173,9 +171,26 @@ const PropertyBar = (props) => {
       ),
     [AllowedLayerTypes]
   );
+  const initialValues = useMemo(
+    () =>
+      currentLayer
+        ? {
+            ...defaultValues,
+            ...currentLayer,
+            layer_data: {
+              ...defaultValues.layer_data,
+              ...currentLayer.layer_data,
+            },
+          }
+        : { ...defaultValues },
+    [defaultValues, currentLayer]
+  );
   const handleClone = useCallback(() => {
     if (currentLayer) onClone(currentLayer);
   }, [onClone, currentLayer]);
+  const handleDelete = useCallback(() => {
+    if (currentLayer) onDelete(currentLayer);
+  }, [onDelete, currentLayer]);
   const handleApply = useCallback(
     (values) => {
       dispatch(updateLayer(values));
@@ -226,14 +241,7 @@ const PropertyBar = (props) => {
     return (
       <Wrapper py={5} px={3}>
         <Formik
-          initialValues={{
-            ...defaultValues,
-            ...currentLayer,
-            layer_data: {
-              ...defaultValues.layer_data,
-              ...currentLayer.layer_data,
-            },
-          }}
+          initialValues={initialValues}
           validationSchema={Yup.object({
             layer_order: Yup.number(),
             layer_visible: Yup.number(),
@@ -349,6 +357,7 @@ const PropertyBar = (props) => {
               currentLayer={currentLayer}
               pressedKey={pressedKey}
               onClone={handleClone}
+              onDelete={handleDelete}
               onLayerDataUpdate={handleLayerDataUpdate}
             />
           )}
@@ -356,7 +365,22 @@ const PropertyBar = (props) => {
       </Wrapper>
     );
   }
-  return <></>;
+
+  return (
+    <Wrapper py={5} px={3}>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+        height="34px"
+      >
+        <Typography variant="h5" noWrap>
+          Properties
+        </Typography>
+      </Box>
+    </Wrapper>
+  );
 };
 
 export default PropertyBar;

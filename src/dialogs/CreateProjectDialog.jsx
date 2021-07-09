@@ -103,8 +103,8 @@ const ProjectSelectDialog = (props) => {
             <></>
           )}
           <NameField
-            label={placeHolderName}
-            value={name}
+            label="Name"
+            value={name && name.length ? name : placeHolderName}
             variant="outlined"
             onChange={(event) => setName(event.target.value)}
             onKeyDown={handleKeyDown}

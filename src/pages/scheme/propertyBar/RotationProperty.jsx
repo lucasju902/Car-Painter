@@ -40,7 +40,9 @@ const RotationProperty = (props) => {
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
-      values.layer_type !== LayerTypes.SHAPE
+      !values.layer_type
+        ? []
+        : values.layer_type !== LayerTypes.SHAPE
         ? AllowedLayerProps[values.layer_type]
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
