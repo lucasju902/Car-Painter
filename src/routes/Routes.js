@@ -6,50 +6,40 @@ import MainLayout from "../layouts/Main";
 import AuthLayout from "../layouts/Auth";
 import Page404 from "../pages/auth/Page404";
 
-const childRoutes = (Layout, routes) =>
-  routes.map(({ component: Component, guard, children, path }, index) => {
-    const Guard = guard || React.Fragment;
+import { withAuthGuard } from "hooks";
 
-    return children ? (
-      children.map((element, index) => {
-        const Guard = element.guard || React.Fragment;
+const renderChildRoutes = (Layout, routes) =>
+  routes.map(
+    (
+      { path, component: Component, children, guarded, redirectToSignIn },
+      index
+    ) => {
+      const ComponentLayout = guarded
+        ? withAuthGuard(Layout, redirectToSignIn)
+        : Layout;
 
-        return (
-          <Route
-            key={index}
-            path={element.path}
-            exact
-            render={(props) => (
-              <Guard>
-                <Layout>
-                  <element.component {...props} />
-                </Layout>
-              </Guard>
-            )}
-          />
-        );
-      })
-    ) : Component ? (
-      <Route
-        key={index}
-        path={path}
-        exact
-        render={(props) => (
-          <Guard>
-            <Layout>
+      return children ? (
+        renderChildRoutes(Layout, children)
+      ) : Component ? (
+        <Route
+          key={index}
+          path={path}
+          exact
+          render={(props) => (
+            <ComponentLayout>
               <Component {...props} />
-            </Layout>
-          </Guard>
-        )}
-      />
-    ) : null;
-  });
+            </ComponentLayout>
+          )}
+        />
+      ) : null;
+    }
+  );
 
 const Routes = () => (
   <Router>
     <Switch>
-      {childRoutes(MainLayout, mainLayoutRoutes)}
-      {childRoutes(AuthLayout, authLayoutRoutes)}
+      {renderChildRoutes(MainLayout, mainLayoutRoutes)}
+      {renderChildRoutes(AuthLayout, authLayoutRoutes)}
       <Route
         render={() => (
           <AuthLayout>

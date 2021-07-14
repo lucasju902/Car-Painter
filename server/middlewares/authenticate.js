@@ -1,17 +1,20 @@
-// const CMSService = require("../services/cmsService");
+const UserService = require("../services/userService");
 
 const isAuthenticated = async (req, res, next) => {
   const token = JSON.parse(req.headers.authorization);
 
-  if (token) {
+  if (token && token.usr && token.hash) {
     try {
-      //   const user = await CMSService.getUserProfile(token);
-      //   req.user = user;
-      req.user = {
-        id: token.usr,
-      };
-      // console.log("Token: ", token);
-      next();
+      let user = await UserService.getById(parseInt(token.usr));
+      user = user.toJSON();
+      if (user.password === token.hash) {
+        req.user = user;
+        next();
+      } else {
+        res.status(401).json({
+          message: "Invalid token.",
+        });
+      }
     } catch (_err) {
       res.status(401).json({
         message: "Invalid token.",

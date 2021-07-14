@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import styled, { createGlobalStyle } from "styled-components/macro";
 import { CssBaseline, withWidth } from "@material-ui/core";
-import ScreenLoader from "components/ScreenLoader";
 
-import { signInWithCookie } from "redux/reducers/authReducer";
+import { useHistory } from "react-router";
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -32,22 +31,22 @@ const Root = styled.div`
   width: 100%;
 `;
 
-const Main = ({ children, routes, width }) => {
-  const dispatch = useDispatch();
+const Main = ({ children }) => {
+  const history = useHistory();
   const user = useSelector((state) => state.authReducer.user);
-  const authLoading = useSelector((state) => state.authReducer.loading);
 
   useEffect(() => {
     if (!user) {
-      dispatch(signInWithCookie());
+      history.push("/auth/sign-in");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
+
   return (
     <Root>
       <CssBaseline />
       <GlobalStyle />
-      {authLoading ? <ScreenLoader /> : children}
+      {children}
     </Root>
   );
 };

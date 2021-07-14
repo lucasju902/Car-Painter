@@ -164,6 +164,24 @@ const overrides = {
       borderBottom: "none",
     },
   },
+  MuiInputBase: {
+    input: {
+      height: "2rem",
+      "&:-webkit-autofill": {
+        "-webkit-box-shadow": "0 0 0 100px #444 inset !important",
+      },
+    },
+  },
+  MuiInputLabel: {
+    outlined: {
+      transform: "translate(14px, 14px) scale(1)",
+    },
+  },
+  MuiAutocomplete: {
+    input: {
+      height: "1.1876em",
+    },
+  },
   MuiAccordion: {
     rounded: {
       borderRadius: "6px",

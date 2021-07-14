@@ -679,7 +679,7 @@ const Board = ({
           )}
         </Layer>
       </Stage>
-      <Box position="absolute" right={currentLayer ? "350px" : 0} top={0}>
+      <Box position="absolute" right={0} top={0}>
         <LightTooltip title="Rotate Left" position="bottom" arrow>
           <RotationButton onClick={() => handleChangeBoardRotation(false)}>
             <RotateLeftIcon />

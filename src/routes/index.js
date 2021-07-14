@@ -1,9 +1,7 @@
 import async from "../components/Async";
 
-// Guards
-// const AuthGuard = async(() => import("../components/AuthGuard"));
-
 // Auth components
+const SignIn = async(() => import("../pages/auth/SignIn"));
 const Page404 = async(() => import("../pages/auth/Page404"));
 const Page500 = async(() => import("../pages/auth/Page500"));
 
@@ -16,6 +14,11 @@ const authRoutes = {
   path: "/auth",
   //   icon: <Users />,
   children: [
+    {
+      path: "/auth/sign-in",
+      name: "Sign In",
+      component: SignIn,
+    },
     {
       path: "/auth/404",
       name: "404 Page",
@@ -35,7 +38,8 @@ const projectRoute = {
   path: "/",
   name: "Project",
   component: Project,
-  //   guard: AuthGuard,
+  guarded: true,
+  redirectToSignIn: true,
 };
 
 const schemeRoute = {
@@ -43,7 +47,8 @@ const schemeRoute = {
   path: "/scheme/:id",
   name: "scheme",
   component: Scheme,
-  //   guard: AuthGuard,
+  guarded: true,
+  redirectToSignIn: true,
 };
 
 // Routes using the Dashboard layout

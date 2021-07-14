@@ -1,4 +1,4 @@
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 const getQueryVariable = (variable) => {
   const query = decodeURIComponent(variable);
@@ -13,11 +13,32 @@ const getQueryVariable = (variable) => {
 
 export default class CookieService {
   static getSiteLogin = () => {
-    // return Cookies.get("site_login_v2", {
-    //   domain: "tradingpaints.com",
-    // });
     return getQueryVariable(
-      "usr%3D20210226%26hash%3D5d9c68c6c50ed3d02a2fcf54f63993b6"
+      Cookies.get(
+        "site_login_v2"
+        // {
+        //   domain: "tradingpaints.com",
+        // }
+      )
+    );
+  };
+
+  static setSiteLogin = (token) => {
+    Cookies.set(
+      "site_login_v2",
+      token
+      // {
+      //   domain: "tradingpaints.com",
+      // }
+    );
+  };
+
+  static clearSiteLogin = () => {
+    Cookies.remove(
+      "site_login_v2"
+      // {
+      //   domain: "tradingpaints.com",
+      // }
     );
   };
 }

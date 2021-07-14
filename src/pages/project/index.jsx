@@ -4,11 +4,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
 import styled from "styled-components/macro";
-import { spacing } from "@material-ui/system";
 
 import {
   Box,
-  Button as MuiButton,
   Grid,
   TextField,
   FormControl,
@@ -16,11 +14,12 @@ import {
   InputLabel,
   MenuItem,
 } from "@material-ui/core";
+import { Button, Autocomplete, IconButton } from "components/MaterialUI";
+import LightTooltip from "components/LightTooltip";
 import { Add as AddIcon } from "@material-ui/icons";
+import { LogOut as LogOutIcon } from "react-feather";
 
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Autocomplete as MuiAutocomplete } from "@material-ui/lab";
-import Loader from "components/Loader";
 import ScreenLoader from "components/ScreenLoader";
 import CreateProjectDialog from "dialogs/CreateProjectDialog";
 import SearchBox from "components/SearchBox";
@@ -33,9 +32,8 @@ import {
   cloneScheme,
 } from "redux/reducers/schemeReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
+import { signOut } from "redux/reducers/authReducer";
 
-const Button = styled(MuiButton)(spacing);
-const Autocomplete = styled(MuiAutocomplete)(spacing);
 const CustomFormControl = styled(FormControl)`
   .MuiInputBase-root {
     height: 38px;
@@ -140,6 +138,10 @@ const Scheme = () => {
     dispatch(cloneScheme(schemeID));
   };
 
+  const handleLogOut = () => {
+    dispatch(signOut());
+  };
+
   const increaseData = () => {
     setLimit(limit + step);
   };
@@ -163,14 +165,22 @@ const Scheme = () => {
             mb={3}
           >
             <SearchBox value={search} onChange={(value) => setSearch(value)} />
-            <Button
-              onClick={handleCreateNew}
-              color="default"
-              variant="outlined"
-              startIcon={<AddIcon />}
-            >
-              New
-            </Button>
+            <Box display="flex">
+              <Button
+                onClick={handleCreateNew}
+                color="default"
+                variant="outlined"
+                startIcon={<AddIcon />}
+                mr={2}
+              >
+                New
+              </Button>
+              <LightTooltip title="Log Out" arrow>
+                <IconButton onClick={handleLogOut} size="small">
+                  <LogOutIcon />
+                </IconButton>
+              </LightTooltip>
+            </Box>
           </Box>
           <Box
             display="flex"
