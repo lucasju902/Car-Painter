@@ -2,6 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import AuthService from "services/authService";
 import CookieService from "services/cookieService";
 import { setMessage } from "./messageReducer";
+import {
+  clearCurrent as clearCurrentScheme,
+  clearList as clearSchemeList,
+  clearSharedList,
+} from "./schemeReducer";
 
 const initialState = {
   user: undefined,
@@ -57,6 +62,9 @@ export const signIn = (payload) => async (dispatch) => {
 
 export const signOut = () => async (dispatch) => {
   CookieService.clearSiteLogin();
+  dispatch(clearSchemeList());
+  dispatch(clearCurrentScheme());
+  dispatch(clearSharedList());
   dispatch(setUser(null));
 };
 

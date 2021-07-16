@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { HistoryActions } from "constant";
 import { parseScheme } from "helper";
 import SchemeService from "services/schemeService";
+import SharedSchemeService from "services/sharedSchemeService";
 import { setMessage } from "./messageReducer";
 import { setCurrent as setCurrentCarMake } from "./carMakeReducer";
 import { setList as setLayerList, setLoadedStatusAll } from "./layerReducer";
@@ -11,6 +12,7 @@ import { pushToActionHistory } from "./boardReducer";
 
 const initialState = {
   list: [],
+  sharedList: [],
   current: null,
   loading: false,
   loaded: false,
@@ -39,6 +41,9 @@ export const slice = createSlice({
       }
       state.list = list;
     },
+    clearList: (state) => {
+      state.list = [];
+    },
     insertToList: (state, action) => {
       let scheme = { ...action.payload };
       if (
@@ -61,6 +66,27 @@ export const slice = createSlice({
     },
     deleteListItem: (state, action) => {
       state.list = state.list.filter((item) => item.id !== action.payload);
+    },
+    setSharedList: (state, action) => {
+      state.sharedList = [...action.payload];
+    },
+    updateSharedListItem: (state, action) => {
+      let sharedList = [...state.sharedList];
+      let foundIndex = sharedList.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (foundIndex !== -1) {
+        sharedList[foundIndex] = action.payload;
+        state.sharedList = sharedList;
+      }
+    },
+    deleteSharedListItem: (state, action) => {
+      state.sharedList = state.sharedList.filter(
+        (item) => item.id !== action.payload
+      );
+    },
+    clearSharedList: (state) => {
+      state.sharedList = [];
     },
     setCurrent: (state, action) => {
       let scheme = { ...state.current, ...action.payload };
@@ -96,12 +122,17 @@ const {
   insertToList,
   updateListItem,
   deleteListItem,
+  setSharedList,
+  updateSharedListItem,
+  deleteSharedListItem,
 } = slice.actions;
 export const {
   setSaving,
   setLoaded,
   setCurrent,
   clearCurrent,
+  clearList,
+  clearSharedList,
   setCurrentName,
   setCurrentBaseColor,
 } = slice.actions;
@@ -247,6 +278,39 @@ export const cloneScheme = (schemeID) => async (dispatch) => {
     dispatch(
       setMessage({ message: "Cloned Project successfully!", type: "success" })
     );
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
+export const getSharedList = (userID) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const list = await SharedSchemeService.getSharedSchemeListByUserID(userID);
+    dispatch(setSharedList(list));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
+export const updateSharedItem = (id, payload) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const shared = await SharedSchemeService.updateSharedScheme(id, payload);
+    dispatch(updateSharedListItem(shared));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
+export const deleteSharedItem = (id) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    await SharedSchemeService.deleteSharedScheme(id);
+    dispatch(deleteSharedListItem(id));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

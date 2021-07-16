@@ -9,6 +9,9 @@ const Scheme = bookshelf.model("Scheme", {
   user() {
     return this.belongsTo("User", "user_id");
   },
+  sharedUsers() {
+    return this.hasMany("SharedScheme", "scheme_id");
+  },
   carMake() {
     return this.belongsTo("CarMake", "car_make");
   },
