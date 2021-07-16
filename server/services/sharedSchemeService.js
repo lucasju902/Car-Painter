@@ -22,7 +22,7 @@ class SharedSchemeService {
 
   static async getByID(id) {
     const shared = await SharedScheme.where({ id }).fetch({
-      withRelated: ["user", "scheme"],
+      withRelated: ["user", "scheme", "scheme.carMake"],
     });
     return shared;
   }
@@ -33,13 +33,14 @@ class SharedSchemeService {
   }
 
   static async updateById(id, payload) {
-    const shared = await this.getById(id);
+    let shared = await SharedScheme.where({ id }).fetch();
     await shared.save(payload);
+    shared = this.getByID(id);
     return shared;
   }
 
   static async deleteById(id) {
-    const shared = await this.getById(id);
+    const shared = await SharedScheme.where({ id }).fetch();
     await shared.destroy();
     return true;
   }

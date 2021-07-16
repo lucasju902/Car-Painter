@@ -13,6 +13,7 @@ import { pushToActionHistory } from "./boardReducer";
 const initialState = {
   list: [],
   sharedList: [],
+  sharedUsers: [],
   current: null,
   loading: false,
   loaded: false,
@@ -88,6 +89,27 @@ export const slice = createSlice({
     clearSharedList: (state) => {
       state.sharedList = [];
     },
+    setSharedUsers: (state, action) => {
+      state.sharedUsers = [...action.payload];
+    },
+    updateSharedUser: (state, action) => {
+      let sharedUsers = [...state.sharedUsers];
+      let foundIndex = sharedUsers.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (foundIndex !== -1) {
+        sharedUsers[foundIndex] = action.payload;
+        state.sharedUsers = sharedUsers;
+      }
+    },
+    deleteSharedUser: (state, action) => {
+      state.sharedUsers = state.sharedUsers.filter(
+        (item) => item.id !== action.payload
+      );
+    },
+    clearSharedUser: (state) => {
+      state.sharedUsers = [];
+    },
     setCurrent: (state, action) => {
       let scheme = { ...state.current, ...action.payload };
       if (
@@ -125,6 +147,9 @@ const {
   setSharedList,
   updateSharedListItem,
   deleteSharedListItem,
+  setSharedUsers,
+  updateSharedUser,
+  deleteSharedUser,
 } = slice.actions;
 export const {
   setSaving,
@@ -133,6 +158,7 @@ export const {
   clearCurrent,
   clearList,
   clearSharedList,
+  clearSharedUser,
   setCurrentName,
   setCurrentBaseColor,
 } = slice.actions;
@@ -171,7 +197,7 @@ export const createScheme = (
   dispatch(setLoading(false));
 };
 
-export const getScheme = (schemeID) => async (dispatch) => {
+export const getScheme = (schemeID, callback) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     const result = await SchemeService.getScheme(schemeID);
@@ -189,6 +215,7 @@ export const getScheme = (schemeID) => async (dispatch) => {
     dispatch(setLoadedStatusAll(loadedStatuses));
     dispatch(setLayerList(result.layers));
     dispatch(setBasePaintList(result.basePaints));
+    if (callback) callback();
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -278,6 +305,41 @@ export const cloneScheme = (schemeID) => async (dispatch) => {
     dispatch(
       setMessage({ message: "Cloned Project successfully!", type: "success" })
     );
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
+export const getSharedUsers = (schemeID) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const sharedUsers = await SharedSchemeService.getSharedSchemeListBySchemeID(
+      schemeID
+    );
+    dispatch(setSharedUsers(sharedUsers));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
+export const updateSharedUserItem = (id, payload) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const shared = await SharedSchemeService.updateSharedScheme(id, payload);
+    dispatch(updateSharedUser(shared));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
+export const deleteSharedUserItem = (id) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    await SharedSchemeService.deleteSharedScheme(id);
+    dispatch(deleteSharedUser(id));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

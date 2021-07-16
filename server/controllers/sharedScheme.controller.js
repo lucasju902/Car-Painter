@@ -28,7 +28,7 @@ class SharedSchemeController {
 
   static async getListBySchemeID(req, res) {
     try {
-      let list = await SharedSchemeService.getListBySchemeID(req.params.id);
+      let list = await SharedSchemeService.getListBySchemeId(req.params.id);
       res.json(list);
     } catch (err) {
       logger.log("error", err.stack);

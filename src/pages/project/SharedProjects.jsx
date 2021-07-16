@@ -16,7 +16,14 @@ const CustomInfiniteScroll = styled(InfiniteScroll)`
 `;
 
 const SharedProjects = (props) => {
-  const { sharedSchemeList, sortBy, search, selectedVehicle } = props;
+  const {
+    sharedSchemeList,
+    sortBy,
+    search,
+    selectedVehicle,
+    onAccept,
+    onRemove,
+  } = props;
 
   const step = 15;
   const [limit, setLimit] = useState(step);
@@ -85,7 +92,14 @@ const SharedProjects = (props) => {
                 lg={3}
                 xl={3}
               >
-                <ProjectItem scheme={sharedScheme.scheme} />
+                <ProjectItem
+                  scheme={sharedScheme.scheme}
+                  shared={true}
+                  accepted={false}
+                  sharedID={sharedScheme.id}
+                  onAccept={onAccept}
+                  onDelete={onRemove}
+                />
               </Grid>
             ))}
           </Grid>
@@ -99,7 +113,13 @@ const SharedProjects = (props) => {
       <Grid container spacing={4}>
         {acceptedSharedSchemeList.slice(0, limit).map((sharedScheme) => (
           <Grid key={sharedScheme.id} item xs={12} sm={6} md={4} lg={3} xl={3}>
-            <ProjectItem scheme={sharedScheme.scheme} />
+            <ProjectItem
+              scheme={sharedScheme.scheme}
+              shared={true}
+              accepted={true}
+              sharedID={sharedScheme.id}
+              onDelete={onRemove}
+            />
           </Grid>
         ))}
       </Grid>

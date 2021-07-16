@@ -29,6 +29,8 @@ import {
   deleteScheme,
   cloneScheme,
   getSharedList,
+  updateSharedItem,
+  deleteSharedItem,
 } from "redux/reducers/schemeReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 import { signOut } from "redux/reducers/authReducer";
@@ -68,7 +70,7 @@ const Wrapper = styled(Box)`
 `;
 
 const Tab = styled(Box)`
-  background-color: ${(props) => (props.active ? "#222" : "#333")};
+  background-color: ${(props) => (props.state === "active" ? "#222" : "#333")};
   cursor: pointer;
   padding: 4px 12px;
 `;
@@ -154,6 +156,16 @@ const Scheme = () => {
   const handleCloneProject = (schemeID) => {
     dispatch(cloneScheme(schemeID));
   };
+  const handleAcceptInvitation = (sharedID) => {
+    dispatch(
+      updateSharedItem(sharedID, {
+        accepted: 1,
+      })
+    );
+  };
+  const handleRemoveSharedProject = (sharedID) => {
+    dispatch(deleteSharedItem(sharedID));
+  };
 
   const handleLogOut = () => {
     dispatch(signOut());
@@ -179,25 +191,31 @@ const Scheme = () => {
           </LightTooltip>
         </Box>
         <Box display="flex" flexDirection="column">
-          <Tab active={tabValue === 0} onClick={() => setTabValue(0)}>
+          <Tab
+            state={tabValue === 0 ? "active" : null}
+            onClick={() => setTabValue(0)}
+          >
             <Typography>My Projects</Typography>
           </Tab>
           <Tab
             display="flex"
             justifyContent="space-between"
-            active={tabValue === 1}
+            state={tabValue === 1 ? "active" : null}
             onClick={() => setTabValue(1)}
           >
             <Typography>Shared with Me</Typography>
             {newInvitationCount ? (
-              <Box borderRadius="100%" bgcolor="#444" px={2}>
+              <Box borderRadius="100%" bgcolor="#444" px="10px">
                 <Typography variant="body1">{newInvitationCount}</Typography>
               </Box>
             ) : (
               <></>
             )}
           </Tab>
-          <Tab active={tabValue === 2} onClick={() => setTabValue(2)}>
+          <Tab
+            state={tabValue === 2 ? "active" : null}
+            onClick={() => setTabValue(2)}
+          >
             <Typography>Favorite Projects</Typography>
           </Tab>
         </Box>
@@ -286,6 +304,8 @@ const Scheme = () => {
                   sortBy={sortBy}
                   search={search}
                   selectedVehicle={selectedVehicle}
+                  onAccept={handleAcceptInvitation}
+                  onRemove={handleRemoveSharedProject}
                 />
               </TabPanel>
               <TabPanel value={tabValue} index={2}>

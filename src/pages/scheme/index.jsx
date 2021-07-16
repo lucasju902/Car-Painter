@@ -19,7 +19,12 @@ import PropertyBar from "./propertyBar";
 import ConfirmDialog from "dialogs/ConfirmDialog";
 import { MouseModes, PaintingGuides, DialogTypes } from "constant";
 
-import { getScheme, setSaving, setLoaded } from "redux/reducers/schemeReducer";
+import {
+  getScheme,
+  setSaving,
+  setLoaded,
+  getSharedUsers,
+} from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
 import { getFontList } from "redux/reducers/fontReducer";
 import { getLogoList } from "redux/reducers/logoReducer";
@@ -51,6 +56,7 @@ import {
   getZoomedCenterPosition,
 } from "helper";
 import SchemeService from "services/schemeService";
+import { getUserList } from "redux/reducers/userReducer";
 
 const Wrapper = styled(Box)`
   background-color: ${(props) => props.background};
@@ -90,6 +96,8 @@ const Scheme = () => {
   const overlayList = useSelector((state) => state.overlayReducer.list);
   const logoList = useSelector((state) => state.logoReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
+  const userList = useSelector((state) => state.userReducer.list);
+  const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
@@ -533,14 +541,19 @@ const Scheme = () => {
   useEffect(() => {
     if (user && user.id && params.id) {
       if (!currentScheme) {
-        dispatch(getScheme(params.id));
+        dispatch(
+          getScheme(params.id, () => {
+            if (!uploadsInitialized) {
+              dispatch(getUploadListByUserID(user.id));
+            }
+            if (!overlayList.length) dispatch(getOverlayList());
+            if (!logoList.length) dispatch(getLogoList());
+            if (!fontList.length) dispatch(getFontList());
+            if (!userList.length) dispatch(getUserList());
+            if (!sharedUsers.length) dispatch(getSharedUsers(params.id));
+          })
+        );
       }
-      if (!uploadsInitialized) {
-        dispatch(getUploadListByUserID(user.id));
-      }
-      if (!overlayList.length) dispatch(getOverlayList());
-      if (!logoList.length) dispatch(getLogoList());
-      if (!fontList.length) dispatch(getFontList());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);

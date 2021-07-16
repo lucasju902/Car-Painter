@@ -43,14 +43,20 @@ const BasePaintDialog = React.memo((props) => {
   const { legacyMode, basePaints, carMake, onCancel, open, onOpenBase } = props;
   const bases = useMemo(
     () =>
-      legacyMode
+      !carMake
+        ? []
+        : legacyMode
         ? basePaints
         : Array.from({ length: carMake.total_bases }, (_, i) => i + 1),
     [legacyMode, basePaints, carMake]
   );
   const hasMore = useMemo(
     () =>
-      legacyMode ? limit < basePaints.length : limit < carMake.total_bases,
+      !carMake
+        ? false
+        : legacyMode
+        ? limit < basePaints.length
+        : limit < carMake.total_bases,
     [legacyMode, limit, basePaints, carMake]
   );
 

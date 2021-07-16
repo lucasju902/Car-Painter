@@ -28,9 +28,17 @@ const StyledMenu = styled(Menu)`
 `;
 
 const ProjectItem = (props) => {
-  const { scheme, onDelete, onCloneProject } = props;
+  const {
+    scheme,
+    onDelete,
+    onCloneProject,
+    onAccept,
+    shared,
+    accepted,
+    sharedID,
+  } = props;
   const [actionMenuEl, setActionMenuEl] = useState(null);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(false);
   const history = useHistory();
 
   const handleActionMenuClick = (event) => {
@@ -40,11 +48,19 @@ const ProjectItem = (props) => {
     setActionMenuEl(null);
   };
   const handleDeleteItem = () => {
-    onDelete(scheme.id);
+    if (shared) {
+      onDelete(sharedID);
+    } else {
+      onDelete(scheme.id);
+    }
     handleActionMenuClose();
   };
   const handleCloneProject = () => {
     onCloneProject(scheme.id);
+    handleActionMenuClose();
+  };
+  const handleAccept = () => {
+    onAccept(sharedID);
     handleActionMenuClose();
   };
   const openScheme = (schemeID) => {
@@ -94,17 +110,38 @@ const ProjectItem = (props) => {
             open={Boolean(actionMenuEl)}
             onClose={handleActionMenuClose}
           >
-            <MenuItem onClick={handleCloneProject}>Clone</MenuItem>
-            <MenuItem onClick={() => setShowDeleteDialog(true)}>
-              Delete
+            {onCloneProject && (
+              <MenuItem onClick={handleCloneProject}>Clone</MenuItem>
+            )}
+
+            {onAccept && <MenuItem onClick={handleAccept}>Accept</MenuItem>}
+
+            <MenuItem
+              onClick={() =>
+                setDeleteMessage(
+                  `Are you sure to ${
+                    shared && !accepted
+                      ? "reject"
+                      : shared && accepted
+                      ? "remove"
+                      : "delete"
+                  } "${scheme.name}"?`
+                )
+              }
+            >
+              {shared && !accepted
+                ? "Reject"
+                : shared && accepted
+                ? "Remove"
+                : "Delete"}
             </MenuItem>
           </StyledMenu>
         </Box>
       </Box>
       <ConfirmDialog
-        text={`Are you sure to delete "${scheme.name}"?`}
-        open={showDeleteDialog}
-        onCancel={() => setShowDeleteDialog(false)}
+        text={deleteMessage}
+        open={!!deleteMessage}
+        onCancel={() => setDeleteMessage(null)}
         onConfirm={handleDeleteItem}
       />
     </ItemWrapper>

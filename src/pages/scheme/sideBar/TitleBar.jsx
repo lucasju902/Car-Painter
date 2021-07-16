@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import _ from "lodash";
 import styled from "styled-components/macro";
 
 import {
@@ -19,7 +20,7 @@ import {
   SettingsBackupRestore as BackUpIcon,
 } from "@material-ui/icons";
 import { faQuestion, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import SchemeSettingsDialog from "dialogs/SchemeSettingsDialog";
+import SchemeSettingsDialog from "dialogs/scheme-settings-dialog";
 import ShortCutsDialog from "dialogs/ShortCutsDialog";
 import LightTooltip from "components/LightTooltip";
 
@@ -44,6 +45,11 @@ const TitleBar = () => {
   const [dialog, setDialog] = useState(null);
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
+  const guide_data = useSelector(
+    (state) => state.schemeReducer.current.guide_data
+  );
+  const userList = useSelector((state) => state.userReducer.list);
 
   const handleNameChange = useCallback(
     (event) => {
@@ -75,7 +81,7 @@ const TitleBar = () => {
     history.push("/");
   }, [history, dispatch]);
 
-  const handleApplySettings = useCallback(
+  const handleApplyProjectSettings = useCallback(
     (guide_data) => {
       dispatch(
         updateScheme({
@@ -86,6 +92,14 @@ const TitleBar = () => {
       setDialog(null);
     },
     [dispatch, currentScheme, setDialog]
+  );
+  const handleApplySharingSetting = useCallback(
+    (data) => {
+      console.log(data);
+
+      setDialog(null);
+    },
+    [dispatch, setDialog]
   );
   useEffect(() => {
     if (currentScheme) {
@@ -148,8 +162,14 @@ const TitleBar = () => {
         onCancel={() => setDialog(null)}
       />
       <SchemeSettingsDialog
+        ownerID={currentScheme.user_id}
+        schemeID={currentScheme.id}
+        sharedUsers={sharedUsers}
+        userList={userList}
+        guide_data={guide_data}
         open={dialog === DialogTypes.SETTINGS}
-        onApply={handleApplySettings}
+        onApplyGuideSettings={handleApplyProjectSettings}
+        onApplySharingSetting={handleApplySharingSetting}
         onCancel={() => setDialog(null)}
       />
     </Box>
