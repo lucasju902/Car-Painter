@@ -9,6 +9,7 @@ import { getRelativeShadowOffset } from "helper";
 
 const LogosAndTexts = (props) => {
   const {
+    editable,
     layers,
     loadedFontList,
     loadedStatuses,
@@ -67,6 +68,7 @@ const LogosAndTexts = (props) => {
               key={layer.id}
               id={layer.id}
               name={layer.id.toString()}
+              editable={editable}
               src={`${config.assetsURL}/${layer.layer_data.source_file}`}
               loadedStatus={loadedStatuses[layer.id]}
               x={parseFloat(layer.layer_data.left || 0)}
@@ -109,6 +111,7 @@ const LogosAndTexts = (props) => {
           <TextNode
             key={layer.id}
             id={layer.id}
+            editable={editable}
             name={layer.id.toString()}
             text={layer.layer_data.text}
             fontFamily={font.font_name}

@@ -31,6 +31,7 @@ const CustomIconButton = styled(IconButton)`
 
 const SizeProperty = (props) => {
   const {
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -211,6 +212,7 @@ const SizeProperty = (props) => {
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.width)}
+                disabled={!editable}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.width &&
@@ -238,6 +240,7 @@ const SizeProperty = (props) => {
             {AllowedLayerTypes.includes("layer_data.width") &&
             AllowedLayerTypes.includes("layer_data.height") ? (
               <CustomIconButton
+                disabled={!editable}
                 onClick={() => toggleLayerDataField("sizeLocked")}
               >
                 {values.layer_data.sizeLocked || pressingShiftKey ? (
@@ -260,6 +263,7 @@ const SizeProperty = (props) => {
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.height)}
+                disabled={!editable}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.height &&
@@ -298,6 +302,7 @@ const SizeProperty = (props) => {
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.scaleX)}
+                disabled={!editable}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.scaleX &&
@@ -325,6 +330,7 @@ const SizeProperty = (props) => {
             {AllowedLayerTypes.includes("layer_data.scaleX") &&
             AllowedLayerTypes.includes("layer_data.scaleY") ? (
               <CustomIconButton
+                disabled={!editable}
                 onClick={() => toggleLayerDataField("scaleLocked")}
               >
                 {values.layer_data.scaleLocked || pressingShiftKey ? (
@@ -343,6 +349,7 @@ const SizeProperty = (props) => {
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.scaleY)}
+                disabled={!editable}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.scaleY &&
@@ -381,6 +388,7 @@ const SizeProperty = (props) => {
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.innerRadius)}
+                disabled={!editable}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.innerRadius &&
@@ -408,6 +416,7 @@ const SizeProperty = (props) => {
             {AllowedLayerTypes.includes("layer_data.innerRadius") &&
             AllowedLayerTypes.includes("layer_data.outerRadius") ? (
               <CustomIconButton
+                disabled={!editable}
                 onClick={() => toggleLayerDataField("scaleLocked")}
               >
                 {values.layer_data.scaleLocked || pressingShiftKey ? (
@@ -426,6 +435,7 @@ const SizeProperty = (props) => {
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.outerRadius)}
+                disabled={!editable}
                 error={Boolean(
                   touched.layer_data &&
                     touched.layer_data.outerRadius &&
@@ -458,6 +468,7 @@ const SizeProperty = (props) => {
               variant="outlined"
               type="number"
               value={mathRound2(values.layer_data.radius)}
+              disabled={!editable}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.radius &&
@@ -489,6 +500,7 @@ const SizeProperty = (props) => {
               variant="outlined"
               type="number"
               value={mathRound2(values.layer_data.pointerWidth)}
+              disabled={!editable}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.pointerWidth &&
@@ -520,6 +532,7 @@ const SizeProperty = (props) => {
               variant="outlined"
               type="number"
               value={mathRound2(values.layer_data.pointerLength)}
+              disabled={!editable}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.pointerLength &&
@@ -544,7 +557,7 @@ const SizeProperty = (props) => {
           ) : (
             <></>
           )}
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

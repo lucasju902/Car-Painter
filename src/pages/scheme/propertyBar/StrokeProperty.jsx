@@ -20,6 +20,7 @@ import SliderInput from "components/SliderInput";
 
 const StrokeProperty = (props) => {
   const {
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -65,6 +66,7 @@ const StrokeProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.scolor}
+                  disabled={!editable}
                   onChange={(color) => onLayerDataUpdate("scolor", color)}
                   onInputChange={(color) =>
                     setFieldValue("layer_data.scolor", color)
@@ -84,6 +86,7 @@ const StrokeProperty = (props) => {
                 min={0}
                 max={10}
                 value={values.layer_data.stroke}
+                disabled={!editable}
                 setValue={(value) => setFieldValue("layer_data.stroke", value)}
               />
             </Box>
@@ -102,6 +105,7 @@ const StrokeProperty = (props) => {
                   name="layer_data.strokeType"
                   variant="outlined"
                   value={values.layer_data.strokeType}
+                  disabled={!editable}
                   onChange={(event) =>
                     onLayerDataUpdate("strokeType", event.target.value)
                   }
@@ -116,7 +120,7 @@ const StrokeProperty = (props) => {
           ) : (
             <></>
           )}
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

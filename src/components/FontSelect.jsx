@@ -21,13 +21,14 @@ const FontImage = styled.img`
 `;
 
 const FontSelect = (props) => {
-  const { fontList, value, onChange } = props;
+  const { fontList, value, disabled, onChange } = props;
 
   return (
     <CustomSelect
       labelId="font-select-label"
       id="font-select-outlined"
       value={value}
+      disabled={disabled}
       onChange={onChange}
       label="Font"
       mb={4}

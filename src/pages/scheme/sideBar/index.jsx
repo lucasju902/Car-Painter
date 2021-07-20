@@ -33,6 +33,7 @@ const Sidebar = (props) => {
   const {
     dialog,
     setDialog,
+    editable,
     stageRef,
     focusBoard,
     hoveredLayerJSON,
@@ -84,7 +85,7 @@ const Sidebar = (props) => {
   return (
     <Box display="flex" flexDirection="column">
       <TitleWrapper px={3}>
-        <TitleBar />
+        <TitleBar editable={editable} />
       </TitleWrapper>
       <Wrapper display="flex">
         <DrawerBar
@@ -92,6 +93,7 @@ const Sidebar = (props) => {
           setDialog={setDialog}
           stageRef={stageRef}
           focusBoard={focusBoard}
+          editable={editable}
         />
         <LayerWrapper pr={3} pb={2}>
           <PartGroup
@@ -99,6 +101,7 @@ const Sidebar = (props) => {
             layerList={layerList.filter(
               (item) => item.layer_type === LayerTypes.CAR
             )}
+            disabled={!editable}
             disableLock={true}
             disableDnd={true}
             hoveredLayerJSON={hoveredLayerJSON}
@@ -112,6 +115,7 @@ const Sidebar = (props) => {
                 item.layer_type === LayerTypes.TEXT ||
                 item.layer_type === LayerTypes.UPLOAD
             )}
+            disabled={!editable}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
           />
@@ -120,6 +124,7 @@ const Sidebar = (props) => {
             layerList={layerList.filter(
               (item) => item.layer_type === LayerTypes.SHAPE
             )}
+            disabled={!editable}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
           />
@@ -128,6 +133,7 @@ const Sidebar = (props) => {
             layerList={layerList.filter(
               (item) => item.layer_type === LayerTypes.OVERLAY
             )}
+            disabled={!editable}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
           />
@@ -136,6 +142,7 @@ const Sidebar = (props) => {
             layerList={layerList.filter(
               (item) => item.layer_type === LayerTypes.BASE
             )}
+            disabled={!editable}
             disableLock={true}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
@@ -147,6 +154,7 @@ const Sidebar = (props) => {
               >
                 <ColorPickerInput
                   value={colorInput}
+                  disabled={!editable}
                   onChange={handleChangeBasePaintColor}
                   onInputChange={handleChangeBasePaintColorInput}
                 />

@@ -27,6 +27,7 @@ const CustomeTextField = styled(TextField)`
 const ShadowProperty = (props) => {
   const DefaultBlurToSet = 5;
   const {
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -91,6 +92,7 @@ const ShadowProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.shadowColor}
+                  disabled={!editable}
                   onChange={(color) => handleColorChange(color)}
                   onInputChange={(color) => handleColorChange(color, false)}
                   error={Boolean(
@@ -112,6 +114,7 @@ const ShadowProperty = (props) => {
               variant="outlined"
               type="number"
               value={mathRound2(values.layer_data.shadowBlur)}
+              disabled={!editable}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.shadowBlur &&
@@ -143,6 +146,7 @@ const ShadowProperty = (props) => {
               max={1}
               step={0.01}
               value={values.layer_data.shadowOpacity}
+              disabled={!editable}
               setValue={(value) =>
                 setFieldValue("layer_data.shadowOpacity", value)
               }
@@ -159,6 +163,7 @@ const ShadowProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.shadowOffsetX)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.shadowOffsetX &&
@@ -192,6 +197,7 @@ const ShadowProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.shadowOffsetY)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.shadowOffsetY &&
@@ -218,7 +224,7 @@ const ShadowProperty = (props) => {
               )}
             </Grid>
           </Grid>
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

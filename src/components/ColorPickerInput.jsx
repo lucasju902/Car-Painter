@@ -9,7 +9,7 @@ const ColorInputField = styled(TextField)`
 `;
 
 const ColorPickerInput = (props) => {
-  const { value, onChange, onInputChange, error, helperText } = props;
+  const { value, disabled, onChange, onInputChange, error, helperText } = props;
 
   const handleInputKeyDown = useCallback(
     (event) => {
@@ -23,15 +23,27 @@ const ColorPickerInput = (props) => {
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
       <Box display="flex" alignItems="center">
-        <ColorPicker
-          value={value || ""}
-          onChange={(color) => onChange(color.css.backgroundColor)}
-          palette={Palette}
-          deferred
-          hideTextfield
-        />
+        {disabled ? (
+          <Box
+            width="24px"
+            height="24px"
+            bgcolor={value || "white"}
+            borderRadius="5px"
+            m="4px"
+          ></Box>
+        ) : (
+          <ColorPicker
+            value={value || ""}
+            onChange={(color) => onChange(color.css.backgroundColor)}
+            palette={Palette}
+            deferred
+            hideTextfield
+          />
+        )}
+
         <ColorInputField
           value={value || ""}
+          disabled={disabled}
           onChange={(event) => onInputChange(event.target.value)}
           onKeyDown={handleInputKeyDown}
         />

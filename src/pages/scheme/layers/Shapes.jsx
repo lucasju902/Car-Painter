@@ -7,6 +7,7 @@ import { getRelativeShadowOffset, removeDuplicatedPointFromEnd } from "helper";
 
 const Shapes = (props) => {
   const {
+    editable,
     layers,
     drawingLayer,
     setCurrentLayer,
@@ -94,6 +95,7 @@ const Shapes = (props) => {
           <Shape
             key={layer.id}
             id={layer.id}
+            editable={editable}
             type={layer.layer_data.type}
             x={parseFloat(layer.layer_data.left + offsetsFromStroke.x || 0)}
             y={parseFloat(layer.layer_data.top + offsetsFromStroke.y || 0)}

@@ -56,6 +56,7 @@ const RotationButton = styled(IconButton)`
 
 const Board = ({
   hoveredLayerJSON,
+  editable,
   onChangeHoverJSONItem,
   onChangeBoardRotation,
   stageRef,
@@ -580,6 +581,7 @@ const Board = ({
           )}
 
           <Overlays
+            editable={editable}
             layers={layerList}
             frameSize={frameSize}
             boardRotate={boardRotate}
@@ -595,6 +597,7 @@ const Board = ({
             onDragEnd={handleLayerDragEnd}
           />
           <Shapes
+            editable={editable}
             layers={layerList}
             drawingLayer={drawingLayerRef.current}
             boardRotate={boardRotate}
@@ -609,6 +612,7 @@ const Board = ({
             onDragEnd={handleLayerDragEnd}
           />
           <LogosAndTexts
+            editable={editable}
             layers={layerList}
             fonts={fontList}
             loadedFontList={loadedFontList}
@@ -660,13 +664,18 @@ const Board = ({
             handleImageSize={handleImageSize}
             onLoadLayer={handleLoadLayer}
           />
-          <TransformerComponent
-            trRef={activeTransformerRef}
-            selectedLayer={currentLayer}
-            pressedKey={pressedKey}
-          />
+          {editable ? (
+            <TransformerComponent
+              trRef={activeTransformerRef}
+              selectedLayer={currentLayer}
+              pressedKey={pressedKey}
+            />
+          ) : (
+            <></>
+          )}
+
           {hoveredLayerJSON &&
-          (!currentLayer || !hoveredLayerJSON[currentLayer.id]) ? (
+          (!currentLayer || !hoveredLayerJSON[currentLayer.id] || !editable) ? (
             <TransformerComponent
               trRef={hoveredTransformerRef}
               selectedLayer={layerList.find(

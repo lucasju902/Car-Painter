@@ -33,6 +33,7 @@ class SchemeController {
         carMake: scheme.carMake,
         basePaints: scheme.carMake.bases,
         layers: scheme.layers,
+        sharedUsers: scheme.sharedUsers,
       });
     } catch (err) {
       logger.log("error", err.stack);

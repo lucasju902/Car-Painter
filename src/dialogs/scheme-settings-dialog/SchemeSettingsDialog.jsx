@@ -7,6 +7,8 @@ import { StyledTabs, StyledTab, TabPanel, a11yProps } from "./styles";
 const SchemeSettingsDialog = (props) => {
   const {
     ownerID,
+    editable,
+    currentUserID,
     schemeID,
     userList,
     sharedUsers,
@@ -45,6 +47,7 @@ const SchemeSettingsDialog = (props) => {
       <Box>
         <TabPanel value={tabValue} index={0}>
           <GuidesSetting
+            editable={editable}
             guide_data={guide_data}
             onApply={onApplyGuideSettings}
             onCancel={onCancel}
@@ -53,6 +56,7 @@ const SchemeSettingsDialog = (props) => {
         <TabPanel value={tabValue} index={1}>
           <SharingSetting
             ownerID={ownerID}
+            currentUserID={currentUserID}
             schemeID={schemeID}
             userList={userList}
             sharedUsers={sharedUsers}

@@ -8,14 +8,20 @@ import {
   Typography,
   Select,
   MenuItem,
-  Autocomplete,
   TextField,
 } from "components/MaterialUI";
 
 import { CustomDialogContent, CustomAutocomplete } from "./styles";
 
 export const InnerForm = React.memo(
-  ({ owner, schemeID, premiumUsers, onCancel, ...formProps }) => {
+  ({
+    owner,
+    currentUserID,
+    schemeID,
+    premiumUsers,
+    onCancel,
+    ...formProps
+  }) => {
     const {
       isSubmitting,
       isValid,
@@ -23,14 +29,21 @@ export const InnerForm = React.memo(
       setFieldValue,
       values,
     } = formProps;
+
     const unInvitedUsers = useMemo(
       () =>
-        premiumUsers.filter(
-          (user) =>
-            user.id !== owner.id &&
-            !values.sharedUsers.find((item) => item.user.id === user.id)
-        ),
+        !owner
+          ? []
+          : premiumUsers.filter(
+              (user) =>
+                user.id !== owner.id &&
+                !values.sharedUsers.find((item) => item.user_id === user.id)
+            ),
       [premiumUsers, owner, values]
+    );
+    const isOwner = useMemo(
+      () => (!owner ? false : owner.id === currentUserID),
+      [owner, currentUserID]
     );
 
     const handleNewUserChange = useCallback(
@@ -62,56 +75,62 @@ export const InnerForm = React.memo(
     return (
       <Form onSubmit={handleSubmit} noValidate>
         <CustomDialogContent dividers id="insert-text-dialog-content">
-          <Box display="flex" justifyContent="space-between" mb={5} pr={5}>
-            <CustomAutocomplete
-              options={unInvitedUsers}
-              getOptionLabel={(option) => option.id.toString()}
-              style={{ width: 200 }}
-              onChange={(event, newValue) => {
-                handleNewUserChange(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Enter Customer ID"
-                  variant="outlined"
-                />
-              )}
-            />
-            {values.newUser ? (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                flexGrow={1}
-                ml={5}
-              >
-                <Box>
-                  <Typography>{values.newUser.user.drivername}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    ID #{values.newUser.user.id}
-                  </Typography>
-                </Box>
-                <Box height="31px">
-                  <Select
+          {isOwner ? (
+            <Box display="flex" justifyContent="space-between" mb={5} pr={5}>
+              <CustomAutocomplete
+                options={unInvitedUsers}
+                getOptionLabel={(option) => option.id.toString()}
+                style={{ width: 200 }}
+                onChange={(event, newValue) => {
+                  handleNewUserChange(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Enter Customer ID"
                     variant="outlined"
-                    value={values.newUser.editable}
-                    onChange={(event) =>
-                      handleNewUserPermissionChange(event.target.value)
-                    }
-                  >
-                    <MenuItem value={0}>Can view</MenuItem>
-                    <MenuItem value={1}>{"Can view & edit"}</MenuItem>
-                    <MenuItem value={-1}>Cancel</MenuItem>
-                  </Select>
+                  />
+                )}
+              />
+              {values.newUser ? (
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  flexGrow={1}
+                  ml={5}
+                >
+                  <Box mt="-7px">
+                    <Typography>{values.newUser.user.drivername}</Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      ID #{values.newUser.user.id}
+                    </Typography>
+                  </Box>
+                  <Box height="31px">
+                    <Select
+                      variant="outlined"
+                      value={values.newUser.editable}
+                      onChange={(event) =>
+                        handleNewUserPermissionChange(event.target.value)
+                      }
+                    >
+                      <MenuItem value={0}>Can view</MenuItem>
+                      <MenuItem value={1}>{"Can view & edit"}</MenuItem>
+                      <MenuItem value={-1}>Cancel</MenuItem>
+                    </Select>
+                  </Box>
                 </Box>
-              </Box>
-            ) : (
-              <></>
-            )}
-          </Box>
+              ) : (
+                <></>
+              )}
+            </Box>
+          ) : (
+            <></>
+          )}
           <Box maxHeight="50vh" pr={5} overflow="auto">
-            <Box display="flex" justifyContent="space-between" mb={2}>
-              <Typography color="textSecondary">{owner.drivername}</Typography>
+            <Box display="flex" justifyContent="space-between" mb={4}>
+              <Typography color="textSecondary">
+                {owner.drivername + (isOwner ? " (you)" : "")}
+              </Typography>
               <Typography color="textSecondary">Owner</Typography>
             </Box>
             {values.sharedUsers.map((sharedUser, index) => (
@@ -119,22 +138,31 @@ export const InnerForm = React.memo(
                 display="flex"
                 justifyContent="space-between"
                 key={index}
-                mb={2}
+                mb={4}
               >
-                <Typography color="textSecondary">
-                  {sharedUser.user.drivername}
-                </Typography>
-                <Select
-                  variant="outlined"
-                  value={sharedUser.editable}
-                  onChange={(event) =>
-                    handleSharedUserChange(event.target.value, index)
-                  }
-                >
-                  <MenuItem value={0}>Can view</MenuItem>
-                  <MenuItem value={1}>{"Can view & edit"}</MenuItem>
-                  <MenuItem value={-1}>Remove</MenuItem>
-                </Select>
+                <Box mt="-7px">
+                  <Typography color="textSecondary">
+                    {sharedUser.user.drivername +
+                      (currentUserID === sharedUser.user.id ? " (you)" : "")}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    ID #{sharedUser.user.id}
+                  </Typography>
+                </Box>
+                <Box height="31px">
+                  <Select
+                    variant="outlined"
+                    value={sharedUser.editable}
+                    disabled={!isOwner && currentUserID !== sharedUser.user.id}
+                    onChange={(event) =>
+                      handleSharedUserChange(event.target.value, index)
+                    }
+                  >
+                    <MenuItem value={0}>Can view</MenuItem>
+                    <MenuItem value={1}>{"Can view & edit"}</MenuItem>
+                    <MenuItem value={-1}>Remove</MenuItem>
+                  </Select>
+                </Box>
               </Box>
             ))}
           </Box>

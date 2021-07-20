@@ -30,6 +30,7 @@ const CustomeTextField = styled(TextField)`
 const GeneralProperty = (props) => {
   const {
     user,
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -82,6 +83,7 @@ const GeneralProperty = (props) => {
               label="Name"
               variant="outlined"
               value={layerName(values.layer_data.name, values.layer_type)}
+              disabled={!editable}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.name &&
@@ -112,6 +114,7 @@ const GeneralProperty = (props) => {
               label="Text"
               variant="outlined"
               value={values.layer_data.text}
+              disabled={!editable}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.text &&
@@ -143,6 +146,7 @@ const GeneralProperty = (props) => {
               variant="outlined"
               type="number"
               value={Math.round(values.layer_data.numPoints)}
+              disabled={!editable}
               error={Boolean(
                 touched.layer_data &&
                   touched.layer_data.numPoints &&
@@ -170,6 +174,7 @@ const GeneralProperty = (props) => {
           {AllowedLayerTypes.includes("layer_data.angle") ? (
             <SliderInput
               label="Angle"
+              disabled={!editable}
               min={0}
               max={360}
               value={Math.round(values.layer_data.angle)}
@@ -189,6 +194,7 @@ const GeneralProperty = (props) => {
                 Visibility
               </Typography>
               <IconButton
+                disabled={!editable}
                 onClick={() => toggleField("layer_visible")}
                 size="small"
               >
@@ -213,6 +219,7 @@ const GeneralProperty = (props) => {
                 Locking
               </Typography>
               <IconButton
+                disabled={!editable}
                 onClick={() => toggleField("layer_locked")}
                 size="small"
               >
@@ -222,7 +229,7 @@ const GeneralProperty = (props) => {
           ) : (
             <></>
           )}
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

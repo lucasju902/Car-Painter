@@ -102,6 +102,10 @@ export const slice = createSlice({
         state.sharedUsers = sharedUsers;
       }
     },
+    insertToSharedUsers: (state, action) => {
+      let sharedUser = { ...action.payload };
+      state.sharedUsers.push(sharedUser);
+    },
     deleteSharedUser: (state, action) => {
       state.sharedUsers = state.sharedUsers.filter(
         (item) => item.id !== action.payload
@@ -150,6 +154,7 @@ const {
   setSharedUsers,
   updateSharedUser,
   deleteSharedUser,
+  insertToSharedUsers,
 } = slice.actions;
 export const {
   setSaving,
@@ -203,7 +208,7 @@ export const getScheme = (schemeID, callback) => async (dispatch) => {
     const result = await SchemeService.getScheme(schemeID);
     console.log("result: ", result);
     let scheme = await SchemeService.updateScheme(schemeID, {
-      ..._.omit(result.scheme, ["carMake", "layers"]),
+      ..._.omit(result.scheme, ["carMake", "layers", "sharedUsers"]),
       date_modified: Math.round(new Date().getTime() / 1000),
     });
     dispatch(setCurrent(scheme));
@@ -215,7 +220,7 @@ export const getScheme = (schemeID, callback) => async (dispatch) => {
     dispatch(setLoadedStatusAll(loadedStatuses));
     dispatch(setLayerList(result.layers));
     dispatch(setBasePaintList(result.basePaints));
-    if (callback) callback();
+    if (callback) callback(scheme, result.sharedUsers);
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -325,25 +330,21 @@ export const getSharedUsers = (schemeID) => async (dispatch) => {
 };
 
 export const updateSharedUserItem = (id, payload) => async (dispatch) => {
-  dispatch(setLoading(true));
   try {
     const shared = await SharedSchemeService.updateSharedScheme(id, payload);
     dispatch(updateSharedUser(shared));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  dispatch(setLoading(false));
 };
 
 export const deleteSharedUserItem = (id) => async (dispatch) => {
-  dispatch(setLoading(true));
   try {
     await SharedSchemeService.deleteSharedScheme(id);
     dispatch(deleteSharedUser(id));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  dispatch(setLoading(false));
 };
 
 export const getSharedList = (userID) => async (dispatch) => {
@@ -377,6 +378,16 @@ export const deleteSharedItem = (id) => async (dispatch) => {
     dispatch(setMessage({ message: err.message }));
   }
   dispatch(setLoading(false));
+};
+
+export const createSharedUser = (payload) => async (dispatch) => {
+  try {
+    console.log("payload: ", payload);
+    let sharedUser = await SharedSchemeService.createSharedScheme(payload);
+    dispatch(insertToSharedUsers(sharedUser));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
 };
 
 export default slice.reducer;

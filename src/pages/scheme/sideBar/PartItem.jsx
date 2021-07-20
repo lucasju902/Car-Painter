@@ -40,6 +40,7 @@ const PartItem = (props) => {
     toggleVisible,
     toggleLocked,
     selected,
+    disabled,
     disableLock,
     onSelect,
     hovered,
@@ -96,7 +97,9 @@ const PartItem = (props) => {
           {text}
         </CustomTypography>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          {!disableLock && (selected || hovered || layer_locked) ? (
+          {!disableLock &&
+          !disabled &&
+          (selected || hovered || layer_locked) ? (
             <Box mr={1}>
               <SmallIconButton onClick={handleToggleLock} size="small">
                 {layer_locked ? <LockIcon /> : <LockOpenIcon />}
@@ -105,7 +108,7 @@ const PartItem = (props) => {
           ) : (
             <Box width="24px" height="24px" mr={1}></Box>
           )}
-          {selected || hovered || !layer_visible ? (
+          {!disabled && (selected || hovered || !layer_visible) ? (
             <SmallIconButton onClick={handleToggleVisible} size="small">
               {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </SmallIconButton>

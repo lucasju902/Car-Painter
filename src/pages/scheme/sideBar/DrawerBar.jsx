@@ -173,7 +173,7 @@ const dialog_modes = [
   },
 ];
 
-const DrawerBar = ({ dialog, setDialog, focusBoard, stageRef }) => {
+const DrawerBar = ({ dialog, setDialog, focusBoard, stageRef, editable }) => {
   const dispatch = useDispatch();
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -334,6 +334,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard, stageRef }) => {
           >
             <CustomItem
               value={mode.value}
+              disabled={!editable}
               onClick={() => handleModeChange(mode.value)}
               active={mode.value === mouseMode ? "true" : "false"}
             >
@@ -351,6 +352,7 @@ const DrawerBar = ({ dialog, setDialog, focusBoard, stageRef }) => {
           >
             <CustomItem
               value={item.value}
+              disabled={!editable}
               onClick={() => setDialog(item.value)}
             >
               {item.icon}
@@ -381,7 +383,11 @@ const DrawerBar = ({ dialog, setDialog, focusBoard, stageRef }) => {
                 }px solid ${
                   currentScheme.guide_data.default_shape_scolor || "#000000"
                 }`}
-                onClick={() => setDialog(DialogTypes.DEFAULT_SHAPE_SETTINGS)}
+                onClick={() =>
+                  editable
+                    ? setDialog(DialogTypes.DEFAULT_SHAPE_SETTINGS)
+                    : null
+                }
               />
             </Box>
           </LightTooltip>

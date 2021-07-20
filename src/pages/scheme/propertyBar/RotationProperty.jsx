@@ -23,6 +23,7 @@ import SliderInput from "components/SliderInput";
 
 const RotationProperty = (props) => {
   const {
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -106,6 +107,7 @@ const RotationProperty = (props) => {
               min={-179}
               max={179}
               value={Math.round(values.layer_data.rotation)}
+              disabled={!editable}
               setValue={handleChangeRotation}
             />
           ) : (
@@ -122,6 +124,7 @@ const RotationProperty = (props) => {
                 Flop
               </Typography>
               <IconButton
+                disabled={!editable}
                 onClick={() =>
                   onLayerDataUpdate("flop", values.layer_data.flop ? 0 : 1)
                 }
@@ -153,6 +156,7 @@ const RotationProperty = (props) => {
                 Flip
               </Typography>
               <IconButton
+                disabled={!editable}
                 onClick={() =>
                   onLayerDataUpdate("flip", values.layer_data.flip ? 0 : 1)
                 }
@@ -173,7 +177,7 @@ const RotationProperty = (props) => {
           ) : (
             <></>
           )}
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

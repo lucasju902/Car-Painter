@@ -5,7 +5,15 @@ import { Formik } from "formik";
 import { InnerForm } from "./inner-form";
 
 export const SharingSetting = React.memo((props) => {
-  const { ownerID, schemeID, userList, sharedUsers, onCancel, onApply } = props;
+  const {
+    ownerID,
+    schemeID,
+    currentUserID,
+    userList,
+    sharedUsers,
+    onCancel,
+    onApply,
+  } = props;
   const owner = useMemo(() => userList.find((item) => item.id === ownerID), [
     ownerID,
     userList,
@@ -37,6 +45,7 @@ export const SharingSetting = React.memo((props) => {
         <InnerForm
           {...formProps}
           owner={owner}
+          currentUserID={currentUserID}
           schemeID={schemeID}
           premiumUsers={premiumUsers}
           onCancel={onCancel}

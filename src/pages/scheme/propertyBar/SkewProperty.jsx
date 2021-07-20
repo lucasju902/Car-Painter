@@ -23,6 +23,7 @@ const CustomeTextField = styled(TextField)`
 
 const SkewProperty = (props) => {
   const {
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -69,6 +70,7 @@ const SkewProperty = (props) => {
                     step: 0.1,
                   }}
                   value={mathRound2(values.layer_data.skewX)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.skewX &&
@@ -105,6 +107,7 @@ const SkewProperty = (props) => {
                     step: 0.1,
                   }}
                   value={mathRound2(values.layer_data.skewY)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.skewY &&
@@ -131,7 +134,7 @@ const SkewProperty = (props) => {
               )}
             </Grid>
           </Grid>
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

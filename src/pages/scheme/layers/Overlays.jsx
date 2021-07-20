@@ -9,6 +9,7 @@ import { getRelativeShadowOffset } from "helper";
 const Overlays = (props) => {
   const {
     layers,
+    editable,
     setCurrentLayer,
     frameSize,
     mouseMode,
@@ -49,6 +50,7 @@ const Overlays = (props) => {
           <GroupedURLImage
             key={layer.id}
             id={layer.id}
+            editable={editable}
             name={layer.id.toString()}
             src={`${config.assetsURL}/${layer.layer_data.source_file}`}
             x={parseFloat(layer.layer_data.left || 0)}

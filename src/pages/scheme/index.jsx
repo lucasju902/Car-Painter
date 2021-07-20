@@ -1,11 +1,17 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { useReducerRef } from "hooks";
 import _ from "lodash";
 import styled from "styled-components/macro";
 import { useSelector, useDispatch } from "react-redux";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import Helmet from "react-helmet";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import TGA from "utils/tga";
 
 import { Box } from "@material-ui/core";
@@ -64,6 +70,7 @@ const Wrapper = styled(Box)`
 
 const Scheme = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const params = useParams();
   const [confirmMessage, setConfirmMessage] = useState("");
   const [dialog, setDialog] = useState(null);
@@ -117,6 +124,17 @@ const Scheme = () => {
   const fontLoading = useSelector((state) => state.fontReducer.loading);
   const uploadsInitialized = useSelector(
     (state) => state.uploadReducer.initialized
+  );
+
+  const editable = useMemo(
+    () =>
+      !user || !currentScheme
+        ? false
+        : user.id === currentScheme.user_id ||
+          sharedUsers.find(
+            (shared) => shared.user_id === user.id && shared.editable
+          ),
+    [user, currentScheme, sharedUsers]
   );
 
   const setHoveredJSONItem = useCallback(
@@ -234,7 +252,8 @@ const Scheme = () => {
         if (
           (key === "del" || key === "backspace") &&
           currentLayer &&
-          currentLayer.layer_type !== LayerTypes.CAR
+          currentLayer.layer_type !== LayerTypes.CAR &&
+          editable
         ) {
           handleDeleteLayer(currentLayer);
         } else if (key === "esc" && currentLayer) {
@@ -247,47 +266,57 @@ const Scheme = () => {
           dispatch(setZoom(1));
         } else if (event.key === "(" && event.shiftKey) {
           handleZoomFit();
-        } else if (event.key === "D" && event.shiftKey) {
+        } else if (event.key === "D" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.DEFAULT));
-        } else if (event.key === "B" && event.shiftKey) {
+        } else if (event.key === "B" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.PEN));
-        } else if (event.key === "R" && event.shiftKey) {
+        } else if (event.key === "R" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.RECT));
-        } else if (event.key === "C" && event.shiftKey) {
+        } else if (event.key === "C" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.CIRCLE));
-        } else if (event.key === "E" && event.shiftKey) {
+        } else if (event.key === "E" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.ELLIPSE));
-        } else if (event.key === "S" && event.shiftKey) {
+        } else if (event.key === "S" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.STAR));
-        } else if (event.key === "G" && event.shiftKey) {
+        } else if (event.key === "G" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.RING));
-        } else if (event.key === "O" && event.shiftKey) {
+        } else if (event.key === "O" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.REGULARPOLYGON));
-        } else if (event.key === "W" && event.shiftKey) {
+        } else if (event.key === "W" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.WEDGE));
-        } else if (event.key === "A" && event.shiftKey) {
+        } else if (event.key === "A" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.ARC));
-        } else if (event.key === "P" && event.shiftKey) {
+        } else if (event.key === "P" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.POLYGON));
-        } else if (event.key === "L" && event.shiftKey) {
+        } else if (event.key === "L" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.LINE));
-        } else if (event.key === ">" && event.shiftKey) {
+        } else if (event.key === ">" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.ARROW));
         } else if (
           event.key === "c" &&
           (event.ctrlKey || event.metaKey) &&
-          currentLayer
+          currentLayer &&
+          editable
         ) {
           dispatch(setLayerClipboard(currentLayer));
         } else if (
           event.key === "v" &&
           (event.ctrlKey || event.metaKey) &&
-          clipboardLayer
+          clipboardLayer &&
+          editable
         ) {
           handleCloneLayer(clipboardLayer);
-        } else if (event.key === "z" && (event.ctrlKey || event.metaKey)) {
+        } else if (
+          event.key === "z" &&
+          (event.ctrlKey || event.metaKey) &&
+          editable
+        ) {
           dispatch(historyActionBack());
-        } else if (event.key === "y" && (event.ctrlKey || event.metaKey)) {
+        } else if (
+          event.key === "y" &&
+          (event.ctrlKey || event.metaKey) &&
+          editable
+        ) {
           dispatch(historyActionUp());
         } else if (key === "1") {
           togglePaintingGuides(PaintingGuides.CARMASK);
@@ -299,15 +328,15 @@ const Scheme = () => {
           togglePaintingGuides(PaintingGuides.NUMBERBLOCKS);
         } else if (key === "5") {
           togglePaintingGuides(PaintingGuides.GRID);
-        } else if (key === "t") {
+        } else if (key === "t" && editable) {
           setDialog(DialogTypes.TEXT);
-        } else if (key === "s") {
+        } else if (key === "s" && editable) {
           setDialog(DialogTypes.SHAPE);
-        } else if (key === "l") {
+        } else if (key === "l" && editable) {
           setDialog(DialogTypes.LOGO);
-        } else if (key === "b") {
+        } else if (key === "b" && editable) {
           setDialog(DialogTypes.BASEPAINT);
-        } else if (key === "enter") {
+        } else if (key === "enter" && editable) {
           if (
             [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
               mouseMode
@@ -321,7 +350,7 @@ const Scheme = () => {
       }
 
       // Arrow Keys
-      if (event.target.tagName !== "INPUT") {
+      if (event.target.tagName !== "INPUT" && editable) {
         if (event.type === "keyup") {
           dispatch(setPressedKey(null));
         }
@@ -394,6 +423,7 @@ const Scheme = () => {
       clipboardLayer,
       prevTick.current,
       tick.current,
+      editable,
       handleCloneLayer,
       handleDeleteLayer,
     ]
@@ -542,15 +572,27 @@ const Scheme = () => {
     if (user && user.id && params.id) {
       if (!currentScheme) {
         dispatch(
-          getScheme(params.id, () => {
-            if (!uploadsInitialized) {
-              dispatch(getUploadListByUserID(user.id));
+          getScheme(params.id, (scheme, tempsharedUsers) => {
+            if (
+              user.id !== scheme.user_id &&
+              !tempsharedUsers.find((shared) => shared.user_id === user.id)
+            ) {
+              dispatch(
+                setMessage({
+                  message: "You don't have permission for this project!",
+                })
+              );
+              history.push("/");
+            } else {
+              if (!uploadsInitialized) {
+                dispatch(getUploadListByUserID(user.id));
+              }
+              if (!overlayList.length) dispatch(getOverlayList());
+              if (!logoList.length) dispatch(getLogoList());
+              if (!fontList.length) dispatch(getFontList());
+              if (!userList.length) dispatch(getUserList());
+              if (!sharedUsers.length) dispatch(getSharedUsers(params.id));
             }
-            if (!overlayList.length) dispatch(getOverlayList());
-            if (!logoList.length) dispatch(getLogoList());
-            if (!fontList.length) dispatch(getFontList());
-            if (!userList.length) dispatch(getUserList());
-            if (!sharedUsers.length) dispatch(getSharedUsers(params.id));
           })
         );
       }
@@ -559,17 +601,19 @@ const Scheme = () => {
   }, [user]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      tick.current += 1;
-    }, 200);
-    const startTimout = setTimeout(handleUploadThumbnail, 7000);
-    const thumbnailInterval = setInterval(handleUploadThumbnail, 300000);
+    if (editable) {
+      const interval = setInterval(() => {
+        tick.current += 1;
+      }, 200);
+      const startTimout = setTimeout(handleUploadThumbnail, 7000);
+      const thumbnailInterval = setInterval(handleUploadThumbnail, 300000);
 
-    return () => {
-      clearInterval(interval);
-      clearInterval(thumbnailInterval);
-      clearTimeout(startTimout);
-    };
+      return () => {
+        clearInterval(interval);
+        clearInterval(thumbnailInterval);
+        clearTimeout(startTimout);
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -617,6 +661,7 @@ const Scheme = () => {
               dialog={dialog}
               setDialog={setDialog}
               focusBoard={focusBoard}
+              editable={editable}
               hoveredLayerJSON={hoveredJSON}
               stageRef={stageRef}
               onChangeHoverJSONItem={setHoveredJSONItem}
@@ -624,6 +669,7 @@ const Scheme = () => {
             <Wrapper background="#282828" overflow="hidden" flexGrow="1">
               <Board
                 hoveredLayerJSON={hoveredJSON}
+                editable={editable}
                 onChangeHoverJSONItem={setHoveredJSONItem}
                 onChangeBoardRotation={handleChangeBoardRotation}
                 stageRef={stageRef}
@@ -636,6 +682,7 @@ const Scheme = () => {
             </Wrapper>
             <PropertyBar
               stageRef={stageRef}
+              editable={editable}
               onClone={handleCloneLayer}
               onDelete={handleDeleteLayer}
             />

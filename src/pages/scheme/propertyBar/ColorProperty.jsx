@@ -20,6 +20,7 @@ import SliderInput from "components/SliderInput";
 
 const ColorProperty = (props) => {
   const {
+    editable,
     errors,
     handleBlur,
     handleChange,
@@ -66,6 +67,7 @@ const ColorProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.color}
+                  disabled={!editable}
                   onChange={(color) => onLayerDataUpdate("color", color)}
                   onInputChange={(color) =>
                     setFieldValue("layer_data.color", color)
@@ -82,6 +84,7 @@ const ColorProperty = (props) => {
             <Box mb={2}>
               <SliderInput
                 label="Opacity"
+                disabled={!editable}
                 min={0}
                 max={1}
                 step={0.01}
@@ -104,6 +107,7 @@ const ColorProperty = (props) => {
                   name="layer_data.blendType"
                   variant="outlined"
                   value={values.layer_data.blendType}
+                  disabled={!editable}
                   onChange={(event) =>
                     onLayerDataUpdate("blendType", event.target.value)
                   }
@@ -128,7 +132,7 @@ const ColorProperty = (props) => {
           ) : (
             <></>
           )}
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

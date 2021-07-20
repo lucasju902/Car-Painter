@@ -6,6 +6,7 @@ import { Box, Button } from "@material-ui/core";
 
 const ExtraProperty = (props) => {
   const {
+    editable,
     errors,
     handleBlur,
     handleChange,
@@ -32,14 +33,14 @@ const ExtraProperty = (props) => {
     return <></>;
   return (
     <Box display="flex" flexDirection="column" width="100%">
-      {AllowedLayerTypes.includes("clone") ? (
+      {editable && AllowedLayerTypes.includes("clone") ? (
         <Button variant="outlined" onClick={onClone}>
           Clone
         </Button>
       ) : (
         <></>
       )}
-      {AllowedLayerTypes.includes("delete") ? (
+      {editable && AllowedLayerTypes.includes("delete") ? (
         <Box width="100%" mt={2}>
           <Button
             variant="outlined"

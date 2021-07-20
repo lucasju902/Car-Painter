@@ -32,6 +32,7 @@ const Wrapper = styled(Box)`
 const InnerForm = React.memo(
   ({
     user,
+    editable,
     stageRef,
     fontList,
     toggleField,
@@ -72,34 +73,40 @@ const InnerForm = React.memo(
         </Box>
         <GeneralProperty
           {...formProps}
+          editable={editable}
           user={user}
           toggleField={toggleField}
           checkLayerDataDirty={checkLayerDataDirty}
         />
         <FontProperty
           {...formProps}
+          editable={editable}
           fontList={fontList}
           onLayerDataUpdate={onLayerDataUpdate}
           checkLayerDataDirty={checkLayerDataDirty}
         />
         <ColorProperty
           {...formProps}
+          editable={editable}
           onLayerDataUpdate={onLayerDataUpdate}
           checkLayerDataDirty={checkLayerDataDirty}
         />
         <BackgroundProperty
           {...formProps}
+          editable={editable}
           onLayerDataUpdate={onLayerDataUpdate}
           checkLayerDataDirty={checkLayerDataDirty}
         />
         <StrokeProperty
           {...formProps}
+          editable={editable}
           checkLayerDataDirty={checkLayerDataDirty}
           onLayerDataUpdate={onLayerDataUpdate}
           onLayerDataUpdate={onLayerDataUpdate}
         />
         <SizeProperty
           {...formProps}
+          editable={editable}
           toggleLayerDataField={toggleLayerDataField}
           currentLayer={currentLayer}
           pressedKey={pressedKey}
@@ -107,10 +114,12 @@ const InnerForm = React.memo(
         />
         <PositionProperty
           {...formProps}
+          editable={editable}
           checkLayerDataDirty={checkLayerDataDirty}
         />
         <RotationProperty
           {...formProps}
+          editable={editable}
           stageRef={stageRef}
           currentLayer={currentLayer}
           toggleField={toggleField}
@@ -119,25 +128,33 @@ const InnerForm = React.memo(
         />
         <SkewProperty
           {...formProps}
+          editable={editable}
           checkLayerDataDirty={checkLayerDataDirty}
         />
         <ShadowProperty
           {...formProps}
+          editable={editable}
           checkLayerDataDirty={checkLayerDataDirty}
           onLayerDataUpdate={onLayerDataUpdate}
         />
         <CornerProperty
+          editable={editable}
           {...formProps}
           checkLayerDataDirty={checkLayerDataDirty}
         />
-        <ExtraProperty {...formProps} onClone={onClone} onDelete={onDelete} />
+        <ExtraProperty
+          {...formProps}
+          editable={editable}
+          onClone={onClone}
+          onDelete={onDelete}
+        />
       </Form>
     );
   }
 );
 
 const PropertyBar = (props) => {
-  const { stageRef, onClone, onDelete } = props;
+  const { editable, stageRef, onClone, onDelete } = props;
   const dispatch = useDispatch();
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
@@ -349,6 +366,7 @@ const PropertyBar = (props) => {
           {(formProps) => (
             <InnerForm
               {...formProps}
+              editable={editable}
               user={user}
               stageRef={stageRef}
               fontList={fontList}

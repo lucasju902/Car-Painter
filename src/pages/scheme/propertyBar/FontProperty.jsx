@@ -23,6 +23,7 @@ const FormControl = styled(MuiFormControl)(spacing);
 
 const FontProperty = (props) => {
   const {
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -64,6 +65,7 @@ const FontProperty = (props) => {
               <InputLabel id="font-select-label">Font</InputLabel>
               <FontSelect
                 value={values.layer_data.font}
+                disabled={!editable}
                 onChange={(e) => onLayerDataUpdate("font", e.target.value)}
                 fontList={fontList}
               />
@@ -81,6 +83,7 @@ const FontProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.color}
+                  disabled={!editable}
                   onChange={(color) => onLayerDataUpdate("color", color)}
                   onInputChange={(color) =>
                     setFieldValue("layer_data.color", color)
@@ -96,6 +99,7 @@ const FontProperty = (props) => {
           {AllowedLayerTypes.includes("layer_data.size") ? (
             <SliderInput
               label="Font Size"
+              disabled={!editable}
               min={6}
               max={72}
               value={values.layer_data.size}
@@ -104,7 +108,7 @@ const FontProperty = (props) => {
           ) : (
             <></>
           )}
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

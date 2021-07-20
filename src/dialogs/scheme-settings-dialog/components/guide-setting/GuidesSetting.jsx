@@ -7,7 +7,7 @@ import { colorValidator } from "helper";
 import { InnerForm } from "./inner-form";
 
 export const GuidesSetting = React.memo((props) => {
-  const { guide_data, onCancel, onApply } = props;
+  const { guide_data, editable, onCancel, onApply } = props;
 
   const initialValues = useMemo(
     () => ({
@@ -58,7 +58,9 @@ export const GuidesSetting = React.memo((props) => {
       }}
       onSubmit={onApply}
     >
-      {(formProps) => <InnerForm {...formProps} onCancel={onCancel} />}
+      {(formProps) => (
+        <InnerForm {...formProps} editable={editable} onCancel={onCancel} />
+      )}
     </Formik>
   );
 });

@@ -29,7 +29,7 @@ const Wrapper = styled(Grid)`
 `;
 
 const SliderInput = (props) => {
-  const { label, min, max, value, setValue, step } = props;
+  const { label, disabled, min, max, value, setValue, step } = props;
 
   const handleBlur = useCallback(() => {
     if (value < min) {
@@ -54,6 +54,7 @@ const SliderInput = (props) => {
               max={max}
               step={step}
               value={value}
+              disabled={disabled}
               onChange={(event, value) => setValue(value)}
               aria-labelledby="shape-size"
               ValueLabelComponent={(props) => (
@@ -70,6 +71,7 @@ const SliderInput = (props) => {
           </SliderWrapper>
           <CustomInput
             value={value}
+            disabled={disabled}
             margin="dense"
             type="number"
             step={step || 1}

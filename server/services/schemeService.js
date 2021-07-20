@@ -21,7 +21,7 @@ class SchemeService {
 
   static async getById(id) {
     const scheme = await Scheme.where({ id }).fetch({
-      withRelated: ["carMake", "carMake.bases", "layers"],
+      withRelated: ["carMake", "carMake.bases", "layers", "sharedUsers"],
     });
     return scheme;
   }

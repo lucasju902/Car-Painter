@@ -13,6 +13,7 @@ import { Image, Group, Rect } from "react-konva";
 const GroupedURLImage = ({
   id,
   src,
+  editable,
   bgColor = null,
   paddingX = 0,
   paddingY = 0,
@@ -226,7 +227,7 @@ const GroupedURLImage = ({
       ref={shapeRef}
       onClick={onSelect}
       onTap={onSelect}
-      draggable={onChange}
+      draggable={onChange && editable}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformEnd={handleTransformEnd}

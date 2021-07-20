@@ -25,6 +25,7 @@ const CustomeTextField = styled(TextField)`
 
 const BackgroundProperty = (props) => {
   const {
+    editable,
     errors,
     handleBlur,
     handleChange,
@@ -70,6 +71,7 @@ const BackgroundProperty = (props) => {
               <Grid item xs={6}>
                 <ColorPickerInput
                   value={values.layer_data.bgColor}
+                  disabled={!editable}
                   onChange={(color) => onLayerDataUpdate("bgColor", color)}
                   onInputChange={(color) =>
                     setFieldValue("layer_data.bgColor", color)
@@ -92,6 +94,7 @@ const BackgroundProperty = (props) => {
                   label="PaddingX"
                   variant="outlined"
                   type="number"
+                  disabled={!editable}
                   value={mathRound2(values.layer_data.paddingX)}
                   error={Boolean(
                     touched.layer_data &&
@@ -126,6 +129,7 @@ const BackgroundProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.paddingY)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.paddingY &&
@@ -152,7 +156,7 @@ const BackgroundProperty = (props) => {
               )}
             </Grid>
           </Grid>
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

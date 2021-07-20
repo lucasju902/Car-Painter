@@ -9,6 +9,9 @@ import {
   updateScheme,
   clearCurrent as clearCurrentScheme,
   setLoaded as setSchemeLoaded,
+  createSharedUser,
+  updateSharedUserItem,
+  deleteSharedUserItem,
 } from "redux/reducers/schemeReducer";
 import { clearFrameSize } from "redux/reducers/boardReducer";
 
@@ -37,7 +40,9 @@ const NameInput = styled(TextField)`
   width: ${(props) => props.width};
 `;
 
-const TitleBar = () => {
+const TitleBar = (props) => {
+  const { editable } = props;
+
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -50,6 +55,7 @@ const TitleBar = () => {
     (state) => state.schemeReducer.current.guide_data
   );
   const userList = useSelector((state) => state.userReducer.list);
+  const currentUser = useSelector((state) => state.authReducer.user);
 
   const handleNameChange = useCallback(
     (event) => {
@@ -96,6 +102,27 @@ const TitleBar = () => {
   const handleApplySharingSetting = useCallback(
     (data) => {
       console.log(data);
+      if (data.newUser && data.newUser.editable >= 0) {
+        dispatch(
+          createSharedUser({
+            user_id: data.newUser.user_id,
+            scheme_id: data.newUser.scheme_id,
+            accepted: data.newUser.accepted,
+            editable: data.newUser.editable,
+          })
+        );
+      }
+      for (let sharedUser of data.sharedUsers) {
+        if (sharedUser.editable === -1) {
+          dispatch(deleteSharedUserItem(sharedUser.id));
+        } else {
+          dispatch(
+            updateSharedUserItem(sharedUser.id, {
+              editable: sharedUser.editable,
+            })
+          );
+        }
+      }
 
       setDialog(null);
     },
@@ -163,6 +190,8 @@ const TitleBar = () => {
       />
       <SchemeSettingsDialog
         ownerID={currentScheme.user_id}
+        editable={editable}
+        currentUserID={currentUser.id}
         schemeID={currentScheme.id}
         sharedUsers={sharedUsers}
         userList={userList}

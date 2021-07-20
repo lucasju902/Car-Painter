@@ -23,6 +23,7 @@ const CustomeTextField = styled(TextField)`
 
 const PositionProperty = (props) => {
   const {
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -66,6 +67,7 @@ const PositionProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.left)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.left &&
@@ -99,6 +101,7 @@ const PositionProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.top)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.top &&
@@ -125,7 +128,7 @@ const PositionProperty = (props) => {
               )}
             </Grid>
           </Grid>
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

@@ -23,6 +23,7 @@ const CustomeTextField = styled(TextField)`
 
 const CornerProperty = (props) => {
   const {
+    editable,
     errors,
     isValid,
     checkLayerDataDirty,
@@ -71,6 +72,7 @@ const CornerProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.cornerTopLeft)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.cornerTopLeft &&
@@ -104,6 +106,7 @@ const CornerProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.cornerTopRight)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.cornerTopRight &&
@@ -137,6 +140,7 @@ const CornerProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.cornerBottomLeft)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.cornerBottomLeft &&
@@ -170,6 +174,7 @@ const CornerProperty = (props) => {
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.cornerBottomRight)}
+                  disabled={!editable}
                   error={Boolean(
                     touched.layer_data &&
                       touched.layer_data.cornerBottomRight &&
@@ -196,7 +201,7 @@ const CornerProperty = (props) => {
               )}
             </Grid>
           </Grid>
-          {isValid && checkLayerDataDirty(layerDataProperties) ? (
+          {editable && isValid && checkLayerDataDirty(layerDataProperties) ? (
             <Box mt={2} width="100%">
               <Button
                 type="submit"

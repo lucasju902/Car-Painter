@@ -15,6 +15,7 @@ import { CustomAccordionSummary } from "./styles";
 export const SubForm = (props) => {
   const {
     label,
+    editable,
     colorKey,
     opacityKey,
     errors,
@@ -46,6 +47,7 @@ export const SubForm = (props) => {
                     Color
                   </Typography>
                   <ColorPickerInput
+                    disabled={!editable}
                     value={values[colorKey]}
                     onChange={(color) => setFieldValue(colorKey, color)}
                     onInputChange={(color) => setFieldValue(colorKey, color)}
@@ -61,6 +63,7 @@ export const SubForm = (props) => {
               <Grid item xs={12} sm={6}>
                 <SliderInput
                   label="Opacity"
+                  disabled={!editable}
                   min={0}
                   max={1}
                   step={0.01}

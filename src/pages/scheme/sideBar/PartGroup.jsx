@@ -83,6 +83,7 @@ const PartGroup = (props) => {
   const {
     layerList,
     title,
+    disabled,
     actions,
     extraChildren,
     disableLock,
@@ -210,7 +211,7 @@ const PartGroup = (props) => {
               animation={150}
               onChoose={(evt) => console.log(evt)}
               onSelect={(evt) => console.log(evt)}
-              sort={!disableDnd}
+              sort={!disableDnd && !disabled}
             >
               {sortedList.map((item) => (
                 <PartItem
@@ -225,6 +226,7 @@ const PartGroup = (props) => {
                   onSelect={() => selectLayer(item)}
                   onHover={(flag) => hoverLayer(item, flag)}
                   disableLock={disableLock}
+                  disabled={disabled}
                 />
               ))}
             </ReactSortable>

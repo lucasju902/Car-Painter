@@ -28,7 +28,9 @@ class SharedSchemeService {
   }
 
   static async create(payload) {
-    const shared = await SharedScheme.forge(payload).save();
+    let shared = await SharedScheme.forge(payload).save();
+    shared = shared.toJSON();
+    shared = this.getByID(shared.id);
     return shared;
   }
 
