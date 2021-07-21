@@ -113,7 +113,12 @@ const Scheme = () => {
   const [tabValue, setTabValue] = useState(0);
 
   let sortedCarMakesList = useMemo(
-    () => _.orderBy([...carMakeList], ["car_type", "name"], ["asc", "asc"]),
+    () =>
+      _.orderBy(
+        [...carMakeList.filter((item) => !item.is_parent)],
+        ["car_type", "name"],
+        ["asc", "asc"]
+      ),
     [carMakeList]
   );
 
@@ -156,11 +161,15 @@ const Scheme = () => {
   const handleCloneProject = (schemeID) => {
     dispatch(cloneScheme(schemeID));
   };
-  const handleAcceptInvitation = (sharedID) => {
+  const handleAcceptInvitation = (sharedID, callback) => {
     dispatch(
-      updateSharedItem(sharedID, {
-        accepted: 1,
-      })
+      updateSharedItem(
+        sharedID,
+        {
+          accepted: 1,
+        },
+        callback
+      )
     );
   };
   const handleRemoveSharedProject = (sharedID) => {

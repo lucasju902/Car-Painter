@@ -33,6 +33,7 @@ const ProjectItem = (props) => {
     onDelete,
     onCloneProject,
     onAccept,
+    onOpenScheme,
     shared,
     accepted,
     sharedID,
@@ -63,9 +64,7 @@ const ProjectItem = (props) => {
     onAccept(sharedID);
     handleActionMenuClose();
   };
-  const openScheme = (schemeID) => {
-    history.push(`/scheme/${schemeID}`);
-  };
+
   const schemeThumbnailURL = (id) => {
     return `${config.assetsURL}/scheme_thumbnails/${id}.png`;
   };
@@ -75,7 +74,7 @@ const ProjectItem = (props) => {
       <CustomImg
         src={schemeThumbnailURL(scheme.id)}
         alt={scheme.name}
-        onClick={() => openScheme(scheme.id)}
+        onClick={() => onOpenScheme(scheme.id, sharedID)}
       />
       <Box display="flex" justifyContent="space-between">
         <Box display="flex" flexDirection="column" p={4}>

@@ -16,6 +16,7 @@ import { CustomDialogContent, CustomAutocomplete } from "./styles";
 export const InnerForm = React.memo(
   ({
     owner,
+    editable,
     currentUserID,
     schemeID,
     premiumUsers,
@@ -159,7 +160,9 @@ export const InnerForm = React.memo(
                     }
                   >
                     <MenuItem value={0}>Can view</MenuItem>
-                    <MenuItem value={1}>{"Can view & edit"}</MenuItem>
+                    <MenuItem value={1} disabled={!editable}>
+                      {"Can view & edit"}
+                    </MenuItem>
                     <MenuItem value={-1}>Remove</MenuItem>
                   </Select>
                 </Box>

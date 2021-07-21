@@ -111,7 +111,7 @@ export const slice = createSlice({
         (item) => item.id !== action.payload
       );
     },
-    clearSharedUser: (state) => {
+    clearSharedUsers: (state) => {
       state.sharedUsers = [];
     },
     setCurrent: (state, action) => {
@@ -163,7 +163,7 @@ export const {
   clearCurrent,
   clearList,
   clearSharedList,
-  clearSharedUser,
+  clearSharedUsers,
   setCurrentName,
   setCurrentBaseColor,
 } = slice.actions;
@@ -329,19 +329,23 @@ export const getSharedUsers = (schemeID) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const updateSharedUserItem = (id, payload) => async (dispatch) => {
+export const updateSharedUserItem = (id, payload, callback) => async (
+  dispatch
+) => {
   try {
     const shared = await SharedSchemeService.updateSharedScheme(id, payload);
     dispatch(updateSharedUser(shared));
+    if (callback) callback();
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
 };
 
-export const deleteSharedUserItem = (id) => async (dispatch) => {
+export const deleteSharedUserItem = (id, callback) => async (dispatch) => {
   try {
     await SharedSchemeService.deleteSharedScheme(id);
     dispatch(deleteSharedUser(id));
+    if (callback) callback();
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -358,13 +362,17 @@ export const getSharedList = (userID) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const updateSharedItem = (id, payload) => async (dispatch) => {
+export const updateSharedItem = (id, payload, callback, fallback) => async (
+  dispatch
+) => {
   dispatch(setLoading(true));
   try {
     const shared = await SharedSchemeService.updateSharedScheme(id, payload);
     dispatch(updateSharedListItem(shared));
+    if (callback) callback();
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
+    if (fallback) fallback();
   }
   dispatch(setLoading(false));
 };
@@ -380,11 +388,12 @@ export const deleteSharedItem = (id) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const createSharedUser = (payload) => async (dispatch) => {
+export const createSharedUser = (payload, callback) => async (dispatch) => {
   try {
     console.log("payload: ", payload);
     let sharedUser = await SharedSchemeService.createSharedScheme(payload);
     dispatch(insertToSharedUsers(sharedUser));
+    if (callback) callback();
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 
 import { Box } from "components/MaterialUI";
 import ScreenLoader from "components/ScreenLoader";
-import { signInWithCookie } from "redux/reducers/authReducer";
+import { setPreviousPath, signInWithCookie } from "redux/reducers/authReducer";
 
 // For routes that can only be accessed by authenticated users
 export const withAuthGuard = (Component, redirectToSignIn = false) => (
@@ -19,6 +19,7 @@ export const withAuthGuard = (Component, redirectToSignIn = false) => (
       dispatch(
         signInWithCookie(null, () => {
           if (redirectToSignIn) {
+            dispatch(setPreviousPath(window.location.pathname));
             history.push("/auth/sign-in");
           }
         })

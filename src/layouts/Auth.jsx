@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components/macro";
 import { CssBaseline } from "@material-ui/core";
+import { withMessage } from "hooks/withMessage";
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -32,4 +33,4 @@ const Auth = ({ children }) => {
   );
 };
 
-export default Auth;
+export default withMessage(Auth);

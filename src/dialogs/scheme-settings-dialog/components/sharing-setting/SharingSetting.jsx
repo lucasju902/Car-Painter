@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import * as Yup from "yup";
 import { Formik } from "formik";
 
 import { InnerForm } from "./inner-form";
 
 export const SharingSetting = React.memo((props) => {
   const {
+    editable,
     ownerID,
     schemeID,
     currentUserID,
@@ -44,6 +44,7 @@ export const SharingSetting = React.memo((props) => {
       {(formProps) => (
         <InnerForm
           {...formProps}
+          editable={editable}
           owner={owner}
           currentUserID={currentUserID}
           schemeID={schemeID}

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import _ from "lodash";
+import { useHistory } from "react-router";
 
 import styled from "styled-components/macro";
 
@@ -25,6 +26,7 @@ const MyProjects = (props) => {
     onCloneProject,
   } = props;
 
+  const history = useHistory();
   const step = 15;
   const [limit, setLimit] = useState(step);
 
@@ -47,6 +49,10 @@ const MyProjects = (props) => {
     [schemeList, search, selectedVehicle, sortBy]
   );
 
+  const openScheme = (schemeID) => {
+    history.push(`/scheme/${schemeID}`);
+  };
+
   const increaseData = () => {
     setLimit(limit + step);
   };
@@ -68,6 +74,7 @@ const MyProjects = (props) => {
             <ProjectItem
               scheme={scheme}
               onDelete={onDeleteProject}
+              onOpenScheme={openScheme}
               onCloneProject={onCloneProject}
             />
           </Grid>

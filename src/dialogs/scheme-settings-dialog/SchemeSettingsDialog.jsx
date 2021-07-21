@@ -55,6 +55,7 @@ const SchemeSettingsDialog = (props) => {
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           <SharingSetting
+            editable={editable}
             ownerID={ownerID}
             currentUserID={currentUserID}
             schemeID={schemeID}

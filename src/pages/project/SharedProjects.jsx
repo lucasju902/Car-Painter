@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import _ from "lodash";
+import { useHistory } from "react-router";
 
 import styled from "styled-components/macro";
 
@@ -26,6 +27,7 @@ const SharedProjects = (props) => {
   } = props;
 
   const step = 15;
+  const history = useHistory();
   const [limit, setLimit] = useState(step);
 
   const filteredSharedSchemeList = useMemo(
@@ -58,6 +60,14 @@ const SharedProjects = (props) => {
     () => filteredSharedSchemeList.filter((item) => item.accepted),
     [filteredSharedSchemeList]
   );
+
+  const openScheme = (schemeID, sharedID) => {
+    if (sharedID) {
+      onAccept(sharedID, () => history.push(`/scheme/${schemeID}`));
+    } else {
+      history.push(`/scheme/${schemeID}`);
+    }
+  };
 
   const increaseData = () => {
     setLimit(limit + step);
@@ -98,6 +108,7 @@ const SharedProjects = (props) => {
                   accepted={false}
                   sharedID={sharedScheme.id}
                   onAccept={onAccept}
+                  onOpenScheme={openScheme}
                   onDelete={onRemove}
                 />
               </Grid>
@@ -118,6 +129,7 @@ const SharedProjects = (props) => {
               shared={true}
               accepted={true}
               sharedID={sharedScheme.id}
+              onOpenScheme={openScheme}
               onDelete={onRemove}
             />
           </Grid>

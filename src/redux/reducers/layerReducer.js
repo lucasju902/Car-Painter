@@ -94,6 +94,9 @@ export const slice = createSlice({
       }
       state.current = layer;
     },
+    clearCurrent: (state) => {
+      state.current = null;
+    },
     setHoveredJSON: (state, action) => {
       state.hoveredJSON = action.payload;
     },
@@ -136,6 +139,7 @@ export const {
   deleteItemsByUploadID,
   setLoadedStatusAll,
   setLoadedStatus,
+  clearCurrent,
 } = slice.actions;
 
 export default slice.reducer;

@@ -10,10 +10,12 @@ import {
   clearCurrent as clearCurrentScheme,
   setLoaded as setSchemeLoaded,
   createSharedUser,
+  clearSharedUsers,
   updateSharedUserItem,
   deleteSharedUserItem,
 } from "redux/reducers/schemeReducer";
 import { clearFrameSize } from "redux/reducers/boardReducer";
+import { clearCurrent as clearCurrentLayer } from "redux/reducers/layerReducer";
 
 import { Box, IconButton, TextField } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,6 +28,7 @@ import { faQuestion, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import SchemeSettingsDialog from "dialogs/scheme-settings-dialog";
 import ShortCutsDialog from "dialogs/ShortCutsDialog";
 import LightTooltip from "components/LightTooltip";
+import { setMessage } from "redux/reducers/messageReducer";
 
 const CustomIcon = styled(FontAwesomeIcon)`
   width: 20px !important;
@@ -83,7 +86,9 @@ const TitleBar = (props) => {
   const handleGoBack = useCallback(() => {
     dispatch(clearFrameSize());
     dispatch(setSchemeLoaded(false));
+    dispatch(clearSharedUsers());
     dispatch(clearCurrentScheme());
+    dispatch(clearCurrentLayer());
     history.push("/");
   }, [history, dispatch]);
 
@@ -102,24 +107,60 @@ const TitleBar = (props) => {
   const handleApplySharingSetting = useCallback(
     (data) => {
       console.log(data);
+      let count = 0;
       if (data.newUser && data.newUser.editable >= 0) {
+        count += 1;
         dispatch(
-          createSharedUser({
-            user_id: data.newUser.user_id,
-            scheme_id: data.newUser.scheme_id,
-            accepted: data.newUser.accepted,
-            editable: data.newUser.editable,
-          })
+          createSharedUser(
+            {
+              user_id: data.newUser.user_id,
+              scheme_id: data.newUser.scheme_id,
+              accepted: data.newUser.accepted,
+              editable: data.newUser.editable,
+            },
+            () => {
+              dispatch(
+                setMessage({
+                  message: "Shared Project successfully!",
+                  type: "success",
+                })
+              );
+            }
+          )
         );
       }
       for (let sharedUser of data.sharedUsers) {
         if (sharedUser.editable === -1) {
-          dispatch(deleteSharedUserItem(sharedUser.id));
+          dispatch(
+            deleteSharedUserItem(sharedUser.id, () => {
+              if (!count)
+                dispatch(
+                  setMessage({
+                    message: "Applied Sharing Setting successfully!",
+                    type: "success",
+                  })
+                );
+              count += 1;
+            })
+          );
         } else {
           dispatch(
-            updateSharedUserItem(sharedUser.id, {
-              editable: sharedUser.editable,
-            })
+            updateSharedUserItem(
+              sharedUser.id,
+              {
+                editable: sharedUser.editable,
+              },
+              () => {
+                if (!count)
+                  dispatch(
+                    setMessage({
+                      message: "Applied Sharing Setting successfully!",
+                      type: "success",
+                    })
+                  );
+                count += 1;
+              }
+            )
           );
         }
       }

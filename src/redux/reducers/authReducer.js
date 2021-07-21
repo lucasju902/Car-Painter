@@ -11,6 +11,7 @@ import {
 const initialState = {
   user: undefined,
   loading: false,
+  previousPath: null,
 };
 
 export const slice = createSlice({
@@ -23,10 +24,14 @@ export const slice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setPreviousPath: (state, action) => {
+      state.previousPath = action.payload;
+    },
   },
 });
 
 const { setUser, setLoading } = slice.actions;
+export const { setPreviousPath } = slice.actions;
 
 export const signInWithCookie = (callback, fallback) => async (dispatch) => {
   const siteLogin = CookieService.getSiteLogin();
@@ -47,13 +52,14 @@ export const signInWithCookie = (callback, fallback) => async (dispatch) => {
   }
 };
 
-export const signIn = (payload) => async (dispatch) => {
+export const signIn = (payload, callback) => async (dispatch) => {
   dispatch(setLoading(true));
 
   try {
     const response = await AuthService.signIn(payload);
     CookieService.setSiteLogin(response.token);
     dispatch(setUser(response.user));
+    if (callback) callback(response.user);
   } catch (error) {
     dispatch(setMessage({ message: error.response.data.message }));
   }

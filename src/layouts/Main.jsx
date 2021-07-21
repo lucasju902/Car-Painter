@@ -5,6 +5,7 @@ import styled, { createGlobalStyle } from "styled-components/macro";
 import { CssBaseline, withWidth } from "@material-ui/core";
 
 import { useHistory } from "react-router";
+import { withMessage } from "hooks/withMessage";
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -51,4 +52,4 @@ const Main = ({ children }) => {
   );
 };
 
-export default withWidth()(Main);
+export default withMessage(withWidth()(Main));

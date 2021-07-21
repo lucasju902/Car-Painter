@@ -129,20 +129,23 @@ const InnerForm = (props) => {
 const SignIn = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const user = useSelector((state) => state.authReducer.user);
-
-  React.useEffect(() => {
-    if (user) {
-      history.push("/");
-    }
-  }, [user, history]);
+  const previousPath = useSelector((state) => state.authReducer.previousPath);
 
   const handleSubmit = async (
     values,
     { setErrors, setStatus, setSubmitting }
   ) => {
     try {
-      dispatch(signIn({ usr: values.usr, password: values.password }));
+      dispatch(
+        signIn(
+          { usr: values.usr, password: values.password },
+          (returnedUser) => {
+            if (returnedUser) {
+              history.push(previousPath ? previousPath : "/");
+            }
+          }
+        )
+      );
     } catch (error) {
       const message = "Invalid Data";
 
