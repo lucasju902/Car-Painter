@@ -9,6 +9,7 @@ import { setCurrent as setCurrentCarMake } from "./carMakeReducer";
 import { setList as setLayerList, setLoadedStatusAll } from "./layerReducer";
 import { setList as setBasePaintList } from "./basePaintReducer";
 import { pushToActionHistory } from "./boardReducer";
+import SocketClient from "utils/socketClient";
 
 const initialState = {
   list: [],
@@ -61,7 +62,15 @@ export const slice = createSlice({
         (item) => item.id === action.payload.id
       );
       if (foundIndex !== -1) {
-        schemeList[foundIndex] = action.payload;
+        let scheme = { ...action.payload };
+        if (
+          scheme &&
+          (typeof scheme.guide_data === "string" || !scheme.guide_data)
+        ) {
+          scheme.guide_data = JSON.parse(scheme.guide_data) || {};
+        }
+
+        schemeList[foundIndex] = scheme;
         state.list = schemeList;
       }
     },
@@ -146,7 +155,6 @@ const {
   setLoading,
   setList,
   insertToList,
-  updateListItem,
   deleteListItem,
   setSharedList,
   updateSharedListItem,
@@ -160,6 +168,7 @@ export const {
   setSaving,
   setLoaded,
   setCurrent,
+  updateListItem,
   clearCurrent,
   clearList,
   clearSharedList,
@@ -211,7 +220,7 @@ export const getScheme = (schemeID, callback) => async (dispatch) => {
       ..._.omit(result.scheme, ["carMake", "layers", "sharedUsers"]),
       date_modified: Math.round(new Date().getTime() / 1000),
     });
-    dispatch(setCurrent(scheme));
+    dispatch(setCurrent(_.omit(scheme, ["carMake", "layers", "sharedUsers"])));
     dispatch(setCurrentCarMake(result.carMake));
     let loadedStatuses = {};
     result.layers.map((item) => {
@@ -237,17 +246,23 @@ export const updateScheme = (payload, pushingToHistory = true) => async (
       dispatch(setCurrent(payload));
     }
 
-    const scheme = await SchemeService.updateScheme(payload.id, {
-      ..._.omit(payload, ["carMake", "layers"]),
-      guide_data: JSON.stringify(payload.guide_data),
+    // const scheme = await SchemeService.updateScheme(payload.id, {
+    //   ..._.omit(payload, ["carMake", "layers"]),
+    //   guide_data: JSON.stringify(payload.guide_data),
+    // });
+    let updatedScheme = { ...currentScheme, ...payload };
+    SocketClient.emit("client-update-scheme", {
+      ...updatedScheme,
+      guide_data: JSON.stringify(updatedScheme.guide_data),
     });
-    dispatch(updateListItem(scheme));
+
+    dispatch(updateListItem(updatedScheme));
     if (pushingToHistory)
       dispatch(
         pushToActionHistory({
           action: HistoryActions.SCHEME_CHANGE_ACTION,
           prev_data: currentScheme,
-          next_data: parseScheme(scheme),
+          next_data: parseScheme(updatedScheme),
         })
       );
   } catch (err) {
@@ -255,10 +270,16 @@ export const updateScheme = (payload, pushingToHistory = true) => async (
   }
 };
 
-export const changeName = (id, name) => async (dispatch) => {
+export const changeName = (id, name) => async (dispatch, getState) => {
   try {
+    const currentScheme = getState().schemeReducer.current;
     dispatch(setCurrentName(name));
-    await SchemeService.updateScheme(id, { name });
+    // await SchemeService.updateScheme(id, { name });
+    let updatedScheme = { ...currentScheme, name: name };
+    SocketClient.emit("client-update-scheme", {
+      ...updatedScheme,
+      guide_data: JSON.stringify(updatedScheme.guide_data),
+    });
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -271,13 +292,17 @@ export const changeBaseColor = (id, color) => async (dispatch, getState) => {
     if (base_color !== "transparent") {
       base_color = base_color.replace("#", "");
     }
-    const scheme = await SchemeService.updateScheme(id, { base_color });
+    let updatedScheme = { ...currentScheme, base_color };
+    SocketClient.emit("client-update-scheme", {
+      ...updatedScheme,
+      guide_data: JSON.stringify(updatedScheme.guide_data),
+    });
     dispatch(setCurrentBaseColor(base_color));
     dispatch(
       pushToActionHistory({
         action: HistoryActions.SCHEME_CHANGE_ACTION,
         prev_data: currentScheme,
-        next_data: parseScheme(scheme),
+        next_data: parseScheme(updatedScheme),
       })
     );
   } catch (err) {

@@ -30,6 +30,8 @@ import {
   setSaving,
   setLoaded,
   getSharedUsers,
+  updateListItem as updateSchemeListItem,
+  setCurrent as setCurrentScheme,
 } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
 import { getFontList } from "redux/reducers/fontReducer";
@@ -44,6 +46,7 @@ import {
   cloneLayer,
   setDrawingStatus,
   DrawingStatus,
+  updateListItem as updateLayerListItem,
 } from "redux/reducers/layerReducer";
 import {
   setPaintingGuides,
@@ -63,6 +66,7 @@ import {
 } from "helper";
 import SchemeService from "services/schemeService";
 import { getUserList } from "redux/reducers/userReducer";
+import SocketClient from "utils/socketClient";
 
 const Wrapper = styled(Box)`
   background-color: ${(props) => props.background};
@@ -614,6 +618,30 @@ const Scheme = () => {
         clearTimeout(startTimout);
       };
     }
+  }, []);
+
+  // Socket.io Stuffs
+  useEffect(() => {
+    SocketClient.connect();
+
+    SocketClient.on("connect", () => {
+      SocketClient.emit("room", params.id);
+    });
+
+    SocketClient.on("client-update-layer", (data) => {
+      console.log("Event: ", "client-update-layer", data);
+      dispatch(updateLayerListItem(data));
+    });
+
+    SocketClient.on("client-update-scheme", (data) => {
+      console.log("Event: ", "client-update-scheme", data);
+      dispatch(updateSchemeListItem(data));
+      dispatch(setCurrentScheme(data));
+    });
+
+    return () => {
+      SocketClient.disconnect();
+    };
   }, []);
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
+import SocketClient from "utils/socketClient";
 
 import {
   LayerTypes,
@@ -65,7 +66,11 @@ export const slice = createSlice({
         (item) => item.id === action.payload.id
       );
       if (foundIndex !== -1) {
-        layerList[foundIndex] = action.payload;
+        let item = action.payload;
+        if (typeof item.layer_data === "string") {
+          item.layer_data = JSON.parse(item.layer_data);
+        }
+        layerList[foundIndex] = item;
         state.list = layerList;
       }
     },
@@ -442,10 +447,15 @@ export const updateLayer = (layer, pushingToHistory = true) => async (
     if (currentLayer && currentLayer.id === configuredLayer.id) {
       dispatch(setCurrent(configuredLayer));
     }
-    await LayerService.updateLayer(configuredLayer.id, {
+    // await LayerService.updateLayer(configuredLayer.id, {
+    //   ...configuredLayer,
+    //   layer_data: JSON.stringify(configuredLayer.layer_data),
+    // });
+    SocketClient.emit("client-update-layer", {
       ...configuredLayer,
       layer_data: JSON.stringify(configuredLayer.layer_data),
     });
+
     if (pushingToHistory) {
       dispatch(
         pushToActionHistory({
