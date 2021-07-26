@@ -124,6 +124,6 @@
     "redux-devtools-extension": "2.13.8"
   },
   "engines": {
-    "node": "^14.0.0"
+    "node": "14.0.0"
   }
 }
