@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import useInterval from "react-useinterval";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
-import { useResizeDetector } from "react-resize-detector";
 
 import styled from "styled-components/macro";
 import { spacing } from "@material-ui/system";
@@ -55,6 +54,9 @@ const RotationButton = styled(IconButton)`
 `;
 
 const Board = ({
+  wrapperWidth,
+  wrapperHeight,
+  wrapperRef,
   hoveredLayerJSON,
   editable,
   onChangeHoverJSONItem,
@@ -75,7 +77,6 @@ const Board = ({
   const [previousGuide, setPreviousGuide] = useState([]);
 
   const dispatch = useDispatch();
-  const { width, height, ref } = useResizeDetector();
 
   const frameSize = useSelector((state) => state.boardReducer.frameSize);
   const zoom = useSelector((state) => state.boardReducer.zoom);
@@ -507,11 +508,11 @@ const Board = ({
       position="relative"
       id="board-wrapper"
       position="relative"
-      ref={ref}
+      ref={wrapperRef}
     >
       <Stage
-        width={width}
-        height={height}
+        width={wrapperWidth}
+        height={wrapperHeight}
         onMousedown={handleMouseDown}
         onContentMousedown={handleContentMouseDown}
         onContentMousemove={handleMouseMove}
@@ -522,8 +523,8 @@ const Board = ({
         scaleX={zoom || 1}
         scaleY={zoom || 1}
         rotation={boardRotate}
-        x={width / 2}
-        y={height / 2}
+        x={wrapperWidth / 2}
+        y={wrapperHeight / 2}
         offsetX={frameSize.width / 2}
         offsetY={frameSize.height / 2}
         ref={stageRef}

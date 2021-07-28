@@ -180,6 +180,12 @@ export const createLayersFromBasePaint = (
               basePaintIndex: basePaintItemOrIndex,
               img: `${base_item}.png`,
               opacity: 1,
+              color:
+                base_item === 1
+                  ? "#ff0000"
+                  : base_item === 2
+                  ? "#00ff00"
+                  : "#0000ff",
             }),
       });
       SocketClient.emit("client-create-layer", {

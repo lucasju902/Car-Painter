@@ -6,6 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import { useReducerRef } from "hooks";
+import { useResizeDetector } from "react-resize-detector";
 import _ from "lodash";
 import styled from "styled-components/macro";
 import { useSelector, useDispatch } from "react-redux";
@@ -82,6 +83,11 @@ const Scheme = () => {
   const [dialog, setDialog] = useState(null);
   const [hoveredJSON, setHoveredJSON] = useState({});
 
+  const {
+    width: wrapperWidth,
+    height: wrapperHeight,
+    ref: wrapperRef,
+  } = useResizeDetector();
   const tick = useRef(0);
   const prevTick = useRef(0);
   const stageRef = useRef(null);
@@ -450,12 +456,16 @@ const Scheme = () => {
       let width = frameSizeRef.current.width * pixelRatio;
       let height = frameSizeRef.current.height * pixelRatio;
       let baseLayerImg, mainLayerImg, carMaskLayerImg;
-      let attrs = { ...stageRef.current.attrs };
+      let stageAttrs = { ...stageRef.current.attrs };
+
+      wrapperRef.current.style.width = `${frameSizeRef.current.width}px`;
+      wrapperRef.current.style.height = `${frameSizeRef.current.height}px`;
+
       stageRef.current.setAttrs({
         x: 0,
         y: 0,
-        offsetX: 0,
-        offsetY: 0,
+        offsetX: frameSizeRef.current.width / 2,
+        offsetY: frameSizeRef.current.width / 2,
         scaleX: 1,
         scaleY: 1,
         rotation: 0,
@@ -465,22 +475,41 @@ const Scheme = () => {
       stageRef.current.draw();
 
       if (baseLayerRef.current) {
-        let baseLayerURL = baseLayerRef.current.toDataURL({ pixelRatio });
+        let baseLayerURL = baseLayerRef.current.toDataURL({
+          pixelRatio,
+          x: -frameSizeRef.current.width / 2,
+          y: -frameSizeRef.current.width / 2,
+          width: frameSizeRef.current.width,
+          height: frameSizeRef.current.height,
+        });
         baseLayerImg = await addImageProcess(baseLayerURL);
       }
+
       if (mainLayerRef.current) {
-        let mainLayerURL = mainLayerRef.current.toDataURL({ pixelRatio });
+        let mainLayerURL = mainLayerRef.current.toDataURL({
+          pixelRatio,
+          x: 0,
+          y: 0,
+          width: frameSizeRef.current.width,
+          height: frameSizeRef.current.height,
+        });
         mainLayerImg = await addImageProcess(mainLayerURL);
       }
       if (carMaskLayerRef.current && isPNG) {
         let carMaskLayerURL = carMaskLayerRef.current.toDataURL({
           pixelRatio,
+          x: 0,
+          y: 0,
+          width: frameSizeRef.current.width,
+          height: frameSizeRef.current.height,
         });
         carMaskLayerImg = await addImageProcess(carMaskLayerURL);
       }
 
-      stageRef.current.setAttrs(_.omit(attrs, ["container"]));
+      stageRef.current.setAttrs(_.omit(stageAttrs, ["container"]));
       stageRef.current.draw();
+      wrapperRef.current.style.width = `100%`;
+      wrapperRef.current.style.height = `100%`;
       canvas.width = width;
       canvas.height = height;
 
@@ -510,6 +539,7 @@ const Scheme = () => {
   const handleUploadThumbnail = useCallback(async () => {
     if (stageRef.current && currentSchemeRef.current) {
       try {
+        console.log("Uploading Thumbnail");
         dispatch(setSaving(true));
         let dataURL = await takeScreenshot();
         dispatch(setSaving(false));
@@ -527,6 +557,7 @@ const Scheme = () => {
         formData.append("schemeID", currentSchemeRef.current.id);
 
         await SchemeService.uploadThumbnail(formData);
+        console.log("Uploaded Thumbnail");
       } catch (err) {
         dispatch(setMessage({ message: err.message }));
       }
@@ -611,13 +642,11 @@ const Scheme = () => {
       const interval = setInterval(() => {
         tick.current += 1;
       }, 200);
-      const startTimout = setTimeout(handleUploadThumbnail, 7000);
       const thumbnailInterval = setInterval(handleUploadThumbnail, 300000);
 
       return () => {
         clearInterval(interval);
         clearInterval(thumbnailInterval);
-        clearTimeout(startTimout);
       };
     }
   }, []);
@@ -660,6 +689,7 @@ const Scheme = () => {
     ) {
       dispatch(setLoaded(true));
       handleZoomFit();
+      setTimeout(handleUploadThumbnail, 5000);
     }
   }, [loadedStatuses, schemeLoaded]);
 
@@ -704,6 +734,9 @@ const Scheme = () => {
             />
             <Wrapper background="#282828" overflow="hidden" flexGrow="1">
               <Board
+                wrapperWidth={wrapperWidth}
+                wrapperHeight={wrapperHeight}
+                wrapperRef={wrapperRef}
                 hoveredLayerJSON={hoveredJSON}
                 editable={editable}
                 onChangeHoverJSONItem={setHoveredJSONItem}
