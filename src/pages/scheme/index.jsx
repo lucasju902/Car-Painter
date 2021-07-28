@@ -47,6 +47,8 @@ import {
   setDrawingStatus,
   DrawingStatus,
   updateListItem as updateLayerListItem,
+  deleteListItem as deleteLayerListItem,
+  insertToList as insertToLayerList,
 } from "redux/reducers/layerReducer";
 import {
   setPaintingGuides,
@@ -628,15 +630,21 @@ const Scheme = () => {
       SocketClient.emit("room", params.id);
     });
 
-    SocketClient.on("client-update-layer", (data) => {
-      console.log("Event: ", "client-update-layer", data);
-      dispatch(updateLayerListItem(data));
+    SocketClient.on("client-update-layer", (response) => {
+      dispatch(updateLayerListItem(response.data));
     });
 
-    SocketClient.on("client-update-scheme", (data) => {
-      console.log("Event: ", "client-update-scheme", data);
-      dispatch(updateSchemeListItem(data));
-      dispatch(setCurrentScheme(data));
+    SocketClient.on("client-delete-layer", (response) => {
+      dispatch(deleteLayerListItem(response.data));
+    });
+
+    SocketClient.on("client-update-scheme", (response) => {
+      dispatch(updateSchemeListItem(response.data));
+      dispatch(setCurrentScheme(response.data));
+    });
+
+    SocketClient.on("client-create-layer", (response) => {
+      dispatch(insertToLayerList(response.data));
     });
 
     return () => {

@@ -252,8 +252,11 @@ export const updateScheme = (payload, pushingToHistory = true) => async (
     // });
     let updatedScheme = { ...currentScheme, ...payload };
     SocketClient.emit("client-update-scheme", {
-      ...updatedScheme,
-      guide_data: JSON.stringify(updatedScheme.guide_data),
+      data: {
+        ...updatedScheme,
+        guide_data: JSON.stringify(updatedScheme.guide_data),
+      },
+      socketID: SocketClient.socket.id,
     });
 
     dispatch(updateListItem(updatedScheme));
@@ -277,8 +280,11 @@ export const changeName = (id, name) => async (dispatch, getState) => {
     // await SchemeService.updateScheme(id, { name });
     let updatedScheme = { ...currentScheme, name: name };
     SocketClient.emit("client-update-scheme", {
-      ...updatedScheme,
-      guide_data: JSON.stringify(updatedScheme.guide_data),
+      data: {
+        ...updatedScheme,
+        guide_data: JSON.stringify(updatedScheme.guide_data),
+      },
+      socketID: SocketClient.socket.id,
     });
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
@@ -294,8 +300,11 @@ export const changeBaseColor = (id, color) => async (dispatch, getState) => {
     }
     let updatedScheme = { ...currentScheme, base_color };
     SocketClient.emit("client-update-scheme", {
-      ...updatedScheme,
-      guide_data: JSON.stringify(updatedScheme.guide_data),
+      data: {
+        ...updatedScheme,
+        guide_data: JSON.stringify(updatedScheme.guide_data),
+      },
+      socketID: SocketClient.socket.id,
     });
     dispatch(setCurrentBaseColor(base_color));
     dispatch(

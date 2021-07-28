@@ -36,30 +36,23 @@ class SocketServer {
     );
   }
 
-  async onClientUpdateLayer(socket, data) {
-    console.log("client-update-layer", data);
-    socket.broadcast.to(socket.room).emit("client-update-layer", data);
-    await LayerService.updateById(data.id, data);
+  async onClientUpdateLayer(socket, requestData) {
+    socket.broadcast.to(socket.room).emit("client-update-layer", requestData);
+    await LayerService.updateById(requestData.data.id, requestData.data);
   }
 
-  async onClientCreateLayer(socket, data) {
-    console.log("client-create-layer", data);
-    let layer = await LayerService.create(data);
-    socket.broadcast
-      .to(socket.room)
-      .emit("client-create-layer", layer.toJSON());
+  async onClientCreateLayer(socket, requestData) {
+    socket.broadcast.to(socket.room).emit("client-create-layer", requestData);
   }
 
-  async onClientDeleteLayer(socket, data) {
-    console.log("client-delete-layer", data);
-    socket.broadcast.to(socket.room).emit("client-delete-layer", data);
-    await LayerService.deleteById(data.id);
+  async onClientDeleteLayer(socket, requestData) {
+    socket.broadcast.to(socket.room).emit("client-delete-layer", requestData);
+    await LayerService.deleteById(requestData.data.id);
   }
 
-  async onClientUpdateScheme(socket, data) {
-    console.log("client-update-scheme", data);
-    socket.broadcast.to(socket.room).emit("client-update-scheme", data);
-    await SchemeService.updateById(data.id, data);
+  async onClientUpdateScheme(socket, requestData) {
+    socket.broadcast.to(socket.room).emit("client-update-scheme", requestData);
+    await SchemeService.updateById(requestData.data.id, requestData.data);
   }
 }
 

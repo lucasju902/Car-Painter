@@ -182,6 +182,10 @@ export const createLayersFromBasePaint = (
               opacity: 1,
             }),
       });
+      SocketClient.emit("client-create-layer", {
+        data: layer,
+        socketID: SocketClient.socket.id,
+      });
       dispatch(insertToList(layer));
       dispatch(setCurrent(layer));
       dispatch(
@@ -220,6 +224,10 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
         preview_file: shape.overlay_thumb,
       }),
     });
+    SocketClient.emit("client-create-layer", {
+      data: layer,
+      socketID: SocketClient.socket.id,
+    });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
     dispatch(
@@ -256,6 +264,10 @@ export const createLayerFromLogo = (schemeID, logo, position) => async (
         source_file: logo.source_file,
         preview_file: logo.preview_file,
       }),
+    });
+    SocketClient.emit("client-create-layer", {
+      data: layer,
+      socketID: SocketClient.socket.id,
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -297,6 +309,10 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
         preview_file: upload.file_name,
       }),
     });
+    SocketClient.emit("client-create-layer", {
+      data: layer,
+      socketID: SocketClient.socket.id,
+    });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
     dispatch(
@@ -331,6 +347,10 @@ export const createTextLayer = (schemeID, textObj, position) => async (
         left: position.x,
         top: position.y,
       }),
+    });
+    SocketClient.emit("client-create-layer", {
+      data: layer,
+      socketID: SocketClient.socket.id,
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -375,6 +395,10 @@ export const cloneLayer = (
                 : 0),
         }),
       });
+      SocketClient.emit("client-create-layer", {
+        data: layer,
+        socketID: SocketClient.socket.id,
+      });
       dispatch(insertToList(layer));
       dispatch(setCurrent(layer));
       if (pushingToHistory)
@@ -412,6 +436,10 @@ export const createShape = (schemeID, newlayer) => async (dispatch) => {
           ).map((item) => item.replace("layer_data.", ""))
         )
       ),
+    });
+    SocketClient.emit("client-create-layer", {
+      data: layer,
+      socketID: SocketClient.socket.id,
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -452,8 +480,11 @@ export const updateLayer = (layer, pushingToHistory = true) => async (
     //   layer_data: JSON.stringify(configuredLayer.layer_data),
     // });
     SocketClient.emit("client-update-layer", {
-      ...configuredLayer,
-      layer_data: JSON.stringify(configuredLayer.layer_data),
+      data: {
+        ...configuredLayer,
+        layer_data: JSON.stringify(configuredLayer.layer_data),
+      },
+      socketID: SocketClient.socket.id,
     });
 
     if (pushingToHistory) {
@@ -492,7 +523,11 @@ export const deleteLayer = (layer, pushingToHistory = true) => async (
   try {
     dispatch(deleteListItem(layer));
     dispatch(setCurrent(null));
-    await LayerService.deleteLayer(layer.id);
+    // await LayerService.deleteLayer(layer.id);
+    SocketClient.emit("client-delete-layer", {
+      data: { ...layer },
+      socketID: SocketClient.socket.id,
+    });
     if (pushingToHistory)
       dispatch(
         pushToActionHistory({
