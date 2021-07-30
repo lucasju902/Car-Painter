@@ -497,209 +497,212 @@ const Board = ({
   }, [showGuideForRepositioning, currentScheme]);
 
   return (
-    <Box
-      width="100%"
-      height="100%"
-      display="flex"
-      justifyContent="center"
-      flexDirection="column"
-      alignItems="center"
-      margin="auto"
-      position="relative"
-      id="board-wrapper"
-      position="relative"
-      ref={wrapperRef}
-    >
-      <Stage
-        width={wrapperWidth}
-        height={wrapperHeight}
-        onMousedown={handleMouseDown}
-        onContentMousedown={handleContentMouseDown}
-        onContentMousemove={handleMouseMove}
-        onContentMouseup={handleMouseUp}
-        onDblClick={handleContentDoubleClick}
-        onTouchStart={handleMouseDown}
-        onWheel={handleZoomStage}
-        scaleX={zoom || 1}
-        scaleY={zoom || 1}
-        rotation={boardRotate}
-        x={wrapperWidth / 2}
-        y={wrapperHeight / 2}
-        offsetX={frameSize.width / 2}
-        offsetY={frameSize.height / 2}
-        ref={stageRef}
-        draggable={mouseMode === MouseModes.DEFAULT}
-        style={{
-          cursor: mouseMode === MouseModes.DEFAULT ? "default" : "crosshair",
-        }}
+    <Box width="100%" height="100%" position="relative">
+      <Box
+        width="100%"
+        height="100%"
+        display="flex"
+        justifyContent="center"
+        flexDirection="column"
+        alignItems="center"
+        margin="auto"
+        id="board-wrapper"
+        position="relative"
+        ref={wrapperRef}
       >
-        <Layer ref={baseLayerRef} listening={false}>
-          {/* Background */}
-          <Rect
-            x={0}
-            y={0}
-            width={frameSize.width}
-            height={frameSize.height}
-            fill={
-              currentScheme.base_color === "transparent"
-                ? currentScheme.base_color
-                : "#" + currentScheme.base_color
-            }
-            listening={false}
-          />
-          <BasePaints
-            legacyMode={currentScheme.legacy_mode}
-            carMake={currentCarMake}
-            layers={layerList}
-            loadedStatuses={loadedStatuses}
-            handleImageSize={handleImageSize}
-            onLoadLayer={handleLoadLayer}
-          />
-        </Layer>
-        <Layer listening={false}>
-          <PaintingGuideBottom
-            legacyMode={currentScheme.legacy_mode}
-            carMake={currentCarMake}
-            paintingGuides={paintingGuides}
-            guideData={currentScheme.guide_data}
-            loadedStatuses={loadedStatuses}
-            handleImageSize={handleImageSize}
-            onLoadLayer={handleLoadLayer}
-          />
-        </Layer>
-        <Layer ref={mainLayerRef}>
-          {!currentScheme.guide_data.show_carparts_on_top ? (
-            <CarParts
-              layers={layerList}
+        <Stage
+          width={wrapperWidth}
+          height={wrapperHeight}
+          onMousedown={handleMouseDown}
+          onContentMousedown={handleContentMouseDown}
+          onContentMousemove={handleMouseMove}
+          onContentMouseup={handleMouseUp}
+          onDblClick={handleContentDoubleClick}
+          onTouchStart={handleMouseDown}
+          onWheel={handleZoomStage}
+          scaleX={zoom || 1}
+          scaleY={zoom || 1}
+          rotation={boardRotate}
+          x={wrapperWidth / 2}
+          y={wrapperHeight / 2}
+          offsetX={frameSize.width / 2}
+          offsetY={frameSize.height / 2}
+          ref={stageRef}
+          draggable={mouseMode === MouseModes.DEFAULT}
+          style={{
+            cursor: mouseMode === MouseModes.DEFAULT ? "default" : "crosshair",
+          }}
+        >
+          <Layer ref={baseLayerRef} listening={false}>
+            {/* Background */}
+            <Rect
+              x={0}
+              y={0}
+              width={frameSize.width}
+              height={frameSize.height}
+              fill={
+                currentScheme.base_color === "transparent"
+                  ? currentScheme.base_color
+                  : "#" + currentScheme.base_color
+              }
+              listening={false}
+            />
+            <BasePaints
               legacyMode={currentScheme.legacy_mode}
               carMake={currentCarMake}
+              layers={layerList}
               loadedStatuses={loadedStatuses}
               handleImageSize={handleImageSize}
               onLoadLayer={handleLoadLayer}
             />
-          ) : (
-            <></>
-          )}
-
-          <Overlays
-            editable={editable}
-            layers={layerList}
-            frameSize={frameSize}
-            boardRotate={boardRotate}
-            currentLayer={currentLayer}
-            mouseMode={mouseMode}
-            loadedStatuses={loadedStatuses}
-            handleImageSize={handleImageSize}
-            setCurrentLayer={handleLayerSelect}
-            onChange={handleLayerDataChange}
-            onHover={handleHoverLayer}
-            onLoadLayer={handleLoadLayer}
-            onDragStart={handleLayerDragStart}
-            onDragEnd={handleLayerDragEnd}
-          />
-          <Shapes
-            editable={editable}
-            layers={layerList}
-            drawingLayer={drawingLayerRef.current}
-            boardRotate={boardRotate}
-            mouseMode={mouseMode}
-            currentLayer={currentLayer}
-            loadedStatuses={loadedStatuses}
-            setCurrentLayer={handleLayerSelect}
-            onChange={handleLayerDataChange}
-            onHover={handleHoverLayer}
-            onLoadLayer={handleLoadLayer}
-            onDragStart={handleLayerDragStart}
-            onDragEnd={handleLayerDragEnd}
-          />
-          <LogosAndTexts
-            editable={editable}
-            layers={layerList}
-            fonts={fontList}
-            loadedFontList={loadedFontList}
-            frameSize={frameSize}
-            mouseMode={mouseMode}
-            boardRotate={boardRotate}
-            loadedStatuses={loadedStatuses}
-            currentLayer={currentLayer}
-            setCurrentLayer={handleLayerSelect}
-            onChange={handleLayerDataChange}
-            onFontLoad={handleAddFont}
-            onHover={handleHoverLayer}
-            onLoadLayer={handleLoadLayer}
-            onDragStart={handleLayerDragStart}
-            onDragEnd={handleLayerDragEnd}
-          />
-          {currentScheme.guide_data.show_carparts_on_top ? (
-            <CarParts
-              layers={layerList}
+          </Layer>
+          <Layer listening={false}>
+            <PaintingGuideBottom
               legacyMode={currentScheme.legacy_mode}
               carMake={currentCarMake}
+              paintingGuides={paintingGuides}
+              guideData={currentScheme.guide_data}
               loadedStatuses={loadedStatuses}
               handleImageSize={handleImageSize}
               onLoadLayer={handleLoadLayer}
             />
-          ) : (
-            <></>
-          )}
-        </Layer>
-        <Layer ref={carMaskLayerRef} listening={false}>
-          <PaintingGuideCarMask
-            legacyMode={currentScheme.legacy_mode}
-            carMake={currentCarMake}
-            paintingGuides={paintingGuides}
-            loadedStatuses={loadedStatuses}
-            guideData={currentScheme.guide_data}
-            handleImageSize={handleImageSize}
-            onLoadLayer={handleLoadLayer}
-          />
-        </Layer>
-        <Layer>
-          <PaintingGuideTop
-            legacyMode={currentScheme.legacy_mode}
-            carMake={currentCarMake}
-            paintingGuides={paintingGuides}
-            loadedStatuses={loadedStatuses}
-            frameSize={frameSize}
-            guideData={currentScheme.guide_data}
-            handleImageSize={handleImageSize}
-            onLoadLayer={handleLoadLayer}
-          />
-          {editable ? (
-            <TransformerComponent
-              trRef={activeTransformerRef}
-              selectedLayer={currentLayer}
-              pressedKey={pressedKey}
-            />
-          ) : (
-            <></>
-          )}
+          </Layer>
+          <Layer ref={mainLayerRef}>
+            {!currentScheme.guide_data.show_carparts_on_top ? (
+              <CarParts
+                layers={layerList}
+                legacyMode={currentScheme.legacy_mode}
+                carMake={currentCarMake}
+                loadedStatuses={loadedStatuses}
+                handleImageSize={handleImageSize}
+                onLoadLayer={handleLoadLayer}
+              />
+            ) : (
+              <></>
+            )}
 
-          {hoveredLayerJSON &&
-          (!currentLayer || !hoveredLayerJSON[currentLayer.id] || !editable) ? (
-            <TransformerComponent
-              trRef={hoveredTransformerRef}
-              selectedLayer={layerList.find(
-                (item) => hoveredLayerJSON[item.id]
-              )}
-              hoveredTransform={true}
+            <Overlays
+              editable={editable}
+              layers={layerList}
+              frameSize={frameSize}
+              boardRotate={boardRotate}
+              currentLayer={currentLayer}
+              mouseMode={mouseMode}
+              loadedStatuses={loadedStatuses}
+              handleImageSize={handleImageSize}
+              setCurrentLayer={handleLayerSelect}
+              onChange={handleLayerDataChange}
+              onHover={handleHoverLayer}
+              onLoadLayer={handleLoadLayer}
+              onDragStart={handleLayerDragStart}
+              onDragEnd={handleLayerDragEnd}
             />
-          ) : (
-            <></>
-          )}
-        </Layer>
-      </Stage>
-      <Box position="absolute" right={0} top={0}>
-        <LightTooltip title="Rotate Left" position="bottom" arrow>
-          <RotationButton onClick={() => handleChangeBoardRotation(false)}>
-            <RotateLeftIcon />
-          </RotationButton>
-        </LightTooltip>
-        <LightTooltip title="Rotate Right" position="bottom" arrow>
-          <RotationButton onClick={() => handleChangeBoardRotation(true)}>
-            <RotateRightIcon />
-          </RotationButton>
-        </LightTooltip>
+            <Shapes
+              editable={editable}
+              layers={layerList}
+              drawingLayer={drawingLayerRef.current}
+              boardRotate={boardRotate}
+              mouseMode={mouseMode}
+              currentLayer={currentLayer}
+              loadedStatuses={loadedStatuses}
+              setCurrentLayer={handleLayerSelect}
+              onChange={handleLayerDataChange}
+              onHover={handleHoverLayer}
+              onLoadLayer={handleLoadLayer}
+              onDragStart={handleLayerDragStart}
+              onDragEnd={handleLayerDragEnd}
+            />
+            <LogosAndTexts
+              editable={editable}
+              layers={layerList}
+              fonts={fontList}
+              loadedFontList={loadedFontList}
+              frameSize={frameSize}
+              mouseMode={mouseMode}
+              boardRotate={boardRotate}
+              loadedStatuses={loadedStatuses}
+              currentLayer={currentLayer}
+              setCurrentLayer={handleLayerSelect}
+              onChange={handleLayerDataChange}
+              onFontLoad={handleAddFont}
+              onHover={handleHoverLayer}
+              onLoadLayer={handleLoadLayer}
+              onDragStart={handleLayerDragStart}
+              onDragEnd={handleLayerDragEnd}
+            />
+            {currentScheme.guide_data.show_carparts_on_top ? (
+              <CarParts
+                layers={layerList}
+                legacyMode={currentScheme.legacy_mode}
+                carMake={currentCarMake}
+                loadedStatuses={loadedStatuses}
+                handleImageSize={handleImageSize}
+                onLoadLayer={handleLoadLayer}
+              />
+            ) : (
+              <></>
+            )}
+          </Layer>
+          <Layer ref={carMaskLayerRef} listening={false}>
+            <PaintingGuideCarMask
+              legacyMode={currentScheme.legacy_mode}
+              carMake={currentCarMake}
+              paintingGuides={paintingGuides}
+              loadedStatuses={loadedStatuses}
+              guideData={currentScheme.guide_data}
+              handleImageSize={handleImageSize}
+              onLoadLayer={handleLoadLayer}
+            />
+          </Layer>
+          <Layer>
+            <PaintingGuideTop
+              legacyMode={currentScheme.legacy_mode}
+              carMake={currentCarMake}
+              paintingGuides={paintingGuides}
+              loadedStatuses={loadedStatuses}
+              frameSize={frameSize}
+              guideData={currentScheme.guide_data}
+              handleImageSize={handleImageSize}
+              onLoadLayer={handleLoadLayer}
+            />
+            {editable ? (
+              <TransformerComponent
+                trRef={activeTransformerRef}
+                selectedLayer={currentLayer}
+                pressedKey={pressedKey}
+              />
+            ) : (
+              <></>
+            )}
+
+            {hoveredLayerJSON &&
+            (!currentLayer ||
+              !hoveredLayerJSON[currentLayer.id] ||
+              !editable) ? (
+              <TransformerComponent
+                trRef={hoveredTransformerRef}
+                selectedLayer={layerList.find(
+                  (item) => hoveredLayerJSON[item.id]
+                )}
+                hoveredTransform={true}
+              />
+            ) : (
+              <></>
+            )}
+          </Layer>
+        </Stage>
+        <Box position="absolute" right={0} top={0}>
+          <LightTooltip title="Rotate Left" position="bottom" arrow>
+            <RotationButton onClick={() => handleChangeBoardRotation(false)}>
+              <RotateLeftIcon />
+            </RotationButton>
+          </LightTooltip>
+          <LightTooltip title="Rotate Right" position="bottom" arrow>
+            <RotationButton onClick={() => handleChangeBoardRotation(true)}>
+              <RotateRightIcon />
+            </RotationButton>
+          </LightTooltip>
+        </Box>
       </Box>
       {schemeSaving || !schemeLoaded ? (
         <Box

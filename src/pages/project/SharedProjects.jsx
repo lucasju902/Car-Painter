@@ -18,12 +18,16 @@ const CustomInfiniteScroll = styled(InfiniteScroll)`
 
 const SharedProjects = (props) => {
   const {
+    user,
     sharedSchemeList,
+    favoriteSchemeList,
     sortBy,
     search,
     selectedVehicle,
     onAccept,
     onRemove,
+    onRemoveFavorite,
+    onAddFavorite,
   } = props;
 
   const step = 15;
@@ -92,27 +96,37 @@ const SharedProjects = (props) => {
           </Typography>
 
           <Grid container spacing={4}>
-            {pendingSharedSchemeList.map((sharedScheme) => (
-              <Grid
-                key={sharedScheme.id}
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                xl={3}
-              >
-                <ProjectItem
-                  scheme={sharedScheme.scheme}
-                  shared={true}
-                  accepted={false}
-                  sharedID={sharedScheme.id}
-                  onAccept={onAccept}
-                  onOpenScheme={openScheme}
-                  onDelete={onRemove}
-                />
-              </Grid>
-            ))}
+            {pendingSharedSchemeList.map((sharedScheme) => {
+              const favroiteScheme = favoriteSchemeList.find(
+                (item) => item.scheme_id === sharedScheme.scheme_id
+              );
+              return (
+                <Grid
+                  key={sharedScheme.id}
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  xl={3}
+                >
+                  <ProjectItem
+                    user={user}
+                    isFavorite={!!favroiteScheme}
+                    scheme={sharedScheme.scheme}
+                    shared={true}
+                    accepted={false}
+                    sharedID={sharedScheme.id}
+                    favoriteID={favroiteScheme ? favroiteScheme.id : null}
+                    onAccept={onAccept}
+                    onOpenScheme={openScheme}
+                    onDelete={onRemove}
+                    onRemoveFavorite={onRemoveFavorite}
+                    onAddFavorite={onAddFavorite}
+                  />
+                </Grid>
+              );
+            })}
           </Grid>
 
           <Box my={5} bgcolor="#808080" width="100%" height="1px" />
@@ -122,18 +136,36 @@ const SharedProjects = (props) => {
       )}
 
       <Grid container spacing={4}>
-        {acceptedSharedSchemeList.slice(0, limit).map((sharedScheme) => (
-          <Grid key={sharedScheme.id} item xs={12} sm={6} md={4} lg={3} xl={3}>
-            <ProjectItem
-              scheme={sharedScheme.scheme}
-              shared={true}
-              accepted={true}
-              sharedID={sharedScheme.id}
-              onOpenScheme={openScheme}
-              onDelete={onRemove}
-            />
-          </Grid>
-        ))}
+        {acceptedSharedSchemeList.slice(0, limit).map((sharedScheme) => {
+          const favroiteScheme = favoriteSchemeList.find(
+            (item) => item.scheme_id === sharedScheme.scheme_id
+          );
+          return (
+            <Grid
+              key={sharedScheme.id}
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              xl={3}
+            >
+              <ProjectItem
+                user={user}
+                isFavorite={!!favroiteScheme}
+                scheme={sharedScheme.scheme}
+                shared={true}
+                accepted={true}
+                sharedID={sharedScheme.id}
+                favoriteID={favroiteScheme ? favroiteScheme.id : null}
+                onOpenScheme={openScheme}
+                onDelete={onRemove}
+                onRemoveFavorite={onRemoveFavorite}
+                onAddFavorite={onAddFavorite}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
     </CustomInfiniteScroll>
   );

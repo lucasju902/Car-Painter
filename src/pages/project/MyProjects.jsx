@@ -18,12 +18,16 @@ const CustomInfiniteScroll = styled(InfiniteScroll)`
 
 const MyProjects = (props) => {
   const {
+    user,
     schemeList,
+    favoriteSchemeList,
     sortBy,
     search,
     selectedVehicle,
     onDeleteProject,
     onCloneProject,
+    onRemoveFavorite,
+    onAddFavorite,
   } = props;
 
   const history = useHistory();
@@ -69,16 +73,26 @@ const MyProjects = (props) => {
         My Projects
       </Typography>
       <Grid container spacing={4}>
-        {filteredSchemeList.slice(0, limit).map((scheme) => (
-          <Grid key={scheme.id} item xs={12} sm={6} md={4} lg={3} xl={3}>
-            <ProjectItem
-              scheme={scheme}
-              onDelete={onDeleteProject}
-              onOpenScheme={openScheme}
-              onCloneProject={onCloneProject}
-            />
-          </Grid>
-        ))}
+        {filteredSchemeList.slice(0, limit).map((scheme) => {
+          const favroiteScheme = favoriteSchemeList.find(
+            (item) => item.scheme_id === scheme.id
+          );
+          return (
+            <Grid key={scheme.id} item xs={12} sm={6} md={4} lg={3} xl={3}>
+              <ProjectItem
+                user={user}
+                isFavorite={!!favroiteScheme}
+                scheme={scheme}
+                favoriteID={favroiteScheme ? favroiteScheme.id : null}
+                onDelete={onDeleteProject}
+                onOpenScheme={openScheme}
+                onCloneProject={onCloneProject}
+                onRemoveFavorite={onRemoveFavorite}
+                onAddFavorite={onAddFavorite}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
     </CustomInfiniteScroll>
   );

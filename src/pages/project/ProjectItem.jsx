@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import _ from "lodash";
-import { useHistory } from "react-router";
 
 import config from "config";
 import styled from "styled-components/macro";
 
-import { Box, IconButton, Typography, Menu, MenuItem } from "@material-ui/core";
+import {
+  Box,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+  CircularProgress,
+} from "@material-ui/core";
 import { MoreVert as ActionIcon } from "@material-ui/icons";
+import { faStar as faStarOn } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faStarOff } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ConfirmDialog from "dialogs/ConfirmDialog";
 
 import { getDifferenceFromToday } from "helper";
@@ -29,18 +38,30 @@ const StyledMenu = styled(Menu)`
 
 const ProjectItem = (props) => {
   const {
+    user,
     scheme,
     onDelete,
     onCloneProject,
     onAccept,
     onOpenScheme,
+    onAddFavorite,
+    onRemoveFavorite,
     shared,
+    isFavorite,
     accepted,
     sharedID,
+    favoriteID,
   } = props;
   const [actionMenuEl, setActionMenuEl] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState(false);
-  const history = useHistory();
+  const [favoriteInPrgoress, setFavoriteInPrgoress] = useState(false);
+
+  const handleToggleFavorite = () => {
+    setFavoriteInPrgoress(true);
+    if (isFavorite)
+      onRemoveFavorite(favoriteID, () => setFavoriteInPrgoress(false));
+    else onAddFavorite(user.id, scheme.id, () => setFavoriteInPrgoress(false));
+  };
 
   const handleActionMenuClick = (event) => {
     setActionMenuEl(event.currentTarget);
@@ -85,6 +106,17 @@ const ProjectItem = (props) => {
           <Typography variant="body2">{scheme.carMake.name}</Typography>
         </Box>
         <Box display="flex" alignItems="center">
+          {favoriteInPrgoress ? (
+            <CircularProgress size={30} />
+          ) : (
+            <IconButton onClick={handleToggleFavorite}>
+              {isFavorite ? (
+                <FontAwesomeIcon icon={faStarOn} size="sm" />
+              ) : (
+                <FontAwesomeIcon icon={faStarOff} size="sm" />
+              )}
+            </IconButton>
+          )}
           <IconButton
             aria-haspopup="true"
             aria-controls={`action-menu-${scheme.id}`}
@@ -115,25 +147,27 @@ const ProjectItem = (props) => {
 
             {onAccept && <MenuItem onClick={handleAccept}>Accept</MenuItem>}
 
-            <MenuItem
-              onClick={() =>
-                setDeleteMessage(
-                  `Are you sure to ${
-                    shared && !accepted
-                      ? "reject"
-                      : shared && accepted
-                      ? "remove"
-                      : "delete"
-                  } "${scheme.name}"?`
-                )
-              }
-            >
-              {shared && !accepted
-                ? "Reject"
-                : shared && accepted
-                ? "Remove"
-                : "Delete"}
-            </MenuItem>
+            {onDelete && (
+              <MenuItem
+                onClick={() =>
+                  setDeleteMessage(
+                    `Are you sure to ${
+                      shared && !accepted
+                        ? "reject"
+                        : shared && accepted
+                        ? "remove"
+                        : "delete"
+                    } "${scheme.name}"?`
+                  )
+                }
+              >
+                {shared && !accepted
+                  ? "Reject"
+                  : shared && accepted
+                  ? "Remove"
+                  : "Delete"}
+              </MenuItem>
+            )}
           </StyledMenu>
         </Box>
       </Box>

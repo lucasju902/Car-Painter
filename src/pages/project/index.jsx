@@ -31,6 +31,9 @@ import {
   getSharedList,
   updateSharedItem,
   deleteSharedItem,
+  getFavoriteList,
+  deleteFavoriteItem,
+  createFavoriteScheme,
 } from "redux/reducers/schemeReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 import { signOut } from "redux/reducers/authReducer";
@@ -102,6 +105,9 @@ const Scheme = () => {
   const sharedSchemeList = useSelector(
     (state) => state.schemeReducer.sharedList
   );
+  const favoriteSchemeList = useSelector(
+    (state) => state.schemeReducer.favoriteList
+  );
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
 
@@ -132,6 +138,7 @@ const Scheme = () => {
       if (!schemeList.length) dispatch(getSchemeList(user.id));
       if (!carMakeList.length) dispatch(getCarMakeList());
       if (!sharedSchemeList.length) dispatch(getSharedList(user.id));
+      if (!favoriteSchemeList.length) dispatch(getFavoriteList(user.id));
 
       const url = new URL(window.location.href);
       const makeID = url.searchParams.get("make");
@@ -172,8 +179,25 @@ const Scheme = () => {
       )
     );
   };
+
   const handleRemoveSharedProject = (sharedID) => {
     dispatch(deleteSharedItem(sharedID));
+  };
+
+  const handleCreateFavorite = (user_id, scheme_id, callback) => {
+    dispatch(
+      createFavoriteScheme(
+        {
+          user_id,
+          scheme_id,
+        },
+        callback
+      )
+    );
+  };
+
+  const handleRemoveFavorite = (favoriteID, callback) => {
+    dispatch(deleteFavoriteItem(favoriteID, callback));
   };
 
   const handleLogOut = () => {
@@ -299,30 +323,41 @@ const Scheme = () => {
             <>
               <TabPanel value={tabValue} index={0}>
                 <MyProjects
+                  user={user}
+                  favoriteSchemeList={favoriteSchemeList}
                   schemeList={schemeList}
                   sortBy={sortBy}
                   search={search}
                   selectedVehicle={selectedVehicle}
                   onDeleteProject={handleDeleteProject}
                   onCloneProject={handleCloneProject}
+                  onRemoveFavorite={handleRemoveFavorite}
+                  onAddFavorite={handleCreateFavorite}
                 />
               </TabPanel>
               <TabPanel value={tabValue} index={1}>
                 <SharedProjects
+                  user={user}
+                  favoriteSchemeList={favoriteSchemeList}
                   sharedSchemeList={sharedSchemeList}
                   sortBy={sortBy}
                   search={search}
                   selectedVehicle={selectedVehicle}
                   onAccept={handleAcceptInvitation}
                   onRemove={handleRemoveSharedProject}
+                  onRemoveFavorite={handleRemoveFavorite}
+                  onAddFavorite={handleCreateFavorite}
                 />
               </TabPanel>
               <TabPanel value={tabValue} index={2}>
                 <FavoriteProjects
-                  schemeList={schemeList}
+                  user={user}
+                  favoriteSchemeList={favoriteSchemeList}
                   sortBy={sortBy}
                   search={search}
                   selectedVehicle={selectedVehicle}
+                  onRemoveFavorite={handleRemoveFavorite}
+                  onAddFavorite={handleCreateFavorite}
                 />
               </TabPanel>
             </>

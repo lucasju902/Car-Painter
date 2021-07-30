@@ -1,10 +1,10 @@
-const SharedSchemeService = require("../services/sharedSchemeService");
+const FavoriteSchemeService = require("../services/favoriteSchemeService");
 const logger = require("../config/winston");
 
-class SharedSchemeController {
+class FavoriteSchemeController {
   static async getList(req, res) {
     try {
-      let list = await SharedSchemeService.getList();
+      let list = await FavoriteSchemeService.getList();
       res.json(list);
     } catch (err) {
       logger.log("error", err.stack);
@@ -16,7 +16,7 @@ class SharedSchemeController {
 
   static async getListByUserID(req, res) {
     try {
-      let list = await SharedSchemeService.getListByUserId(req.params.id);
+      let list = await FavoriteSchemeService.getListByUserId(req.params.id);
       res.json(list);
     } catch (err) {
       logger.log("error", err.stack);
@@ -28,7 +28,7 @@ class SharedSchemeController {
 
   static async getListBySchemeID(req, res) {
     try {
-      let list = await SharedSchemeService.getListBySchemeId(req.params.id);
+      let list = await FavoriteSchemeService.getListBySchemeId(req.params.id);
       res.json(list);
     } catch (err) {
       logger.log("error", err.stack);
@@ -40,7 +40,7 @@ class SharedSchemeController {
 
   static async getByID(req, res) {
     try {
-      let favorite = await SharedSchemeService.getById(req.params.id);
+      let favorite = await FavoriteSchemeService.getById(req.params.id);
       res.json(favorite);
     } catch (err) {
       logger.log("error", err.stack);
@@ -52,7 +52,7 @@ class SharedSchemeController {
 
   static async create(req, res) {
     try {
-      let favorite = await SharedSchemeService.create(req.body);
+      let favorite = await FavoriteSchemeService.create(req.body);
       res.json(favorite);
     } catch (err) {
       logger.log("error", err.stack);
@@ -64,7 +64,7 @@ class SharedSchemeController {
 
   static async update(req, res) {
     try {
-      let favorite = await SharedSchemeService.updateById(
+      let favorite = await FavoriteSchemeService.updateById(
         req.params.id,
         req.body
       );
@@ -79,7 +79,7 @@ class SharedSchemeController {
 
   static async delete(req, res) {
     try {
-      await SharedSchemeService.deleteById(req.params.id);
+      await FavoriteSchemeService.deleteById(req.params.id);
       res.json({});
     } catch (err) {
       logger.log("error", err.stack);
@@ -90,4 +90,4 @@ class SharedSchemeController {
   }
 }
 
-module.exports = SharedSchemeController;
+module.exports = FavoriteSchemeController;

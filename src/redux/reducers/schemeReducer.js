@@ -4,6 +4,7 @@ import { HistoryActions } from "constant";
 import { parseScheme } from "helper";
 import SchemeService from "services/schemeService";
 import SharedSchemeService from "services/sharedSchemeService";
+import FavoriteSchemeService from "services/favoriteSchemeService";
 import { setMessage } from "./messageReducer";
 import { setCurrent as setCurrentCarMake } from "./carMakeReducer";
 import { setList as setLayerList, setLoadedStatusAll } from "./layerReducer";
@@ -13,6 +14,7 @@ import SocketClient from "utils/socketClient";
 
 const initialState = {
   list: [],
+  favoriteList: [],
   sharedList: [],
   sharedUsers: [],
   current: null,
@@ -76,6 +78,21 @@ export const slice = createSlice({
     },
     deleteListItem: (state, action) => {
       state.list = state.list.filter((item) => item.id !== action.payload);
+    },
+    setFavoriteList: (state, action) => {
+      state.favoriteList = [...action.payload];
+    },
+    insertToFavoriteList: (state, action) => {
+      let favorite = { ...action.payload };
+      state.favoriteList.push(favorite);
+    },
+    deleteFavoriteListItem: (state, action) => {
+      state.favoriteList = state.favoriteList.filter(
+        (item) => item.id !== action.payload
+      );
+    },
+    clearFavoriteList: (state) => {
+      state.favoriteList = [];
     },
     setSharedList: (state, action) => {
       state.sharedList = [...action.payload];
@@ -157,12 +174,15 @@ const {
   insertToList,
   deleteListItem,
   setSharedList,
+  setFavoriteList,
+  deleteFavoriteListItem,
   updateSharedListItem,
   deleteSharedListItem,
   setSharedUsers,
   updateSharedUser,
   deleteSharedUser,
   insertToSharedUsers,
+  insertToFavoriteList,
 } = slice.actions;
 export const {
   setSaving,
@@ -171,6 +191,7 @@ export const {
   updateListItem,
   clearCurrent,
   clearList,
+  clearFavoriteList,
   clearSharedList,
   clearSharedUsers,
   setCurrentName,
@@ -422,9 +443,43 @@ export const deleteSharedItem = (id) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
+export const getFavoriteList = (userID) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const list = await FavoriteSchemeService.getFavoriteSchemeListByUserID(
+      userID
+    );
+    dispatch(setFavoriteList(list));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
+export const createFavoriteScheme = (payload, callback) => async (dispatch) => {
+  try {
+    let favoriteScheme = await FavoriteSchemeService.createFavoriteScheme(
+      payload
+    );
+    dispatch(insertToFavoriteList(favoriteScheme));
+    if (callback) callback();
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+};
+
+export const deleteFavoriteItem = (id, callback) => async (dispatch) => {
+  try {
+    await FavoriteSchemeService.deleteFavoriteScheme(id);
+    dispatch(deleteFavoriteListItem(id));
+    if (callback) callback();
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+};
+
 export const createSharedUser = (payload, callback) => async (dispatch) => {
   try {
-    console.log("payload: ", payload);
     let sharedUser = await SharedSchemeService.createSharedScheme(payload);
     dispatch(insertToSharedUsers(sharedUser));
     if (callback) callback();

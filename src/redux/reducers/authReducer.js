@@ -6,6 +6,7 @@ import {
   clearCurrent as clearCurrentScheme,
   clearList as clearSchemeList,
   clearSharedList,
+  clearFavoriteList,
 } from "./schemeReducer";
 
 const initialState = {
@@ -71,6 +72,7 @@ export const signOut = () => async (dispatch) => {
   dispatch(clearSchemeList());
   dispatch(clearCurrentScheme());
   dispatch(clearSharedList());
+  dispatch(clearFavoriteList());
   dispatch(setUser(null));
 };
 

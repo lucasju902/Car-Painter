@@ -85,9 +85,11 @@ const ShadowProperty = (props) => {
           {AllowedLayerTypes.includes("layer_data.shadowColor") ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Typography variant="body1" color="textSecondary" mr={2}>
-                  Shadow Color
-                </Typography>
+                <Box display="flex" alignItems="center" height="100%">
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Shadow Color
+                  </Typography>
+                </Box>
               </Grid>
               <Grid item xs={6}>
                 <ColorPickerInput
@@ -141,7 +143,7 @@ const ShadowProperty = (props) => {
           )}
           {AllowedLayerTypes.includes("layer_data.shadowOpacity") ? (
             <SliderInput
-              label="Shadow Opacity"
+              label="Opacity"
               min={0}
               max={1}
               step={0.01}

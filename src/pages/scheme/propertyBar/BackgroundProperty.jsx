@@ -13,7 +13,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from "@material-ui/core";
+} from "components/MaterialUI";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import ColorPickerInput from "components/ColorPickerInput";
@@ -64,9 +64,11 @@ const BackgroundProperty = (props) => {
           {AllowedLayerTypes.includes("layer_data.bgColor") ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Typography variant="body1" color="textSecondary" mr={2}>
-                  Background Color
-                </Typography>
+                <Box display="flex" alignItems="center" height="100%">
+                  <Typography variant="body1" color="textSecondary">
+                    BG Color
+                  </Typography>
+                </Box>
               </Grid>
               <Grid item xs={6}>
                 <ColorPickerInput
