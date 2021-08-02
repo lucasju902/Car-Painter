@@ -33,6 +33,8 @@ import {
   getSharedUsers,
   updateListItem as updateSchemeListItem,
   setCurrent as setCurrentScheme,
+  clearSharedUsers,
+  clearCurrent as clearCurrentScheme,
 } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
 import { getFontList } from "redux/reducers/fontReducer";
@@ -50,6 +52,7 @@ import {
   updateListItem as updateLayerListItem,
   deleteListItem as deleteLayerListItem,
   insertToList as insertToLayerList,
+  clearCurrent as clearCurrentLayer,
 } from "redux/reducers/layerReducer";
 import {
   setPaintingGuides,
@@ -59,6 +62,7 @@ import {
   setBoardRotate,
   historyActionUp,
   historyActionBack,
+  clearFrameSize,
 } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 import {
@@ -120,6 +124,9 @@ const Scheme = () => {
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
+  const showProperties = useSelector(
+    (state) => state.boardReducer.showProperties
+  );
   const [frameSize, frameSizeRef] = useReducerRef(
     useSelector((state) => state.boardReducer.frameSize)
   );
@@ -536,33 +543,37 @@ const Scheme = () => {
     ]
   );
 
-  const handleUploadThumbnail = useCallback(async () => {
-    if (stageRef.current && currentSchemeRef.current) {
-      try {
-        console.log("Uploading Thumbnail");
-        dispatch(setSaving(true));
-        let dataURL = await takeScreenshot();
-        dispatch(setSaving(false));
-        let blob = dataURItoBlob(dataURL);
-        var fileOfBlob = new File(
-          [blob],
-          `${currentSchemeRef.current.id}.png`,
-          {
-            type: "image/png",
-          }
-        );
+  const handleUploadThumbnail = useCallback(
+    async (uploadLater = true) => {
+      if (stageRef.current && currentSchemeRef.current) {
+        try {
+          console.log("Uploading Thumbnail");
+          dispatch(setSaving(true));
+          let dataURL = await takeScreenshot();
+          if (uploadLater) dispatch(setSaving(false));
+          let blob = dataURItoBlob(dataURL);
+          var fileOfBlob = new File(
+            [blob],
+            `${currentSchemeRef.current.id}.png`,
+            {
+              type: "image/png",
+            }
+          );
 
-        let formData = new FormData();
-        formData.append("files", fileOfBlob);
-        formData.append("schemeID", currentSchemeRef.current.id);
+          let formData = new FormData();
+          formData.append("files", fileOfBlob);
+          formData.append("schemeID", currentSchemeRef.current.id);
 
-        await SchemeService.uploadThumbnail(formData);
-        console.log("Uploaded Thumbnail");
-      } catch (err) {
-        dispatch(setMessage({ message: err.message }));
+          await SchemeService.uploadThumbnail(formData);
+          if (!uploadLater) dispatch(setSaving(false));
+          console.log("Uploaded Thumbnail");
+        } catch (err) {
+          dispatch(setMessage({ message: err.message }));
+        }
       }
-    }
-  }, [dispatch, currentSchemeRef.current, !stageRef.current, takeScreenshot]);
+    },
+    [dispatch, currentSchemeRef.current, !stageRef.current, takeScreenshot]
+  );
 
   const handleDownloadTGA = useCallback(async () => {
     if (stageRef.current && currentSchemeRef.current) {
@@ -590,6 +601,7 @@ const Scheme = () => {
         a.download = `car_${userRef.current.id}.tga`;
         a.click();
         window.URL.revokeObjectURL(url);
+        await handleUploadThumbnail();
       } catch (err) {
         console.log(err);
         dispatch(setMessage({ message: err.message }));
@@ -603,7 +615,18 @@ const Scheme = () => {
     frameSizeRef.current,
     !stageRef.current,
     takeScreenshot,
+    handleUploadThumbnail,
   ]);
+
+  const handleGoBack = useCallback(async () => {
+    await handleUploadThumbnail(false);
+    dispatch(clearFrameSize());
+    dispatch(setLoaded(false));
+    dispatch(clearSharedUsers());
+    dispatch(clearCurrentScheme());
+    dispatch(clearCurrentLayer());
+    history.push("/");
+  }, [history, dispatch, handleUploadThumbnail]);
 
   useEffect(() => {
     if (user && user.id && params.id) {
@@ -730,6 +753,7 @@ const Scheme = () => {
               editable={editable}
               hoveredLayerJSON={hoveredJSON}
               stageRef={stageRef}
+              onBack={handleGoBack}
               onChangeHoverJSONItem={setHoveredJSONItem}
             />
             <Wrapper background="#282828" overflow="hidden" flexGrow="1">
@@ -749,12 +773,16 @@ const Scheme = () => {
                 hoveredTransformerRef={hoveredTransformerRef}
               />
             </Wrapper>
-            <PropertyBar
-              stageRef={stageRef}
-              editable={editable}
-              onClone={handleCloneLayer}
-              onDelete={handleDeleteLayer}
-            />
+            {showProperties ? (
+              <PropertyBar
+                stageRef={stageRef}
+                editable={editable}
+                onClone={handleCloneLayer}
+                onDelete={handleDeleteLayer}
+              />
+            ) : (
+              <></>
+            )}
           </Box>
           <Toolbar
             onZoomIn={handleZoomIn}

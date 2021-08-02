@@ -37,6 +37,7 @@ const Sidebar = (props) => {
     stageRef,
     focusBoard,
     hoveredLayerJSON,
+    onBack,
     onChangeHoverJSONItem,
   } = props;
 
@@ -85,7 +86,7 @@ const Sidebar = (props) => {
   return (
     <Box display="flex" flexDirection="column">
       <TitleWrapper px={3}>
-        <TitleBar editable={editable} />
+        <TitleBar editable={editable} onBack={onBack} />
       </TitleWrapper>
       <Wrapper display="flex">
         <DrawerBar

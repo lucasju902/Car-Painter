@@ -1,21 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router";
 import _ from "lodash";
 import styled from "styled-components/macro";
 
 import {
   changeName,
   updateScheme,
-  clearCurrent as clearCurrentScheme,
-  setLoaded as setSchemeLoaded,
   createSharedUser,
-  clearSharedUsers,
   updateSharedUserItem,
   deleteSharedUserItem,
 } from "redux/reducers/schemeReducer";
-import { clearFrameSize } from "redux/reducers/boardReducer";
-import { clearCurrent as clearCurrentLayer } from "redux/reducers/layerReducer";
 
 import { Box, IconButton, TextField } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -44,9 +38,8 @@ const NameInput = styled(TextField)`
 `;
 
 const TitleBar = (props) => {
-  const { editable } = props;
+  const { editable, onBack } = props;
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -82,15 +75,6 @@ const TitleBar = (props) => {
   const handleDiscardName = useCallback(() => {
     setName(currentScheme.name);
   }, [setName, currentScheme && currentScheme.name]);
-
-  const handleGoBack = useCallback(() => {
-    dispatch(clearFrameSize());
-    dispatch(setSchemeLoaded(false));
-    dispatch(clearSharedUsers());
-    dispatch(clearCurrentScheme());
-    dispatch(clearCurrentLayer());
-    history.push("/");
-  }, [history, dispatch]);
 
   const handleApplyProjectSettings = useCallback(
     (guide_data) => {
@@ -209,7 +193,7 @@ const TitleBar = (props) => {
           <></>
         )}
         <LightTooltip title="Back" arrow>
-          <IconButton onClick={handleGoBack}>
+          <IconButton onClick={onBack}>
             <CustomIcon icon={faChevronLeft} size="xs" />
           </IconButton>
         </LightTooltip>

@@ -17,6 +17,7 @@ const initialState = {
     width: 1024,
     height: 1024,
   },
+  showProperties: true,
   paintingGuides: ["car-mask"],
   zoom: 1,
   pressedKey: null,
@@ -46,6 +47,9 @@ export const slice = createSlice({
     },
     setPressedKey: (state, action) => {
       state.pressedKey = action.payload;
+    },
+    setShowProperties: (state, action) => {
+      state.showProperties = action.payload;
     },
     setBoardRotate: (state, action) => {
       state.boardRotate = action.payload;
@@ -84,6 +88,7 @@ export const {
   setPressedKey,
   setBoardRotate,
   setMouseMode,
+  setShowProperties,
   pushToActionHistory,
   setActionHistory,
   setActionHistoryIndex,

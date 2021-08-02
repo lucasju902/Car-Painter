@@ -5,6 +5,7 @@ import {
   setZoom,
   historyActionBack,
   historyActionUp,
+  setShowProperties,
 } from "redux/reducers/boardReducer";
 
 import { spacing } from "@material-ui/system";
@@ -23,6 +24,7 @@ import {
   Redo as RedoIcon,
   KeyboardArrowUp as ArrowUpIcon,
 } from "@material-ui/icons";
+import { ChevronsLeft, ChevronsRight } from "react-feather";
 
 import { PaintingGuides } from "constant";
 import LightTooltip from "components/LightTooltip";
@@ -68,6 +70,13 @@ const Toolbar = React.memo((props) => {
     (state) => state.boardReducer.actionHistory
   );
   const zoom = useSelector((state) => state.boardReducer.zoom);
+  const showProperties = useSelector(
+    (state) => state.boardReducer.showProperties
+  );
+
+  const handleToggleProperties = useCallback(() => {
+    dispatch(setShowProperties(!showProperties));
+  }, [dispatch, showProperties]);
 
   const handleChangePaintingGuides = useCallback(
     (event, newFormats) => {
@@ -200,6 +209,12 @@ const Toolbar = React.memo((props) => {
             onZoomFit={onZoomFit}
             onClose={handleCloseZoomPoper}
           />
+
+          <LightTooltip title="Toggle Properties" arrow>
+            <IconButton onClick={handleToggleProperties} ml={2}>
+              {showProperties ? <ChevronsRight /> : <ChevronsLeft />}
+            </IconButton>
+          </LightTooltip>
         </Box>
       </Box>
     </Wrapper>
