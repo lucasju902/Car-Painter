@@ -53,6 +53,7 @@ import {
   deleteListItem as deleteLayerListItem,
   insertToList as insertToLayerList,
   clearCurrent as clearCurrentLayer,
+  setLoadedStatusAll,
 } from "redux/reducers/layerReducer";
 import {
   setPaintingGuides,
@@ -588,7 +589,7 @@ const Scheme = () => {
         var tga = new TGA({
           width: width,
           height: height,
-          imageType: TGA.Type.RLE_RGB,
+          imageType: TGA.Type.RGB,
         });
         tga.setImageData(imageData);
 
@@ -621,10 +622,11 @@ const Scheme = () => {
   const handleGoBack = useCallback(async () => {
     await handleUploadThumbnail(false);
     dispatch(clearFrameSize());
-    dispatch(setLoaded(false));
     dispatch(clearSharedUsers());
     dispatch(clearCurrentScheme());
     dispatch(clearCurrentLayer());
+    dispatch(setLoadedStatusAll({}));
+    dispatch(setLoaded(false));
     history.push("/");
   }, [history, dispatch, handleUploadThumbnail]);
 
@@ -707,6 +709,7 @@ const Scheme = () => {
   useEffect(() => {
     if (
       !schemeLoaded &&
+      Object.keys(loadedStatuses).length &&
       Object.keys(loadedStatuses).every((k) => loadedStatuses[k]) &&
       stageRef.current
     ) {
@@ -785,6 +788,7 @@ const Scheme = () => {
             )}
           </Box>
           <Toolbar
+            editable={editable}
             onZoomIn={handleZoomIn}
             onZoomOut={handleZoomOut}
             onZoomFit={handleZoomFit}

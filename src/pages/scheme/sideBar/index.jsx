@@ -86,7 +86,7 @@ const Sidebar = (props) => {
   return (
     <Box display="flex" flexDirection="column">
       <TitleWrapper px={3}>
-        <TitleBar editable={editable} onBack={onBack} />
+        <TitleBar onBack={onBack} />
       </TitleWrapper>
       <Wrapper display="flex">
         <DrawerBar

@@ -121,7 +121,7 @@ const Scheme = () => {
   let sortedCarMakesList = useMemo(
     () =>
       _.orderBy(
-        [...carMakeList.filter((item) => !item.is_parent)],
+        [...carMakeList.filter((item) => !item.is_parent && !item.deleted)],
         ["car_type", "name"],
         ["asc", "asc"]
       ),

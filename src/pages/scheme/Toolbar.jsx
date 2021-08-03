@@ -7,6 +7,12 @@ import {
   historyActionUp,
   setShowProperties,
 } from "redux/reducers/boardReducer";
+import {
+  updateScheme,
+  createSharedUser,
+  updateSharedUserItem,
+  deleteSharedUserItem,
+} from "redux/reducers/schemeReducer";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -23,12 +29,16 @@ import {
   Undo as UndoIcon,
   Redo as RedoIcon,
   KeyboardArrowUp as ArrowUpIcon,
+  Settings as SettingsIcon,
 } from "@material-ui/icons";
 import { ChevronsLeft, ChevronsRight } from "react-feather";
 
-import { PaintingGuides } from "constant";
+import { PaintingGuides, DialogTypes } from "constant";
 import LightTooltip from "components/LightTooltip";
 import ZoomPopover from "dialogs/ZoomPopover";
+import SchemeSettingsDialog from "dialogs/scheme-settings-dialog";
+
+import { setMessage } from "redux/reducers/messageReducer";
 
 const Typography = styled(MuiTypography)(spacing);
 const ToggleButton = styled(MuiToggleButton)(spacing);
@@ -51,12 +61,14 @@ const ZoomButton = styled(Button)`
 
 const Toolbar = React.memo((props) => {
   const {
+    editable,
     onZoomIn,
     onZoomOut,
     onZoomFit,
     onChangePaintingGuides,
     onDownloadTGA,
   } = props;
+  const [dialog, setDialog] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const dispatch = useDispatch();
@@ -73,6 +85,13 @@ const Toolbar = React.memo((props) => {
   const showProperties = useSelector(
     (state) => state.boardReducer.showProperties
   );
+  const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
+  const guide_data = useSelector(
+    (state) => state.schemeReducer.current.guide_data
+  );
+  const userList = useSelector((state) => state.userReducer.list);
+  const currentUser = useSelector((state) => state.authReducer.user);
 
   const handleToggleProperties = useCallback(() => {
     dispatch(setShowProperties(!showProperties));
@@ -112,6 +131,84 @@ const Toolbar = React.memo((props) => {
       dispatch(setZoom(value));
     },
     [dispatch]
+  );
+
+  const handleApplyProjectSettings = useCallback(
+    (guide_data) => {
+      dispatch(
+        updateScheme({
+          ...currentScheme,
+          guide_data: guide_data,
+        })
+      );
+      setDialog(null);
+    },
+    [dispatch, currentScheme, setDialog]
+  );
+  const handleApplySharingSetting = useCallback(
+    (data) => {
+      console.log(data);
+      let count = 0;
+      if (data.newUser && data.newUser.editable >= 0) {
+        count += 1;
+        dispatch(
+          createSharedUser(
+            {
+              user_id: data.newUser.user_id,
+              scheme_id: data.newUser.scheme_id,
+              accepted: data.newUser.accepted,
+              editable: data.newUser.editable,
+            },
+            () => {
+              dispatch(
+                setMessage({
+                  message: "Shared Project successfully!",
+                  type: "success",
+                })
+              );
+            }
+          )
+        );
+      }
+      for (let sharedUser of data.sharedUsers) {
+        if (sharedUser.editable === -1) {
+          dispatch(
+            deleteSharedUserItem(sharedUser.id, () => {
+              if (!count)
+                dispatch(
+                  setMessage({
+                    message: "Applied Sharing Setting successfully!",
+                    type: "success",
+                  })
+                );
+              count += 1;
+            })
+          );
+        } else {
+          dispatch(
+            updateSharedUserItem(
+              sharedUser.id,
+              {
+                editable: sharedUser.editable,
+              },
+              () => {
+                if (!count)
+                  dispatch(
+                    setMessage({
+                      message: "Applied Sharing Setting successfully!",
+                      type: "success",
+                    })
+                  );
+                count += 1;
+              }
+            )
+          );
+        }
+      }
+
+      setDialog(null);
+    },
+    [dispatch, setDialog]
   );
 
   return (
@@ -169,6 +266,11 @@ const Toolbar = React.memo((props) => {
               </LightTooltip>
             </ToggleButton>
           </ToggleButtonGroup>
+          <LightTooltip title="Settings" arrow>
+            <IconButton ml={2} onClick={() => setDialog(DialogTypes.SETTINGS)}>
+              <SettingsIcon />
+            </IconButton>
+          </LightTooltip>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
           <Button variant="outlined" onClick={onDownloadTGA}>
@@ -217,6 +319,20 @@ const Toolbar = React.memo((props) => {
           </LightTooltip>
         </Box>
       </Box>
+
+      <SchemeSettingsDialog
+        ownerID={currentScheme.user_id}
+        editable={editable}
+        currentUserID={currentUser.id}
+        schemeID={currentScheme.id}
+        sharedUsers={sharedUsers}
+        userList={userList}
+        guide_data={guide_data}
+        open={dialog === DialogTypes.SETTINGS}
+        onApplyGuideSettings={handleApplyProjectSettings}
+        onApplySharingSetting={handleApplySharingSetting}
+        onCancel={() => setDialog(null)}
+      />
     </Wrapper>
   );
 });

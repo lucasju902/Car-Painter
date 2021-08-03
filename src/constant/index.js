@@ -50,6 +50,8 @@ export const DialogTypes = {
   UPLOAD: "UPLOAD",
   TEXT: "TEXT",
   DEFAULT_SHAPE_SETTINGS: "DEFAULT_SHAPE_SETTINGS",
+  SHORTCUTS: "SHORTCUTS",
+  SETTINGS: "SETTINGS",
 };
 
 export const DefaultLayer = {
