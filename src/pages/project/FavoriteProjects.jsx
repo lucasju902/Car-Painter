@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 
 import styled from "styled-components/macro";
 
-import { Grid, Typography } from "components/MaterialUI";
+import { Box, Grid, Typography } from "components/MaterialUI";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import ScreenLoader from "components/ScreenLoader";
@@ -61,32 +61,46 @@ const FavoriteProjects = (props) => {
   };
 
   return (
-    <CustomInfiniteScroll
-      dataLength={limit} //This is important field to render the next data
-      next={increaseData}
-      hasMore={limit < filteredSchemeList.length}
-      loader={<ScreenLoader />}
-      scrollableTarget="scheme-list-content"
-    >
+    <Box minHeight="calc(100vh - 160px)" display="flex" flexDirection="column">
       <Typography variant="h2" mb={5}>
         Favorite Projects
       </Typography>
-      <Grid container spacing={4}>
-        {filteredSchemeList.slice(0, limit).map((favorite) => (
-          <Grid key={favorite.id} item xs={12} sm={6} md={4} lg={3} xl={3}>
-            <ProjectItem
-              user={user}
-              scheme={favorite.scheme}
-              isFavorite={true}
-              favoriteID={favorite.id}
-              onRemoveFavorite={onRemoveFavorite}
-              onAddFavorite={onAddFavorite}
-              onOpenScheme={openScheme}
-            />
+      {filteredSchemeList.length ? (
+        <CustomInfiniteScroll
+          dataLength={limit} //This is important field to render the next data
+          next={increaseData}
+          hasMore={limit < filteredSchemeList.length}
+          loader={<ScreenLoader />}
+          scrollableTarget="scheme-list-content"
+        >
+          <Grid container spacing={4}>
+            {filteredSchemeList.slice(0, limit).map((favorite) => (
+              <Grid key={favorite.id} item xs={12} sm={6} md={4} lg={3} xl={3}>
+                <ProjectItem
+                  user={user}
+                  scheme={favorite.scheme}
+                  isFavorite={true}
+                  favoriteID={favorite.id}
+                  onRemoveFavorite={onRemoveFavorite}
+                  onAddFavorite={onAddFavorite}
+                  onOpenScheme={openScheme}
+                />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
-    </CustomInfiniteScroll>
+        </CustomInfiniteScroll>
+      ) : (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100%"
+          flexGrow={1}
+        >
+          <Typography variant="h2">No Projects</Typography>
+        </Box>
+      )}
+    </Box>
   );
 };
 

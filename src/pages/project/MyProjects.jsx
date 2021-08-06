@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 
 import styled from "styled-components/macro";
 
-import { Grid, Typography } from "components/MaterialUI";
+import { Box, Grid, Typography } from "components/MaterialUI";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import ScreenLoader from "components/ScreenLoader";
@@ -62,39 +62,53 @@ const MyProjects = (props) => {
   };
 
   return (
-    <CustomInfiniteScroll
-      dataLength={limit} //This is important field to render the next data
-      next={increaseData}
-      hasMore={limit < filteredSchemeList.length}
-      loader={<ScreenLoader />}
-      scrollableTarget="scheme-list-content"
-    >
+    <Box minHeight="calc(100vh - 160px)" display="flex" flexDirection="column">
       <Typography variant="h2" mb={5}>
         My Projects
       </Typography>
-      <Grid container spacing={4}>
-        {filteredSchemeList.slice(0, limit).map((scheme) => {
-          const favroiteScheme = favoriteSchemeList.find(
-            (item) => item.scheme_id === scheme.id
-          );
-          return (
-            <Grid key={scheme.id} item xs={12} sm={6} md={4} lg={3} xl={3}>
-              <ProjectItem
-                user={user}
-                isFavorite={!!favroiteScheme}
-                scheme={scheme}
-                favoriteID={favroiteScheme ? favroiteScheme.id : null}
-                onDelete={onDeleteProject}
-                onOpenScheme={openScheme}
-                onCloneProject={onCloneProject}
-                onRemoveFavorite={onRemoveFavorite}
-                onAddFavorite={onAddFavorite}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
-    </CustomInfiniteScroll>
+      {filteredSchemeList.length ? (
+        <CustomInfiniteScroll
+          dataLength={limit} //This is important field to render the next data
+          next={increaseData}
+          hasMore={limit < filteredSchemeList.length}
+          loader={<ScreenLoader />}
+          scrollableTarget="scheme-list-content"
+        >
+          <Grid container spacing={4}>
+            {filteredSchemeList.slice(0, limit).map((scheme) => {
+              const favroiteScheme = favoriteSchemeList.find(
+                (item) => item.scheme_id === scheme.id
+              );
+              return (
+                <Grid key={scheme.id} item xs={12} sm={6} md={4} lg={3} xl={3}>
+                  <ProjectItem
+                    user={user}
+                    isFavorite={!!favroiteScheme}
+                    scheme={scheme}
+                    favoriteID={favroiteScheme ? favroiteScheme.id : null}
+                    onDelete={onDeleteProject}
+                    onOpenScheme={openScheme}
+                    onCloneProject={onCloneProject}
+                    onRemoveFavorite={onRemoveFavorite}
+                    onAddFavorite={onAddFavorite}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </CustomInfiniteScroll>
+      ) : (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100%"
+          flexGrow={1}
+        >
+          <Typography variant="h2">No Projects</Typography>
+        </Box>
+      )}
+    </Box>
   );
 };
 

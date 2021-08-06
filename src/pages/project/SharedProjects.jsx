@@ -78,25 +78,66 @@ const SharedProjects = (props) => {
   };
 
   return (
-    <CustomInfiniteScroll
-      dataLength={limit} //This is important field to render the next data
-      next={increaseData}
-      hasMore={limit < acceptedSharedSchemeList.length}
-      loader={<ScreenLoader />}
-      scrollableTarget="scheme-list-content"
-    >
+    <Box minHeight="calc(100vh - 160px)" display="flex" flexDirection="column">
       <Typography variant="h2" mb={5}>
         Shared with Me
       </Typography>
+      {filteredSharedSchemeList.length ? (
+        <CustomInfiniteScroll
+          dataLength={limit} //This is important field to render the next data
+          next={increaseData}
+          hasMore={limit < acceptedSharedSchemeList.length}
+          loader={<ScreenLoader />}
+          scrollableTarget="scheme-list-content"
+        >
+          {pendingSharedSchemeList.length ? (
+            <>
+              <Typography variant="h4" mb={2}>
+                New invitations
+              </Typography>
 
-      {pendingSharedSchemeList.length ? (
-        <>
-          <Typography variant="h4" mb={2}>
-            New invitations
-          </Typography>
+              <Grid container spacing={4}>
+                {pendingSharedSchemeList.map((sharedScheme) => {
+                  const favroiteScheme = favoriteSchemeList.find(
+                    (item) => item.scheme_id === sharedScheme.scheme_id
+                  );
+                  return (
+                    <Grid
+                      key={sharedScheme.id}
+                      item
+                      xs={12}
+                      sm={6}
+                      md={4}
+                      lg={3}
+                      xl={3}
+                    >
+                      <ProjectItem
+                        user={user}
+                        isFavorite={!!favroiteScheme}
+                        scheme={sharedScheme.scheme}
+                        shared={true}
+                        accepted={false}
+                        sharedID={sharedScheme.id}
+                        favoriteID={favroiteScheme ? favroiteScheme.id : null}
+                        onAccept={onAccept}
+                        onOpenScheme={openScheme}
+                        onDelete={onRemove}
+                        onRemoveFavorite={onRemoveFavorite}
+                        onAddFavorite={onAddFavorite}
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid>
+
+              <Box my={5} bgcolor="#808080" width="100%" height="1px" />
+            </>
+          ) : (
+            <></>
+          )}
 
           <Grid container spacing={4}>
-            {pendingSharedSchemeList.map((sharedScheme) => {
+            {acceptedSharedSchemeList.slice(0, limit).map((sharedScheme) => {
               const favroiteScheme = favoriteSchemeList.find(
                 (item) => item.scheme_id === sharedScheme.scheme_id
               );
@@ -115,10 +156,9 @@ const SharedProjects = (props) => {
                     isFavorite={!!favroiteScheme}
                     scheme={sharedScheme.scheme}
                     shared={true}
-                    accepted={false}
+                    accepted={true}
                     sharedID={sharedScheme.id}
                     favoriteID={favroiteScheme ? favroiteScheme.id : null}
-                    onAccept={onAccept}
                     onOpenScheme={openScheme}
                     onDelete={onRemove}
                     onRemoveFavorite={onRemoveFavorite}
@@ -128,46 +168,19 @@ const SharedProjects = (props) => {
               );
             })}
           </Grid>
-
-          <Box my={5} bgcolor="#808080" width="100%" height="1px" />
-        </>
+        </CustomInfiniteScroll>
       ) : (
-        <></>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100%"
+          flexGrow={1}
+        >
+          <Typography variant="h2">No Projects</Typography>
+        </Box>
       )}
-
-      <Grid container spacing={4}>
-        {acceptedSharedSchemeList.slice(0, limit).map((sharedScheme) => {
-          const favroiteScheme = favoriteSchemeList.find(
-            (item) => item.scheme_id === sharedScheme.scheme_id
-          );
-          return (
-            <Grid
-              key={sharedScheme.id}
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              xl={3}
-            >
-              <ProjectItem
-                user={user}
-                isFavorite={!!favroiteScheme}
-                scheme={sharedScheme.scheme}
-                shared={true}
-                accepted={true}
-                sharedID={sharedScheme.id}
-                favoriteID={favroiteScheme ? favroiteScheme.id : null}
-                onOpenScheme={openScheme}
-                onDelete={onRemove}
-                onRemoveFavorite={onRemoveFavorite}
-                onAddFavorite={onAddFavorite}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
-    </CustomInfiniteScroll>
+    </Box>
   );
 };
 

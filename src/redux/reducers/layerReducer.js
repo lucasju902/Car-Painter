@@ -8,7 +8,7 @@ import {
   AllowedLayerProps,
   HistoryActions,
 } from "constant";
-import { parseLayer } from "helper";
+import { parseLayer, rotatePoint } from "helper";
 import LayerService from "services/layerService";
 import { setMessage } from "./messageReducer";
 import { pushToActionHistory } from "./boardReducer";
@@ -153,29 +153,40 @@ export const createLayersFromBasePaint = (
   schemeID,
   basePaintItemOrIndex,
   legacyMode
-) => async (dispatch) => {
+) => async (dispatch, getState) => {
   dispatch(setLoading(true));
 
   try {
+    const currentUser = getState().authReducer.user;
     // let layer_order = order;
     let baseData = legacyMode
       ? basePaintItemOrIndex.base_data
       : Array.from({ length: 3 }, (_, i) => i + 1); // There are 3 basepaints for each carMake.
 
     for (let base_item of baseData) {
+      const AllowedLayerTypes = AllowedLayerProps[LayerTypes.BASE];
       const layer = await LayerService.createLayer({
         ...DefaultLayer,
         layer_type: LayerTypes.BASE,
         scheme_id: schemeID,
         layer_data: legacyMode
           ? JSON.stringify({
-              ...DefaultLayer.layer_data,
-              ...base_item,
+              ..._.pick(
+                { ...DefaultLayer.layer_data, ...base_item },
+                AllowedLayerTypes.filter((item) =>
+                  item.includes("layer_data.")
+                ).map((item) => item.replace("layer_data.", ""))
+              ),
               id: basePaintItemOrIndex.id,
               opacity: 1,
             })
           : JSON.stringify({
-              ...DefaultLayer.layer_data,
+              ..._.pick(
+                { ...DefaultLayer.layer_data },
+                AllowedLayerTypes.filter((item) =>
+                  item.includes("layer_data.")
+                ).map((item) => item.replace("layer_data.", ""))
+              ),
               name: `Base Pattern ${base_item}`,
               basePaintIndex: basePaintItemOrIndex,
               img: `${base_item}.png`,
@@ -191,6 +202,7 @@ export const createLayersFromBasePaint = (
       SocketClient.emit("client-create-layer", {
         data: layer,
         socketID: SocketClient.socket.id,
+        userID: currentUser.id,
       });
       dispatch(insertToList(layer));
       dispatch(setCurrent(layer));
@@ -215,12 +227,19 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
 
   try {
     const boardRotate = getState().boardReducer.boardRotate;
+    const currentUser = getState().authReducer.user;
+    const AllowedLayerTypes = AllowedLayerProps[LayerTypes.OVERLAY];
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
       layer_type: LayerTypes.OVERLAY,
       scheme_id: schemeID,
       layer_data: JSON.stringify({
-        ...DefaultLayer.layer_data,
+        ..._.pick(
+          DefaultLayer.layer_data,
+          AllowedLayerTypes.filter((item) =>
+            item.includes("layer_data.")
+          ).map((item) => item.replace("layer_data.", ""))
+        ),
         id: shape.id,
         name: shape.name,
         rotation: -boardRotate,
@@ -233,6 +252,7 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
     SocketClient.emit("client-create-layer", {
       data: layer,
       socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -256,12 +276,19 @@ export const createLayerFromLogo = (schemeID, logo, position) => async (
 
   try {
     const boardRotate = getState().boardReducer.boardRotate;
+    const currentUser = getState().authReducer.user;
+    const AllowedLayerTypes = AllowedLayerProps[LayerTypes.LOGO];
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
       layer_type: LayerTypes.LOGO,
       scheme_id: schemeID,
       layer_data: JSON.stringify({
-        ...DefaultLayer.layer_data,
+        ..._.pick(
+          DefaultLayer.layer_data,
+          AllowedLayerTypes.filter((item) =>
+            item.includes("layer_data.")
+          ).map((item) => item.replace("layer_data.", ""))
+        ),
         id: logo.id,
         name: logo.name,
         rotation: -boardRotate,
@@ -274,6 +301,7 @@ export const createLayerFromLogo = (schemeID, logo, position) => async (
     SocketClient.emit("client-create-layer", {
       data: layer,
       socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -297,12 +325,19 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
 
   try {
     const boardRotate = getState().boardReducer.boardRotate;
+    const currentUser = getState().authReducer.user;
+    const AllowedLayerTypes = AllowedLayerProps[LayerTypes.UPLOAD];
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
       layer_type: LayerTypes.UPLOAD,
       scheme_id: schemeID,
       layer_data: JSON.stringify({
-        ...DefaultLayer.layer_data,
+        ..._.pick(
+          DefaultLayer.layer_data,
+          AllowedLayerTypes.filter((item) =>
+            item.includes("layer_data.")
+          ).map((item) => item.replace("layer_data.", ""))
+        ),
         id: upload.id,
         name: upload.file_name.substring(
           upload.file_name.lastIndexOf("uploads/") + "uploads/".length,
@@ -318,6 +353,7 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
     SocketClient.emit("client-create-layer", {
       data: layer,
       socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -341,13 +377,19 @@ export const createTextLayer = (schemeID, textObj, position) => async (
 
   try {
     const boardRotate = getState().boardReducer.boardRotate;
+    const currentUser = getState().authReducer.user;
+    const AllowedLayerTypes = AllowedLayerProps[LayerTypes.TEXT];
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
       layer_type: LayerTypes.TEXT,
       scheme_id: schemeID,
       layer_data: JSON.stringify({
-        ...DefaultLayer.layer_data,
-        ...textObj,
+        ..._.pick(
+          { ...DefaultLayer.layer_data, ...textObj },
+          AllowedLayerTypes.filter((item) =>
+            item.includes("layer_data.")
+          ).map((item) => item.replace("layer_data.", ""))
+        ),
         name: textObj.text,
         rotation: textObj.rotation - boardRotate,
         left: position.x,
@@ -357,6 +399,7 @@ export const createTextLayer = (schemeID, textObj, position) => async (
     SocketClient.emit("client-create-layer", {
       data: layer,
       socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -376,11 +419,20 @@ export const cloneLayer = (
   layerToClone,
   samePosition = false,
   pushingToHistory = true,
-  centerPosition
-) => async (dispatch) => {
+  centerPosition,
+  callback
+) => async (dispatch, getState) => {
   if (layerToClone) {
     dispatch(setLoading(true));
     try {
+      const currentUser = getState().authReducer.user;
+      const offset = rotatePoint(
+        layerToClone.layer_data.width ? -layerToClone.layer_data.width / 2 : 0,
+        layerToClone.layer_data.height
+          ? -layerToClone.layer_data.height / 2
+          : 0,
+        layerToClone.layer_data.rotation || 0
+      );
       const layer = await LayerService.createLayer({
         ..._.omit(layerToClone, ["id"]),
         layer_order: 0,
@@ -389,21 +441,16 @@ export const cloneLayer = (
           name: layerToClone.layer_data.name + " copy",
           left: samePosition
             ? layerToClone.layer_data.left
-            : centerPosition.x -
-              (layerToClone.layer_data.width
-                ? layerToClone.layer_data.width / 2
-                : 0),
+            : centerPosition.x + offset.x,
           top: samePosition
             ? layerToClone.layer_data.top
-            : centerPosition.y -
-              (layerToClone.layer_data.height
-                ? layerToClone.layer_data.height / 2
-                : 0),
+            : centerPosition.y + offset.y,
         }),
       });
       SocketClient.emit("client-create-layer", {
         data: layer,
         socketID: SocketClient.socket.id,
+        userID: currentUser.id,
       });
       dispatch(insertToList(layer));
       dispatch(setCurrent(layer));
@@ -414,6 +461,7 @@ export const cloneLayer = (
             data: parseLayer(layer),
           })
         );
+      if (callback) callback();
     } catch (err) {
       dispatch(setMessage({ message: err.message }));
     }
@@ -421,9 +469,13 @@ export const cloneLayer = (
   }
 };
 
-export const createShape = (schemeID, newlayer) => async (dispatch) => {
+export const createShape = (schemeID, newlayer) => async (
+  dispatch,
+  getState
+) => {
   dispatch(setLoading(true));
   try {
+    const currentUser = getState().authReducer.user;
     const AllowedLayerTypes =
       AllowedLayerProps[LayerTypes.SHAPE][newlayer.layer_data.type];
     const layer = await LayerService.createLayer({
@@ -446,6 +498,7 @@ export const createShape = (schemeID, newlayer) => async (dispatch) => {
     SocketClient.emit("client-create-layer", {
       data: layer,
       socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
     dispatch(insertToList(layer));
     dispatch(setCurrent(layer));
@@ -472,6 +525,7 @@ export const updateLayer = (layer, pushingToHistory = true) => async (
     layer_order: layer.layer_order || 1,
   };
   try {
+    const currentUser = getState().authReducer.user;
     let previousLayer = getState().layerReducer.list.find(
       (item) => item.id === layer.id
     );
@@ -491,6 +545,7 @@ export const updateLayer = (layer, pushingToHistory = true) => async (
         layer_data: JSON.stringify(configuredLayer.layer_data),
       },
       socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
 
     if (pushingToHistory) {
@@ -522,17 +577,20 @@ export const updateLayerOnly = (layer) => async (dispatch, getState) => {
 };
 
 export const deleteLayer = (layer, pushingToHistory = true) => async (
-  dispatch
+  dispatch,
+  getState
 ) => {
   // dispatch(setLoading(true));
 
   try {
+    const currentUser = getState().authReducer.user;
     dispatch(deleteListItem(layer));
     dispatch(setCurrent(null));
     // await LayerService.deleteLayer(layer.id);
     SocketClient.emit("client-delete-layer", {
       data: { ...layer },
       socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
     if (pushingToHistory)
       dispatch(

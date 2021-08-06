@@ -35,6 +35,7 @@ import {
   setCurrent as setCurrentScheme,
   clearSharedUsers,
   clearCurrent as clearCurrentScheme,
+  getFavoriteList,
 } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
 import { getFontList } from "redux/reducers/fontReducer";
@@ -122,6 +123,9 @@ const Scheme = () => {
   const fontList = useSelector((state) => state.fontReducer.list);
   const userList = useSelector((state) => state.userReducer.list);
   const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
+  const favoriteSchemeList = useSelector(
+    (state) => state.schemeReducer.favoriteList
+  );
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
@@ -251,8 +255,9 @@ const Scheme = () => {
           getZoomedCenterPosition(stageRef, frameSize, zoom)
         )
       );
+      focusBoard();
     },
-    [dispatch, getZoomedCenterPosition, stageRef, frameSize, zoom]
+    [dispatch, getZoomedCenterPosition, focusBoard, stageRef, frameSize, zoom]
   );
   const handleDeleteLayer = useCallback(
     (layer) => {
@@ -458,7 +463,7 @@ const Scheme = () => {
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
       const targetWidth =
-        isPNG || currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
+        currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
       const pixelRatio = targetWidth / frameSizeRef.current.width;
 
       let width = frameSizeRef.current.width * pixelRatio;
@@ -503,7 +508,7 @@ const Scheme = () => {
         });
         mainLayerImg = await addImageProcess(mainLayerURL);
       }
-      if (carMaskLayerRef.current && isPNG) {
+      if (carMaskLayerRef.current) {
         let carMaskLayerURL = carMaskLayerRef.current.toDataURL({
           pixelRatio,
           x: 0,
@@ -530,9 +535,11 @@ const Scheme = () => {
       if (carMaskLayerImg && isPNG) {
         ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
       }
-      if (isPNG) return canvas.toDataURL("image/png");
-      var imageData = ctx.getImageData(0, 0, width, height);
-      return imageData;
+      return {
+        canvas,
+        ctx,
+        carMaskLayerImg,
+      };
     },
     [
       frameSizeRef.current,
@@ -544,28 +551,40 @@ const Scheme = () => {
     ]
   );
 
+  const uploadThumbnail = useCallback(
+    async (dataURL) => {
+      try {
+        let blob = dataURItoBlob(dataURL);
+        var fileOfBlob = new File(
+          [blob],
+          `${currentSchemeRef.current.id}.png`,
+          {
+            type: "image/png",
+          }
+        );
+
+        let formData = new FormData();
+        formData.append("files", fileOfBlob);
+        formData.append("schemeID", currentSchemeRef.current.id);
+
+        await SchemeService.uploadThumbnail(formData);
+      } catch (err) {
+        dispatch(setMessage({ message: err.message }));
+      }
+    },
+    [dispatch, currentSchemeRef.current]
+  );
+
   const handleUploadThumbnail = useCallback(
     async (uploadLater = true) => {
       if (stageRef.current && currentSchemeRef.current) {
         try {
           console.log("Uploading Thumbnail");
           dispatch(setSaving(true));
-          let dataURL = await takeScreenshot();
+          const { canvas } = await takeScreenshot();
+          let dataURL = canvas.toDataURL("image/png");
           if (uploadLater) dispatch(setSaving(false));
-          let blob = dataURItoBlob(dataURL);
-          var fileOfBlob = new File(
-            [blob],
-            `${currentSchemeRef.current.id}.png`,
-            {
-              type: "image/png",
-            }
-          );
-
-          let formData = new FormData();
-          formData.append("files", fileOfBlob);
-          formData.append("schemeID", currentSchemeRef.current.id);
-
-          await SchemeService.uploadThumbnail(formData);
+          await uploadThumbnail(dataURL);
           if (!uploadLater) dispatch(setSaving(false));
           console.log("Uploaded Thumbnail");
         } catch (err) {
@@ -573,19 +592,28 @@ const Scheme = () => {
         }
       }
     },
-    [dispatch, currentSchemeRef.current, !stageRef.current, takeScreenshot]
+    [
+      dispatch,
+      currentSchemeRef.current,
+      !stageRef.current,
+      takeScreenshot,
+      uploadThumbnail,
+    ]
   );
 
   const handleDownloadTGA = useCallback(async () => {
     if (stageRef.current && currentSchemeRef.current) {
       try {
         dispatch(setSaving(true));
-        let imageData = await takeScreenshot(false);
-        dispatch(setSaving(false));
         const width =
           currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
         const height =
           currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
+        const { canvas, ctx, carMaskLayerImg } = await takeScreenshot(false);
+        let imageData = ctx.getImageData(0, 0, width, height);
+
+        dispatch(setSaving(false));
+
         var tga = new TGA({
           width: width,
           height: height,
@@ -602,7 +630,9 @@ const Scheme = () => {
         a.download = `car_${userRef.current.id}.tga`;
         a.click();
         window.URL.revokeObjectURL(url);
-        await handleUploadThumbnail();
+        ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
+        let dataURL = canvas.toDataURL("image/png");
+        await uploadThumbnail(dataURL);
       } catch (err) {
         console.log(err);
         dispatch(setMessage({ message: err.message }));
@@ -634,28 +664,36 @@ const Scheme = () => {
     if (user && user.id && params.id) {
       if (!currentScheme) {
         dispatch(
-          getScheme(params.id, (scheme, tempsharedUsers) => {
-            if (
-              user.id !== scheme.user_id &&
-              !tempsharedUsers.find((shared) => shared.user_id === user.id)
-            ) {
-              dispatch(
-                setMessage({
-                  message: "You don't have permission for this project!",
-                })
-              );
-              history.push("/");
-            } else {
-              if (!uploadsInitialized) {
-                dispatch(getUploadListByUserID(user.id));
+          getScheme(
+            params.id,
+            (scheme, tempsharedUsers) => {
+              if (
+                user.id !== scheme.user_id &&
+                !tempsharedUsers.find((shared) => shared.user_id === user.id)
+              ) {
+                dispatch(
+                  setMessage({
+                    message: "You don't have permission for this project!",
+                  })
+                );
+                history.push("/");
+              } else {
+                if (!uploadsInitialized) {
+                  dispatch(getUploadListByUserID(user.id));
+                }
+                if (!overlayList.length) dispatch(getOverlayList());
+                if (!logoList.length) dispatch(getLogoList());
+                if (!fontList.length) dispatch(getFontList());
+                if (!userList.length) dispatch(getUserList());
+                if (!sharedUsers.length) dispatch(getSharedUsers(params.id));
+                if (!favoriteSchemeList.length)
+                  dispatch(getFavoriteList(user.id));
               }
-              if (!overlayList.length) dispatch(getOverlayList());
-              if (!logoList.length) dispatch(getLogoList());
-              if (!fontList.length) dispatch(getFontList());
-              if (!userList.length) dispatch(getUserList());
-              if (!sharedUsers.length) dispatch(getSharedUsers(params.id));
+            },
+            () => {
+              history.push("/");
             }
-          })
+          )
         );
       }
     }
@@ -674,7 +712,7 @@ const Scheme = () => {
         clearInterval(thumbnailInterval);
       };
     }
-  }, []);
+  }, [editable]);
 
   // Socket.io Stuffs
   useEffect(() => {
@@ -682,6 +720,10 @@ const Scheme = () => {
 
     SocketClient.on("connect", () => {
       SocketClient.emit("room", params.id);
+    });
+
+    SocketClient.on("client-create-layer", (response) => {
+      dispatch(insertToLayerList(response.data));
     });
 
     SocketClient.on("client-update-layer", (response) => {
@@ -697,8 +739,9 @@ const Scheme = () => {
       dispatch(setCurrentScheme(response.data));
     });
 
-    SocketClient.on("client-create-layer", (response) => {
-      dispatch(insertToLayerList(response.data));
+    SocketClient.on("client-delete-scheme", () => {
+      dispatch(setMessage({ message: "The Project has been deleted!" }));
+      history.push("/");
     });
 
     return () => {

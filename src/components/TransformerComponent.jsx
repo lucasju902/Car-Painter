@@ -14,7 +14,6 @@ const TransformerComponent = ({
     () =>
       selectedLayer &&
       (selectedLayer.layer_data.sizeLocked ||
-        selectedLayer.layer_data.scaleLocked ||
         [
           MouseModes.CIRCLE,
           MouseModes.STAR,

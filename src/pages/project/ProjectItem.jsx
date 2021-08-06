@@ -12,6 +12,7 @@ import {
   MenuItem,
   CircularProgress,
 } from "@material-ui/core";
+import ImageWithLoad from "components/ImageWithLoad";
 import { MoreVert as ActionIcon } from "@material-ui/icons";
 import { faStar as faStarOn } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarOff } from "@fortawesome/free-regular-svg-icons";
@@ -20,13 +21,6 @@ import ConfirmDialog from "dialogs/ConfirmDialog";
 
 import { getDifferenceFromToday } from "helper";
 
-const CustomImg = styled.img`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  object-fit: contain;
-  cursor: pointer;
-`;
 const ItemWrapper = styled(Box)`
   border: 1px solid grey;
 `;
@@ -92,8 +86,12 @@ const ProjectItem = (props) => {
 
   return (
     <ItemWrapper display="flex" flexDirection="column">
-      <CustomImg
-        src={schemeThumbnailURL(scheme.id)}
+      <ImageWithLoad
+        src={
+          schemeThumbnailURL(scheme.id) +
+          "?date=" +
+          new Date().toLocaleDateString()
+        }
         alt={scheme.name}
         onClick={() => onOpenScheme(scheme.id, sharedID)}
       />

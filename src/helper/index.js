@@ -52,7 +52,6 @@ export const getRelativePointerPosition = (node) => {
   transform.invert();
   // get pointer (say mouse or touch) position
   var pos = node.getStage().getPointerPosition();
-  console.log("Mouse Pos: ", pos);
   // now we can find relative point
   return transform.point(pos);
 };
@@ -166,6 +165,15 @@ export const getZoomedCenterPosition = (stageRef, frameSize, zoom) => {
     x: -transform[4] / zoom + (frameSize.width * fitZoom) / zoom / 2,
     y: -transform[5] / zoom + (frameSize.height * fitZoom) / zoom / 2,
   };
+};
+
+export const rotatePoint = (x, y, angle) => {
+  var radians = (Math.PI / 180) * angle,
+    cos = Math.cos(radians),
+    sin = Math.sin(radians),
+    nx = cos * x + sin * y,
+    ny = cos * y - sin * x;
+  return { x: nx, y: ny };
 };
 
 export const getCenter = (shape) => {

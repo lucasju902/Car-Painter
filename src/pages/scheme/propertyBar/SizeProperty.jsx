@@ -106,7 +106,7 @@ const SizeProperty = (props) => {
   const handleChangeScaleX = useCallback(
     (event) => {
       let value = parseFloat(event.target.value) || 0;
-      if (values.layer_data.scaleLocked) {
+      if (values.layer_data.sizeLocked) {
         setFieldValue(
           "layer_data.scaleY",
           (value * currentLayer.layer_data.scaleY) /
@@ -124,7 +124,7 @@ const SizeProperty = (props) => {
   const handleChangeScaleY = useCallback(
     (event) => {
       let value = parseFloat(event.target.value) || 0;
-      if (values.layer_data.scaleLocked) {
+      if (values.layer_data.sizeLocked) {
         setFieldValue(
           "layer_data.scaleX",
           (value * currentLayer.layer_data.scaleX) /
@@ -143,7 +143,7 @@ const SizeProperty = (props) => {
   const handleChangeInnerRadius = useCallback(
     (event) => {
       let value = parseFloat(event.target.value) || 0;
-      if (values.layer_data.scaleLocked) {
+      if (values.layer_data.sizeLocked) {
         setFieldValue(
           "layer_data.outerRadius",
           (value * currentLayer.layer_data.outerRadius) /
@@ -164,7 +164,7 @@ const SizeProperty = (props) => {
   const handleChangeOuterRadius = useCallback(
     (event) => {
       let value = parseFloat(event.target.value) || 0;
-      if (values.layer_data.scaleLocked) {
+      if (values.layer_data.sizeLocked) {
         setFieldValue(
           "layer_data.innerRadius",
           (value * currentLayer.layer_data.innerRadius) /
@@ -331,9 +331,9 @@ const SizeProperty = (props) => {
             AllowedLayerTypes.includes("layer_data.scaleY") ? (
               <CustomIconButton
                 disabled={!editable}
-                onClick={() => toggleLayerDataField("scaleLocked")}
+                onClick={() => toggleLayerDataField("sizeLocked")}
               >
-                {values.layer_data.scaleLocked || pressingShiftKey ? (
+                {values.layer_data.sizeLocked || pressingShiftKey ? (
                   <LinkIcon />
                 ) : (
                   <LinkOfficon />
@@ -417,9 +417,9 @@ const SizeProperty = (props) => {
             AllowedLayerTypes.includes("layer_data.outerRadius") ? (
               <CustomIconButton
                 disabled={!editable}
-                onClick={() => toggleLayerDataField("scaleLocked")}
+                onClick={() => toggleLayerDataField("sizeLocked")}
               >
-                {values.layer_data.scaleLocked || pressingShiftKey ? (
+                {values.layer_data.sizeLocked || pressingShiftKey ? (
                   <LinkIcon />
                 ) : (
                   <LinkOfficon />

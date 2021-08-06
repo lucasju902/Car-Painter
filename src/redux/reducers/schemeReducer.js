@@ -232,16 +232,14 @@ export const createScheme = (
   dispatch(setLoading(false));
 };
 
-export const getScheme = (schemeID, callback) => async (dispatch) => {
+export const getScheme = (schemeID, callback, fallback) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     const result = await SchemeService.getScheme(schemeID);
-    console.log("result: ", result);
-    let scheme = await SchemeService.updateScheme(schemeID, {
-      ..._.omit(result.scheme, ["carMake", "layers", "sharedUsers"]),
-      date_modified: Math.round(new Date().getTime() / 1000),
-    });
-    dispatch(setCurrent(_.omit(scheme, ["carMake", "layers", "sharedUsers"])));
+    console.log("result: ", result.scheme);
+    dispatch(
+      setCurrent(_.omit(result.scheme, ["carMake", "layers", "sharedUsers"]))
+    );
     dispatch(setCurrentCarMake(result.carMake));
     let loadedStatuses = {};
     result.layers.map((item) => {
@@ -250,9 +248,10 @@ export const getScheme = (schemeID, callback) => async (dispatch) => {
     dispatch(setLoadedStatusAll(loadedStatuses));
     dispatch(setLayerList(result.layers));
     dispatch(setBasePaintList(result.basePaints));
-    if (callback) callback(scheme, result.sharedUsers);
+    if (callback) callback(result.scheme, result.sharedUsers);
   } catch (err) {
-    dispatch(setMessage({ message: err.message }));
+    dispatch(setMessage({ message: "No Project with that ID!" }));
+    if (fallback) fallback();
   }
   dispatch(setLoading(false));
 };
@@ -263,21 +262,38 @@ export const updateScheme = (payload, pushingToHistory = true) => async (
 ) => {
   try {
     const currentScheme = getState().schemeReducer.current;
+    const currentUser = getState().authReducer.user;
+    let updatedScheme;
     if (currentScheme && currentScheme.id === payload.id) {
-      dispatch(setCurrent(payload));
+      updatedScheme = {
+        ...currentScheme,
+        ...payload,
+        date_modified: Math.round(new Date().getTime() / 1000),
+        last_modified_by: currentUser.id,
+      };
+      dispatch(setCurrent(updatedScheme));
+    } else {
+      const schemeList = getState().schemeReducer.list;
+      const foundScheme = schemeList.find((item) => item.id === payload.id);
+      updatedScheme = {
+        ...foundScheme,
+        date_modified: Math.round(new Date().getTime() / 1000),
+        last_modified_by: currentUser.id,
+      };
     }
 
     // const scheme = await SchemeService.updateScheme(payload.id, {
     //   ..._.omit(payload, ["carMake", "layers"]),
     //   guide_data: JSON.stringify(payload.guide_data),
     // });
-    let updatedScheme = { ...currentScheme, ...payload };
+
     SocketClient.emit("client-update-scheme", {
       data: {
-        ...updatedScheme,
+        ..._.omit(updatedScheme, ["carMake", "layers", "sharedUsers"]),
         guide_data: JSON.stringify(updatedScheme.guide_data),
       },
       socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
 
     dispatch(updateListItem(updatedScheme));
@@ -294,59 +310,14 @@ export const updateScheme = (payload, pushingToHistory = true) => async (
   }
 };
 
-export const changeName = (id, name) => async (dispatch, getState) => {
-  try {
-    const currentScheme = getState().schemeReducer.current;
-    dispatch(setCurrentName(name));
-    // await SchemeService.updateScheme(id, { name });
-    let updatedScheme = { ...currentScheme, name: name };
-    SocketClient.emit("client-update-scheme", {
-      data: {
-        ...updatedScheme,
-        guide_data: JSON.stringify(updatedScheme.guide_data),
-      },
-      socketID: SocketClient.socket.id,
-    });
-  } catch (err) {
-    dispatch(setMessage({ message: err.message }));
-  }
-};
-
-export const changeBaseColor = (id, color) => async (dispatch, getState) => {
-  try {
-    const currentScheme = getState().schemeReducer.current;
-    let base_color = color;
-    if (base_color !== "transparent") {
-      base_color = base_color.replace("#", "");
-    }
-    let updatedScheme = { ...currentScheme, base_color };
-    SocketClient.emit("client-update-scheme", {
-      data: {
-        ...updatedScheme,
-        guide_data: JSON.stringify(updatedScheme.guide_data),
-      },
-      socketID: SocketClient.socket.id,
-    });
-    dispatch(setCurrentBaseColor(base_color));
-    dispatch(
-      pushToActionHistory({
-        action: HistoryActions.SCHEME_CHANGE_ACTION,
-        prev_data: currentScheme,
-        next_data: parseScheme(updatedScheme),
-      })
-    );
-  } catch (err) {
-    dispatch(setMessage({ message: err.message }));
-  }
-};
-
-export const deleteScheme = (schemeID) => async (dispatch) => {
+export const deleteScheme = (schemeID, callback) => async (dispatch) => {
   dispatch(setLoading(true));
 
   try {
     dispatch(deleteListItem(schemeID));
     await SchemeService.deleteScheme(schemeID);
 
+    if (callback) callback();
     dispatch(
       setMessage({ message: "Deleted Project successfully!", type: "success" })
     );

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,6 +12,9 @@ import {
   createSharedUser,
   updateSharedUserItem,
   deleteSharedUserItem,
+  createFavoriteScheme,
+  deleteFavoriteItem,
+  deleteScheme,
 } from "redux/reducers/schemeReducer";
 
 import { spacing } from "@material-ui/system";
@@ -87,11 +90,16 @@ const Toolbar = React.memo((props) => {
   );
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
-  const guide_data = useSelector(
-    (state) => state.schemeReducer.current.guide_data
-  );
   const userList = useSelector((state) => state.userReducer.list);
   const currentUser = useSelector((state) => state.authReducer.user);
+  const favoriteSchemeList = useSelector(
+    (state) => state.schemeReducer.favoriteList
+  );
+  const favroiteScheme = useMemo(
+    () =>
+      favoriteSchemeList.find((item) => item.scheme_id === currentScheme.id),
+    [favoriteSchemeList]
+  );
 
   const handleToggleProperties = useCallback(() => {
     dispatch(setShowProperties(!showProperties));
@@ -211,6 +219,40 @@ const Toolbar = React.memo((props) => {
     [dispatch, setDialog]
   );
 
+  const handleCreateFavorite = useCallback(
+    (user_id, scheme_id, callback) => {
+      dispatch(
+        createFavoriteScheme(
+          {
+            user_id,
+            scheme_id,
+          },
+          callback
+        )
+      );
+    },
+    [dispatch]
+  );
+
+  const handleRemoveFavorite = useCallback(
+    (favoriteID, callback) => {
+      dispatch(deleteFavoriteItem(favoriteID, callback));
+    },
+    [dispatch]
+  );
+  const handleSaveName = useCallback(
+    (schemeID, name) => {
+      dispatch(updateScheme({ id: schemeID, name }));
+    },
+    [dispatch]
+  );
+  const handleDeleteProject = useCallback(
+    (schemeID, callback) => {
+      dispatch(deleteScheme(schemeID, callback));
+    },
+    [dispatch]
+  );
+
   return (
     <Wrapper>
       <Box
@@ -321,16 +363,19 @@ const Toolbar = React.memo((props) => {
       </Box>
 
       <SchemeSettingsDialog
-        ownerID={currentScheme.user_id}
+        scheme={currentScheme}
         editable={editable}
-        currentUserID={currentUser.id}
-        schemeID={currentScheme.id}
+        favoriteID={favroiteScheme ? favroiteScheme.id : null}
+        currentUser={currentUser}
         sharedUsers={sharedUsers}
         userList={userList}
-        guide_data={guide_data}
         open={dialog === DialogTypes.SETTINGS}
         onApplyGuideSettings={handleApplyProjectSettings}
         onApplySharingSetting={handleApplySharingSetting}
+        onRemoveFavorite={handleRemoveFavorite}
+        onAddFavorite={handleCreateFavorite}
+        onRename={handleSaveName}
+        onDelete={handleDeleteProject}
         onCancel={() => setDialog(null)}
       />
     </Wrapper>

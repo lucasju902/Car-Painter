@@ -6,6 +6,7 @@ import {
   Typography as MuiTypography,
   Link as MuiLink,
   Grid as MuiGrid,
+  CircularProgress as MuiCircularProgress,
 } from "@material-ui/core";
 import {
   Alert as MuiAlert,
@@ -23,3 +24,4 @@ export const IconButton = styled(MuiIconButton)(spacing);
 export const Link = styled(MuiLink)(spacing);
 export const Typography = styled(MuiTypography)(spacing);
 export const Grid = styled(MuiGrid)(spacing);
+export const CircularProgress = styled(MuiCircularProgress)(spacing);

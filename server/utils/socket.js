@@ -12,6 +12,7 @@ class SocketServer {
     });
     this.shapes = [];
     this.io.on("connection", this.onConnection.bind(this));
+    global.io = this.io;
   }
   initClient(socket) {
     console.log("New client connected");
@@ -34,25 +35,57 @@ class SocketServer {
     socket.on("client-update-scheme", (data) =>
       this.onClientUpdateScheme.bind(this)(socket, data)
     );
+    socket.on("client-delete-scheme", (data) =>
+      this.onClientDeleteScheme.bind(this)(socket, data)
+    );
   }
 
   async onClientUpdateLayer(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-update-layer", requestData);
     await LayerService.updateById(requestData.data.id, requestData.data);
+    let scheme = await SchemeService.updateById(socket.room, {
+      date_modified: Math.round(new Date().getTime() / 1000),
+      last_modified_by: requestData.userID,
+    });
+    this.io.sockets.in(socket.room).emit("client-update-scheme", {
+      ...requestData,
+      data: scheme.toJSON(),
+    });
   }
 
   async onClientCreateLayer(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-create-layer", requestData);
+    let scheme = await SchemeService.updateById(socket.room, {
+      date_modified: Math.round(new Date().getTime() / 1000),
+      last_modified_by: requestData.userID,
+    });
+    this.io.sockets.in(socket.room).emit("client-update-scheme", {
+      ...requestData,
+      data: scheme.toJSON(),
+    });
   }
 
   async onClientDeleteLayer(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-delete-layer", requestData);
     await LayerService.deleteById(requestData.data.id);
+    let scheme = await SchemeService.updateById(socket.room, {
+      date_modified: Math.round(new Date().getTime() / 1000),
+      last_modified_by: requestData.userID,
+    });
+    this.io.sockets.in(socket.room).emit("client-update-scheme", {
+      ...requestData,
+      data: scheme.toJSON(),
+    });
   }
 
   async onClientUpdateScheme(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-update-scheme", requestData);
     await SchemeService.updateById(requestData.data.id, requestData.data);
+  }
+
+  async onClientDeleteScheme(socket, requestData) {
+    socket.broadcast.to(socket.room).emit("client-delete-scheme", requestData);
+    await SchemeService.deleteById(requestData.data.id);
   }
 }
 

@@ -9,7 +9,7 @@ import TitleBar from "./TitleBar";
 import PartGroup from "./PartGroup";
 import DrawerBar from "./DrawerBar";
 
-import { changeBaseColor } from "redux/reducers/schemeReducer";
+import { updateScheme } from "redux/reducers/schemeReducer";
 import ColorPickerInput from "components/ColorPickerInput";
 import { colorValidator } from "helper";
 
@@ -64,7 +64,11 @@ const Sidebar = (props) => {
 
   const handleChangeBasePaintColor = useCallback(
     (color) => {
-      dispatch(changeBaseColor(currentScheme.id, color));
+      let base_color = color;
+      if (base_color !== "transparent") {
+        base_color = base_color.replace("#", "");
+      }
+      dispatch(updateScheme({ id: currentScheme.id, base_color }));
       setColorInput(color);
       setColorDirty(false);
     },
@@ -79,7 +83,11 @@ const Sidebar = (props) => {
     [baseColor, setColorInput, setColorDirty]
   );
   const handleApplyBasePaintColor = useCallback(() => {
-    dispatch(changeBaseColor(currentScheme.id, colorInput));
+    let base_color = colorInput;
+    if (base_color !== "transparent") {
+      base_color = base_color.replace("#", "");
+    }
+    dispatch(updateScheme({ id: currentScheme.id, base_color }));
     setColorDirty(false);
   }, [dispatch, currentScheme && currentScheme.id, colorInput, setColorDirty]);
 

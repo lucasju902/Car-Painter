@@ -49,6 +49,7 @@ class SchemeService {
       user_id: userID,
       date_created: Math.round(new Date().getTime() / 1000),
       date_modified: Math.round(new Date().getTime() / 1000),
+      last_modified_by: userID,
       preview_pic: 0,
       showroom_id: 0,
       base_id: 0,

@@ -158,6 +158,7 @@ class SchemeController {
   static async delete(req, res) {
     try {
       await SchemeService.deleteById(req.params.id);
+      global.io.sockets.in(req.params.id).emit("client-delete-scheme");
       res.json({});
     } catch (err) {
       logger.log("error", err.stack);

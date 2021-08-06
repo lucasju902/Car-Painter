@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import styled from "styled-components/macro";
 
-import { changeName } from "redux/reducers/schemeReducer";
+import { updateScheme } from "redux/reducers/schemeReducer";
 
 import { Box, IconButton, TextField } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,7 +41,7 @@ const TitleBar = (props) => {
     [setName]
   );
   const handleSaveName = useCallback(() => {
-    dispatch(changeName(currentScheme.id, name));
+    dispatch(updateScheme({ id: currentScheme.id, name }));
   }, [dispatch, currentScheme && currentScheme.id, name]);
   const handleNameKeyDown = useCallback(
     (event) => {
