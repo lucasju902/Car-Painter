@@ -46,6 +46,7 @@ class SocketServer {
     let scheme = await SchemeService.updateById(socket.room, {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
+      thumbnail_updated: 0,
     });
     this.io.sockets.in(socket.room).emit("client-update-scheme", {
       ...requestData,
@@ -58,6 +59,7 @@ class SocketServer {
     let scheme = await SchemeService.updateById(socket.room, {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
+      thumbnail_updated: 0,
     });
     this.io.sockets.in(socket.room).emit("client-update-scheme", {
       ...requestData,
@@ -71,6 +73,7 @@ class SocketServer {
     let scheme = await SchemeService.updateById(socket.room, {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
+      thumbnail_updated: 0,
     });
     this.io.sockets.in(socket.room).emit("client-update-scheme", {
       ...requestData,
@@ -80,11 +83,15 @@ class SocketServer {
 
   async onClientUpdateScheme(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-update-scheme", requestData);
+    socket.broadcast.to("general").emit("client-update-scheme", requestData); // Broadcast to General room
     await SchemeService.updateById(requestData.data.id, requestData.data);
   }
 
   async onClientDeleteScheme(socket, requestData) {
-    socket.broadcast.to(socket.room).emit("client-delete-scheme", requestData);
+    socket.broadcast.to(socket.room).emit("client-delete-scheme");
+    socket.broadcast
+      .to("general")
+      .emit("client-delete-scheme", { data: { id: socket.room } }); // Broadcast to General room
     await SchemeService.deleteById(requestData.data.id);
   }
 }

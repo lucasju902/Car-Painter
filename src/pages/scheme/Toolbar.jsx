@@ -242,7 +242,7 @@ const Toolbar = React.memo((props) => {
   );
   const handleSaveName = useCallback(
     (schemeID, name) => {
-      dispatch(updateScheme({ id: schemeID, name }));
+      dispatch(updateScheme({ id: schemeID, name }, true, false));
     },
     [dispatch]
   );

@@ -18,6 +18,7 @@ import { Button, Autocomplete, IconButton } from "components/MaterialUI";
 import LightTooltip from "components/LightTooltip";
 import { Add as AddIcon } from "@material-ui/icons";
 import { LogOut as LogOutIcon } from "react-feather";
+import SocketClient from "utils/socketClient";
 
 import ScreenLoader from "components/ScreenLoader";
 import CreateProjectDialog from "dialogs/CreateProjectDialog";
@@ -27,6 +28,8 @@ import {
   getSchemeList,
   createScheme,
   deleteScheme,
+  updateListItem as updateSchemeListItem,
+  deleteListItem as deleteSchemeListItem,
   cloneScheme,
   getSharedList,
   updateSharedItem,
@@ -203,6 +206,28 @@ const Scheme = () => {
   const handleLogOut = () => {
     dispatch(signOut());
   };
+
+  // Socket.io Stuffs
+  useEffect(() => {
+    SocketClient.connect();
+
+    SocketClient.on("connect", () => {
+      SocketClient.emit("room", "general"); // Join General room
+    });
+
+    SocketClient.on("client-update-scheme", (response) => {
+      dispatch(updateSchemeListItem(response.data));
+    });
+
+    SocketClient.on("client-delete-scheme", (response) => {
+      console.log("client-delete-scheme: ", response);
+      dispatch(deleteSchemeListItem(response.data.id));
+    });
+
+    return () => {
+      SocketClient.disconnect();
+    };
+  }, []);
 
   return (
     <Box width="100%" height="100%" display="flex" bgcolor="#333">

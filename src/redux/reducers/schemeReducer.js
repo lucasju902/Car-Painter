@@ -64,7 +64,7 @@ export const slice = createSlice({
         (item) => item.id === action.payload.id
       );
       if (foundIndex !== -1) {
-        let scheme = { ...action.payload };
+        let scheme = { ...schemeList[foundIndex], ...action.payload };
         if (
           scheme &&
           (typeof scheme.guide_data === "string" || !scheme.guide_data)
@@ -77,7 +77,9 @@ export const slice = createSlice({
       }
     },
     deleteListItem: (state, action) => {
-      state.list = state.list.filter((item) => item.id !== action.payload);
+      state.list = state.list.filter(
+        (item) => item.id !== parseInt(action.payload)
+      );
     },
     setFavoriteList: (state, action) => {
       state.favoriteList = [...action.payload];
@@ -172,7 +174,6 @@ const {
   setLoading,
   setList,
   insertToList,
-  deleteListItem,
   setSharedList,
   setFavoriteList,
   deleteFavoriteListItem,
@@ -189,6 +190,7 @@ export const {
   setLoaded,
   setCurrent,
   updateListItem,
+  deleteListItem,
   clearCurrent,
   clearList,
   clearFavoriteList,
@@ -256,10 +258,11 @@ export const getScheme = (schemeID, callback, fallback) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const updateScheme = (payload, pushingToHistory = true) => async (
-  dispatch,
-  getState
-) => {
+export const updateScheme = (
+  payload,
+  pushingToHistory = true,
+  update_thumbnail = true
+) => async (dispatch, getState) => {
   try {
     const currentScheme = getState().schemeReducer.current;
     const currentUser = getState().authReducer.user;
@@ -271,6 +274,7 @@ export const updateScheme = (payload, pushingToHistory = true) => async (
         date_modified: Math.round(new Date().getTime() / 1000),
         last_modified_by: currentUser.id,
       };
+      if (update_thumbnail) updatedScheme.thumbnail_updated = 0;
       dispatch(setCurrent(updatedScheme));
     } else {
       const schemeList = getState().schemeReducer.list;

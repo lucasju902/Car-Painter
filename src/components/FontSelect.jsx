@@ -5,6 +5,7 @@ import styled from "styled-components/macro";
 
 import { spacing } from "@material-ui/system";
 import { Select as MuiSelect, MenuItem } from "@material-ui/core";
+import ImageWithLoad from "./ImageWithLoad";
 
 const Select = styled(MuiSelect)(spacing);
 
@@ -38,18 +39,22 @@ const FontSelect = (props) => {
           return <>Select Font</>;
         }
         return (
-          <FontImage
+          <ImageWithLoad
+            ImageComponent={FontImage}
             src={`${config.assetsURL}/${font.font_preview}`}
             alt={font.font_name}
+            minHeight="20px"
           />
         );
       }}
     >
       {fontList.map((font) => (
         <MenuItem value={font.id} key={font.id}>
-          <FontImage
+          <ImageWithLoad
+            ImageComponent={FontImage}
             src={`${config.assetsURL}/${font.font_preview}`}
             alt={font.font_name}
+            minHeight="20px"
           />
         </MenuItem>
       ))}

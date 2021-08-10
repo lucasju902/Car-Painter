@@ -143,6 +143,7 @@ class SchemeController {
           let { schemeID } = req.body;
           let scheme = await SchemeService.updateById(schemeID, {
             preview_pic: 1,
+            thumbnail_updated: 1,
           });
           res.json(scheme);
         }
@@ -159,6 +160,9 @@ class SchemeController {
     try {
       await SchemeService.deleteById(req.params.id);
       global.io.sockets.in(req.params.id).emit("client-delete-scheme");
+      global.io.sockets
+        .in("general")
+        .emit("client-delete-scheme", { data: { id: req.params.id } }); // General Room
       res.json({});
     } catch (err) {
       logger.log("error", err.stack);

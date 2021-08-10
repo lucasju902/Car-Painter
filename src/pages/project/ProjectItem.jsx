@@ -92,6 +92,7 @@ const ProjectItem = (props) => {
           "?date=" +
           new Date().toLocaleDateString()
         }
+        minHeight="200px"
         alt={scheme.name}
         onClick={() => onOpenScheme(scheme.id, sharedID)}
       />

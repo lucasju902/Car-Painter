@@ -30,6 +30,7 @@ import { setMessage } from "redux/reducers/messageReducer";
 
 import config from "config";
 import SchemeService from "services/schemeService";
+import ImageWithLoad from "components/ImageWithLoad";
 
 const Button = styled(MuiButton)(spacing);
 
@@ -187,7 +188,7 @@ const UploadDialog = (props) => {
                   cols={1}
                   onClick={() => onOpenUpload(uploadItem)}
                 >
-                  <CustomImg
+                  <ImageWithLoad
                     src={`${config.assetsURL}/${uploadItem.file_name}`}
                     alt={getNameFromFileName(uploadItem.file_name)}
                   />

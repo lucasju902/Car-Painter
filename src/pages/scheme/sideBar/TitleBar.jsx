@@ -41,7 +41,7 @@ const TitleBar = (props) => {
     [setName]
   );
   const handleSaveName = useCallback(() => {
-    dispatch(updateScheme({ id: currentScheme.id, name }));
+    dispatch(updateScheme({ id: currentScheme.id, name }, true, false));
   }, [dispatch, currentScheme && currentScheme.id, name]);
   const handleNameKeyDown = useCallback(
     (event) => {

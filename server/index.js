@@ -3,7 +3,6 @@ const app = express();
 const path = require("path");
 const cors = require("cors");
 const http = require("http");
-const bodyParser = require("body-parser");
 const requestLogger = require("./middlewares/requestLogger");
 
 const config = require("./config");
@@ -11,7 +10,8 @@ const routes = require("./routes");
 const SocketServer = require("./utils/socket");
 
 app.use(cors());
-app.use(bodyParser.json({ limit: "500mb" }));
+app.use(express.json({ limit: "500mb" }));
+app.use(express.urlencoded({ limit: "500mb", extended: true }));
 
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use("/", express.static(path.join(__dirname, "../build")));

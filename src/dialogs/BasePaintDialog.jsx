@@ -14,6 +14,7 @@ import {
   GridListTile,
 } from "@material-ui/core";
 import { basePaintAssetURL, legacyBasePaintAssetURL } from "helper";
+import ImageWithLoad from "components/ImageWithLoad";
 
 const Button = styled(MuiButton)(spacing);
 
@@ -97,7 +98,12 @@ const BasePaintDialog = React.memo((props) => {
                 cols={1}
                 onClick={() => onOpenBase(item)}
               >
-                <CustomImg src={getPreviewURL(item)} alt={getTitle(item)} />
+                <ImageWithLoad
+                  src={getPreviewURL(item)}
+                  alt={getTitle(item)}
+                  minHeight="100px"
+                  minWidth="100px"
+                />
               </CustomGridListTile>
             ))}
           </CustomGridList>

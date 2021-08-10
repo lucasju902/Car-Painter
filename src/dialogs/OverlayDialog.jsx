@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import SearchBox from "components/SearchBox";
 import config from "config";
+import ImageWithLoad from "components/ImageWithLoad";
 
 const Button = styled(MuiButton)(spacing);
 
@@ -85,7 +86,7 @@ const OverlayDialog = (props) => {
                   cols={1}
                   onClick={() => onOpenOverlay(shape)}
                 >
-                  <CustomImg
+                  <ImageWithLoad
                     src={`${config.assetsURL}/${shape.overlay_thumb}`}
                     alt={shape.name}
                   />

@@ -21,6 +21,7 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import SearchBox from "components/SearchBox";
 import config from "config";
+import ImageWithLoad from "components/ImageWithLoad";
 
 const Button = styled(MuiButton)(spacing);
 const Typography = styled(MuiTypography)(spacing);
@@ -180,7 +181,7 @@ const LogoDialog = (props) => {
                     cols={1}
                     onClick={() => onOpenLogo(logo)}
                   >
-                    <CustomImg
+                    <ImageWithLoad
                       src={`${config.assetsURL}/${logo.preview_file}`}
                       alt={logo.name}
                     />

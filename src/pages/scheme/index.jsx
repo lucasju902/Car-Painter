@@ -62,6 +62,7 @@ import {
   setMouseMode,
   setPressedKey,
   setBoardRotate,
+  setShowProperties,
   historyActionUp,
   historyActionBack,
   clearFrameSize,
@@ -129,8 +130,8 @@ const Scheme = () => {
   const zoom = useSelector((state) => state.boardReducer.zoom);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
-  const showProperties = useSelector(
-    (state) => state.boardReducer.showProperties
+  const [showProperties, showPropertiesRef] = useReducerRef(
+    useSelector((state) => state.boardReducer.showProperties)
   );
   const [frameSize, frameSizeRef] = useReducerRef(
     useSelector((state) => state.boardReducer.frameSize)
@@ -473,6 +474,8 @@ const Scheme = () => {
 
       wrapperRef.current.style.width = `${frameSizeRef.current.width}px`;
       wrapperRef.current.style.height = `${frameSizeRef.current.height}px`;
+      const originShowProperties = showPropertiesRef.current;
+      dispatch(setShowProperties(false));
 
       stageRef.current.setAttrs({
         x: 0,
@@ -523,6 +526,7 @@ const Scheme = () => {
       stageRef.current.draw();
       wrapperRef.current.style.width = `100%`;
       wrapperRef.current.style.height = `100%`;
+      dispatch(setShowProperties(originShowProperties));
       canvas.width = width;
       canvas.height = height;
 
@@ -542,6 +546,8 @@ const Scheme = () => {
       };
     },
     [
+      dispatch,
+      showPropertiesRef.current,
       frameSizeRef.current,
       currentCarMakeRef.current,
       stageRef.current,
@@ -566,7 +572,7 @@ const Scheme = () => {
         let formData = new FormData();
         formData.append("files", fileOfBlob);
         formData.append("schemeID", currentSchemeRef.current.id);
-
+        dispatch(setCurrentScheme({ thumbnail_updated: 1 }));
         await SchemeService.uploadThumbnail(formData);
       } catch (err) {
         dispatch(setMessage({ message: err.message }));
@@ -577,7 +583,11 @@ const Scheme = () => {
 
   const handleUploadThumbnail = useCallback(
     async (uploadLater = true) => {
-      if (stageRef.current && currentSchemeRef.current) {
+      if (
+        stageRef.current &&
+        currentSchemeRef.current &&
+        !currentSchemeRef.current.thumbnail_updated
+      ) {
         try {
           console.log("Uploading Thumbnail");
           dispatch(setSaving(true));
@@ -632,7 +642,8 @@ const Scheme = () => {
         window.URL.revokeObjectURL(url);
         ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
         let dataURL = canvas.toDataURL("image/png");
-        await uploadThumbnail(dataURL);
+        if (!currentSchemeRef.current.thumbnail_updated)
+          await uploadThumbnail(dataURL);
       } catch (err) {
         console.log(err);
         dispatch(setMessage({ message: err.message }));
@@ -646,7 +657,7 @@ const Scheme = () => {
     frameSizeRef.current,
     !stageRef.current,
     takeScreenshot,
-    handleUploadThumbnail,
+    uploadThumbnail,
   ]);
 
   const handleGoBack = useCallback(async () => {
