@@ -1,0 +1,61 @@
+  
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm ci
+      env:
+        NODE_ENV: ${{secrets.NODE_ENV}}
+        REACT_APP_ASSET_URL: ${{secrets.REACT_APP_ASSET_URL}}
+        PORT: ${{secrets.PORT}}
+        DB_CLIENT: ${{secrets.DB_CLIENT}}
+        DB_HOST: ${{secrets.DB_HOST}}
+        DB_USER: ${{secrets.DB_USER}}
+        DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+        DB_NAME: ${{secrets.DB_NAME}}
+        DB_PORT: ${{secrets.DB_PORT}}
+        AWS_API_KEY: ${{secrets.AWS_API_KEY}}
+        AWS_API_SECRET: ${{secrets.AWS_API_SECRET}}
+        AWS_REGION: ${{secrets.AWS_REGION}}
+        BUCKET_URL: ${{secrets.BUCKET_URL}}
+        LOG_DIR: ${{secrets.LOG_DIR}}
+        LOG_LEVEL: ${{secrets.LOG_LEVEL}}
+    - run: npm run build --if-present
+    - name: Beanstalk Deploy for app
+      uses: einaregilsson/beanstalk-deploy@v10
+      with:
+        aws_access_key: ${{secrets.AWS_API_KEY}}
+        aws_secret_key: ${{secrets.AWS_API_SECRET}}
+        application_name: ${{secrets.EB_APP}}
+        environment_name: ${{secrets.EB_ENV}}
+        region: ${{secrets.EB_REGION}}
+        version_label: "paint-builder-new-${{ steps.format-time.outputs.replaced }}"
+        deployment_package: deploy.zip
+
+    - name: Deployed!
+      run: echo App deployed to ELB
