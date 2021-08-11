@@ -37,7 +37,11 @@ import {
   getFavoriteList,
   deleteFavoriteItem,
   createFavoriteScheme,
+  clearCurrent as clearCurrentScheme,
+  clearSharedUsers,
 } from "redux/reducers/schemeReducer";
+import { reset as resetLayerReducer } from "redux/reducers/layerReducer";
+import { reset as resetBoardReducer } from "redux/reducers/boardReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 import { signOut } from "redux/reducers/authReducer";
 import MyProjects from "./MyProjects";
@@ -135,6 +139,13 @@ const Scheme = () => {
     () => sharedSchemeList.filter((item) => !item.accepted).length,
     [sharedSchemeList]
   );
+
+  useEffect(() => {
+    dispatch(clearCurrentScheme());
+    dispatch(clearSharedUsers());
+    dispatch(resetLayerReducer());
+    dispatch(resetBoardReducer());
+  }, []);
 
   useEffect(() => {
     if (user) {

@@ -33,8 +33,6 @@ import {
   getSharedUsers,
   updateListItem as updateSchemeListItem,
   setCurrent as setCurrentScheme,
-  clearSharedUsers,
-  clearCurrent as clearCurrentScheme,
   getFavoriteList,
 } from "redux/reducers/schemeReducer";
 import { getOverlayList } from "redux/reducers/overlayReducer";
@@ -53,8 +51,6 @@ import {
   updateListItem as updateLayerListItem,
   deleteListItem as deleteLayerListItem,
   insertToList as insertToLayerList,
-  clearCurrent as clearCurrentLayer,
-  setLoadedStatusAll,
 } from "redux/reducers/layerReducer";
 import {
   setPaintingGuides,
@@ -65,7 +61,6 @@ import {
   setShowProperties,
   historyActionUp,
   historyActionBack,
-  clearFrameSize,
 } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 import {
@@ -592,7 +587,7 @@ const Scheme = () => {
           console.log("Uploading Thumbnail");
           dispatch(setSaving(true));
           const { canvas } = await takeScreenshot();
-          let dataURL = canvas.toDataURL("image/png");
+          let dataURL = canvas.toDataURL("image/png", 0.5);
           if (uploadLater) dispatch(setSaving(false));
           await uploadThumbnail(dataURL);
           if (!uploadLater) dispatch(setSaving(false));
@@ -641,7 +636,7 @@ const Scheme = () => {
         a.click();
         window.URL.revokeObjectURL(url);
         ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
-        let dataURL = canvas.toDataURL("image/png");
+        let dataURL = canvas.toDataURL("image/png", 0.5);
         if (!currentSchemeRef.current.thumbnail_updated)
           await uploadThumbnail(dataURL);
       } catch (err) {
@@ -662,14 +657,9 @@ const Scheme = () => {
 
   const handleGoBack = useCallback(async () => {
     await handleUploadThumbnail(false);
-    dispatch(clearFrameSize());
-    dispatch(clearSharedUsers());
-    dispatch(clearCurrentScheme());
-    dispatch(clearCurrentLayer());
-    dispatch(setLoadedStatusAll({}));
-    dispatch(setLoaded(false));
+
     history.push("/");
-  }, [history, dispatch, handleUploadThumbnail]);
+  }, [history, handleUploadThumbnail]);
 
   useEffect(() => {
     if (user && user.id && params.id) {

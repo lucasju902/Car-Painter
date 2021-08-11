@@ -31,6 +31,7 @@ export const slice = createSlice({
   name: "boardReducer",
   initialState,
   reducers: {
+    reset: (state) => initialState,
     setFrameSize: (state, action) => {
       state.frameSize = action.payload;
     },
@@ -92,6 +93,7 @@ export const {
   pushToActionHistory,
   setActionHistory,
   setActionHistoryIndex,
+  reset,
 } = slice.actions;
 
 export default slice.reducer;

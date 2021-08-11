@@ -32,6 +32,7 @@ export const slice = createSlice({
   name: "layerReducer",
   initialState,
   reducers: {
+    reset: (state) => initialState,
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
@@ -145,6 +146,7 @@ export const {
   setLoadedStatusAll,
   setLoadedStatus,
   clearCurrent,
+  reset,
 } = slice.actions;
 
 export default slice.reducer;

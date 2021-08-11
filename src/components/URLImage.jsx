@@ -221,13 +221,23 @@ const URLImage = ({
       ref={shapeRef}
       draggable={onChange}
       filters={filters.length ? filters : null}
-      red={filterColor && filterColor.length ? hexToRgba(filterColor).r : null}
-      green={
-        filterColor && filterColor.length ? hexToRgba(filterColor).g : null
+      red={
+        filterColor && filterColor.length && hexToRgba(filterColor)
+          ? hexToRgba(filterColor).r
+          : null
       }
-      blue={filterColor && filterColor.length ? hexToRgba(filterColor).b : null}
+      green={
+        filterColor && filterColor.length && hexToRgba(filterColor)
+          ? hexToRgba(filterColor).g
+          : null
+      }
+      blue={
+        filterColor && filterColor.length && hexToRgba(filterColor)
+          ? hexToRgba(filterColor).b
+          : null
+      }
       alpha={
-        filterColor && filterColor.length
+        filterColor && filterColor.length && hexToRgba(filterColor)
           ? hexToRgba(filterColor).a / 255
           : null
       }

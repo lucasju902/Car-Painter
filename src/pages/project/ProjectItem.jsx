@@ -90,7 +90,8 @@ const ProjectItem = (props) => {
         src={
           schemeThumbnailURL(scheme.id) +
           "?date=" +
-          new Date().toLocaleDateString()
+          new Date().toLocaleDateString() +
+          new Date().getHours()
         }
         minHeight="200px"
         alt={scheme.name}

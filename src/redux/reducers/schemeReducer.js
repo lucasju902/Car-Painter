@@ -27,6 +27,7 @@ export const slice = createSlice({
   name: "schemeReducer",
   initialState,
   reducers: {
+    reset: (state) => initialState,
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
@@ -196,6 +197,7 @@ export const {
   clearFavoriteList,
   clearSharedList,
   clearSharedUsers,
+  reset,
   setCurrentName,
   setCurrentBaseColor,
 } = slice.actions;

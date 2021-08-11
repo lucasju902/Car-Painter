@@ -73,11 +73,13 @@ class SchemeService {
   }
 
   static async cloneById(id) {
-    let originalScheme = await this.getById(id);
+    let originalScheme = await Scheme.where({ id }).fetch({
+      withRelated: ["layers"],
+    });
     originalScheme = originalScheme.toJSON();
 
     let scheme = await Scheme.forge({
-      ..._.omit(originalScheme, ["id", "carMake", "layers"]),
+      ..._.omit(originalScheme, ["id", "layers"]),
       name: originalScheme.name + " copy",
       date_created: Math.round(new Date().getTime() / 1000),
       date_modified: Math.round(new Date().getTime() / 1000),
