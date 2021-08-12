@@ -39,6 +39,7 @@ import {
   createFavoriteScheme,
   clearCurrent as clearCurrentScheme,
   clearSharedUsers,
+  setLoaded as setSchemeLoaded,
 } from "redux/reducers/schemeReducer";
 import { reset as resetLayerReducer } from "redux/reducers/layerReducer";
 import { reset as resetBoardReducer } from "redux/reducers/boardReducer";
@@ -143,6 +144,7 @@ const Scheme = () => {
   useEffect(() => {
     dispatch(clearCurrentScheme());
     dispatch(clearSharedUsers());
+    dispatch(setSchemeLoaded(false));
     dispatch(resetLayerReducer());
     dispatch(resetBoardReducer());
   }, []);
