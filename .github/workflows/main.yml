@@ -19,6 +19,10 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+      - name: Generate build number
+        uses: einaregilsson/build-number@v3
+        with:
+          token: ${{secrets.github_token}}
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
@@ -58,7 +62,7 @@ jobs:
           application_name: ${{secrets.EB_APP}}
           environment_name: ${{secrets.EB_ENV}}
           region: ${{secrets.EB_REGION}}
-          version_label: "paint-builder-new-${{ steps.format-time.outputs.replaced }}"
+          version_label: "paint-builder-new-${{ steps.buildnumber.outputs.build_number }}"
           deployment_package: deploy.zip
 
       - name: Deployed!
