@@ -19,7 +19,8 @@ const BasePaints = (props) => {
     () =>
       _.orderBy(
         layers.filter((item) => item.layer_type === LayerTypes.BASE),
-        ["layer_order", "desc"]
+        ["layer_order"],
+        ["desc"]
       ),
     [layers]
   );

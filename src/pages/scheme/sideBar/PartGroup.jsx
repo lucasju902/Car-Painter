@@ -90,6 +90,7 @@ const PartGroup = (props) => {
     disableDnd,
     hoveredLayerJSON,
     onChangeHoverJSONItem,
+    onDoubleClickItem,
   } = props;
 
   const sortedList = useMemo(
@@ -224,6 +225,7 @@ const PartGroup = (props) => {
                   selected={currentLayer && currentLayer.id === item.id}
                   hovered={hoveredLayerJSON[item.id]}
                   onSelect={() => selectLayer(item)}
+                  onDoubleClick={onDoubleClickItem}
                   onHover={(flag) => hoverLayer(item, flag)}
                   disableLock={disableLock}
                   disabled={disabled}

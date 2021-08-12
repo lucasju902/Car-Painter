@@ -43,6 +43,7 @@ const PartItem = (props) => {
     disabled,
     disableLock,
     onSelect,
+    onDoubleClick,
     hovered,
     onHover,
   } = props;
@@ -79,6 +80,7 @@ const PartItem = (props) => {
       borderColor="grey.700"
       borderRadius={5}
       onClick={onSelect}
+      onDoubleClick={onDoubleClick}
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
       className={clsx(selected && "activeItem", hovered && "hoveredItem")}

@@ -12,6 +12,7 @@ import DrawerBar from "./DrawerBar";
 import { updateScheme } from "redux/reducers/schemeReducer";
 import ColorPickerInput from "components/ColorPickerInput";
 import { colorValidator } from "helper";
+import { setShowProperties } from "redux/reducers/boardReducer";
 
 const LayerWrapper = styled(Box)`
   width: 300px;
@@ -90,6 +91,9 @@ const Sidebar = (props) => {
     dispatch(updateScheme({ id: currentScheme.id, base_color }));
     setColorDirty(false);
   }, [dispatch, currentScheme && currentScheme.id, colorInput, setColorDirty]);
+  const handleDoubleClickItem = useCallback(() => {
+    dispatch(setShowProperties(true));
+  }, [dispatch]);
 
   return (
     <Box display="flex" flexDirection="column">
@@ -115,6 +119,7 @@ const Sidebar = (props) => {
             disableDnd={true}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
+            onDoubleClickItem={handleDoubleClickItem}
           />
           <PartGroup
             title="Logos & Text"
@@ -127,6 +132,7 @@ const Sidebar = (props) => {
             disabled={!editable}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
+            onDoubleClickItem={handleDoubleClickItem}
           />
           <PartGroup
             title="Shapes"
@@ -136,6 +142,7 @@ const Sidebar = (props) => {
             disabled={!editable}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
+            onDoubleClickItem={handleDoubleClickItem}
           />
           <PartGroup
             title="Overlays"
@@ -145,6 +152,7 @@ const Sidebar = (props) => {
             disabled={!editable}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
+            onDoubleClickItem={handleDoubleClickItem}
           />
           <PartGroup
             title="Base Paint"
@@ -155,6 +163,7 @@ const Sidebar = (props) => {
             disableLock={true}
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
+            onDoubleClickItem={handleDoubleClickItem}
             extraChildren={
               <Box
                 display="flex"
