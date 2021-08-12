@@ -48,6 +48,8 @@ jobs:
           LOG_DIR: ${{secrets.LOG_DIR}}
           LOG_LEVEL: ${{secrets.LOG_LEVEL}}
         run: yarn build
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
       - name: Beanstalk Deploy for app
         uses: einaregilsson/beanstalk-deploy@v10
         with:
