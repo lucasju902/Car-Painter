@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn
-      - name: Set Env Variables
+      - name: Build
         env:
           NODE_ENV: ${{secrets.NODE_ENV}}
           REACT_APP_ASSET_URL: ${{secrets.REACT_APP_ASSET_URL}}
@@ -47,7 +47,7 @@ jobs:
           BUCKET_URL: ${{secrets.BUCKET_URL}}
           LOG_DIR: ${{secrets.LOG_DIR}}
           LOG_LEVEL: ${{secrets.LOG_LEVEL}}
-      - run: yarn build
+        run: yarn build
       - name: Beanstalk Deploy for app
         uses: einaregilsson/beanstalk-deploy@v10
         with:
