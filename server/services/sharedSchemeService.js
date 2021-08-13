@@ -8,7 +8,7 @@ class SharedSchemeService {
 
   static async getListByUserId(user_id) {
     const list = await SharedScheme.where({ user_id }).fetchAll({
-      withRelated: ["scheme", "scheme.carMake"],
+      withRelated: ["scheme", "scheme.carMake", "scheme.user"],
     });
     return list;
   }

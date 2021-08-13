@@ -100,6 +100,13 @@ const ProjectItem = (props) => {
       <Box display="flex" justifyContent="space-between">
         <Box display="flex" flexDirection="column" p={4}>
           <Typography variant="body1">{scheme.name}</Typography>
+          {scheme.user.id !== user.id ? (
+            <Typography variant="body2">
+              Owner: {scheme.user.drivername}
+            </Typography>
+          ) : (
+            <></>
+          )}
           <Typography variant="body2">
             Edited {getDifferenceFromToday(scheme.date_modified)}
           </Typography>

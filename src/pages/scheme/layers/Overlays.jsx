@@ -20,6 +20,7 @@ const Overlays = (props) => {
     onLoadLayer,
     onDragStart,
     onDragEnd,
+    onDblClick,
   } = props;
 
   const filteredLayers = useMemo(
@@ -76,6 +77,7 @@ const Overlays = (props) => {
             shadowOffsetX={shadowOffset.x}
             shadowOffsetY={shadowOffset.y}
             onSelect={() => setCurrentLayer(layer)}
+            onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             frameSize={frameSize}
             layer_data={layer.layer_data}

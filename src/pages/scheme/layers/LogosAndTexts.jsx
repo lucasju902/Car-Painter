@@ -21,6 +21,7 @@ const LogosAndTexts = (props) => {
     onChange,
     onFontLoad,
     onHover,
+    onDblClick,
     onLoadLayer,
     onDragStart,
     onDragEnd,
@@ -94,6 +95,7 @@ const LogosAndTexts = (props) => {
               opacity={layer.layer_data.opacity}
               layer_data={layer.layer_data}
               onSelect={() => setCurrentLayer(layer)}
+              onDblClick={onDblClick}
               listening={
                 !layer.layer_locked && mouseMode === MouseModes.DEFAULT
               }
@@ -153,6 +155,7 @@ const LogosAndTexts = (props) => {
             shadowOffsetY={shadowOffset.y}
             visible={layer.layer_visible ? true : false}
             onSelect={() => setCurrentLayer(layer)}
+            onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
             onHover={(flag) => onHover(layer, flag)}

@@ -25,6 +25,7 @@ const GroupedURLImage = ({
   onLoadLayer,
   tellSize,
   onSelect,
+  onDblClick,
   onChange,
   onHover,
   onDragStart,
@@ -226,6 +227,7 @@ const GroupedURLImage = ({
       {...props}
       ref={shapeRef}
       onClick={onSelect}
+      onDblClick={onDblClick}
       onTap={onSelect}
       draggable={onChange && editable}
       onDragStart={handleDragStart}

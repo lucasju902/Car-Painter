@@ -16,6 +16,7 @@ const TextNode = ({
   shadowOffsetY,
   onLoadLayer,
   onSelect,
+  onDblClick,
   onChange,
   onFontLoad,
   onHover,
@@ -105,6 +106,7 @@ const TextNode = ({
       {...props}
       fontFamily={loadedFontFamily}
       onClick={onSelect}
+      onDblClick={onDblClick}
       onTap={onSelect}
       ref={shapeRef}
       shadowColor={shapeRef.current ? shadowColor : null}

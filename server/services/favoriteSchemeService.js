@@ -8,7 +8,7 @@ class FavoriteSchemeService {
 
   static async getListByUserId(user_id) {
     const list = await FavoriteScheme.where({ user_id }).fetchAll({
-      withRelated: ["scheme", "scheme.carMake"],
+      withRelated: ["scheme", "scheme.carMake", "scheme.user"],
     });
     return list;
   }
@@ -22,7 +22,7 @@ class FavoriteSchemeService {
 
   static async getByID(id) {
     const favorite = await FavoriteScheme.where({ id }).fetch({
-      withRelated: ["user", "scheme", "scheme.carMake"],
+      withRelated: ["user", "scheme", "scheme.carMake", "scheme.user"],
     });
     return favorite;
   }

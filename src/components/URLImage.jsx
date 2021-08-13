@@ -21,6 +21,7 @@ const URLImage = ({
   onLoadLayer,
   tellSize,
   onSelect,
+  onDblClick,
   onChange,
   onHover,
   onDragStart,
@@ -216,6 +217,7 @@ const URLImage = ({
     <Image
       {...props}
       image={image}
+      onDblClick={onDblClick}
       onClick={onSelect}
       onTap={onSelect}
       ref={shapeRef}

@@ -19,6 +19,7 @@ const Shapes = (props) => {
     onLoadLayer,
     onDragStart,
     onDragEnd,
+    onDblClick,
   } = props;
 
   const filteredLayers = useMemo(
@@ -160,6 +161,7 @@ const Shapes = (props) => {
             layer_data={layer.layer_data}
             perfectDrawEnabled={false}
             onSelect={() => setCurrentLayer(layer)}
+            onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
             onHover={(flag) => onHover(layer, flag)}

@@ -14,7 +14,7 @@ class SchemeService {
     const schemes = await Scheme.where({
       user_id: user_id,
     }).fetchAll({
-      withRelated: ["carMake", "layers"],
+      withRelated: ["carMake", "layers", "user"],
     });
     return schemes;
   }

@@ -27,6 +27,7 @@ import {
   setFrameSizeToMax,
   setMouseMode,
   setPaintingGuides,
+  setShowProperties,
   setZoom,
 } from "redux/reducers/boardReducer";
 import { insertToLoadedList as insertToLoadedFontList } from "redux/reducers/fontReducer";
@@ -495,6 +496,9 @@ const Board = ({
     )
       showGuideForRepositioning(false);
   }, [showGuideForRepositioning, currentScheme]);
+  const handleDblClickLayer = useCallback(() => {
+    dispatch(setShowProperties(true));
+  }, [dispatch]);
 
   return (
     <Box width="100%" height="100%" position="relative">
@@ -556,17 +560,21 @@ const Board = ({
               onLoadLayer={handleLoadLayer}
             />
           </Layer>
-          <Layer listening={false}>
-            <PaintingGuideBottom
-              legacyMode={currentScheme.legacy_mode}
-              carMake={currentCarMake}
-              paintingGuides={paintingGuides}
-              guideData={currentScheme.guide_data}
-              loadedStatuses={loadedStatuses}
-              handleImageSize={handleImageSize}
-              onLoadLayer={handleLoadLayer}
-            />
-          </Layer>
+          {!currentScheme.guide_data.show_guide_block_on_top ? (
+            <Layer listening={false}>
+              <PaintingGuideBottom
+                legacyMode={currentScheme.legacy_mode}
+                carMake={currentCarMake}
+                paintingGuides={paintingGuides}
+                guideData={currentScheme.guide_data}
+                loadedStatuses={loadedStatuses}
+                handleImageSize={handleImageSize}
+                onLoadLayer={handleLoadLayer}
+              />
+            </Layer>
+          ) : (
+            <></>
+          )}
           <Layer ref={mainLayerRef}>
             {!currentScheme.guide_data.show_carparts_on_top ? (
               <CarParts
@@ -596,6 +604,7 @@ const Board = ({
               onLoadLayer={handleLoadLayer}
               onDragStart={handleLayerDragStart}
               onDragEnd={handleLayerDragEnd}
+              onDblClick={handleDblClickLayer}
             />
             <Shapes
               editable={editable}
@@ -611,6 +620,7 @@ const Board = ({
               onLoadLayer={handleLoadLayer}
               onDragStart={handleLayerDragStart}
               onDragEnd={handleLayerDragEnd}
+              onDblClick={handleDblClickLayer}
             />
             <LogosAndTexts
               editable={editable}
@@ -629,6 +639,7 @@ const Board = ({
               onLoadLayer={handleLoadLayer}
               onDragStart={handleLayerDragStart}
               onDragEnd={handleLayerDragEnd}
+              onDblClick={handleDblClickLayer}
             />
             {currentScheme.guide_data.show_carparts_on_top ? (
               <CarParts
@@ -654,6 +665,21 @@ const Board = ({
               onLoadLayer={handleLoadLayer}
             />
           </Layer>
+          {currentScheme.guide_data.show_guide_block_on_top ? (
+            <Layer listening={false}>
+              <PaintingGuideBottom
+                legacyMode={currentScheme.legacy_mode}
+                carMake={currentCarMake}
+                paintingGuides={paintingGuides}
+                guideData={currentScheme.guide_data}
+                loadedStatuses={loadedStatuses}
+                handleImageSize={handleImageSize}
+                onLoadLayer={handleLoadLayer}
+              />
+            </Layer>
+          ) : (
+            <></>
+          )}
           <Layer>
             <PaintingGuideTop
               legacyMode={currentScheme.legacy_mode}

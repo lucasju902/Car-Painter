@@ -34,47 +34,52 @@ export const SubForm = (props) => {
       </CustomAccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%" mb={1}>
-          <Grid container spacing={2}>
-            {colorKey ? (
-              <Grid item xs={12} sm={6}>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="body1" color="textSecondary" mr={2}>
-                    Color
-                  </Typography>
-                  <ColorPickerInput
+          {colorKey || opacityKey ? (
+            <Grid container spacing={2}>
+              {colorKey ? (
+                <Grid item xs={12} sm={6}>
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Typography variant="body1" color="textSecondary" mr={2}>
+                      Color
+                    </Typography>
+                    <ColorPickerInput
+                      disabled={!editable}
+                      value={values[colorKey]}
+                      onChange={(color) => setFieldValue(colorKey, color)}
+                      onInputChange={(color) => setFieldValue(colorKey, color)}
+                      error={Boolean(errors[colorKey])}
+                      helperText={errors[colorKey]}
+                    />
+                  </Box>
+                </Grid>
+              ) : (
+                <></>
+              )}
+              {opacityKey ? (
+                <Grid item xs={12} sm={6}>
+                  <SliderInput
+                    label="Opacity"
                     disabled={!editable}
-                    value={values[colorKey]}
-                    onChange={(color) => setFieldValue(colorKey, color)}
-                    onInputChange={(color) => setFieldValue(colorKey, color)}
-                    error={Boolean(errors[colorKey])}
-                    helperText={errors[colorKey]}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={values[opacityKey]}
+                    setValue={(value) => setFieldValue(opacityKey, value)}
                   />
-                </Box>
-              </Grid>
-            ) : (
-              <></>
-            )}
-            {opacityKey ? (
-              <Grid item xs={12} sm={6}>
-                <SliderInput
-                  label="Opacity"
-                  disabled={!editable}
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={values[opacityKey]}
-                  setValue={(value) => setFieldValue(opacityKey, value)}
-                />
-              </Grid>
-            ) : (
-              <></>
-            )}
-          </Grid>
+                </Grid>
+              ) : (
+                <></>
+              )}
+            </Grid>
+          ) : (
+            <></>
+          )}
+
           {extraChildren}
         </Box>
       </AccordionDetails>
