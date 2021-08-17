@@ -69,7 +69,9 @@ export const getUploadListByUserID = (userID) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const uploadFiles = (userID, schemeID, files) => async (dispatch) => {
+export const uploadFiles = (userID, schemeID, files, callback) => async (
+  dispatch
+) => {
   dispatch(setLoading(true));
   try {
     let formData = new FormData();
@@ -84,6 +86,15 @@ export const uploadFiles = (userID, schemeID, files) => async (dispatch) => {
 
     const uploads = await UploadService.uploadFiles(formData);
     dispatch(concatList(uploads));
+    dispatch(
+      setMessage({
+        message: `Uploaded ${files.length} ${
+          files.length > 1 ? "files" : "file"
+        } successfully!`,
+        type: "success",
+      })
+    );
+    if (callback) callback();
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

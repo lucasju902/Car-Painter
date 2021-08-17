@@ -49,7 +49,13 @@ const InnerForm = React.memo(
         if (!currentLayer) return false;
         for (let param of params) {
           if (
-            formProps.values.layer_data[param] != currentLayer.layer_data[param]
+            formProps.values.layer_data[param] !=
+              currentLayer.layer_data[param] &&
+            !(
+              formProps.values.layer_data[param] ===
+                DefaultLayer.layer_data[param] &&
+              currentLayer.layer_data[param] === undefined
+            )
           )
             return true;
         }

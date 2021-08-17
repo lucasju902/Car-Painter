@@ -207,6 +207,16 @@ const overrides = {
       padding: "4px 12px 12px",
     },
   },
+  MuiDropzoneArea: {
+    root: {
+      minHeight: "105px",
+    },
+  },
+  MuiDropzonePreviewList: {
+    image: {
+      objectFit: "contain",
+    },
+  },
 };
 
 export default overrides;

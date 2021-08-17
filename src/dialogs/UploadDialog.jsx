@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components/macro";
@@ -63,15 +63,17 @@ const DeleteButton = styled(IconButton)`
 const UploadDialog = (props) => {
   const step = 30;
   const dispatch = useDispatch();
+  const { uploads, onCancel, open, onOpenUpload } = props;
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+
   const [uploadToDelete, setUploadToDelete] = useState(null);
   const [associatedSchemes, setAssociatedSchemes] = useState([]);
-
   const [limit, setLimit] = useState(step);
   const [files, setFiles] = useState([]);
   const [dropZoneKey, setDropZoneKey] = useState(1);
-  const { uploads, onCancel, open, onOpenUpload } = props;
+
+  const scrollToRef = useRef(null);
 
   const increaseData = useCallback(() => {
     setLimit(limit + step);
@@ -90,25 +92,19 @@ const UploadDialog = (props) => {
   );
   const handleDropZoneChange = useCallback(
     (files_up) => {
-      setFiles(files_up);
       console.log(files_up);
+      if (files_up.length) {
+        dispatch(
+          uploadFiles(user.id, currentScheme.id, files_up, () => {
+            scrollToRef.current.scrollIntoView({ behavior: "smooth" });
+          })
+        );
+        setFiles([]);
+        setDropZoneKey(dropZoneKey + 1);
+      }
     },
-    [setFiles]
+    [dispatch, user.id, currentScheme.id, setFiles, dropZoneKey, setDropZoneKey]
   );
-  const handleUploadFiles = useCallback(() => {
-    console.log(files);
-    dispatch(uploadFiles(user.id, currentScheme.id, files));
-    setFiles([]);
-    setDropZoneKey(dropZoneKey + 1);
-  }, [
-    dispatch,
-    user.id,
-    currentScheme.id,
-    files,
-    setFiles,
-    dropZoneKey,
-    setDropZoneKey,
-  ]);
   const handleClickDeleteUpload = useCallback(
     (event, uploadItem) => {
       event.stopPropagation();
@@ -155,24 +151,13 @@ const UploadDialog = (props) => {
         <DropzoneArea
           onChange={handleDropZoneChange}
           value={files}
-          showFileNamesInPreview={true}
-          showFileNames={true}
+          showPreviews={false}
+          showPreviewsInDropzone={false}
+          showFileNamesInPreview={false}
+          showFileNames={false}
           maxFiles={10}
           key={dropZoneKey}
         />
-        {files.length ? (
-          <Box mt={1} width="100%" display="flex" justifyContent="center">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleUploadFiles}
-            >
-              Save To My Upload List
-            </Button>
-          </Box>
-        ) : (
-          <></>
-        )}
         <Box id="upload-dialog-content" overflow="auto" height="40vh" mt={1}>
           <CustomInfiniteScroll
             dataLength={limit} //This is important field to render the next data
@@ -207,6 +192,7 @@ const UploadDialog = (props) => {
                 </CustomGridListTile>
               ))}
             </CustomGridList>
+            <div ref={scrollToRef}></div>
           </CustomInfiniteScroll>
         </Box>
       </CustomDialogContent>
