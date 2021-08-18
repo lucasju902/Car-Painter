@@ -475,8 +475,8 @@ const Scheme = () => {
       stageRef.current.setAttrs({
         x: 0,
         y: 0,
-        offsetX: frameSizeRef.current.width / 2,
-        offsetY: frameSizeRef.current.width / 2,
+        offsetX: 0,
+        offsetY: 0,
         scaleX: 1,
         scaleY: 1,
         rotation: 0,
@@ -484,12 +484,19 @@ const Scheme = () => {
         height: frameSizeRef.current.height,
       });
       stageRef.current.draw();
+      const baseLayerAbPos = baseLayerRef.current.absolutePosition();
+      const mainLayerAbPos = mainLayerRef.current.absolutePosition();
+      const carMaskLayerAbPos = carMaskLayerRef.current.absolutePosition();
 
       if (baseLayerRef.current) {
+        baseLayerRef.current.absolutePosition({
+          x: 0,
+          y: 0,
+        });
         let baseLayerURL = baseLayerRef.current.toDataURL({
           pixelRatio,
-          x: -frameSizeRef.current.width / 2,
-          y: -frameSizeRef.current.width / 2,
+          x: 0,
+          y: 0,
           width: frameSizeRef.current.width,
           height: frameSizeRef.current.height,
         });
@@ -497,6 +504,10 @@ const Scheme = () => {
       }
 
       if (mainLayerRef.current) {
+        mainLayerRef.current.absolutePosition({
+          x: 0,
+          y: 0,
+        });
         let mainLayerURL = mainLayerRef.current.toDataURL({
           pixelRatio,
           x: 0,
@@ -507,6 +518,10 @@ const Scheme = () => {
         mainLayerImg = await addImageProcess(mainLayerURL);
       }
       if (carMaskLayerRef.current) {
+        carMaskLayerRef.current.absolutePosition({
+          x: 0,
+          y: 0,
+        });
         let carMaskLayerURL = carMaskLayerRef.current.toDataURL({
           pixelRatio,
           x: 0,
@@ -518,6 +533,10 @@ const Scheme = () => {
       }
 
       stageRef.current.setAttrs(_.omit(stageAttrs, ["container"]));
+      baseLayerRef.current.absolutePosition(baseLayerAbPos);
+      mainLayerRef.current.absolutePosition(mainLayerAbPos);
+      carMaskLayerRef.current.absolutePosition(carMaskLayerAbPos);
+
       stageRef.current.draw();
       wrapperRef.current.style.width = `100%`;
       wrapperRef.current.style.height = `100%`;
