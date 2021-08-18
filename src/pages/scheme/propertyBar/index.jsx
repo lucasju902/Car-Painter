@@ -142,6 +142,7 @@ const InnerForm = React.memo(
           editable={editable}
           checkLayerDataDirty={checkLayerDataDirty}
           onLayerDataUpdate={onLayerDataUpdate}
+          onApply={formProps.handleSubmit}
         />
         <CornerProperty
           editable={editable}

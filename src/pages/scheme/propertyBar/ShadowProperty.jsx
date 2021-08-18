@@ -25,7 +25,7 @@ const CustomeTextField = styled(TextField)`
 `;
 
 const ShadowProperty = (props) => {
-  const DefaultBlurToSet = 5;
+  const DefaultBlurToSet = 10;
   const {
     editable,
     errors,
@@ -37,6 +37,7 @@ const ShadowProperty = (props) => {
     touched,
     values,
     onLayerDataUpdate,
+    onApply,
   } = props;
   const layerDataProperties = [
     "shadowColor",
@@ -63,10 +64,10 @@ const ShadowProperty = (props) => {
       ) {
         setFieldValue("layer_data.shadowBlur", DefaultBlurToSet);
       }
-      if (applyNow) onLayerDataUpdate("shadowColor", value);
-      else setFieldValue("layer_data.shadowColor", value);
+      setFieldValue("layer_data.shadowColor", value);
+      if (applyNow) onApply(values);
     },
-    [setFieldValue, onLayerDataUpdate, values.layer_data]
+    [setFieldValue, onLayerDataUpdate, values]
   );
 
   if (

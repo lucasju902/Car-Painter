@@ -472,6 +472,9 @@ const Scheme = () => {
       const originShowProperties = showPropertiesRef.current;
       dispatch(setShowProperties(false));
 
+      const baseLayerAbPos = baseLayerRef.current.absolutePosition();
+      const mainLayerAbPos = mainLayerRef.current.absolutePosition();
+      const carMaskLayerAbPos = carMaskLayerRef.current.absolutePosition();
       stageRef.current.setAttrs({
         x: 0,
         y: 0,
@@ -484,9 +487,6 @@ const Scheme = () => {
         height: frameSizeRef.current.height,
       });
       stageRef.current.draw();
-      const baseLayerAbPos = baseLayerRef.current.absolutePosition();
-      const mainLayerAbPos = mainLayerRef.current.absolutePosition();
-      const carMaskLayerAbPos = carMaskLayerRef.current.absolutePosition();
 
       if (baseLayerRef.current) {
         baseLayerRef.current.absolutePosition({
@@ -533,11 +533,11 @@ const Scheme = () => {
       }
 
       stageRef.current.setAttrs(_.omit(stageAttrs, ["container"]));
+      stageRef.current.draw();
       baseLayerRef.current.absolutePosition(baseLayerAbPos);
       mainLayerRef.current.absolutePosition(mainLayerAbPos);
       carMaskLayerRef.current.absolutePosition(carMaskLayerAbPos);
 
-      stageRef.current.draw();
       wrapperRef.current.style.width = `100%`;
       wrapperRef.current.style.height = `100%`;
       dispatch(setShowProperties(originShowProperties));

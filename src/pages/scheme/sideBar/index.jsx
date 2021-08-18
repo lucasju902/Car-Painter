@@ -65,12 +65,16 @@ const Sidebar = (props) => {
 
   const handleChangeBasePaintColor = useCallback(
     (color) => {
-      let base_color = color;
+      let correctedColor = color;
+      if (correctedColor[0] === "#" && correctedColor.length > 7) {
+        correctedColor = correctedColor.slice(0, 7);
+      }
+      let base_color = correctedColor;
       if (base_color !== "transparent") {
         base_color = base_color.replace("#", "");
       }
       dispatch(updateScheme({ id: currentScheme.id, base_color }));
-      setColorInput(color);
+      setColorInput(correctedColor);
       setColorDirty(false);
     },
     [dispatch, currentScheme && currentScheme.id, setColorInput, setColorDirty]
