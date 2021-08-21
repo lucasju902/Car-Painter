@@ -1,13 +1,13 @@
-import async from "../components/common/Async";
+import async from "components/common/Async";
 
 // Auth components
-const SignIn = async(() => import("../pages/Auth/SignIn"));
-const Page404 = async(() => import("../pages/Auth/Page404"));
-const Page500 = async(() => import("../pages/Auth/Page500"));
+const SignIn = async(() => import("pages/Auth/SignIn"));
+const Page404 = async(() => import("pages/Auth/Page404"));
+const Page500 = async(() => import("pages/Auth/Page500"));
 
 // Main components
-const Scheme = async(() => import("../pages/Scheme"));
-const Project = async(() => import("../pages/Project"));
+const Scheme = async(() => import("pages/Scheme"));
+const Project = async(() => import("pages/Project"));
 
 const authRoutes = {
   id: "Auth",

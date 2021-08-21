@@ -2,9 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { mainLayoutRoutes, authLayoutRoutes } from "./index";
 
-import MainLayout from "../layouts/Main";
-import AuthLayout from "../layouts/Auth";
-import Page404 from "../pages/Auth/Page404";
+import MainLayout from "layouts/Main";
+import AuthLayout from "layouts/Auth";
+import Page404 from "pages/Auth/Page404";
 
 import { withAuthGuard } from "hooks";
 
