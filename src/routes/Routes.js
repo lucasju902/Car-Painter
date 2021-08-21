@@ -4,7 +4,7 @@ import { mainLayoutRoutes, authLayoutRoutes } from "./index";
 
 import MainLayout from "layouts/Main";
 import AuthLayout from "layouts/Auth";
-import Page404 from "pages/Auth/Page404";
+import Page404 from "../pages/auth/Page404";
 
 import { withAuthGuard } from "hooks";
 
