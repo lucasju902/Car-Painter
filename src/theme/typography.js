@@ -61,7 +61,6 @@ const typography = {
   },
   body1: {
     fontSize: "1rem",
-    lineHeight: 1.75,
   },
   body2: {
     fontSize: 12,

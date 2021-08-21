@@ -1,0 +1,12 @@
+export { SchemeSettingsDialog } from "./SchemeSettingsDialog";
+export { BasePaintDialog } from "./BasePaintDialog";
+export { ConfirmDialog } from "./ConfirmDialog";
+export { CreateProjectDialog } from "./CreateProjectDialog";
+export { DefaultSettingsDialog } from "./DefaultSettingsDialog";
+export { LogoDialog } from "./LogoDialog";
+export { OverlayDialog } from "./OverlayDialog";
+export { ShortCutsDialog } from "./ShortCutsDialog";
+export { TextDialog } from "./TextDialog";
+export { UploadDialog } from "./UploadDialog";
+export { YesNoDialog } from "./YesNoDialog";
+export { ZoomPopover } from "./ZoomPopover";

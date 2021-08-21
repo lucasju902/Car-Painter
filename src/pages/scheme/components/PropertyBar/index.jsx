@@ -1,0 +1,1 @@
+export { PropertyBar } from "./PropertyBar";

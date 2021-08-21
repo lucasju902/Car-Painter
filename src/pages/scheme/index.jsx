@@ -17,14 +17,10 @@ import TGA from "utils/tga";
 
 import { Box } from "@material-ui/core";
 
-import { LayerTypes } from "constant";
-import ScreenLoader from "components/ScreenLoader";
-import Toolbar from "./Toolbar";
-import Board from "./Board";
-import Sidebar from "./sideBar";
-import PropertyBar from "./propertyBar";
-import ConfirmDialog from "dialogs/ConfirmDialog";
-import { MouseModes, PaintingGuides, DialogTypes } from "constant";
+import { MouseModes, PaintingGuides, DialogTypes, LayerTypes } from "constant";
+import { ScreenLoader } from "components/common";
+import { ConfirmDialog } from "components/dialogs";
+import { Toolbar, Board, SideBar, PropertyBar } from "./components";
 
 import {
   getScheme,
@@ -812,7 +808,7 @@ const Scheme = () => {
             display="flex"
             justifyContent="space-between"
           >
-            <Sidebar
+            <SideBar
               dialog={dialog}
               setDialog={setDialog}
               focusBoard={focusBoard}

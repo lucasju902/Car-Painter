@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { Box } from "components/MaterialUI";
-import ScreenLoader from "components/ScreenLoader";
+import { ScreenLoader } from "components/common";
 import { setPreviousPath, signInWithCookie } from "redux/reducers/authReducer";
 
 // For routes that can only be accessed by authenticated users

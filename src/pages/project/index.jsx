@@ -5,6 +5,8 @@ import { useHistory } from "react-router";
 
 import styled from "styled-components/macro";
 
+import { LogOut as LogOutIcon } from "react-feather";
+import { Add as AddIcon } from "@material-ui/icons";
 import {
   Box,
   TextField,
@@ -15,14 +17,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Button, Autocomplete, IconButton } from "components/MaterialUI";
-import LightTooltip from "components/LightTooltip";
-import { Add as AddIcon } from "@material-ui/icons";
-import { LogOut as LogOutIcon } from "react-feather";
-import SocketClient from "utils/socketClient";
+import { LightTooltip, ScreenLoader, SearchBox } from "components/common";
+import { CreateProjectDialog } from "components/dialogs";
+import { MyProjects, SharedProjects, FavoriteProjects } from "./components";
 
-import ScreenLoader from "components/ScreenLoader";
-import CreateProjectDialog from "dialogs/CreateProjectDialog";
-import SearchBox from "components/SearchBox";
+import SocketClient from "utils/socketClient";
 
 import {
   getSchemeList,
@@ -45,9 +44,6 @@ import { reset as resetLayerReducer } from "redux/reducers/layerReducer";
 import { reset as resetBoardReducer } from "redux/reducers/boardReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 import { signOut } from "redux/reducers/authReducer";
-import MyProjects from "./MyProjects";
-import SharedProjects from "./SharedProjects";
-import FavoriteProjects from "./FavoriteProjects";
 
 const CustomFormControl = styled(FormControl)`
   .MuiInputBase-root {

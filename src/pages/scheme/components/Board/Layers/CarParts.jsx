@@ -1,0 +1,58 @@
+import React, { useMemo, useCallback } from "react";
+import _ from "lodash";
+
+import { LayerTypes } from "constant";
+import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
+
+import { URLImage } from "components/konva";
+
+export const CarParts = React.memo((props) => {
+  const {
+    layers,
+    legacyMode,
+    carMake,
+    loadedStatuses,
+    handleImageSize,
+    onLoadLayer,
+  } = props;
+
+  const filteredLayers = useMemo(
+    () =>
+      _.orderBy(
+        layers.filter((item) => item.layer_type === LayerTypes.CAR),
+        ["layer_order"],
+        ["desc"]
+      ),
+    [layers]
+  );
+  const getCarMakeImage = useCallback(
+    (image) => {
+      return (
+        (legacyMode
+          ? legacyCarMakeAssetURL(carMake)
+          : carMakeAssetURL(carMake)) + image
+      );
+    },
+    [legacyMode, carMake]
+  );
+
+  return (
+    <>
+      {filteredLayers.map((layer) => (
+        <URLImage
+          key={layer.id}
+          id={layer.id}
+          src={getCarMakeImage(layer.layer_data.img)}
+          filterColor={layer.layer_data.color}
+          listening={false}
+          visible={layer.layer_visible ? true : false}
+          loadedStatus={loadedStatuses[layer.id]}
+          onLoadLayer={onLoadLayer}
+          tellSize={handleImageSize}
+        />
+      ))}
+    </>
+  );
+});
+
+export default CarParts;

@@ -1,0 +1,13 @@
+export { NameProperty } from "./NameProperty";
+export { GeneralProperty } from "./GeneralProperty";
+export { SizeProperty } from "./SizeProperty";
+export { PositionProperty } from "./PositionProperty";
+export { FontProperty } from "./FontProperty";
+export { StrokeProperty } from "./StrokeProperty";
+export { ColorProperty } from "./ColorProperty";
+export { BackgroundProperty } from "./BackgroundProperty";
+export { RotationProperty } from "./RotationProperty";
+export { ShadowProperty } from "./ShadowProperty";
+export { CornerProperty } from "./CornerProperty";
+export { ExtraProperty } from "./ExtraProperty";
+export { SkewProperty } from "./SkewProperty";
