@@ -114,6 +114,7 @@ export const GeneralSetting = React.memo((props) => {
             variant="outlined"
             disabled={!editable}
             value={name}
+            inputProps={{ maxLength: "254" }}
             onChange={handleNameChange}
             onKeyDown={handleNameKeyDown}
             width="300px"

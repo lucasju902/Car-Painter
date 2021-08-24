@@ -1,17 +1,13 @@
 import React from "react";
 
-import styled from "styled-components/macro";
-import { spacing } from "@material-ui/system";
 import {
-  Button as MuiButton,
+  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Typography,
-} from "@material-ui/core";
-
-const Button = styled(MuiButton)(spacing);
+} from "components/MaterialUI";
 
 export const ConfirmDialog = React.memo((props) => {
   const { text, open, onCancel, onConfirm } = props;

@@ -84,6 +84,26 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                     labelPlacement="start"
                   />
                 </Grid>
+                <Grid item xs={12} sm={12}>
+                  <CustomFormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="show_sponsor_block_on_top"
+                        checked={formProps.values.show_sponsor_block_on_top}
+                        disabled={!editable}
+                        onChange={(event) =>
+                          formProps.setFieldValue(
+                            "show_sponsor_block_on_top",
+                            event.target.checked
+                          )
+                        }
+                      />
+                    }
+                    label={`Show Sponsor Blocks on top`}
+                    labelPlacement="start"
+                  />
+                </Grid>
               </Grid>
             }
           />
@@ -112,6 +132,26 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                       />
                     }
                     label="Show Number Blocks for Repositioning"
+                    labelPlacement="start"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <CustomFormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="show_number_block_on_top"
+                        checked={formProps.values.show_number_block_on_top}
+                        disabled={!editable}
+                        onChange={(event) =>
+                          formProps.setFieldValue(
+                            "show_number_block_on_top",
+                            event.target.checked
+                          )
+                        }
+                      />
+                    }
+                    label={`Show Number Blocks on top`}
                     labelPlacement="start"
                   />
                 </Grid>
@@ -198,26 +238,6 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                       />
                     }
                     label="Show Car Parts on top of other layers"
-                    labelPlacement="start"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  <CustomFormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        name="show_guide_block_on_top"
-                        checked={formProps.values.show_guide_block_on_top}
-                        disabled={!editable}
-                        onChange={(event) =>
-                          formProps.setFieldValue(
-                            "show_guide_block_on_top",
-                            event.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label={`Show Sponsor Blocks & Number Blocks Painting Guides on top`}
                     labelPlacement="start"
                   />
                 </Grid>

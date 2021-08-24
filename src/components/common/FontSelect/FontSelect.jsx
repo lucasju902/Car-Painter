@@ -1,25 +1,9 @@
 import React from "react";
 import config from "config";
 
-import styled from "styled-components/macro";
-
-import { spacing } from "@material-ui/system";
-import { Select as MuiSelect, MenuItem } from "@material-ui/core";
-import ImageWithLoad from "./ImageWithLoad";
-
-const Select = styled(MuiSelect)(spacing);
-
-const CustomSelect = styled(Select)`
-  .MuiSelect-selectMenu {
-    display: flex;
-    align-items: center;
-    height: 2rem;
-  }
-`;
-const FontImage = styled.img`
-  width: 506px;
-  filter: invert(1);
-`;
+import { MenuItem } from "@material-ui/core";
+import { CustomSelect, FontImage } from "./FontSelect.style";
+import { ImageWithLoad } from "components/common";
 
 export const FontSelect = (props) => {
   const { fontList, value, disabled, onChange } = props;
@@ -61,5 +45,3 @@ export const FontSelect = (props) => {
     </CustomSelect>
   );
 };
-
-export default FontSelect;

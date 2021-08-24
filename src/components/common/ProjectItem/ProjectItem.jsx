@@ -2,33 +2,25 @@ import React, { useState } from "react";
 import _ from "lodash";
 
 import config from "config";
-import styled from "styled-components/macro";
 
 import {
   Box,
   IconButton,
   Typography,
-  Menu,
   MenuItem,
   CircularProgress,
 } from "@material-ui/core";
 import { ImageWithLoad } from "components/common";
 import { ConfirmDialog } from "components/dialogs";
-import { MoreVert as ActionIcon } from "@material-ui/icons";
-import { faStar as faStarOn } from "@fortawesome/free-solid-svg-icons";
-import { faStar as faStarOff } from "@fortawesome/free-regular-svg-icons";
+import {
+  StyledMenu,
+  ActionIcon,
+  faStarOn,
+  faStarOff,
+} from "./ProjectItem.style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { getDifferenceFromToday } from "helper";
-
-const ItemWrapper = styled(Box)`
-  border: 1px solid grey;
-`;
-const StyledMenu = styled(Menu)`
-  .MuiMenu-paper {
-    border: 1px solid grey;
-  }
-`;
+import { getDifferenceFromToday, reduceString } from "helper";
 
 export const ProjectItem = (props) => {
   const {
@@ -85,7 +77,7 @@ export const ProjectItem = (props) => {
   };
 
   return (
-    <ItemWrapper display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" border="1px solid grey">
       <ImageWithLoad
         src={
           schemeThumbnailURL(scheme.id) +
@@ -100,7 +92,9 @@ export const ProjectItem = (props) => {
       <Box display="flex" justifyContent="space-between">
         <Box display="flex" flexDirection="column" p={4}>
           <Box mb={1}>
-            <Typography variant="body1">{scheme.name}</Typography>
+            <Typography variant="body1">
+              {reduceString(scheme.name, 60)}
+            </Typography>
           </Box>
           {scheme.user.id !== user.id ? (
             <Typography variant="body2">
@@ -186,7 +180,7 @@ export const ProjectItem = (props) => {
         onCancel={() => setDeleteMessage(null)}
         onConfirm={handleDeleteItem}
       />
-    </ItemWrapper>
+    </Box>
   );
 };
 

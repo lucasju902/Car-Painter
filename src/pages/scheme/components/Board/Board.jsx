@@ -16,7 +16,8 @@ import { LightTooltip, ScreenLoader } from "components/common";
 import {
   PaintingGuideTop,
   PaintingGuideCarMask,
-  PaintingGuideBottom,
+  PaintingGuideNumber,
+  PaintingGuideSponsor,
 } from "./Guides";
 import {
   BasePaints,
@@ -563,21 +564,40 @@ export const Board = ({
               onLoadLayer={handleLoadLayer}
             />
           </Layer>
-          {!currentScheme.guide_data.show_guide_block_on_top ? (
+          {!currentScheme.guide_data.show_sponsor_block_on_top ||
+          !currentScheme.guide_data.show_number_block_on_top ? (
             <Layer listening={false}>
-              <PaintingGuideBottom
-                legacyMode={currentScheme.legacy_mode}
-                carMake={currentCarMake}
-                paintingGuides={paintingGuides}
-                guideData={currentScheme.guide_data}
-                loadedStatuses={loadedStatuses}
-                handleImageSize={handleImageSize}
-                onLoadLayer={handleLoadLayer}
-              />
+              {!currentScheme.guide_data.show_sponsor_block_on_top ? (
+                <PaintingGuideSponsor
+                  legacyMode={currentScheme.legacy_mode}
+                  carMake={currentCarMake}
+                  paintingGuides={paintingGuides}
+                  guideData={currentScheme.guide_data}
+                  loadedStatuses={loadedStatuses}
+                  handleImageSize={handleImageSize}
+                  onLoadLayer={handleLoadLayer}
+                />
+              ) : (
+                <></>
+              )}
+              {!currentScheme.guide_data.show_number_block_on_top ? (
+                <PaintingGuideNumber
+                  legacyMode={currentScheme.legacy_mode}
+                  carMake={currentCarMake}
+                  paintingGuides={paintingGuides}
+                  guideData={currentScheme.guide_data}
+                  loadedStatuses={loadedStatuses}
+                  handleImageSize={handleImageSize}
+                  onLoadLayer={handleLoadLayer}
+                />
+              ) : (
+                <></>
+              )}
             </Layer>
           ) : (
             <></>
           )}
+
           <Layer ref={mainLayerRef}>
             {!currentScheme.guide_data.show_carparts_on_top ? (
               <CarParts
@@ -668,17 +688,35 @@ export const Board = ({
               onLoadLayer={handleLoadLayer}
             />
           </Layer>
-          {currentScheme.guide_data.show_guide_block_on_top ? (
+          {currentScheme.guide_data.show_sponsor_block_on_top ||
+          currentScheme.guide_data.show_number_block_on_top ? (
             <Layer listening={false}>
-              <PaintingGuideBottom
-                legacyMode={currentScheme.legacy_mode}
-                carMake={currentCarMake}
-                paintingGuides={paintingGuides}
-                guideData={currentScheme.guide_data}
-                loadedStatuses={loadedStatuses}
-                handleImageSize={handleImageSize}
-                onLoadLayer={handleLoadLayer}
-              />
+              {currentScheme.guide_data.show_sponsor_block_on_top ? (
+                <PaintingGuideSponsor
+                  legacyMode={currentScheme.legacy_mode}
+                  carMake={currentCarMake}
+                  paintingGuides={paintingGuides}
+                  guideData={currentScheme.guide_data}
+                  loadedStatuses={loadedStatuses}
+                  handleImageSize={handleImageSize}
+                  onLoadLayer={handleLoadLayer}
+                />
+              ) : (
+                <></>
+              )}
+              {currentScheme.guide_data.show_number_block_on_top ? (
+                <PaintingGuideNumber
+                  legacyMode={currentScheme.legacy_mode}
+                  carMake={currentCarMake}
+                  paintingGuides={paintingGuides}
+                  guideData={currentScheme.guide_data}
+                  loadedStatuses={loadedStatuses}
+                  handleImageSize={handleImageSize}
+                  onLoadLayer={handleLoadLayer}
+                />
+              ) : (
+                <></>
+              )}
             </Layer>
           ) : (
             <></>

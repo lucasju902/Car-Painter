@@ -215,9 +215,18 @@ const Scheme = () => {
   const handleLogOut = () => {
     dispatch(signOut());
   };
+  const handleClickTabItem = (tabIndex) => {
+    window.history.replaceState({}, "", `?tab=${tabIndex}`);
+    setTabValue(tabIndex);
+  };
 
-  // Socket.io Stuffs
   useEffect(() => {
+    // Set Tab based on query string
+    const url = new URL(window.location.href);
+    const tab = url.searchParams.get("tab");
+    if (tab) setTabValue(parseInt(tab));
+
+    // Socket.io Stuffs
     SocketClient.connect();
 
     SocketClient.on("connect", () => {
@@ -260,7 +269,7 @@ const Scheme = () => {
         <Box display="flex" flexDirection="column">
           <Tab
             state={tabValue === 0 ? "active" : null}
-            onClick={() => setTabValue(0)}
+            onClick={() => handleClickTabItem(0)}
           >
             <Typography>My Projects</Typography>
           </Tab>
@@ -268,7 +277,7 @@ const Scheme = () => {
             display="flex"
             justifyContent="space-between"
             state={tabValue === 1 ? "active" : null}
-            onClick={() => setTabValue(1)}
+            onClick={() => handleClickTabItem(1)}
           >
             <Typography>Shared with Me</Typography>
             {newInvitationCount ? (
@@ -281,7 +290,7 @@ const Scheme = () => {
           </Tab>
           <Tab
             state={tabValue === 2 ? "active" : null}
-            onClick={() => setTabValue(2)}
+            onClick={() => handleClickTabItem(2)}
           >
             <Typography>Favorite Projects</Typography>
           </Tab>

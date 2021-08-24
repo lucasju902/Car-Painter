@@ -7,6 +7,7 @@ import {
   Link as MuiLink,
   Grid as MuiGrid,
   CircularProgress as MuiCircularProgress,
+  Select as MuiSelect,
 } from "@material-ui/core";
 import {
   Alert as MuiAlert,
@@ -25,3 +26,4 @@ export const Link = styled(MuiLink)(spacing);
 export const Typography = styled(MuiTypography)(spacing);
 export const Grid = styled(MuiGrid)(spacing);
 export const CircularProgress = styled(MuiCircularProgress)(spacing);
+export const Select = styled(MuiSelect)(spacing);

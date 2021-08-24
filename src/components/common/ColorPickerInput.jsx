@@ -2,11 +2,6 @@ import React, { useCallback } from "react";
 import { ColorPicker } from "material-ui-color";
 import { Box, TextField, Typography } from "@material-ui/core";
 import { Palette } from "constant";
-import styled from "styled-components/macro";
-
-const ColorInputField = styled(TextField)`
-  width: 80px;
-`;
 
 export const ColorPickerInput = (props) => {
   const {
@@ -50,9 +45,10 @@ export const ColorPickerInput = (props) => {
           />
         )}
 
-        <ColorInputField
+        <TextField
           value={value || ""}
           disabled={disabled}
+          style={{ width: 85 }}
           onChange={(event) => onInputChange(event.target.value)}
           onKeyDown={handleInputKeyDown}
         />

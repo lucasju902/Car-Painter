@@ -1,24 +1,6 @@
 import React, { useState } from "react";
 import { Box } from "components/MaterialUI";
-import { Skeleton } from "@material-ui/lab";
-import styled from "styled-components/macro";
-
-const CustomImg = styled.img`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  object-fit: contain;
-  cursor: pointer;
-`;
-
-const CustomSkeleton = styled(Skeleton)`
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-`;
+import { CustomImg, CustomSkeleton } from "./ImageWithLoad.style";
 
 export const ImageWithLoad = ({
   src,
@@ -58,5 +40,3 @@ export const ImageWithLoad = ({
     </Box>
   );
 };
-
-export default ImageWithLoad;

@@ -9,3 +9,4 @@ export { ScreenLoader } from "./ScreenLoader";
 export { SearchBox } from "./SearchBox";
 export { SliderInput } from "./SliderInput";
 export { ProjectItem } from "./ProjectItem";
+export { LockButton } from "./LockButton";

@@ -216,10 +216,6 @@ export const PropertyBar = (props) => {
             ),
           })}
           enableReinitialize
-          validate={(values) => {
-            console.log(values);
-            return {};
-          }}
           onSubmit={handleApply}
         >
           {(formProps) => (

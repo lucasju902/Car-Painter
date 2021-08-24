@@ -1,32 +1,6 @@
 import React, { useCallback } from "react";
-import styled from "styled-components/macro";
-import { spacing } from "@material-ui/system";
-import {
-  Slider,
-  Tooltip,
-  Box,
-  Typography as MuiTypography,
-  Input,
-  Grid,
-} from "@material-ui/core";
-const Typography = styled(MuiTypography)(spacing);
-const CustomInput = styled(Input)`
-  .MuiInputBase-inputMarginDense {
-    padding-top: 4px;
-    padding-bottom: 5px;
-    width: 50px;
-  }
-`;
-const SliderWrapper = styled(Box)`
-  width: 80px;
-  margin-left: 8px;
-  margin-right: 8px;
-  height: 28px;
-`;
-const Wrapper = styled(Grid)`
-  height: 100%;
-  align-items: center;
-`;
+import { Slider, Tooltip, Box, Grid, Typography } from "components/MaterialUI";
+import { CustomInput, SliderWrapper, Wrapper } from "./SliderInput.style";
 
 export const SliderInput = (props) => {
   const { label, disabled, min, max, value, setValue, step } = props;

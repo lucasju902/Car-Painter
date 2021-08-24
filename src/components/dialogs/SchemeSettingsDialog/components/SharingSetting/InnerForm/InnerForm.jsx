@@ -48,13 +48,16 @@ export const InnerForm = React.memo(
     );
 
     const handleNewUserChange = useCallback(
-      (user) => {
+      (userID) => {
+        let foundUser = unInvitedUsers.find(
+          (item) => item.id === parseInt(userID)
+        );
         setFieldValue(
           `newUser`,
-          user
+          foundUser
             ? {
-                user_id: user.id,
-                user: user,
+                user_id: foundUser.id,
+                user: foundUser,
                 scheme_id: schemeID,
                 accepted: 0,
                 editable: 0,
@@ -62,7 +65,7 @@ export const InnerForm = React.memo(
             : null
         );
       },
-      [schemeID]
+      [schemeID, unInvitedUsers]
     );
 
     const handleNewUserPermissionChange = useCallback((value) => {
@@ -78,25 +81,18 @@ export const InnerForm = React.memo(
         <CustomDialogContent dividers id="insert-text-dialog-content">
           {isOwner ? (
             <Box display="flex" justifyContent="space-between" mb={5} pr={5}>
-              <CustomAutocomplete
-                options={unInvitedUsers}
-                getOptionLabel={(option) => option.id.toString()}
+              <TextField
+                label="Enter Customer ID"
+                variant="outlined"
+                name="newUser"
+                onChange={(event) => handleNewUserChange(event.target.value)}
                 style={{ width: 200 }}
-                onChange={(event, newValue) => {
-                  handleNewUserChange(newValue);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Enter Customer ID"
-                    variant="outlined"
-                  />
-                )}
               />
               {values.newUser ? (
                 <Box
                   display="flex"
                   justifyContent="space-between"
+                  alignItems="center"
                   flexGrow={1}
                   ml={5}
                 >

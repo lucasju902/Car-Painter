@@ -11,22 +11,14 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  IconButton,
 } from "@material-ui/core";
-import {
-  ExpandMore as ExpandMoreIcon,
-  Link as LinkIcon,
-  LinkOff as LinkOfficon,
-} from "@material-ui/icons";
+import { LockButton } from "components/common";
+import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 const CustomeTextField = styled(TextField)`
   .MuiInputBase-input {
     height: 2rem;
   }
-`;
-const CustomIconButton = styled(IconButton)`
-  margin: 0 5px;
-  height: 50px;
 `;
 
 export const SizeProperty = React.memo((props) => {
@@ -239,16 +231,11 @@ export const SizeProperty = React.memo((props) => {
             )}
             {AllowedLayerTypes.includes("layer_data.width") &&
             AllowedLayerTypes.includes("layer_data.height") ? (
-              <CustomIconButton
+              <LockButton
                 disabled={!editable}
+                locked={values.layer_data.sizeLocked || pressingShiftKey}
                 onClick={() => toggleLayerDataField("sizeLocked")}
-              >
-                {values.layer_data.sizeLocked || pressingShiftKey ? (
-                  <LinkIcon />
-                ) : (
-                  <LinkOfficon />
-                )}
-              </CustomIconButton>
+              />
             ) : (
               <></>
             )}
@@ -329,16 +316,11 @@ export const SizeProperty = React.memo((props) => {
             )}
             {AllowedLayerTypes.includes("layer_data.scaleX") &&
             AllowedLayerTypes.includes("layer_data.scaleY") ? (
-              <CustomIconButton
+              <LockButton
                 disabled={!editable}
+                locked={values.layer_data.sizeLocked || pressingShiftKey}
                 onClick={() => toggleLayerDataField("sizeLocked")}
-              >
-                {values.layer_data.sizeLocked || pressingShiftKey ? (
-                  <LinkIcon />
-                ) : (
-                  <LinkOfficon />
-                )}
-              </CustomIconButton>
+              />
             ) : (
               <></>
             )}
@@ -415,16 +397,11 @@ export const SizeProperty = React.memo((props) => {
             )}
             {AllowedLayerTypes.includes("layer_data.innerRadius") &&
             AllowedLayerTypes.includes("layer_data.outerRadius") ? (
-              <CustomIconButton
+              <LockButton
                 disabled={!editable}
                 onClick={() => toggleLayerDataField("sizeLocked")}
-              >
-                {values.layer_data.sizeLocked || pressingShiftKey ? (
-                  <LinkIcon />
-                ) : (
-                  <LinkOfficon />
-                )}
-              </CustomIconButton>
+                locked={values.layer_data.sizeLocked || pressingShiftKey}
+              />
             ) : (
               <></>
             )}
