@@ -30,6 +30,7 @@ import {
 } from "redux/reducers/layerReducer";
 import { setMessage } from "redux/reducers/messageReducer";
 import SchemeService from "services/schemeService";
+import { getNameFromUploadFileName } from "helper";
 
 const Button = styled(MuiButton)(spacing);
 
@@ -49,12 +50,7 @@ const CustomGridListTile = styled(GridListTile)`
 const CustomDialogContent = styled(DialogContent)`
   width: 600px;
 `;
-const CustomImg = styled.img`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  object-fit: contain;
-`;
+
 const DeleteButton = styled(IconButton)`
   color: #ccc;
 `;
@@ -77,18 +73,7 @@ export const UploadDialog = React.memo((props) => {
   const increaseData = useCallback(() => {
     setLimit(limit + step);
   }, [setLimit, limit]);
-  const getNameFromFileName = useCallback(
-    (file_name) => {
-      let temp = file_name.substring(
-        file_name.lastIndexOf("uploads/") + "uploads/".length,
-        file_name.lastIndexOf(".")
-      );
-      if (temp.indexOf(user.id.toString()) === 0)
-        return temp.slice(user.id.toString().length + 1);
-      return temp;
-    },
-    [user.id]
-  );
+
   const handleDropZoneChange = useCallback(
     (files_up) => {
       console.log(files_up);
@@ -174,10 +159,13 @@ export const UploadDialog = React.memo((props) => {
                 >
                   <ImageWithLoad
                     src={`${config.assetsURL}/${uploadItem.file_name}`}
-                    alt={getNameFromFileName(uploadItem.file_name)}
+                    alt={getNameFromUploadFileName(uploadItem.file_name, user)}
                   />
                   <GridListTileBar
-                    title={getNameFromFileName(uploadItem.file_name)}
+                    title={getNameFromUploadFileName(
+                      uploadItem.file_name,
+                      user
+                    )}
                     actionIcon={
                       <DeleteButton
                         onClick={(event) =>
@@ -203,8 +191,9 @@ export const UploadDialog = React.memo((props) => {
       <ConfirmDialog
         text={
           uploadToDelete
-            ? `Are you sure to delete "${getNameFromFileName(
-                uploadToDelete.file_name
+            ? `Are you sure to delete "${getNameFromUploadFileName(
+                uploadToDelete.file_name,
+                user
               )}"?`
             : ""
         }

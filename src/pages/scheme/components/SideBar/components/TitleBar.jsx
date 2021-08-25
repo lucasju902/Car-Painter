@@ -5,13 +5,14 @@ import { DialogTypes } from "constant";
 import styled from "styled-components/macro";
 
 import { Box, IconButton, TextField } from "@material-ui/core";
-import { ShortCutsDialog } from "components/dialogs";
+import { ShortCutsDialog, SchemeSettingsDialog } from "components/dialogs";
 import { LightTooltip } from "components/common";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import {
   Save as SaveIcon,
   SettingsBackupRestore as BackUpIcon,
+  Settings as SettingsIcon,
 } from "@material-ui/icons";
 
 import { updateScheme } from "redux/reducers/schemeReducer";
@@ -25,7 +26,7 @@ const NameInput = styled(TextField)`
 `;
 
 export const TitleBar = React.memo((props) => {
-  const { onBack } = props;
+  const { editable, onBack } = props;
 
   const dispatch = useDispatch();
 
@@ -75,7 +76,7 @@ export const TitleBar = React.memo((props) => {
         value={name}
         onChange={handleNameChange}
         onKeyDown={handleNameKeyDown}
-        width={currentScheme && name !== currentScheme.name ? "158px" : "250px"}
+        width={currentScheme && name !== currentScheme.name ? "108px" : "200px"}
         inputProps={{ maxLength: "254" }}
       />
       <Box display="flex">
@@ -107,10 +108,20 @@ export const TitleBar = React.memo((props) => {
             <CustomIcon icon={faQuestion} size="xs" />
           </IconButton>
         </LightTooltip>
+        <LightTooltip title="Settings" arrow>
+          <IconButton ml={2} onClick={() => setDialog(DialogTypes.SETTINGS)}>
+            <SettingsIcon />
+          </IconButton>
+        </LightTooltip>
       </Box>
 
       <ShortCutsDialog
         open={dialog === DialogTypes.SHORTCUTS}
+        onCancel={() => setDialog(null)}
+      />
+      <SchemeSettingsDialog
+        editable={editable}
+        open={dialog === DialogTypes.SETTINGS}
         onCancel={() => setDialog(null)}
       />
     </Box>

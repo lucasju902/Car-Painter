@@ -188,6 +188,7 @@ export const DrawerBar = React.memo(
     const frameSize = useSelector((state) => state.boardReducer.frameSize);
     const zoom = useSelector((state) => state.boardReducer.zoom);
     const basePaints = useSelector((state) => state.basePaintReducer.list);
+    const user = useSelector((state) => state.authReducer.user);
 
     const handleModeChange = useCallback(
       (value) => {
@@ -419,7 +420,10 @@ export const DrawerBar = React.memo(
         <LogoDialog
           open={dialog === DialogTypes.LOGO}
           logos={logoList}
+          uploads={uploadList}
+          user={user}
           onOpenLogo={handleOpenLogo}
+          onOpenUpload={handleOpenUpload}
           onCancel={() => setDialog(null)}
         />
         <UploadDialog

@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components/macro";
 import { useDispatch, useSelector } from "react-redux";
-import { PaintingGuides, DialogTypes } from "constant";
+import { PaintingGuides } from "constant";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -18,29 +18,18 @@ import {
   Undo as UndoIcon,
   Redo as RedoIcon,
   KeyboardArrowUp as ArrowUpIcon,
-  Settings as SettingsIcon,
 } from "@material-ui/icons";
 import { ChevronsLeft, ChevronsRight } from "react-feather";
 
 import { LightTooltip } from "components/common";
-import { ZoomPopover, SchemeSettingsDialog } from "components/dialogs";
+import { ZoomPopover } from "components/dialogs";
 
-import { setMessage } from "redux/reducers/messageReducer";
 import {
   setZoom,
   historyActionBack,
   historyActionUp,
   setShowProperties,
 } from "redux/reducers/boardReducer";
-import {
-  updateScheme,
-  createSharedUser,
-  updateSharedUserItem,
-  deleteSharedUserItem,
-  createFavoriteScheme,
-  deleteFavoriteItem,
-  deleteScheme,
-} from "redux/reducers/schemeReducer";
 
 const Typography = styled(MuiTypography)(spacing);
 const ToggleButton = styled(MuiToggleButton)(spacing);
@@ -87,18 +76,6 @@ export const Toolbar = React.memo((props) => {
   const showProperties = useSelector(
     (state) => state.boardReducer.showProperties
   );
-  const currentScheme = useSelector((state) => state.schemeReducer.current);
-  const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
-  const userList = useSelector((state) => state.userReducer.list);
-  const currentUser = useSelector((state) => state.authReducer.user);
-  const favoriteSchemeList = useSelector(
-    (state) => state.schemeReducer.favoriteList
-  );
-  const favroiteScheme = useMemo(
-    () =>
-      favoriteSchemeList.find((item) => item.scheme_id === currentScheme.id),
-    [favoriteSchemeList]
-  );
 
   const handleToggleProperties = useCallback(() => {
     dispatch(setShowProperties(!showProperties));
@@ -136,118 +113,6 @@ export const Toolbar = React.memo((props) => {
   const handleZoom = useCallback(
     (value) => {
       dispatch(setZoom(value));
-    },
-    [dispatch]
-  );
-
-  const handleApplyProjectSettings = useCallback(
-    (guide_data) => {
-      dispatch(
-        updateScheme({
-          ...currentScheme,
-          guide_data: guide_data,
-        })
-      );
-      setDialog(null);
-    },
-    [dispatch, currentScheme, setDialog]
-  );
-  const handleApplySharingSetting = useCallback(
-    (data) => {
-      console.log(data);
-      let count = 0;
-      if (data.newUser && data.newUser.editable >= 0) {
-        count += 1;
-        dispatch(
-          createSharedUser(
-            {
-              user_id: data.newUser.user_id,
-              scheme_id: data.newUser.scheme_id,
-              accepted: data.newUser.accepted,
-              editable: data.newUser.editable,
-            },
-            () => {
-              dispatch(
-                setMessage({
-                  message: "Shared Project successfully!",
-                  type: "success",
-                })
-              );
-            }
-          )
-        );
-      }
-      for (let sharedUser of data.sharedUsers) {
-        if (sharedUser.editable === -1) {
-          dispatch(
-            deleteSharedUserItem(sharedUser.id, () => {
-              if (!count)
-                dispatch(
-                  setMessage({
-                    message: "Applied Sharing Setting successfully!",
-                    type: "success",
-                  })
-                );
-              count += 1;
-            })
-          );
-        } else {
-          dispatch(
-            updateSharedUserItem(
-              sharedUser.id,
-              {
-                editable: sharedUser.editable,
-              },
-              () => {
-                if (!count)
-                  dispatch(
-                    setMessage({
-                      message: "Applied Sharing Setting successfully!",
-                      type: "success",
-                    })
-                  );
-                count += 1;
-              }
-            )
-          );
-        }
-      }
-
-      setDialog(null);
-    },
-    [dispatch, setDialog]
-  );
-
-  const handleCreateFavorite = useCallback(
-    (user_id, scheme_id, callback) => {
-      dispatch(
-        createFavoriteScheme(
-          {
-            user_id,
-            scheme_id,
-          },
-          callback
-        )
-      );
-    },
-    [dispatch]
-  );
-
-  const handleRemoveFavorite = useCallback(
-    (favoriteID, callback) => {
-      dispatch(deleteFavoriteItem(favoriteID, callback));
-    },
-    [dispatch]
-  );
-  const handleSaveName = useCallback(
-    (schemeID, name) => {
-      dispatch(updateScheme({ id: schemeID, name }, true, false));
-    },
-    [dispatch]
-  );
-  const handleDeleteProject = useCallback(
-    (schemeID, callback) => {
-      dispatch(deleteScheme(schemeID, callback));
     },
     [dispatch]
   );
@@ -307,11 +172,6 @@ export const Toolbar = React.memo((props) => {
               </LightTooltip>
             </ToggleButton>
           </ToggleButtonGroup>
-          <LightTooltip title="Settings" arrow>
-            <IconButton ml={2} onClick={() => setDialog(DialogTypes.SETTINGS)}>
-              <SettingsIcon />
-            </IconButton>
-          </LightTooltip>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
           <Button variant="outlined" onClick={onDownloadTGA}>
@@ -360,23 +220,6 @@ export const Toolbar = React.memo((props) => {
           </LightTooltip>
         </Box>
       </Box>
-
-      <SchemeSettingsDialog
-        scheme={currentScheme}
-        editable={editable}
-        favoriteID={favroiteScheme ? favroiteScheme.id : null}
-        currentUser={currentUser}
-        sharedUsers={sharedUsers}
-        userList={userList}
-        open={dialog === DialogTypes.SETTINGS}
-        onApplyGuideSettings={handleApplyProjectSettings}
-        onApplySharingSetting={handleApplySharingSetting}
-        onRemoveFavorite={handleRemoveFavorite}
-        onAddFavorite={handleCreateFavorite}
-        onRename={handleSaveName}
-        onDelete={handleDeleteProject}
-        onCancel={() => setDialog(null)}
-      />
     </Wrapper>
   );
 });

@@ -104,7 +104,7 @@ export const SideBar = (props) => {
   return (
     <Box display="flex" flexDirection="column">
       <TitleWrapper px={3}>
-        <TitleBar onBack={onBack} />
+        <TitleBar editable={editable} onBack={onBack} />
       </TitleWrapper>
       <Wrapper display="flex">
         <DrawerBar

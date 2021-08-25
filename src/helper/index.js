@@ -233,3 +233,13 @@ export const reduceString = (text, limit) => {
   if (text.length <= limit) return text;
   return text.slice(0, limit) + "...";
 };
+
+export const getNameFromUploadFileName = (file_name, user) => {
+  let temp = file_name.substring(
+    file_name.lastIndexOf("uploads/") + "uploads/".length,
+    file_name.lastIndexOf(".")
+  );
+  if (temp.indexOf(user.id.toString()) === 0)
+    return temp.slice(user.id.toString().length + 1);
+  return temp;
+};
