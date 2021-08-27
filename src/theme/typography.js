@@ -1,5 +1,6 @@
 const typography = {
   fontFamily: [
+    "CircularXXWeb-Regular",
     "Inter",
     "-apple-system",
     "BlinkMacSystemFont",

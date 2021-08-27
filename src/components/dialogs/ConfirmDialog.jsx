@@ -13,7 +13,7 @@ export const ConfirmDialog = React.memo((props) => {
   const { text, open, onCancel, onConfirm } = props;
 
   return (
-    <Dialog aria-labelledby="confirm-title" open={open}>
+    <Dialog aria-labelledby="confirm-title" open={open} onClose={onCancel}>
       <DialogTitle id="confirm-title">Confirm</DialogTitle>
       <DialogContent dividers>
         <Typography variant="body1">{text}</Typography>

@@ -8,6 +8,7 @@ export const ImageWithLoad = ({
   ImageComponent,
   minHeight = "100%",
   minWidth = "100%",
+  justifyContent = "center",
   ...props
 }) => {
   const [loaded, setLoaded] = useState(false);
@@ -18,7 +19,7 @@ export const ImageWithLoad = ({
       minHeight={minHeight}
       minWidth={minWidth}
       display="flex"
-      justifyContent="center"
+      justifyContent={justifyContent}
       alignItems="center"
     >
       {ImageComponent ? (

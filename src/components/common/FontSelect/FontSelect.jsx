@@ -28,6 +28,7 @@ export const FontSelect = (props) => {
             src={`${config.assetsURL}/${font.font_preview}`}
             alt={font.font_name}
             minHeight="20px"
+            justifyContent="flex-start"
           />
         );
       }}
@@ -39,6 +40,7 @@ export const FontSelect = (props) => {
             src={`${config.assetsURL}/${font.font_preview}`}
             alt={font.font_name}
             minHeight="20px"
+            justifyContent="flex-start"
           />
         </MenuItem>
       ))}

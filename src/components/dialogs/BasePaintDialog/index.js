@@ -1,0 +1,1 @@
+export { BasePaintDialog } from "./BasePaintDialog";

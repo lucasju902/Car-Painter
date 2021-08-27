@@ -19,7 +19,7 @@ const Message = () => {
   return (
     <Snackbar
       open={message.msg ? true : false}
-      autoHideDuration={5000}
+      autoHideDuration={3000}
       onClose={handleClose}
       anchorOrigin={{
         vertical: "top",

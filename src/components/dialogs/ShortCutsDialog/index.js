@@ -1,0 +1,1 @@
+export { ShortCutsDialog } from "./ShortCutsDialog";

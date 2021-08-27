@@ -55,7 +55,6 @@ export const GuidesSetting = React.memo((props) => {
           .test("color-validation", "Incorrect Color Format", colorValidator),
       })}
       validate={(values) => {
-        console.log(values);
         return {};
       }}
       onSubmit={onApply}

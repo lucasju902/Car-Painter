@@ -1,0 +1,1 @@
+export { GeneralSetting } from "./GeneralSetting";

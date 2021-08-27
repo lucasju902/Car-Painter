@@ -1,0 +1,1 @@
+export { TextDialog } from "./TextDialog";

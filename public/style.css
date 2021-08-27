@@ -1,0 +1,75 @@
+/*
+ *
+ * INSTRUCTIONS
+ *
+ * Copy the Legal Disclaimer and the @font-faces statements to your regular CSS file.
+ * The font file(s) should be placed relative to the regular CSS file.
+ *
+ */
+
+/*
+ * Legal Disclaimer for Web licence
+ *
+ * Licence to use webfonts for displaying dynamic text on designated website domains.
+ *
+ * Should the license page views limit be exceeded the license holder will be required to contact Lineto.com for an upgrade.
+ * 
+ * It is strictly prohibited to rename the font and to download or use these fonts in any other media. 
+ * 
+ * These Web fonts are licensed exclusively for the use on the following domain(s) and their subdomains:
+ *
+ * For use on:
+ * tradingpaints.com, up to 5m monthly page views
+ * Developer email: steve@luvender.com
+ * Upgrade from <1m to <5m monthly page views
+ *
+ */
+
+/* complete */
+
+@font-face {
+  font-family: "CircularXXWeb-Regular";
+  src: url("./fonts/CircularXXWeb-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "CircularXXWeb-Regular";
+  src: url("./fonts/CircularXXWeb-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "CircularXXWeb-Bold";
+  src: url("./fonts/CircularXXWeb-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "CircularXXWeb-Bold";
+  src: url("./fonts/CircularXXWeb-Bold.woff2") format("woff2");
+}
+
+/* subset */
+
+@font-face {
+  font-family: "CircularXXSub-RegularSubset";
+  src: url("./fonts/CircularXXSub-RegularSubset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "CircularXXSub-RegularSubset";
+  src: url("./fonts/CircularXXSub-RegularSubset.woff") format("woff");
+}
+
+@font-face {
+  font-family: "CircularXXSub-BoldSubset";
+  src: url("./fonts/CircularXXSub-BoldSubset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "CircularXXSub-BoldSubset";
+  src: url("./fonts/CircularXXSub-BoldSubset.woff") format("woff");
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

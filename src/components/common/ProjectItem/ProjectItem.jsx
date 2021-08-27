@@ -71,6 +71,18 @@ export const ProjectItem = (props) => {
     onAccept(sharedID);
     handleActionMenuClose();
   };
+  const handleDelete = () => {
+    setDeleteMessage(
+      `Are you sure to ${
+        shared && !accepted
+          ? "reject"
+          : shared && accepted
+          ? "remove"
+          : "delete"
+      } "${scheme.name}"?`
+    );
+    handleActionMenuClose();
+  };
 
   const schemeThumbnailURL = (id) => {
     return `${config.assetsURL}/scheme_thumbnails/${id}.png`;
@@ -151,19 +163,7 @@ export const ProjectItem = (props) => {
             {onAccept && <MenuItem onClick={handleAccept}>Accept</MenuItem>}
 
             {onDelete && (
-              <MenuItem
-                onClick={() =>
-                  setDeleteMessage(
-                    `Are you sure to ${
-                      shared && !accepted
-                        ? "reject"
-                        : shared && accepted
-                        ? "remove"
-                        : "delete"
-                    } "${scheme.name}"?`
-                  )
-                }
-              >
+              <MenuItem onClick={handleDelete}>
                 {shared && !accepted
                   ? "Reject"
                   : shared && accepted

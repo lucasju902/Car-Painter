@@ -12,6 +12,8 @@ import {
 import {
   Alert as MuiAlert,
   Autocomplete as MuiAutocomplete,
+  ToggleButton as MuiToggleButton,
+  ToggleButtonGroup as MuiToggleButtonGroup,
 } from "@material-ui/lab";
 import { spacing } from "@material-ui/system";
 
@@ -27,3 +29,5 @@ export const Typography = styled(MuiTypography)(spacing);
 export const Grid = styled(MuiGrid)(spacing);
 export const CircularProgress = styled(MuiCircularProgress)(spacing);
 export const Select = styled(MuiSelect)(spacing);
+export const ToggleButton = styled(MuiToggleButton)(spacing);
+export const ToggleButtonGroup = styled(MuiToggleButtonGroup)(spacing);

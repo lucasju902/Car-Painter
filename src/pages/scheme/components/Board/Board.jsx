@@ -3,16 +3,15 @@ import useInterval from "react-useinterval";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 
-import styled from "styled-components/macro";
-import { spacing } from "@material-ui/system";
-import { Box, IconButton as MuiIconButton } from "@material-ui/core";
+import { MouseModes, LayerTypes, DefaultLayer, PaintingGuides } from "constant";
 import {
-  RotateLeft as RotateLeftIcon,
-  RotateRight as RotateRightIcon,
-} from "@material-ui/icons";
+  getRelativePointerPosition,
+  removeDuplicatedPointFromEnd,
+} from "helper";
 
-import { TransformerComponent } from "components/konva";
+import { Box } from "@material-ui/core";
 import { LightTooltip, ScreenLoader } from "components/common";
+import { RotationButton, RotateLeftIcon, RotateRightIcon } from "./Board.style";
 import {
   PaintingGuideTop,
   PaintingGuideCarMask,
@@ -26,6 +25,7 @@ import {
   LogosAndTexts,
   Shapes,
 } from "./Layers";
+import { TransformerComponent } from "components/konva";
 
 import {
   setFrameSizeToMax,
@@ -43,20 +43,6 @@ import {
   DrawingStatus,
   setLoadedStatus,
 } from "redux/reducers/layerReducer";
-import { MouseModes, LayerTypes, DefaultLayer, PaintingGuides } from "constant";
-import {
-  getRelativePointerPosition,
-  removeDuplicatedPointFromEnd,
-} from "helper";
-
-const IconButton = styled(MuiIconButton)(spacing);
-const RotationButton = styled(IconButton)`
-  background: black;
-  border-radius: 0;
-  &:hover {
-    background: #444;
-  }
-`;
 
 export const Board = ({
   wrapperWidth,

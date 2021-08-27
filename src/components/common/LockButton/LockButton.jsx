@@ -4,7 +4,7 @@ import { CustomIconButton, LinkIcon, LinkOfficon } from "./LockButton.style";
 export const LockButton = ({ locked, ...props }) => {
   return (
     <CustomIconButton {...props} locked={locked}>
-      {locked ? <LinkIcon /> : <LinkOfficon />}
+      {locked === "true" ? <LinkIcon /> : <LinkOfficon />}
     </CustomIconButton>
   );
 };
