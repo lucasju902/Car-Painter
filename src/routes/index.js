@@ -6,8 +6,8 @@ const Page404 = async(() => import("pages/auth/Page404"));
 const Page500 = async(() => import("pages/auth/Page500"));
 
 // Main components
-const Scheme = async(() => import("pages/Scheme"));
-const Projects = async(() => import("pages/Projects"));
+const Scheme = async(() => import("pages/scheme"));
+const Projects = async(() => import("pages/projects"));
 
 const authRoutes = {
   id: "Auth",
