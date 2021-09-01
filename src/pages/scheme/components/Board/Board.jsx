@@ -3,7 +3,13 @@ import useInterval from "react-useinterval";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 
-import { MouseModes, LayerTypes, DefaultLayer, PaintingGuides } from "constant";
+import {
+  MouseModes,
+  LayerTypes,
+  DefaultLayer,
+  PaintingGuides,
+  DrawingStatus,
+} from "constant";
 import {
   getRelativePointerPosition,
   removeDuplicatedPointFromEnd,
@@ -40,7 +46,6 @@ import {
   updateLayer,
   createShape,
   setDrawingStatus,
-  DrawingStatus,
   setLoadedStatus,
 } from "redux/reducers/layerReducer";
 

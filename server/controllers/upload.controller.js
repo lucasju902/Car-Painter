@@ -67,15 +67,16 @@ class UploadController {
             message: err.message,
           });
         } else {
-          let { userID, schemeID, fileNames } = req.body;
+          let { userID, schemeID, fileNames, newNames } = req.body;
           fileNames = JSON.parse(fileNames);
+          newNames = JSON.parse(newNames);
           let uploads = [];
           for (let fileName of fileNames) {
             uploads.push(
               await UploadService.create({
                 user_id: parseInt(userID),
                 scheme_id: parseInt(schemeID),
-                file_name: `uploads/${userID}_${fileName}`,
+                file_name: `uploads/${newNames[fileName]}`,
               })
             );
           }

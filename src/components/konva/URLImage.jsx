@@ -169,6 +169,12 @@ export const URLImage = ({
     },
     [mathRound2, onChange, onDragEnd]
   );
+  const handleTransformStart = useCallback(
+    (e) => {
+      if (onDragStart) onDragStart();
+    },
+    [onDragStart]
+  );
   const handleTransformEnd = useCallback(
     (e) => {
       if (onChange) {
@@ -209,8 +215,9 @@ export const URLImage = ({
           node.clearCache();
         }
       }
+      if (onDragEnd) onDragEnd();
     },
-    [filterColor, mathRound2, getPixelRatio, onChange]
+    [filterColor, mathRound2, getPixelRatio, onChange, onDragEnd]
   );
 
   return (
@@ -245,6 +252,7 @@ export const URLImage = ({
       }
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
       perfectDrawEnabled={false}
       shadowForStrokeEnabled={false}

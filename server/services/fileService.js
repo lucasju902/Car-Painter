@@ -34,10 +34,11 @@ class FileService {
           cb(null, file.mimetype);
         },
         key: function (req, file, cb) {
-          let { userID } = req.body;
-          if (type === "upload")
-            cb(null, `uploads/${userID}_${file.originalname}`);
-          else cb(null, `scheme_thumbnails/${file.originalname}`);
+          if (type === "upload") {
+            let { newNames } = req.body;
+            newNames = JSON.parse(newNames);
+            cb(null, `uploads/${newNames[file.originalname]}`);
+          } else cb(null, `scheme_thumbnails/${file.originalname}`);
         },
       }),
     }).fields([{ name: "files", maxCount: 3 }]);

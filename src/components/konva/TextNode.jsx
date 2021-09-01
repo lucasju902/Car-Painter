@@ -78,6 +78,12 @@ export const TextNode = ({
     [onChange, onDragEnd]
   );
 
+  const handleTransformStart = useCallback(
+    (e) => {
+      if (onDragStart) onDragStart();
+    },
+    [onDragStart]
+  );
   const handleTransformEnd = useCallback(
     (e) => {
       if (onChange) {
@@ -97,8 +103,9 @@ export const TextNode = ({
           flip: scaleY > 0 ? 0 : 1,
         });
       }
+      if (onDragEnd) onDragEnd();
     },
-    [onChange]
+    [onChange, onDragEnd]
   );
 
   return (
@@ -117,6 +124,7 @@ export const TextNode = ({
       draggable={onChange}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
       perfectDrawEnabled={false}
       shadowForStrokeEnabled={false}

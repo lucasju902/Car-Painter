@@ -51,6 +51,8 @@ import { getCarMakeList } from "redux/reducers/carMakeReducer";
 import { signOut } from "redux/reducers/authReducer";
 import { setMessage } from "redux/reducers/messageReducer";
 
+const tabURLs = ["mine", "shared", "favorite"];
+
 export const Projects = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -169,15 +171,16 @@ export const Projects = () => {
     dispatch(signOut());
   };
   const handleClickTabItem = (tabIndex) => {
-    window.history.replaceState({}, "", `?tab=${tabIndex}`);
+    window.history.replaceState({}, "", tabURLs[tabIndex]);
     setTabValue(tabIndex);
   };
 
   useEffect(() => {
     // Set Tab based on query string
     const url = new URL(window.location.href);
-    const tab = url.searchParams.get("tab");
-    if (tab) setTabValue(parseInt(tab));
+    const pathName = url.pathname.slice(1);
+    const tab = tabURLs.findIndex((item) => item === pathName);
+    if (tab !== -1) setTabValue(parseInt(tab));
 
     // Socket.io Stuffs
     SocketClient.connect();

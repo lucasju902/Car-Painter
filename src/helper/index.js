@@ -237,7 +237,7 @@ export const reduceString = (text, limit) => {
 export const getNameFromUploadFileName = (file_name, user) => {
   let temp = file_name.substring(
     file_name.lastIndexOf("uploads/") + "uploads/".length,
-    file_name.lastIndexOf(".")
+    file_name.indexOf(".")
   );
   if (temp.indexOf(user.id.toString()) === 0)
     return temp.slice(user.id.toString().length + 1);

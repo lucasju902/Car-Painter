@@ -175,6 +175,12 @@ export const GroupedURLImage = ({
     },
     [mathRound2, onChange, onDragEnd]
   );
+  const handleTransformStart = useCallback(
+    (e) => {
+      if (onDragStart) onDragStart();
+    },
+    [onDragStart]
+  );
   const handleTransformEnd = useCallback(
     (e) => {
       if (onChange) {
@@ -217,9 +223,10 @@ export const GroupedURLImage = ({
         } else {
           imageNode.clearCache();
         }
+        if (onDragEnd) onDragEnd();
       }
     },
-    [filterColor, mathRound2, getPixelRatio, onChange]
+    [filterColor, mathRound2, getPixelRatio, onChange, onDragEnd]
   );
 
   return (
@@ -232,6 +239,7 @@ export const GroupedURLImage = ({
       draggable={onChange && editable}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
       onMouseOver={() => props.listening && onHover && onHover(true)}
       onMouseOut={() => props.listening && onHover && onHover(false)}

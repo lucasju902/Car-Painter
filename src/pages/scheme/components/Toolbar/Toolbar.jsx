@@ -16,8 +16,6 @@ import {
   UndoIcon,
   RedoIcon,
   ArrowUpIcon,
-  ChevronsLeft,
-  ChevronsRight,
 } from "./Toolbar.style";
 import { LightTooltip } from "components/common";
 import { ZoomPopover } from "components/dialogs";
@@ -26,7 +24,6 @@ import {
   setZoom,
   historyActionBack,
   historyActionUp,
-  setShowProperties,
 } from "redux/reducers/boardReducer";
 
 export const Toolbar = React.memo((props) => {
@@ -51,13 +48,6 @@ export const Toolbar = React.memo((props) => {
     (state) => state.boardReducer.actionHistory
   );
   const zoom = useSelector((state) => state.boardReducer.zoom);
-  const showProperties = useSelector(
-    (state) => state.boardReducer.showProperties
-  );
-
-  const handleToggleProperties = useCallback(() => {
-    dispatch(setShowProperties(!showProperties));
-  }, [dispatch, showProperties]);
 
   const handleChangePaintingGuides = useCallback(
     (event, newFormats) => {
@@ -190,12 +180,6 @@ export const Toolbar = React.memo((props) => {
             onZoomFit={onZoomFit}
             onClose={handleCloseZoomPoper}
           />
-
-          <LightTooltip title="Toggle Properties" arrow>
-            <IconButton onClick={handleToggleProperties} ml={2}>
-              {showProperties ? <ChevronsRight /> : <ChevronsLeft />}
-            </IconButton>
-          </LightTooltip>
         </Box>
       </Box>
     </Wrapper>

@@ -7,8 +7,9 @@ import {
   DefaultLayer,
   AllowedLayerProps,
   HistoryActions,
+  DrawingStatus,
 } from "constant";
-import { parseLayer, rotatePoint } from "helper";
+import { getNameFromUploadFileName, parseLayer, rotatePoint } from "helper";
 import LayerService from "services/layerService";
 import { setMessage } from "./messageReducer";
 import { pushToActionHistory } from "./boardReducer";
@@ -21,11 +22,6 @@ const initialState = {
   drawingStatus: null,
   loadedStatuses: {},
   loading: false,
-};
-
-export const DrawingStatus = {
-  CLEAR_COMMAND: "CLEAR_COMMAND",
-  ADD_TO_SHAPE: "ADD_TO_SHAPE",
 };
 
 export const slice = createSlice({
@@ -341,10 +337,7 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
           ).map((item) => item.replace("layer_data.", ""))
         ),
         id: upload.id,
-        name: upload.file_name.substring(
-          upload.file_name.lastIndexOf("uploads/") + "uploads/".length,
-          upload.file_name.lastIndexOf(".")
-        ),
+        name: getNameFromUploadFileName(upload.file_name, currentUser),
         rotation: -boardRotate,
         left: position.x,
         top: position.y,

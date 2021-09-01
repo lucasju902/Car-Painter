@@ -17,10 +17,16 @@ import TGA from "utils/tga";
 
 import { Box } from "@material-ui/core";
 
-import { MouseModes, PaintingGuides, DialogTypes, LayerTypes } from "constant";
+import {
+  MouseModes,
+  PaintingGuides,
+  DialogTypes,
+  LayerTypes,
+  DrawingStatus,
+} from "constant";
 import { ScreenLoader } from "components/common";
 import { ConfirmDialog } from "components/dialogs";
-import { Toolbar, Board, SideBar, PropertyBar } from "./components";
+import { Toolbar, Board, SideBar, PropertyBar, BoardGuide } from "./components";
 
 import {
   getScheme,
@@ -43,7 +49,6 @@ import {
   setClipboard as setLayerClipboard,
   cloneLayer,
   setDrawingStatus,
-  DrawingStatus,
   updateListItem as updateLayerListItem,
   deleteListItem as deleteLayerListItem,
   insertToList as insertToLayerList,
@@ -257,7 +262,7 @@ export const Scheme = () => {
   const handleKeyEvent = useCallback(
     (key, event) => {
       // Delete Selected Layer
-      // console.log("KeyEvent: ", key, event);
+      console.log("KeyEvent: ", key, event);
       if (event.target.tagName !== "INPUT" && event.type === "keydown") {
         if (pressedKey !== key) {
           dispatch(setPressedKey(key));
@@ -269,8 +274,17 @@ export const Scheme = () => {
           editable
         ) {
           handleDeleteLayer(currentLayer);
-        } else if (key === "esc" && currentLayer) {
-          dispatch(setCurrentLayer(null));
+        } else if (key === "esc") {
+          if (currentLayer) {
+            dispatch(setCurrentLayer(null));
+          } else if (
+            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+              mouseMode
+            )
+          ) {
+            dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
+            dispatch(setMouseMode(MouseModes.DEFAULT));
+          }
         } else if (event.key === "+" && event.shiftKey) {
           handleZoomIn();
         } else if (event.key === "_" && event.shiftKey) {
@@ -814,7 +828,12 @@ export const Scheme = () => {
               onBack={handleGoBack}
               onChangeHoverJSONItem={setHoveredJSONItem}
             />
-            <Box bgcolor="#282828" overflow="hidden" flexGrow="1">
+            <Box
+              bgcolor="#282828"
+              overflow="hidden"
+              flexGrow="1"
+              position="relative"
+            >
               <Board
                 wrapperWidth={wrapperWidth}
                 wrapperHeight={wrapperHeight}
@@ -830,17 +849,14 @@ export const Scheme = () => {
                 activeTransformerRef={activeTransformerRef}
                 hoveredTransformerRef={hoveredTransformerRef}
               />
+              <BoardGuide />
             </Box>
-            {showProperties ? (
-              <PropertyBar
-                stageRef={stageRef}
-                editable={editable}
-                onCloneLayer={handleCloneLayer}
-                onDeleteLayer={handleDeleteLayer}
-              />
-            ) : (
-              <></>
-            )}
+            <PropertyBar
+              stageRef={stageRef}
+              editable={editable}
+              onCloneLayer={handleCloneLayer}
+              onDeleteLayer={handleDeleteLayer}
+            />
           </Box>
           <Toolbar
             editable={editable}

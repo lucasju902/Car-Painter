@@ -79,6 +79,12 @@ export const Shape = ({
     },
     [offsetsFromStroke, onChange, onDragEnd]
   );
+  const handleTransformStart = useCallback(
+    (e) => {
+      if (onDragStart) onDragStart();
+    },
+    [onDragStart]
+  );
   const handleTransformEnd = useCallback(
     (e) => {
       if (onChange) {
@@ -158,9 +164,10 @@ export const Shape = ({
             ).map((item) => item.replace("layer_data.", ""))
           )
         );
+        if (onDragEnd) onDragEnd();
       }
     },
-    [type, offsetsFromStroke, layer_data, points, onChange]
+    [type, offsetsFromStroke, layer_data, points, onChange, onDragEnd]
   );
 
   useEffect(() => {
@@ -188,6 +195,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -210,6 +218,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -233,6 +242,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -257,6 +267,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -280,6 +291,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -303,6 +315,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -326,6 +339,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -350,6 +364,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -374,6 +389,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -398,6 +414,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -423,6 +440,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}

@@ -54,6 +54,11 @@ export const DialogTypes = {
   SETTINGS: "SETTINGS",
 };
 
+export const DrawingStatus = {
+  CLEAR_COMMAND: "CLEAR_COMMAND",
+  ADD_TO_SHAPE: "ADD_TO_SHAPE",
+};
+
 export const DefaultLayer = {
   upload_id: 0,
   layer_visible: 1,

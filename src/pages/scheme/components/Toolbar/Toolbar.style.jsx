@@ -6,9 +6,8 @@ import {
   Redo as RedoIcon,
   KeyboardArrowUp as ArrowUpIcon,
 } from "@material-ui/icons";
-import { ChevronsLeft, ChevronsRight } from "react-feather";
 
-export { UndoIcon, RedoIcon, ArrowUpIcon, ChevronsLeft, ChevronsRight };
+export { UndoIcon, RedoIcon, ArrowUpIcon };
 
 export const Wrapper = styled.div`
   width: 100%;
