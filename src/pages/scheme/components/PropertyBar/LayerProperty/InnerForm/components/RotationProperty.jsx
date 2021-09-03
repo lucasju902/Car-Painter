@@ -36,6 +36,7 @@ export const RotationProperty = React.memo((props) => {
     touched,
     values,
     onLayerDataUpdate,
+    onLayerDataMultiUpdate,
   } = props;
   const layerDataProperties = ["rotation", "flip", "flop"];
   const [expanded, setExpanded] = useState(true);
@@ -88,6 +89,34 @@ export const RotationProperty = React.memo((props) => {
     [currentLayer, rotateAroundCenter]
   );
 
+  const handleToggleFlop = useCallback(() => {
+    const newFlop = values.layer_data.flop ? 0 : 1;
+    const rot = (values.layer_data.rotation / 180) * Math.PI;
+    onLayerDataMultiUpdate({
+      left:
+        values.layer_data.left +
+        (newFlop ? 1 : -1) * Math.cos(rot) * values.layer_data.width,
+      top:
+        values.layer_data.top +
+        (newFlop ? 1 : -1) * Math.sin(rot) * values.layer_data.width,
+      flop: newFlop,
+    });
+  }, [onLayerDataMultiUpdate, values.layer_data]);
+
+  const handleToggleFlip = useCallback(() => {
+    const newFlip = values.layer_data.flip ? 0 : 1;
+    const rot = (values.layer_data.rotation / 180) * Math.PI;
+    onLayerDataMultiUpdate({
+      left:
+        values.layer_data.left +
+        (newFlip ? -1 : 1) * Math.sin(rot) * values.layer_data.height,
+      top:
+        values.layer_data.top +
+        (newFlip ? 1 : -1) * Math.cos(rot) * values.layer_data.height,
+      flip: newFlip,
+    });
+  }, [onLayerDataMultiUpdate, values.layer_data]);
+
   if (
     layerDataProperties.every(
       (value) => !AllowedLayerTypes.includes("layer_data." + value)
@@ -125,9 +154,7 @@ export const RotationProperty = React.memo((props) => {
               </Typography>
               <IconButton
                 disabled={!editable}
-                onClick={() =>
-                  onLayerDataUpdate("flop", values.layer_data.flop ? 0 : 1)
-                }
+                onClick={handleToggleFlop}
                 size="small"
               >
                 {values.layer_data.flop ? (
@@ -157,9 +184,7 @@ export const RotationProperty = React.memo((props) => {
               </Typography>
               <IconButton
                 disabled={!editable}
-                onClick={() =>
-                  onLayerDataUpdate("flip", values.layer_data.flip ? 0 : 1)
-                }
+                onClick={handleToggleFlip}
                 size="small"
               >
                 {values.layer_data.flip ? (

@@ -69,6 +69,7 @@ import {
   dataURItoBlob,
   addImageProcess,
   getZoomedCenterPosition,
+  mathRound2,
 } from "helper";
 import SchemeService from "services/schemeService";
 import { getUserList } from "redux/reducers/userReducer";
@@ -106,7 +107,9 @@ export const Scheme = () => {
     useSelector((state) => state.carMakeReducer.current)
   );
   const schemeLoaded = useSelector((state) => state.schemeReducer.loaded);
-  const currentLayer = useSelector((state) => state.layerReducer.current);
+  const [currentLayer, currentLayerRef] = useReducerRef(
+    useSelector((state) => state.layerReducer.current)
+  );
   const clipboardLayer = useSelector((state) => state.layerReducer.clipboard);
   const loadedStatuses = useSelector(
     (state) => state.layerReducer.loadedStatuses
@@ -462,6 +465,66 @@ export const Scheme = () => {
 
   const takeScreenshot = useCallback(
     async (isPNG = true) => {
+      if (currentLayerRef.current) {
+        const selectedNode = stageRef.current.findOne(
+          "." + currentLayerRef.current.id
+        );
+        const nodeScaleX = selectedNode.scaleX();
+        const nodeScaleY = selectedNode.scaleY();
+        selectedNode.scaleX(nodeScaleX > 0 ? 1 : -1);
+        selectedNode.scaleY(nodeScaleY > 0 ? 1 : -1);
+
+        const nodeWidth = mathRound2(
+          Math.max(1, selectedNode.width() * Math.abs(nodeScaleX))
+        );
+        const nodeHeight = mathRound2(
+          Math.max(1, selectedNode.height() * Math.abs(nodeScaleY))
+        );
+        const nodeX = mathRound2(selectedNode.x());
+        const nodeY = mathRound2(selectedNode.y());
+        const nodeRotation = mathRound2(selectedNode.rotation()) || 0;
+
+        if (
+          nodeX !== currentLayerRef.current.layer_data.left ||
+          nodeY !== currentLayerRef.current.layer_data.top ||
+          nodeWidth !== currentLayerRef.current.layer_data.width ||
+          nodeHeight !== currentLayerRef.current.layer_data.height ||
+          nodeRotation !== currentLayerRef.current.layer_data.rotation
+        ) {
+          const xyScale = Math.abs(
+            Math.abs(mathRound2(nodeScaleY)) !== 1 ? nodeScaleY : nodeScaleX
+          );
+          let shadowBlur = selectedNode.shadowBlur
+            ? mathRound2(selectedNode.shadowBlur() * xyScale)
+            : 0;
+          dispatch(
+            updateLayer({
+              ...currentLayerRef.current,
+              layer_data: {
+                ...currentLayerRef.current.layer_data,
+                left: nodeX,
+                top: nodeY,
+                // set minimal value
+                width: nodeWidth,
+                height: nodeHeight,
+                rotation: nodeRotation,
+                flop: nodeScaleX > 0 ? 0 : 1,
+                flip: nodeScaleY > 0 ? 0 : 1,
+                shadowBlur: shadowBlur,
+                shadowOffsetX: mathRound2(
+                  currentLayerRef.current.layer_data.shadowOffsetX *
+                    Math.abs(nodeScaleX)
+                ),
+                shadowOffsetY: mathRound2(
+                  currentLayerRef.current.layer_data.shadowOffsetY *
+                    Math.abs(nodeScaleY)
+                ),
+              },
+            })
+          );
+        }
+        dispatch(setCurrentLayer(null));
+      }
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
       const targetWidth =
@@ -574,6 +637,7 @@ export const Scheme = () => {
       baseLayerRef.current,
       mainLayerRef.current,
       carMaskLayerRef.current,
+      currentLayerRef.current,
     ]
   );
 

@@ -47,6 +47,48 @@ export const URLImage = ({
     return 1;
   }, []);
 
+  const setImgFromSVG = useCallback(
+    async (src, width, height) => {
+      let canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const v = await Canvg.from(
+        ctx,
+        src + `?timestamp=${new Date().toISOString()}`,
+        {
+          enableRedraw: true,
+        }
+      );
+      let originWidth = v.documentElement.node.width.baseVal.value;
+      let originHeight = v.documentElement.node.height.baseVal.value;
+      if (originWidth && originHeight && originWidth > 200) {
+        originHeight = (originHeight * 200) / originWidth;
+        originWidth = 200;
+      }
+      v.resize(
+        width || originWidth || 200,
+        height || originHeight || 200,
+        "none"
+      );
+      await v.render();
+      setImage(canvas);
+    },
+    [setImage]
+  );
+
+  const applyFilterColor = useCallback(() => {
+    if (shapeRef.current) {
+      if (filterColor && filterColor.length) {
+        shapeRef.current.cache({
+          pixelRatio: getPixelRatio(shapeRef.current),
+          imageSmoothingEnabled: true,
+        });
+        // shapeRef.current.getLayer().batchDraw();
+      } else {
+        shapeRef.current.clearCache();
+      }
+    }
+  }, [shapeRef, filterColor]);
+
   useEffect(() => {
     if (loadedStatus !== false && loadedStatus !== true && onLoadLayer && id)
       onLoadLayer(id, false);
@@ -72,6 +114,18 @@ export const URLImage = ({
     }
   }, [filterColor]);
 
+  useEffect(async () => {
+    if (
+      image &&
+      props.width &&
+      props.height &&
+      src.toLowerCase().includes(".svg")
+    ) {
+      await setImgFromSVG(src, props.width, props.height);
+      applyFilterColor();
+    }
+  }, [props.width, props.height, filterColor]);
+
   const handleLoad = useCallback(async () => {
     let originWidth =
       !allowFit ||
@@ -89,20 +143,8 @@ export const URLImage = ({
     let width = props.width || originWidth;
     let height = props.height || originHeight;
 
-    if (
-      src.toLowerCase().includes(".svg") &&
-      (!imageRef.current.width || !imageRef.current.height)
-    ) {
-      let canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const v = await Canvg.from(ctx, src, {
-        enableRedraw: true,
-      });
-      width = width || v.documentElement.node.width.baseVal.value || 200;
-      height = height || v.documentElement.node.height.baseVal.value || 200;
-      v.resize(width, height, "none");
-      await v.render();
-      setImage(canvas);
+    if (src.toLowerCase().includes(".svg")) {
+      await setImgFromSVG(src, width, height);
     } else {
       setImage(imageRef.current);
     }
@@ -116,13 +158,8 @@ export const URLImage = ({
       });
     }
 
-    if (filterColor && filterColor.length) {
-      shapeRef.current.cache({
-        pixelRatio: getPixelRatio(shapeRef.current),
-        imageSmoothingEnabled: true,
-      });
-      // shapeRef.current.getLayer().batchDraw();
-    }
+    applyFilterColor();
+
     if (tellSize) {
       tellSize({
         width: width,
@@ -141,6 +178,8 @@ export const URLImage = ({
     setImage,
     getPixelRatio,
     mathRound2,
+    setImgFromSVG,
+    applyFilterColor,
   ]);
   const loadImage = useCallback(async () => {
     const img = new window.Image();
@@ -205,19 +244,18 @@ export const URLImage = ({
             layer_data.shadowOffsetY * Math.abs(scaleY)
           ),
         });
-        if (filterColor && filterColor.length) {
-          node.cache({
-            pixelRatio: getPixelRatio(shapeRef.current),
-            imageSmoothingEnabled: true,
-          });
-          // node.getLayer().batchDraw();
-        } else {
-          node.clearCache();
-        }
+        applyFilterColor();
       }
       if (onDragEnd) onDragEnd();
     },
-    [filterColor, mathRound2, getPixelRatio, onChange, onDragEnd]
+    [
+      filterColor,
+      mathRound2,
+      getPixelRatio,
+      onChange,
+      onDragEnd,
+      applyFilterColor,
+    ]
   );
 
   return (

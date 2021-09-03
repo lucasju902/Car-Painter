@@ -97,6 +97,20 @@ export const LayerProperty = (props) => {
     },
     [dispatch, currentLayer]
   );
+  const handleLayerDataMultiUpdate = useCallback(
+    (updatedValues) => {
+      dispatch(
+        updateLayer({
+          ...currentLayer,
+          layer_data: {
+            ...currentLayer.layer_data,
+            ...updatedValues,
+          },
+        })
+      );
+    },
+    [dispatch, currentLayer]
+  );
   const toggleLayerDataField = useCallback(
     (field) => {
       dispatch(
@@ -224,6 +238,7 @@ export const LayerProperty = (props) => {
             onClone={handleClone}
             onDelete={handleDelete}
             onLayerDataUpdate={handleLayerDataUpdate}
+            onLayerDataMultiUpdate={handleLayerDataMultiUpdate}
           />
         )}
       </Formik>

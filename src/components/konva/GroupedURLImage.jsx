@@ -52,6 +52,48 @@ export const GroupedURLImage = ({
     return 1;
   }, []);
 
+  const setImgFromSVG = useCallback(
+    async (src, width, height) => {
+      let canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const v = await Canvg.from(
+        ctx,
+        src + `?timestamp=${new Date().toISOString()}`,
+        {
+          enableRedraw: true,
+        }
+      );
+      let originWidth = v.documentElement.node.width.baseVal.value;
+      let originHeight = v.documentElement.node.height.baseVal.value;
+      if (originWidth && originHeight && originWidth > 200) {
+        originHeight = (originHeight * 200) / originWidth;
+        originWidth = 200;
+      }
+      v.resize(
+        width || originWidth || 200,
+        height || originHeight || 200,
+        "none"
+      );
+      await v.render();
+      setImage(canvas);
+    },
+    [setImage]
+  );
+
+  const applyFilterColor = useCallback(() => {
+    if (imageshapeRef.current) {
+      if (filterColor && filterColor.length) {
+        imageshapeRef.current.cache({
+          pixelRatio: getPixelRatio(imageshapeRef.current),
+          imageSmoothingEnabled: true,
+        });
+        // imageshapeRef.current.getLayer().batchDraw();
+      } else {
+        imageshapeRef.current.clearCache();
+      }
+    }
+  }, [imageshapeRef, filterColor]);
+
   useEffect(() => {
     if (loadedStatus !== false && loadedStatus !== true && onLoadLayer && id)
       onLoadLayer(id, false);
@@ -77,6 +119,18 @@ export const GroupedURLImage = ({
     }
   }, [filterColor]);
 
+  useEffect(async () => {
+    if (
+      image &&
+      props.width &&
+      props.height &&
+      src.toLowerCase().includes(".svg")
+    ) {
+      await setImgFromSVG(src, props.width, props.height);
+      applyFilterColor();
+    }
+  }, [props.width, props.height, filterColor]);
+
   const handleLoad = useCallback(async () => {
     let originWidth =
       !allowFit ||
@@ -94,21 +148,8 @@ export const GroupedURLImage = ({
     let width = props.width || originWidth;
     let height = props.height || originHeight;
 
-    if (
-      src.toLowerCase().includes(".svg") &&
-      (!imageRef.current.width || !imageRef.current.height)
-    ) {
-      let canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const v = await Canvg.from(ctx, src, {
-        enableRedraw: true,
-      });
-      console.log(v);
-      width = width || v.documentElement.node.width.baseVal.value || 200;
-      height = height || v.documentElement.node.height.baseVal.value || 200;
-      v.resize(width, height, "none");
-      await v.render();
-      setImage(canvas);
+    if (src.toLowerCase().includes(".svg")) {
+      await setImgFromSVG(src, width, height);
     } else {
       setImage(imageRef.current);
     }
@@ -122,13 +163,8 @@ export const GroupedURLImage = ({
       });
     }
 
-    if (filterColor && filterColor.length) {
-      imageshapeRef.current.cache({
-        pixelRatio: getPixelRatio(imageshapeRef.current),
-        imageSmoothingEnabled: true,
-      });
-      // imageshapeRef.current.getLayer().batchDraw();
-    }
+    applyFilterColor();
+
     if (tellSize) {
       tellSize({
         width: width,
@@ -145,8 +181,10 @@ export const GroupedURLImage = ({
     onLoadLayer,
     onChange,
     setImage,
+    setImgFromSVG,
     getPixelRatio,
     mathRound2,
+    applyFilterColor,
   ]);
   const loadImage = useCallback(async () => {
     const img = new window.Image();
@@ -214,19 +252,19 @@ export const GroupedURLImage = ({
           paddingX: mathRound2((layer_data.paddingX || 0) * Math.abs(scaleX)),
           paddingY: mathRound2((layer_data.paddingY || 0) * Math.abs(scaleY)),
         });
-        if (filterColor && filterColor.length) {
-          imageNode.cache({
-            pixelRatio: getPixelRatio(imageNode),
-            imageSmoothingEnabled: true,
-          });
-          // imageNode.getLayer().batchDraw();
-        } else {
-          imageNode.clearCache();
-        }
+        applyFilterColor();
+
         if (onDragEnd) onDragEnd();
       }
     },
-    [filterColor, mathRound2, getPixelRatio, onChange, onDragEnd]
+    [
+      filterColor,
+      mathRound2,
+      getPixelRatio,
+      onChange,
+      onDragEnd,
+      applyFilterColor,
+    ]
   );
 
   return (

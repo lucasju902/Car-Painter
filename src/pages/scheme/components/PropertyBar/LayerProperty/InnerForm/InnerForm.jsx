@@ -32,6 +32,7 @@ export const InnerForm = React.memo(
     onClone,
     onDelete,
     onLayerDataUpdate,
+    onLayerDataMultiUpdate,
     ...formProps
   }) => {
     const checkLayerDataDirty = useCallback(
@@ -115,6 +116,7 @@ export const InnerForm = React.memo(
           toggleField={toggleField}
           checkLayerDataDirty={checkLayerDataDirty}
           onLayerDataUpdate={onLayerDataUpdate}
+          onLayerDataMultiUpdate={onLayerDataMultiUpdate}
         />
         <SkewProperty
           {...formProps}

@@ -92,6 +92,7 @@ export const TransformerComponent = ({
         rotateEnabled={!hoveredTransform && pressedKey !== "h"}
         boundBoxFunc={boundBoxFunc}
         borderStroke={hoveredTransform ? "red" : null}
+        centeredScaling={true}
       />
     );
   return <></>;
