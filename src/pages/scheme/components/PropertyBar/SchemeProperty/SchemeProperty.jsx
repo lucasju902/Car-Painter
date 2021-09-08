@@ -175,12 +175,19 @@ export const SchemeProperty = (props) => {
         onChange={handleTabChange}
         aria-label="Project Settings Tab"
       >
-        <StyledTab label="General" {...a11yProps(0)} />
-        <StyledTab label="Painting Guides" {...a11yProps(1)} />
+        <StyledTab label="Painting Guides" {...a11yProps(0)} />
+        <StyledTab label="General" {...a11yProps(1)} />
         <StyledTab label="Sharing" {...a11yProps(2)} />
       </StyledTabs>
       <Box>
         <TabPanel value={tabValue} index={0}>
+          <GuidesSetting
+            editable={editable}
+            guide_data={currentScheme.guide_data}
+            onApply={handleApplyGuideSettings}
+          />
+        </TabPanel>
+        <TabPanel value={tabValue} index={1}>
           <GeneralSetting
             editable={editable}
             scheme={currentScheme}
@@ -192,13 +199,6 @@ export const SchemeProperty = (props) => {
             onAddFavorite={handleCreateFavorite}
             onRename={handleSaveName}
             onDelete={handleDeleteProject}
-          />
-        </TabPanel>
-        <TabPanel value={tabValue} index={1}>
-          <GuidesSetting
-            editable={editable}
-            guide_data={currentScheme.guide_data}
-            onApply={handleApplyGuideSettings}
           />
         </TabPanel>
         <TabPanel value={tabValue} index={2}>

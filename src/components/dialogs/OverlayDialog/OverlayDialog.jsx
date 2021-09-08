@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
+import { useSelector } from "react-redux";
 import config from "config";
 
 import {
@@ -9,7 +10,12 @@ import {
   DialogActions,
   GridListTileBar,
 } from "components/MaterialUI";
-import { ImageWithLoad, Loader, SearchBox } from "components/common";
+import {
+  ImageWithLoad,
+  SVGImageWithLoad,
+  Loader,
+  SearchBox,
+} from "components/common";
 import {
   CustomInfiniteScroll,
   CustomGridList,
@@ -22,6 +28,9 @@ export const OverlayDialog = React.memo((props) => {
   const [limit, setLimit] = useState(step);
   const [search, setSearch] = useState("");
   const { overlays, onCancel, open, onOpenOverlay } = props;
+  const guide_data = useSelector(
+    (state) => state.schemeReducer.current.guide_data
+  );
 
   const increaseData = useCallback(() => {
     setLimit(limit + step);
@@ -59,10 +68,23 @@ export const OverlayDialog = React.memo((props) => {
                   cols={1}
                   onClick={() => onOpenOverlay(shape)}
                 >
-                  <ImageWithLoad
-                    src={`${config.assetsURL}/${shape.overlay_thumb}`}
-                    alt={shape.name}
-                  />
+                  {shape.overlay_thumb.includes(".svg") ? (
+                    <SVGImageWithLoad
+                      src={`${config.assetsURL}/${shape.overlay_thumb}`}
+                      alt={shape.name}
+                      options={{
+                        color: guide_data.default_shape_color,
+                        opacity: guide_data.default_shape_opacity || 1,
+                        stroke: guide_data.default_shape_scolor,
+                        strokeWidth: guide_data.default_shape_stroke || 0,
+                      }}
+                    />
+                  ) : (
+                    <ImageWithLoad
+                      src={`${config.assetsURL}/${shape.overlay_thumb}`}
+                      alt={shape.name}
+                    />
+                  )}
                   <GridListTileBar
                     title={shape.name}
                     subtitle={shape.description}

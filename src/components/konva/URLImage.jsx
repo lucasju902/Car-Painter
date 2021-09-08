@@ -1,14 +1,15 @@
-import Canvg from "canvg";
 import React, {
   useRef,
   useState,
   useEffect,
-  useMemo,
   useCallback,
+  useMemo,
 } from "react";
-import Konva from "konva";
-import { mathRound2, hexToRgba } from "helper";
 import { Image } from "react-konva";
+import Konva from "konva";
+import Canvg from "canvg";
+import { mathRound2, hexToRgba } from "helper";
+import { replaceColors, svgToURL, urlToString } from "helper/svg";
 
 export const URLImage = ({
   id,
@@ -20,6 +21,12 @@ export const URLImage = ({
   loadedStatus,
   onLoadLayer,
   tellSize,
+  stroke,
+  strokeWidth,
+  shadowBlur,
+  shadowColor,
+  shadowOffsetX,
+  shadowOffsetY,
   onSelect,
   onDblClick,
   onChange,
@@ -31,68 +38,39 @@ export const URLImage = ({
   const imageRef = useRef(null);
   const shapeRef = useRef();
   const [image, setImage] = useState(null);
-  const filters = useMemo(
-    () => (filterColor && filterColor.length ? [Konva.Filters.RGBA] : []),
-    [filterColor]
+  const isSVG = useMemo(() => src.toLowerCase().includes(".svg"), [src]);
+  const allowFilter = useMemo(
+    () => !isSVG && filterColor && filterColor.length,
+    [filterColor, isSVG]
   );
+  const filters = useMemo(() => (allowFilter ? [Konva.Filters.RGBA] : []), [
+    allowFilter,
+  ]);
 
-  const getPixelRatio = useCallback((node) => {
-    if (imageRef.current) {
-      return Math.max(
-        1,
-        imageRef.current.width / node.width(),
-        imageRef.current.height / node.height()
-      );
-    }
-    return 1;
-  }, []);
-
-  const setImgFromSVG = useCallback(
-    async (src, width, height) => {
-      let canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const v = await Canvg.from(
-        ctx,
-        src + `?timestamp=${new Date().toISOString()}`,
-        {
-          enableRedraw: true,
-        }
-      );
-      let originWidth = v.documentElement.node.width.baseVal.value;
-      let originHeight = v.documentElement.node.height.baseVal.value;
-      if (originWidth && originHeight && originWidth > 200) {
-        originHeight = (originHeight * 200) / originWidth;
-        originWidth = 200;
+  const getPixelRatio = useCallback(
+    (node) => {
+      if (imageRef.current) {
+        if (imageRef.current.width && imageRef.current.height)
+          return Math.max(
+            1,
+            imageRef.current.width / node.width(),
+            imageRef.current.height / node.height()
+          );
+        return 5;
       }
-      v.resize(
-        width || originWidth || 200,
-        height || originHeight || 200,
-        "none"
-      );
-      await v.render();
-      setImage(canvas);
+      return 1;
     },
-    [setImage]
+    [frameSize]
   );
 
-  const applyFilterColor = useCallback(() => {
-    if (shapeRef.current) {
-      if (filterColor && filterColor.length) {
-        shapeRef.current.cache({
-          pixelRatio: getPixelRatio(shapeRef.current),
-          imageSmoothingEnabled: true,
-        });
-        // shapeRef.current.getLayer().batchDraw();
-      } else {
-        shapeRef.current.clearCache();
-      }
-    }
-  }, [shapeRef, filterColor]);
-
-  useEffect(() => {
+  useEffect(async () => {
     if (loadedStatus !== false && loadedStatus !== true && onLoadLayer && id)
       onLoadLayer(id, false);
-    loadImage();
+    if (isSVG) {
+      await setImgFromSVG(src);
+    } else {
+      loadImage(src + `?timestamp=${new Date().toISOString()}`);
+    }
     return () => {
       if (imageRef.current) {
         imageRef.current.removeEventListener("load", handleLoad);
@@ -100,31 +78,27 @@ export const URLImage = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (shapeRef.current) {
-      if (filterColor && filterColor.length) {
-        shapeRef.current.cache({
-          pixelRatio: getPixelRatio(shapeRef.current),
-          imageSmoothingEnabled: true,
-        });
-        // shapeRef.current.getLayer().batchDraw();
-      } else {
-        shapeRef.current.clearCache();
-      }
-    }
-  }, [filterColor]);
-
   useEffect(async () => {
-    if (
-      image &&
-      props.width &&
-      props.height &&
-      src.toLowerCase().includes(".svg")
-    ) {
-      await setImgFromSVG(src, props.width, props.height);
-      applyFilterColor();
+    if (image && isSVG) {
+      await setImgFromSVG(src);
+      applyCaching();
     }
-  }, [props.width, props.height, filterColor]);
+  }, [stroke, strokeWidth, filterColor]);
+
+  useEffect(() => {
+    if (image) {
+      applyCaching();
+    }
+  }, [shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY]);
+
+  const applyCaching = useCallback(() => {
+    if (shapeRef.current) {
+      shapeRef.current.cache({
+        pixelRatio: getPixelRatio(shapeRef.current),
+        imageSmoothingEnabled: true,
+      });
+    }
+  }, [shapeRef, filterColor]);
 
   const handleLoad = useCallback(async () => {
     let originWidth =
@@ -143,8 +117,14 @@ export const URLImage = ({
     let width = props.width || originWidth;
     let height = props.height || originHeight;
 
-    if (src.toLowerCase().includes(".svg")) {
-      await setImgFromSVG(src, width, height);
+    if (isSVG && navigator.userAgent.indexOf("Firefox") != -1) {
+      let canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const v = await Canvg.from(ctx, imageRef.current.src, {
+        enableRedraw: true,
+      });
+      await v.render();
+      setImage(canvas);
     } else {
       setImage(imageRef.current);
     }
@@ -158,7 +138,7 @@ export const URLImage = ({
       });
     }
 
-    applyFilterColor();
+    applyCaching();
 
     if (tellSize) {
       tellSize({
@@ -178,17 +158,38 @@ export const URLImage = ({
     setImage,
     getPixelRatio,
     mathRound2,
-    setImgFromSVG,
-    applyFilterColor,
+    applyCaching,
   ]);
-  const loadImage = useCallback(async () => {
-    const img = new window.Image();
-    // img.src = src;
-    img.src = src + `?timestamp=${new Date().toISOString()}`;
-    img.crossOrigin = "anonymous";
-    imageRef.current = img;
-    imageRef.current.addEventListener("load", handleLoad);
-  }, [handleLoad]);
+
+  const loadImage = useCallback(
+    async (imageSource) => {
+      const img = new window.Image();
+      img.src = imageSource;
+      img.crossOrigin = "anonymous";
+      imageRef.current = img;
+      imageRef.current.addEventListener("load", handleLoad);
+    },
+    [handleLoad]
+  );
+
+  const setImgFromSVG = useCallback(
+    async (src) => {
+      let svgString = await urlToString(
+        src + `?timestamp=${new Date().toISOString()}`
+      );
+      if (filterColor) {
+        svgString = replaceColors(svgString, {
+          color: filterColor,
+          stroke: stroke,
+          strokeWidth: strokeWidth * 5,
+        });
+      }
+
+      loadImage(svgToURL(svgString));
+    },
+    [loadImage, src, filterColor, stroke, strokeWidth]
+  );
+
   const handleDragStart = useCallback(
     (e) => {
       onSelect();
@@ -244,18 +245,11 @@ export const URLImage = ({
             layer_data.shadowOffsetY * Math.abs(scaleY)
           ),
         });
-        applyFilterColor();
+        applyCaching();
       }
       if (onDragEnd) onDragEnd();
     },
-    [
-      filterColor,
-      mathRound2,
-      getPixelRatio,
-      onChange,
-      onDragEnd,
-      applyFilterColor,
-    ]
+    [filterColor, mathRound2, getPixelRatio, onChange, onDragEnd, applyCaching]
   );
 
   return (
@@ -267,27 +261,15 @@ export const URLImage = ({
       onTap={onSelect}
       ref={shapeRef}
       draggable={onChange}
-      filters={filters.length ? filters : null}
-      red={
-        filterColor && filterColor.length && hexToRgba(filterColor)
-          ? hexToRgba(filterColor).r
-          : null
-      }
-      green={
-        filterColor && filterColor.length && hexToRgba(filterColor)
-          ? hexToRgba(filterColor).g
-          : null
-      }
-      blue={
-        filterColor && filterColor.length && hexToRgba(filterColor)
-          ? hexToRgba(filterColor).b
-          : null
-      }
-      alpha={
-        filterColor && filterColor.length && hexToRgba(filterColor)
-          ? hexToRgba(filterColor).a / 255
-          : null
-      }
+      shadowBlur={shadowBlur}
+      shadowColor={shadowColor}
+      shadowOffsetX={shadowOffsetX}
+      shadowOffsetY={shadowOffsetY}
+      red={allowFilter ? hexToRgba(filterColor).r : null}
+      green={allowFilter ? hexToRgba(filterColor).g : null}
+      blue={allowFilter ? hexToRgba(filterColor).b : null}
+      alpha={allowFilter ? hexToRgba(filterColor).a / 255 : null}
+      filters={allowFilter ? filters : null}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onTransformStart={handleTransformStart}

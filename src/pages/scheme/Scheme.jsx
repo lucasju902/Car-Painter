@@ -265,7 +265,7 @@ export const Scheme = () => {
   const handleKeyEvent = useCallback(
     (key, event) => {
       // Delete Selected Layer
-      console.log("KeyEvent: ", key, event);
+      // console.log("KeyEvent: ", key, event);
       if (event.target.tagName !== "INPUT" && event.type === "keydown") {
         if (pressedKey !== key) {
           dispatch(setPressedKey(key));
@@ -465,7 +465,12 @@ export const Scheme = () => {
 
   const takeScreenshot = useCallback(
     async (isPNG = true) => {
-      if (currentLayerRef.current) {
+      if (
+        currentLayerRef.current &&
+        ![LayerTypes.BASE, LayerTypes.CAR].includes(
+          currentLayerRef.current.layer_type
+        )
+      ) {
         const selectedNode = stageRef.current.findOne(
           "." + currentLayerRef.current.id
         );

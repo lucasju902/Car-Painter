@@ -1,6 +1,7 @@
 export { asyncComponent } from "./Async";
 export { AuthGuard } from "./AuthGuard";
-export { ImageWithLoad } from "../common/ImageWithLoad";
+export { ImageWithLoad } from "./ImageWithLoad";
+export { SVGImageWithLoad } from "./SVGImageWithLoad";
 export { ColorPickerInput } from "./ColorPickerInput";
 export { FontSelect } from "./FontSelect";
 export { LightTooltip } from "./LightTooltip";

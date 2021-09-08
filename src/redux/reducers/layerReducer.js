@@ -226,6 +226,8 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
   try {
     const boardRotate = getState().boardReducer.boardRotate;
     const currentUser = getState().authReducer.user;
+    const guide_data = getState().schemeReducer.current.guide_data;
+
     const AllowedLayerTypes = AllowedLayerProps[LayerTypes.OVERLAY];
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
@@ -245,6 +247,11 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
         top: position.y,
         source_file: shape.overlay_file,
         preview_file: shape.overlay_thumb,
+        sizeLocked: false,
+        color: guide_data.default_shape_color,
+        opacity: guide_data.default_shape_opacity || 1,
+        scolor: guide_data.default_shape_scolor,
+        stroke: guide_data.default_shape_stroke || 0,
       }),
     });
     SocketClient.emit("client-create-layer", {

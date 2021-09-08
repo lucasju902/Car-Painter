@@ -1,0 +1,1 @@
+export { SVGImageWithLoad } from "./SVGImageWithLoad";

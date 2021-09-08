@@ -274,9 +274,9 @@ export const AllowedLayerProps = {
     "layer_data.shadowBlur",
     "layer_data.shadowOffsetX",
     "layer_data.shadowOffsetY",
-    "layer_data.paddingX",
-    "layer_data.paddingY",
-    "layer_data.bgColor",
+    "layer_data.stroke",
+    "layer_data.scolor",
+    "layer_data.strokeType",
   ],
   [LayerTypes.SHAPE]: {
     [MouseModes.RECT]: [

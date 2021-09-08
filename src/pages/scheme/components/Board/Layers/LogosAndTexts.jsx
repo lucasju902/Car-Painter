@@ -90,8 +90,16 @@ export const LogosAndTexts = React.memo((props) => {
               shadowOpacity={layer.layer_data.shadowOpacity}
               shadowOffsetX={shadowOffset.x}
               shadowOffsetY={shadowOffset.y}
-              skewX={layer.layer_data.skewX}
-              skewY={layer.layer_data.skewY}
+              skewX={
+                layer.layer_data.skewX >= 1
+                  ? layer.layer_data.skewX / 10
+                  : layer.layer_data.skewX
+              }
+              skewY={
+                layer.layer_data.skewY >= 1
+                  ? layer.layer_data.skewY / 10
+                  : layer.layer_data.skewY
+              }
               opacity={layer.layer_data.opacity}
               layer_data={layer.layer_data}
               onSelect={() => setCurrentLayer(layer)}
@@ -132,8 +140,16 @@ export const LogosAndTexts = React.memo((props) => {
             strokeEnabled={true}
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
-            skewX={layer.layer_data.skewX}
-            skewY={layer.layer_data.skewY}
+            skewX={
+              layer.layer_data.skewX >= 1
+                ? layer.layer_data.skewX / 10
+                : layer.layer_data.skewX
+            }
+            skewY={
+              layer.layer_data.skewY >= 1
+                ? layer.layer_data.skewY / 10
+                : layer.layer_data.skewY
+            }
             offsetX={0}
             offsetY={0}
             // width={layer.layer_data.width}

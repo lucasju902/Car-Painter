@@ -67,8 +67,16 @@ export const Overlays = React.memo((props) => {
             opacity={layer.layer_data.opacity}
             scaleX={layer.layer_data.flop === 1 ? -1 : 1}
             scaleY={layer.layer_data.flip === 1 ? -1 : 1}
-            skewX={layer.layer_data.skewX}
-            skewY={layer.layer_data.skewY}
+            skewX={
+              layer.layer_data.skewX >= 1
+                ? layer.layer_data.skewX / 10
+                : layer.layer_data.skewX
+            }
+            skewY={
+              layer.layer_data.skewY >= 1
+                ? layer.layer_data.skewY / 10
+                : layer.layer_data.skewY
+            }
             bgColor={layer.layer_data.bgColor}
             paddingX={layer.layer_data.paddingX}
             paddingY={layer.layer_data.paddingY}
@@ -77,6 +85,8 @@ export const Overlays = React.memo((props) => {
             shadowOpacity={layer.layer_data.shadowOpacity}
             shadowOffsetX={shadowOffset.x}
             shadowOffsetY={shadowOffset.y}
+            strokeWidth={layer.layer_data.stroke}
+            stroke={layer.layer_data.scolor}
             onSelect={() => setCurrentLayer(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
