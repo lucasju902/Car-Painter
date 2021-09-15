@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 
-import { AllowedLayerProps, LayerTypes } from "constant";
+import { AllowedLayerProps, LayerTypes, FinishOptions } from "constant";
 
 import {
   Box,
@@ -30,7 +30,7 @@ export const ColorProperty = React.memo((props) => {
     values,
     onLayerDataUpdate,
   } = props;
-  const layerDataProperties = ["color", "blendType"];
+  const layerDataProperties = ["color", "blendType", "finish"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -59,9 +59,11 @@ export const ColorProperty = React.memo((props) => {
           values.layer_type !== LayerTypes.TEXT ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Typography variant="body1" color="textSecondary" mr={2}>
-                  Color
-                </Typography>
+                <Box height="100%" display="flex" alignItems="center">
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Color
+                  </Typography>
+                </Box>
               </Grid>
               <Grid item xs={6}>
                 <ColorPickerInput
@@ -82,9 +84,11 @@ export const ColorProperty = React.memo((props) => {
           {AllowedLayerTypes.includes("layer_data.blendType") ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Typography variant="body1" color="textSecondary" mr={2}>
-                  Blend Type
-                </Typography>
+                <Box height="100%" display="flex" alignItems="center">
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Blend Type
+                  </Typography>
+                </Box>
               </Grid>
               <Grid item xs={6}>
                 <Select
@@ -110,6 +114,44 @@ export const ColorProperty = React.memo((props) => {
                   <MenuItem value="saturation">Saturation</MenuItem>
                   <MenuItem value="luminosity">Luminosity</MenuItem>
                   <MenuItem value="xor">Xor</MenuItem>
+                </Select>
+              </Grid>
+            </Grid>
+          ) : (
+            <></>
+          )}
+          {AllowedLayerTypes.includes("layer_data.finish") ? (
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Box height="100%" display="flex" alignItems="center">
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Finish
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Select
+                  name="layer_data.finish"
+                  variant="outlined"
+                  value={values.layer_data.finish}
+                  disabled={!editable}
+                  onChange={(event) =>
+                    onLayerDataUpdate("finish", event.target.value)
+                  }
+                  fullWidth
+                >
+                  {FinishOptions.map((finishItem, index) => (
+                    <MenuItem value={finishItem.value} key={index}>
+                      <Box
+                        component="span"
+                        bgcolor={finishItem.value}
+                        height="20px"
+                        width="20px"
+                        mr={2}
+                      ></Box>
+                      {finishItem.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </Grid>
             </Grid>

@@ -1,3 +1,9 @@
 export { useStateRef } from "./useStateRef";
 export { useReducerRef } from "./useReducerRef";
+export { useBoardSocket } from "./useBoardSocket";
+export { useGeneralSocket } from "./useGeneralSocket";
+export { useZoom } from "./useZoom";
+export { useCapture } from "./useCapture";
+export { useDrawHelper } from "./useDrawHelper";
 export { withAuthGuard } from "./withAuthGuard";
+export { withKeyEvent } from "./withKeyEvent";

@@ -56,12 +56,10 @@ export function replaceColors(svgString, options) {
 
     // Stroke
     if (options.stroke) element.setAttribute("stroke", options.stroke);
-    else element.setAttribute("stroke", null);
 
     // Stroke Width
     if (options.strokeWidth)
       element.setAttribute("stroke-width", options.strokeWidth);
-    else element.setAttribute("stroke-width", 0);
 
     // Opacity
     if (options.opacity) element.setAttribute("opacity", options.opacity);

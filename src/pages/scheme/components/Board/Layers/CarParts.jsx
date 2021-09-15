@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
-import { LayerTypes } from "constant";
+import { FinishOptions, LayerTypes } from "constant";
 import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
 
 import { URLImage } from "components/konva";
@@ -10,6 +10,7 @@ export const CarParts = React.memo((props) => {
   const {
     layers,
     legacyMode,
+    specMode,
     carMake,
     loadedStatuses,
     handleImageSize,
@@ -43,7 +44,11 @@ export const CarParts = React.memo((props) => {
           key={layer.id}
           id={layer.id}
           src={getCarMakeImage(layer.layer_data.img)}
-          filterColor={layer.layer_data.color}
+          filterColor={
+            specMode
+              ? layer.layer_data.finish || FinishOptions[0].value
+              : layer.layer_data.color
+          }
           listening={false}
           visible={layer.layer_visible ? true : false}
           loadedStatus={loadedStatuses[layer.id]}

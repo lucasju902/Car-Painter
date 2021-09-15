@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { colorValidator } from "helper";
-import { LayerTypes } from "constant";
+import { FinishOptions, LayerTypes } from "constant";
 
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, Grid, Select, MenuItem } from "@material-ui/core";
 import { ColorPickerInput } from "components/common";
 import { TitleBar, PartGroup, DrawerBar } from "./components";
 import {
@@ -22,7 +22,6 @@ export const SideBar = (props) => {
     setDialog,
     editable,
     stageRef,
-    focusBoard,
     hoveredLayerJSON,
     onBack,
     onChangeHoverJSONItem,
@@ -70,6 +69,7 @@ export const SideBar = (props) => {
     },
     [dispatch, currentScheme && currentScheme.id, setColorInput, setColorDirty]
   );
+
   const handleChangeBasePaintColorInput = useCallback(
     (color) => {
       setColorInput(color);
@@ -78,6 +78,7 @@ export const SideBar = (props) => {
     },
     [baseColor, setColorInput, setColorDirty]
   );
+
   const handleApplyBasePaintColor = useCallback(() => {
     let base_color = colorInput;
     if (base_color !== "transparent") {
@@ -86,6 +87,14 @@ export const SideBar = (props) => {
     dispatch(updateScheme({ id: currentScheme.id, base_color }));
     setColorDirty(false);
   }, [dispatch, currentScheme && currentScheme.id, colorInput, setColorDirty]);
+
+  const handleChangeFinishColor = useCallback(
+    (color) => {
+      dispatch(updateScheme({ id: currentScheme.id, finish: color }));
+    },
+    [dispatch, currentScheme && currentScheme.id]
+  );
+
   const handleDoubleClickItem = useCallback(() => {
     dispatch(setShowProperties(true));
   }, [dispatch]);
@@ -100,7 +109,6 @@ export const SideBar = (props) => {
           dialog={dialog}
           setDialog={setDialog}
           stageRef={stageRef}
-          focusBoard={focusBoard}
           editable={editable}
         />
         <LayerWrapper pr={3} pb={2}>
@@ -160,34 +168,70 @@ export const SideBar = (props) => {
             onChangeHoverJSONItem={onChangeHoverJSONItem}
             onDoubleClickItem={handleDoubleClickItem}
             extraChildren={
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <ColorPickerInput
-                  separateValues={true}
-                  valuePicker={pickerValue}
-                  value={colorInput}
-                  disabled={!editable}
-                  onChange={handleChangeBasePaintColor}
-                  onInputChange={handleChangeBasePaintColorInput}
-                />
-                {colorDirty && colorValidator(colorInput) ? (
-                  <ColorApplyButton
-                    onClick={handleApplyBasePaintColor}
-                    variant="outlined"
-                  >
-                    Apply
-                  </ColorApplyButton>
-                ) : !colorValidator(colorInput) ? (
-                  <Typography color="secondary" variant="body2">
-                    Invalid Color
-                  </Typography>
-                ) : (
-                  <></>
-                )}
-              </Box>
+              <>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <ColorPickerInput
+                    separateValues={true}
+                    valuePicker={pickerValue}
+                    value={colorInput}
+                    disabled={!editable}
+                    onChange={handleChangeBasePaintColor}
+                    onInputChange={handleChangeBasePaintColorInput}
+                  />
+                  {colorDirty && colorValidator(colorInput) ? (
+                    <ColorApplyButton
+                      onClick={handleApplyBasePaintColor}
+                      variant="outlined"
+                    >
+                      Apply
+                    </ColorApplyButton>
+                  ) : !colorValidator(colorInput) ? (
+                    <Typography color="secondary" variant="body2">
+                      Invalid Color
+                    </Typography>
+                  ) : (
+                    <></>
+                  )}
+                </Box>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Box display="flex" alignItems="center" height="100%">
+                      <Typography variant="body1" color="textSecondary" mr={2}>
+                        Finish
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Select
+                      name="layer_data.finish"
+                      variant="outlined"
+                      value={currentScheme.finish || FinishOptions[0].value}
+                      disabled={!editable}
+                      onChange={(event) =>
+                        handleChangeFinishColor(event.target.value)
+                      }
+                      fullWidth
+                    >
+                      {FinishOptions.map((finishItem, index) => (
+                        <MenuItem value={finishItem.value} key={index}>
+                          <Box
+                            component="span"
+                            bgcolor={finishItem.value}
+                            height="20px"
+                            width="20px"
+                            mr={2}
+                          ></Box>
+                          {finishItem.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
+                </Grid>
+              </>
             }
           />
         </LayerWrapper>

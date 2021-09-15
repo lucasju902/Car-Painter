@@ -38,7 +38,7 @@ import {
 } from "redux/reducers/layerReducer";
 import { updateScheme } from "redux/reducers/schemeReducer";
 
-import { alphaToHex, getZoomedCenterPosition } from "helper";
+import { alphaToHex, getZoomedCenterPosition, focusBoard } from "helper";
 import { DialogTypes, MouseModes } from "constant";
 
 import {
@@ -176,7 +176,7 @@ const dialog_modes = [
 ];
 
 export const DrawerBar = React.memo(
-  ({ dialog, setDialog, focusBoard, stageRef, editable }) => {
+  ({ dialog, setDialog, stageRef, editable }) => {
     const dispatch = useDispatch();
     const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
     const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -213,7 +213,7 @@ export const DrawerBar = React.memo(
         setDialog(null);
         focusBoard();
       },
-      [dispatch, setDialog, focusBoard, currentScheme && currentScheme.id]
+      [dispatch, setDialog, currentScheme && currentScheme.id]
     );
     const handleOpenOverlay = useCallback(
       (shape) => {
@@ -231,7 +231,6 @@ export const DrawerBar = React.memo(
       [
         dispatch,
         setDialog,
-        focusBoard,
         currentScheme && currentScheme.id,
         getZoomedCenterPosition,
         stageRef,
@@ -255,7 +254,6 @@ export const DrawerBar = React.memo(
       [
         dispatch,
         setDialog,
-        focusBoard,
         currentScheme && currentScheme.id,
         getZoomedCenterPosition,
         stageRef,
@@ -279,7 +277,6 @@ export const DrawerBar = React.memo(
       [
         dispatch,
         setDialog,
-        focusBoard,
         currentScheme && currentScheme.id,
         getZoomedCenterPosition,
         stageRef,
@@ -304,7 +301,6 @@ export const DrawerBar = React.memo(
       [
         dispatch,
         setDialog,
-        focusBoard,
         currentScheme && currentScheme.id,
         getZoomedCenterPosition,
         stageRef,

@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
 import config from "config";
-import { LayerTypes, MouseModes } from "constant";
+import { FinishOptions, LayerTypes, MouseModes } from "constant";
 import { getRelativeShadowOffset } from "helper";
 
 import { GroupedURLImage, TextNode } from "components/konva";
@@ -16,6 +16,7 @@ export const LogosAndTexts = React.memo((props) => {
     fonts,
     frameSize,
     mouseMode,
+    specMode,
     setCurrentLayer,
     boardRotate,
     onChange,
@@ -82,8 +83,23 @@ export const LogosAndTexts = React.memo((props) => {
               boardRotate={boardRotate}
               scaleX={layer.layer_data.flop === 1 ? -1 : 1}
               scaleY={layer.layer_data.flip === 1 ? -1 : 1}
-              shadowColor={layer.layer_data.shadowColor}
-              bgColor={layer.layer_data.bgColor}
+              filterColor={
+                specMode
+                  ? layer.layer_data.finish || FinishOptions[0].value
+                  : null
+              }
+              shadowColor={
+                specMode
+                  ? layer.layer_data.finish || FinishOptions[0].value
+                  : layer.layer_data.shadowColor
+              }
+              bgColor={
+                specMode
+                  ? layer.layer_data.bgColor
+                    ? layer.layer_data.finish || FinishOptions[0].value
+                    : null
+                  : layer.layer_data.bgColor
+              }
               paddingX={layer.layer_data.paddingX}
               paddingY={layer.layer_data.paddingY}
               shadowBlur={layer.layer_data.shadowBlur}
@@ -134,9 +150,17 @@ export const LogosAndTexts = React.memo((props) => {
             loadedStatus={loadedStatuses[layer.id]}
             onFontLoad={onFontLoad}
             fontSize={layer.layer_data.size}
-            fill={layer.layer_data.color}
+            fill={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.color
+            }
             strokeWidth={layer.layer_data.stroke}
-            stroke={layer.layer_data.scolor}
+            stroke={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.scolor
+            }
             strokeEnabled={true}
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
@@ -164,7 +188,11 @@ export const LogosAndTexts = React.memo((props) => {
               (layer.layer_data.scaleY || 1) *
               (layer.layer_data.flip === 1 ? -1 : 1)
             }
-            shadowColor={layer.layer_data.shadowColor}
+            shadowColor={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.shadowColor
+            }
             shadowBlur={layer.layer_data.shadowBlur}
             shadowOpacity={layer.layer_data.shadowOpacity}
             shadowOffsetX={shadowOffset.x}

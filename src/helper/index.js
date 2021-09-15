@@ -1,5 +1,6 @@
 import _ from "lodash";
 import config from "config";
+import TGA from "utils/tga";
 // import validateColor from "validate-color";
 
 export const getDifferenceFromToday = (past_date) => {
@@ -242,4 +243,28 @@ export const getNameFromUploadFileName = (file_name, user) => {
   if (temp.indexOf(user.id.toString()) === 0)
     return temp.slice(user.id.toString().length + 1);
   return temp;
+};
+
+export const downloadTGA = (ctx, width, height, fileName) => {
+  let imageData = ctx.getImageData(0, 0, width, height);
+  var tga = new TGA({
+    width: width,
+    height: height,
+    imageType: TGA.Type.RGB,
+  });
+  tga.setImageData(imageData);
+
+  // get a blob url which can be used to download the file
+  var url = tga.getBlobURL();
+
+  var a = document.createElement("a");
+  a.style = "display: none";
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
+
+export const focusBoard = () => {
+  setTimeout(() => document.activeElement.blur(), 1000);
 };

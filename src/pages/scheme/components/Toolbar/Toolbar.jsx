@@ -24,17 +24,14 @@ import {
   setZoom,
   historyActionBack,
   historyActionUp,
+  setPaintingGuides,
 } from "redux/reducers/boardReducer";
+import { useZoom } from "hooks";
 
 export const Toolbar = React.memo((props) => {
-  const {
-    editable,
-    onZoomIn,
-    onZoomOut,
-    onZoomFit,
-    onChangePaintingGuides,
-    onDownloadTGA,
-  } = props;
+  const { stageRef, onDownloadTGA, onDownloadSpecTGA } = props;
+  const [zoom, onZoomIn, onZoomOut, onZoomFit] = useZoom(stageRef);
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const dispatch = useDispatch();
@@ -47,13 +44,12 @@ export const Toolbar = React.memo((props) => {
   const actionHistory = useSelector(
     (state) => state.boardReducer.actionHistory
   );
-  const zoom = useSelector((state) => state.boardReducer.zoom);
 
   const handleChangePaintingGuides = useCallback(
     (event, newFormats) => {
-      onChangePaintingGuides(newFormats);
+      dispatch(setPaintingGuides(newFormats));
     },
-    [onChangePaintingGuides]
+    [dispatch]
   );
 
   const handleUndoRedo = useCallback(
@@ -142,12 +138,16 @@ export const Toolbar = React.memo((props) => {
           </ToggleButtonGroup>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
-          <Button variant="outlined" onClick={onDownloadTGA}>
+          <Button variant="outlined" onClick={onDownloadSpecTGA} mx={1}>
+            Download Spec TGA
+          </Button>
+          <Button variant="outlined" onClick={onDownloadTGA} mx={1}>
             Download TGA
           </Button>
           <LightTooltip title="Undo" arrow>
             <IconButton
               disabled={actionHistoryIndex === -1}
+              mx={1}
               onClick={() => handleUndoRedo(true)}
             >
               <UndoIcon />
@@ -157,6 +157,7 @@ export const Toolbar = React.memo((props) => {
           <LightTooltip title="Redo" arrow>
             <IconButton
               disabled={actionHistoryIndex === actionHistory.length - 1}
+              mx={1}
               onClick={() => handleUndoRedo(false)}
             >
               <RedoIcon />

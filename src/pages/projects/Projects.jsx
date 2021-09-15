@@ -26,14 +26,10 @@ import {
   AddIcon,
 } from "./Projects.style";
 
-import SocketClient from "utils/socketClient";
-
 import {
   getSchemeList,
   createScheme,
   deleteScheme,
-  updateListItem as updateSchemeListItem,
-  deleteListItem as deleteSchemeListItem,
   cloneScheme,
   getSharedList,
   updateSharedItem,
@@ -50,6 +46,7 @@ import { reset as resetBoardReducer } from "redux/reducers/boardReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 import { signOut } from "redux/reducers/authReducer";
 import { setMessage } from "redux/reducers/messageReducer";
+import { useGeneralSocket } from "hooks";
 
 const tabURLs = ["mine", "shared", "favorite"];
 
@@ -90,6 +87,8 @@ export const Projects = () => {
     () => sharedSchemeList.filter((item) => !item.accepted).length,
     [sharedSchemeList]
   );
+
+  useGeneralSocket();
 
   useEffect(() => {
     dispatch(setMessage({ message: null }));
@@ -181,26 +180,6 @@ export const Projects = () => {
     const pathName = url.pathname.slice(1);
     const tab = tabURLs.findIndex((item) => item === pathName);
     if (tab !== -1) setTabValue(parseInt(tab));
-
-    // Socket.io Stuffs
-    SocketClient.connect();
-
-    SocketClient.on("connect", () => {
-      SocketClient.emit("room", "general"); // Join General room
-    });
-
-    SocketClient.on("client-update-scheme", (response) => {
-      dispatch(updateSchemeListItem(response.data));
-    });
-
-    SocketClient.on("client-delete-scheme", (response) => {
-      console.log("client-delete-scheme: ", response);
-      dispatch(deleteSchemeListItem(response.data.id));
-    });
-
-    return () => {
-      SocketClient.disconnect();
-    };
   }, []);
 
   return (

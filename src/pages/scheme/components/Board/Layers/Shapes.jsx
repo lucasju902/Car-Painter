@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
-import { LayerTypes, MouseModes } from "constant";
+import { FinishOptions, LayerTypes, MouseModes } from "constant";
 import { getRelativeShadowOffset, removeDuplicatedPointFromEnd } from "helper";
 
 import { Shape } from "components/konva";
@@ -14,6 +14,7 @@ export const Shapes = React.memo((props) => {
     setCurrentLayer,
     boardRotate,
     mouseMode,
+    specMode,
     loadedStatuses,
     onChange,
     onHover,
@@ -141,7 +142,11 @@ export const Shapes = React.memo((props) => {
             opacity={layer.layer_data.opacity}
             scaleX={layer.layer_data.flop === 1 ? -1 : 1}
             scaleY={layer.layer_data.flip === 1 ? -1 : 1}
-            shadowColor={layer.layer_data.shadowColor}
+            shadowColor={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.shadowColor
+            }
             shadowBlur={layer.layer_data.shadowBlur}
             shadowOpacity={layer.layer_data.shadowOpacity}
             shadowOffsetX={shadowOffset.x}
@@ -156,9 +161,17 @@ export const Shapes = React.memo((props) => {
                 ? layer.layer_data.skewY / 10
                 : layer.layer_data.skewY
             }
-            fill={layer.layer_data.color}
+            fill={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.color
+            }
             strokeWidth={layer.layer_data.stroke}
-            stroke={layer.layer_data.scolor}
+            stroke={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.scolor
+            }
             strokeEnabled={true}
             globalCompositeOperation={
               layer.layer_data.blendType === "normal"
@@ -201,9 +214,17 @@ export const Shapes = React.memo((props) => {
           innerRadius={Math.abs(drawingLayer.layer_data.innerRadius)}
           outerRadius={Math.abs(drawingLayer.layer_data.outerRadius)}
           numPoints={drawingLayer.layer_data.numPoints}
-          fill={drawingLayer.layer_data.color}
+          fill={
+            specMode
+              ? drawingLayer.layer_data.finish || FinishOptions[0].value
+              : drawingLayer.layer_data.color
+          }
           strokeWidth={drawingLayer.layer_data.stroke}
-          stroke={drawingLayer.layer_data.scolor}
+          stroke={
+            specMode
+              ? drawingLayer.layer_data.finish || FinishOptions[0].value
+              : drawingLayer.layer_data.scolor
+          }
           strokeEnabled={true}
           layer_data={drawingLayer.layer_data}
           perfectDrawEnabled={false}

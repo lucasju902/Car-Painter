@@ -1,19 +1,8 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import useInterval from "react-useinterval";
+import React, { useCallback, useMemo } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  MouseModes,
-  LayerTypes,
-  DefaultLayer,
-  PaintingGuides,
-  DrawingStatus,
-} from "constant";
-import {
-  getRelativePointerPosition,
-  removeDuplicatedPointFromEnd,
-} from "helper";
+import { MouseModes, ViewModes, FinishOptions } from "constant";
 
 import { Box } from "@material-ui/core";
 import { LightTooltip, ScreenLoader } from "components/common";
@@ -23,6 +12,7 @@ import {
   PaintingGuideCarMask,
   PaintingGuideNumber,
   PaintingGuideSponsor,
+  SpecPaintingGuideCarMask,
 } from "./Guides";
 import {
   BasePaints,
@@ -35,8 +25,6 @@ import { TransformerComponent } from "components/konva";
 
 import {
   setFrameSizeToMax,
-  setMouseMode,
-  setPaintingGuides,
   setShowProperties,
   setZoom,
 } from "redux/reducers/boardReducer";
@@ -44,10 +32,9 @@ import { insertToLoadedList as insertToLoadedFontList } from "redux/reducers/fon
 import {
   setCurrent as setCurrentLayer,
   updateLayer,
-  createShape,
-  setDrawingStatus,
   setLoadedStatus,
 } from "redux/reducers/layerReducer";
+import { useDrawHelper } from "hooks";
 
 export const Board = ({
   wrapperWidth,
@@ -65,12 +52,16 @@ export const Board = ({
   hoveredTransformerRef,
 }) => {
   const scaleBy = 1.2;
-  const [prevPosition, setPrevPosition] = useState({});
-  const drawingLayerRef = useRef(null);
-  const prevTick = useRef(0);
-  const currentTick = useRef(0);
-  const [tick, setTick] = useState(0);
-  const [previousGuide, setPreviousGuide] = useState([]);
+  const [
+    drawingLayerRef,
+    onMouseDown,
+    onMouseUp,
+    onMouseMove,
+    onContentMouseDown,
+    onDoubleClick,
+    onLayerDragStart,
+    onLayerDragEnd,
+  ] = useDrawHelper(stageRef);
 
   const dispatch = useDispatch();
 
@@ -82,6 +73,7 @@ export const Board = ({
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
+  const viewMode = useSelector((state) => state.boardReducer.viewMode);
   const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const schemeSaving = useSelector((state) => state.schemeReducer.saving);
@@ -93,253 +85,15 @@ export const Board = ({
   const loadedStatuses = useSelector(
     (state) => state.layerReducer.loadedStatuses
   );
-  const drawingStatus = useSelector(
-    (state) => state.layerReducer.drawingStatus
-  );
 
-  useEffect(() => {
-    switch (drawingStatus) {
-      case DrawingStatus.ADD_TO_SHAPE:
-        if (drawingLayerRef.current) {
-          let layer = {
-            ...drawingLayerRef.current,
-            layer_data: {
-              ...drawingLayerRef.current.layer_data,
-              points: removeDuplicatedPointFromEnd(
-                drawingLayerRef.current.layer_data.points
-              ),
-            },
-          };
-          dispatch(createShape(currentScheme.id, layer));
-          dispatch(setMouseMode(MouseModes.DEFAULT));
-        }
-        break;
-      case DrawingStatus.CLEAR_COMMAND:
-        // setDrawingLayer(null);
-        drawingLayerRef.current = null;
-        dispatch(setDrawingStatus(null));
-        break;
-      default:
-        break;
-    }
-  }, [drawingStatus]);
+  const schemeFinishBase = useMemo(() => {
+    const foundFinish = FinishOptions.find(
+      (item) => item.value === currentScheme.finish
+    );
+    if (foundFinish) return foundFinish.base;
+    return FinishOptions[0].base;
+  }, [currentScheme.finish]);
 
-  useInterval(() => {
-    if (mouseMode !== MouseModes.DEFAULT) {
-      setTick(tick + 1);
-    }
-  }, 50 * (Math.min(currentTick.current - prevTick.current > 4 ? currentTick.current - prevTick.current : (currentTick.current - prevTick.current) / 2, 20) || 1));
-
-  useInterval(() => {
-    if (mouseMode !== MouseModes.DEFAULT) {
-      currentTick.current = currentTick.current + 1;
-    }
-  }, 5);
-
-  const handleMouseDown = useCallback(
-    (e) => {
-      // console.log("Mouse Down");
-      if (mouseMode === MouseModes.DEFAULT) {
-        const clickedOnEmpty = e.target === e.target.getStage();
-        if (clickedOnEmpty && currentLayer) {
-          dispatch(setCurrentLayer(null));
-        }
-      }
-    },
-    [dispatch, mouseMode, currentLayer]
-  );
-  const handleContentMouseDown = useCallback(
-    (e) => {
-      if (mouseMode !== MouseModes.DEFAULT) {
-        const position = getRelativePointerPosition(stageRef.current);
-        if (!drawingLayerRef.current) {
-          let newLayer = {
-            ...DefaultLayer,
-            layer_type: LayerTypes.SHAPE,
-            layer_data: {
-              ...DefaultLayer.layer_data,
-              type: mouseMode,
-              name: mouseMode,
-              left: position.x,
-              top: position.y,
-              color: currentScheme.guide_data.default_shape_color || "#000000",
-              opacity: currentScheme.guide_data.default_shape_opacity || 1,
-              scolor:
-                currentScheme.guide_data.default_shape_scolor || "#000000",
-              stroke: currentScheme.guide_data.default_shape_stroke || 0,
-            },
-          };
-
-          if (
-            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-              mouseMode
-            )
-          ) {
-            newLayer.layer_data.stroke = 5;
-            newLayer.layer_data.points = [0, 0, 0, 0];
-          }
-          if (mouseMode === MouseModes.PEN) {
-            newLayer.layer_data.stroke = 5;
-            newLayer.layer_data.points = [0, 0];
-          }
-          drawingLayerRef.current = newLayer;
-        } else {
-          if (
-            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-              mouseMode
-            )
-          ) {
-            let layer = {
-              ...drawingLayerRef.current,
-              layer_data: {
-                ...drawingLayerRef.current.layer_data,
-                points: removeDuplicatedPointFromEnd(
-                  drawingLayerRef.current.layer_data.points
-                ),
-              },
-            };
-            layer.layer_data.points = layer.layer_data.points.concat([
-              position.x - drawingLayerRef.current.layer_data.left,
-              position.y - drawingLayerRef.current.layer_data.top,
-              position.x - drawingLayerRef.current.layer_data.left,
-              position.y - drawingLayerRef.current.layer_data.top,
-            ]);
-
-            drawingLayerRef.current = layer;
-          }
-        }
-      }
-    },
-    [
-      mouseMode,
-      currentScheme.guide_data,
-      getRelativePointerPosition,
-      drawingLayerRef.current,
-      stageRef.current,
-    ]
-  );
-  const handleMouseMove = useCallback(() => {
-    // console.log("Mouse Move");
-
-    if (mouseMode !== MouseModes.DEFAULT && drawingLayerRef.current) {
-      const position = getRelativePointerPosition(stageRef.current);
-      const width = position.x - drawingLayerRef.current.layer_data.left;
-      const height = position.y - drawingLayerRef.current.layer_data.top;
-      const positionX = position.x - drawingLayerRef.current.layer_data.left;
-      const positionY = position.y - drawingLayerRef.current.layer_data.top;
-      if (
-        drawingLayerRef.current.layer_data.points.length < 2 ||
-        positionX !==
-          drawingLayerRef.current.layer_data.points[
-            drawingLayerRef.current.layer_data.points.length - 2
-          ] ||
-        positionY !==
-          drawingLayerRef.current.layer_data.points[
-            drawingLayerRef.current.layer_data.points.length - 1
-          ]
-      ) {
-        if (
-          currentTick.current - prevTick.current > 1 ||
-          drawingLayerRef.current.layer_data.points.length < 2 ||
-          Math.abs(
-            positionX -
-              drawingLayerRef.current.layer_data.points[
-                drawingLayerRef.current.layer_data.points.length - 2
-              ]
-          ) > 10 ||
-          Math.abs(
-            positionY -
-              drawingLayerRef.current.layer_data.points[
-                drawingLayerRef.current.layer_data.points.length - 1
-              ]
-          ) > 10
-        ) {
-          let layer = {
-            ...drawingLayerRef.current,
-            layer_data: {
-              ...drawingLayerRef.current.layer_data,
-              points: [...drawingLayerRef.current.layer_data.points],
-              width:
-                MouseModes.ELLIPSE !== drawingLayerRef.current.layer_type &&
-                width > 0
-                  ? width
-                  : 0,
-              height:
-                MouseModes.ELLIPSE !== drawingLayerRef.current.layer_type &&
-                height > 0
-                  ? height
-                  : 0,
-              radius: Math.abs(width),
-              innerRadius: Math.abs(width) / 2.5,
-              outerRadius: Math.abs(width),
-            },
-          };
-          if (
-            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-              mouseMode
-            )
-          ) {
-            layer.layer_data.points.splice(-2, 2, positionX, positionY);
-          }
-          if (mouseMode === MouseModes.PEN) {
-            layer.layer_data.points.push(positionX);
-            layer.layer_data.points.push(positionY);
-          }
-          drawingLayerRef.current = layer;
-        }
-      }
-      prevTick.current = currentTick.current;
-    }
-  }, [
-    mouseMode,
-    drawingLayerRef.current,
-    getRelativePointerPosition,
-    stageRef.current,
-    currentTick.current,
-  ]);
-  const handleMouseUp = useCallback(
-    (e) => {
-      // console.log("Mouse Up");
-      if (
-        ![
-          MouseModes.DEFAULT,
-          MouseModes.LINE,
-          MouseModes.ARROW,
-          MouseModes.POLYGON,
-        ].includes(mouseMode)
-      ) {
-        dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
-      }
-      const position = getRelativePointerPosition(stageRef.current);
-      setPrevPosition(position);
-    },
-    [dispatch, mouseMode, getRelativePointerPosition, setPrevPosition]
-  );
-  const handleContentDoubleClick = useCallback(
-    (e) => {
-      const position = getRelativePointerPosition(stageRef.current);
-      if (
-        [
-          MouseModes.DEFAULT,
-          MouseModes.LINE,
-          MouseModes.ARROW,
-          MouseModes.POLYGON,
-        ].includes(mouseMode) &&
-        drawingLayerRef.current &&
-        prevPosition.x === position.x &&
-        prevPosition.y === position.y
-      ) {
-        dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
-      }
-    },
-    [
-      dispatch,
-      mouseMode,
-      getRelativePointerPosition,
-      drawingLayerRef.current,
-      prevPosition,
-    ]
-  );
   const handleZoomStage = useCallback(
     (event) => {
       event.evt.preventDefault();
@@ -436,61 +190,6 @@ export const Board = ({
     [dispatch]
   );
 
-  const showGuideForRepositioning = useCallback(
-    (show = true) => {
-      if (!show) {
-        dispatch(setPaintingGuides([...previousGuide]));
-        setPreviousGuide([]);
-      } else if (!previousGuide.length) {
-        setPreviousGuide([...paintingGuides]);
-        let newPaintingGuides = [...paintingGuides];
-        if (
-          currentScheme.guide_data.show_wireframe &&
-          !newPaintingGuides.includes(PaintingGuides.WIREFRAME)
-        ) {
-          newPaintingGuides.push(PaintingGuides.WIREFRAME);
-        }
-        if (
-          currentScheme.guide_data.show_numberBlocks &&
-          !newPaintingGuides.includes(PaintingGuides.NUMBERBLOCKS)
-        ) {
-          newPaintingGuides.push(PaintingGuides.NUMBERBLOCKS);
-        }
-        if (
-          currentScheme.guide_data.show_sponsor &&
-          !newPaintingGuides.includes(PaintingGuides.SPONSORBLOCKS)
-        ) {
-          newPaintingGuides.push(PaintingGuides.SPONSORBLOCKS);
-        }
-        if (
-          currentScheme.guide_data.show_grid &&
-          !newPaintingGuides.includes(PaintingGuides.GRID)
-        ) {
-          newPaintingGuides.push(PaintingGuides.GRID);
-        }
-        dispatch(setPaintingGuides(newPaintingGuides));
-      }
-    },
-    [dispatch, paintingGuides, previousGuide, setPreviousGuide, currentScheme]
-  );
-  const handleLayerDragStart = useCallback(() => {
-    if (
-      currentScheme.guide_data.show_wireframe ||
-      currentScheme.guide_data.show_numberBlocks ||
-      currentScheme.guide_data.show_sponsor ||
-      currentScheme.guide_data.show_grid
-    )
-      showGuideForRepositioning(true);
-  }, [showGuideForRepositioning, currentScheme]);
-  const handleLayerDragEnd = useCallback(() => {
-    if (
-      currentScheme.guide_data.show_wireframe ||
-      currentScheme.guide_data.show_numberBlocks ||
-      currentScheme.guide_data.show_sponsor ||
-      currentScheme.guide_data.show_grid
-    )
-      showGuideForRepositioning(false);
-  }, [showGuideForRepositioning, currentScheme]);
   const handleDblClickLayer = useCallback(() => {
     dispatch(setShowProperties(true));
   }, [dispatch]);
@@ -512,12 +211,12 @@ export const Board = ({
         <Stage
           width={wrapperWidth}
           height={wrapperHeight}
-          onMousedown={handleMouseDown}
-          onContentMousedown={handleContentMouseDown}
-          onContentMousemove={handleMouseMove}
-          onContentMouseup={handleMouseUp}
-          onDblClick={handleContentDoubleClick}
-          onTouchStart={handleMouseDown}
+          onMousedown={onMouseDown}
+          onTouchStart={onMouseDown}
+          onContentMousedown={onContentMouseDown}
+          onContentMousemove={onMouseMove}
+          onContentMouseup={onMouseUp}
+          onDblClick={onDoubleClick}
           onWheel={handleZoomStage}
           scaleX={zoom || 1}
           scaleY={zoom || 1}
@@ -546,7 +245,18 @@ export const Board = ({
               }
               listening={false}
             />
+            {viewMode === ViewModes.SPEC_VIEW && (
+              <SpecPaintingGuideCarMask
+                legacyMode={currentScheme.legacy_mode}
+                carMake={currentCarMake}
+                loadedStatuses={loadedStatuses}
+                finishBase={schemeFinishBase}
+                handleImageSize={handleImageSize}
+                onLoadLayer={handleLoadLayer}
+              />
+            )}
             <BasePaints
+              specMode={viewMode === ViewModes.SPEC_VIEW}
               legacyMode={currentScheme.legacy_mode}
               carMake={currentCarMake}
               layers={layerList}
@@ -593,6 +303,7 @@ export const Board = ({
             {!currentScheme.guide_data.show_carparts_on_top ? (
               <CarParts
                 layers={layerList}
+                specMode={viewMode === ViewModes.SPEC_VIEW}
                 legacyMode={currentScheme.legacy_mode}
                 carMake={currentCarMake}
                 loadedStatuses={loadedStatuses}
@@ -605,6 +316,7 @@ export const Board = ({
 
             <Overlays
               editable={editable}
+              specMode={viewMode === ViewModes.SPEC_VIEW}
               layers={layerList}
               frameSize={frameSize}
               boardRotate={boardRotate}
@@ -616,12 +328,13 @@ export const Board = ({
               onChange={handleLayerDataChange}
               onHover={handleHoverLayer}
               onLoadLayer={handleLoadLayer}
-              onDragStart={handleLayerDragStart}
-              onDragEnd={handleLayerDragEnd}
+              onDragStart={onLayerDragStart}
+              onDragEnd={onLayerDragEnd}
               onDblClick={handleDblClickLayer}
             />
             <Shapes
               editable={editable}
+              specMode={viewMode === ViewModes.SPEC_VIEW}
               layers={layerList}
               drawingLayer={drawingLayerRef.current}
               boardRotate={boardRotate}
@@ -632,12 +345,13 @@ export const Board = ({
               onChange={handleLayerDataChange}
               onHover={handleHoverLayer}
               onLoadLayer={handleLoadLayer}
-              onDragStart={handleLayerDragStart}
-              onDragEnd={handleLayerDragEnd}
+              onDragStart={onLayerDragStart}
+              onDragEnd={onLayerDragEnd}
               onDblClick={handleDblClickLayer}
             />
             <LogosAndTexts
               editable={editable}
+              specMode={viewMode === ViewModes.SPEC_VIEW}
               layers={layerList}
               fonts={fontList}
               loadedFontList={loadedFontList}
@@ -651,13 +365,14 @@ export const Board = ({
               onFontLoad={handleAddFont}
               onHover={handleHoverLayer}
               onLoadLayer={handleLoadLayer}
-              onDragStart={handleLayerDragStart}
-              onDragEnd={handleLayerDragEnd}
+              onDragStart={onLayerDragStart}
+              onDragEnd={onLayerDragEnd}
               onDblClick={handleDblClickLayer}
             />
             {currentScheme.guide_data.show_carparts_on_top ? (
               <CarParts
                 layers={layerList}
+                specMode={viewMode === ViewModes.SPEC_VIEW}
                 legacyMode={currentScheme.legacy_mode}
                 carMake={currentCarMake}
                 loadedStatuses={loadedStatuses}
@@ -670,6 +385,7 @@ export const Board = ({
           </Layer>
           <Layer ref={carMaskLayerRef} listening={false}>
             <PaintingGuideCarMask
+              specMode={viewMode === ViewModes.SPEC_VIEW}
               legacyMode={currentScheme.legacy_mode}
               carMake={currentCarMake}
               paintingGuides={paintingGuides}

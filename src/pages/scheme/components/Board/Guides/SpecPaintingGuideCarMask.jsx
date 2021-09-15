@@ -1,17 +1,15 @@
 import React, { useCallback, useMemo } from "react";
-import { PaintingGuides } from "constant";
+import { FinishOptions } from "constant";
 
 import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
 import { URLImage } from "components/konva";
 
-export const PaintingGuideCarMask = React.memo((props) => {
+export const SpecPaintingGuideCarMask = React.memo((props) => {
   const {
-    specMode,
+    finishBase = FinishOptions[0].base,
     legacyMode,
-    paintingGuides,
     carMake,
     handleImageSize,
-    guideData,
     loadedStatuses,
     onLoadLayer,
   } = props;
@@ -27,30 +25,24 @@ export const PaintingGuideCarMask = React.memo((props) => {
     [legacyMode, carMake]
   );
 
-  const src = useMemo(() => getCarMakeImage("mask.png"), [getCarMakeImage]);
-
-  const visible = useMemo(
-    () =>
-      !specMode && paintingGuides.includes(PaintingGuides.CARMASK)
-        ? true
-        : false,
-    [paintingGuides, specMode]
-  );
+  const src = useMemo(() => getCarMakeImage(`spec/${finishBase}.png`), [
+    finishBase,
+    getCarMakeImage,
+  ]);
 
   return (
     <URLImage
-      key="guide-mask"
-      id="guide-mask"
-      loadedStatus={loadedStatuses["guide-mask"]}
+      id={`guide-mask-${finishBase}`}
+      key={`guide-mask-${finishBase}`}
+      loadedStatus={loadedStatuses[`guide-mask-${finishBase}`]}
       src={src}
       tellSize={handleImageSize}
-      filterColor={guideData.carmask_color}
-      opacity={guideData.carmask_opacity}
+      opacity={1}
       listening={false}
-      visible={visible}
+      visible={true}
       onLoadLayer={onLoadLayer}
     />
   );
 });
 
-export default PaintingGuideCarMask;
+export default SpecPaintingGuideCarMask;

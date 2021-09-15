@@ -11,6 +11,7 @@ import {
 import { updateScheme } from "./schemeReducer";
 import { setMessage } from "./messageReducer";
 import LayerService from "services/layerService";
+import { PaintingGuides, ViewModes } from "constant";
 
 const initialState = {
   frameSize: {
@@ -18,13 +19,14 @@ const initialState = {
     height: 1024,
   },
   showProperties: true,
-  paintingGuides: ["car-mask"],
+  paintingGuides: [PaintingGuides.CARMASK],
   zoom: 1,
   pressedKey: null,
   boardRotate: 0,
   mouseMode: MouseModes.DEFAULT,
   actionHistory: [],
   actionHistoryIndex: -1,
+  viewMode: ViewModes.NORMAL_VIEW,
 };
 
 export const slice = createSlice({
@@ -77,6 +79,9 @@ export const slice = createSlice({
     setActionHistoryIndex: (state, action) => {
       state.actionHistoryIndex = action.payload;
     },
+    setViewMode: (state, action) => {
+      state.viewMode = action.payload;
+    },
   },
 });
 
@@ -94,6 +99,7 @@ export const {
   setActionHistory,
   setActionHistoryIndex,
   reset,
+  setViewMode,
 } = slice.actions;
 
 export default slice.reducer;

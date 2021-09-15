@@ -27,6 +27,11 @@ export const PaintingGuides = {
   GRID: "grid",
 };
 
+export const ViewModes = {
+  NORMAL_VIEW: "normal",
+  SPEC_VIEW: "spec",
+};
+
 export const Palette = {
   red: "#ff0000",
   blue: "#0000ff",
@@ -58,6 +63,44 @@ export const DrawingStatus = {
   CLEAR_COMMAND: "CLEAR_COMMAND",
   ADD_TO_SHAPE: "ADD_TO_SHAPE",
 };
+
+export const FinishOptions = [
+  {
+    label: "Normal",
+    value: "#0000FF",
+    base: "normal",
+  },
+  {
+    label: "Glossy",
+    value: "#0F0F0F",
+    base: "glossy",
+  },
+  {
+    label: "Flat",
+    value: "#00FF00",
+    base: "flat",
+  },
+  {
+    label: "Matte",
+    value: "#1C83B3",
+    base: "matte",
+  },
+  {
+    label: "Semi-Metallic",
+    value: "#BB2929",
+    base: "semi-metallic",
+  },
+  {
+    label: "Metallic",
+    value: "#FF55FF",
+    base: "metallic",
+  },
+  {
+    label: "Chrome",
+    value: "#FF0000",
+    base: "chrome",
+  },
+];
 
 export const DefaultLayer = {
   upload_id: 0,
@@ -111,6 +154,7 @@ export const DefaultLayer = {
     lineJoin: "round",
     pointerLength: 20,
     pointerWidth: 20,
+    finish: FinishOptions[0].value,
   },
 };
 
@@ -220,6 +264,7 @@ export const AllowedLayerProps = {
     "layer_data.shadowBlur",
     "layer_data.shadowOffsetX",
     "layer_data.shadowOffsetY",
+    "layer_data.finish",
   ],
   [LayerTypes.LOGO]: [
     "layer_visible",
@@ -248,6 +293,7 @@ export const AllowedLayerProps = {
     "layer_data.paddingX",
     "layer_data.paddingY",
     "layer_data.bgColor",
+    "layer_data.finish",
   ],
   [LayerTypes.OVERLAY]: [
     "layer_visible",
@@ -277,6 +323,7 @@ export const AllowedLayerProps = {
     "layer_data.stroke",
     "layer_data.scolor",
     "layer_data.strokeType",
+    "layer_data.finish",
   ],
   [LayerTypes.SHAPE]: {
     [MouseModes.RECT]: [
@@ -313,6 +360,7 @@ export const AllowedLayerProps = {
       "layer_data.cornerTopRight",
       "layer_data.cornerBottomLeft",
       "layer_data.cornerBottomRight",
+      "layer_data.finish",
     ],
     [MouseModes.CIRCLE]: [
       "layer_visible",
@@ -343,6 +391,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.ELLIPSE]: [
       "layer_visible",
@@ -374,6 +423,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.STAR]: [
       "layer_visible",
@@ -405,6 +455,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.RING]: [
       "layer_visible",
@@ -436,6 +487,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.REGULARPOLYGON]: [
       "layer_visible",
@@ -467,6 +519,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.WEDGE]: [
       "layer_visible",
@@ -498,6 +551,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.ARC]: [
       "layer_visible",
@@ -530,6 +584,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.LINE]: [
       "layer_visible",
@@ -560,6 +615,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.POLYGON]: [
       "layer_visible",
@@ -591,6 +647,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.ARROW]: [
       "layer_visible",
@@ -624,6 +681,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
     [MouseModes.PEN]: [
       "layer_visible",
@@ -654,6 +712,7 @@ export const AllowedLayerProps = {
       "layer_data.shadowBlur",
       "layer_data.shadowOffsetX",
       "layer_data.shadowOffsetY",
+      "layer_data.finish",
     ],
   },
   [LayerTypes.UPLOAD]: [
@@ -683,6 +742,7 @@ export const AllowedLayerProps = {
     "layer_data.paddingX",
     "layer_data.paddingY",
     "layer_data.bgColor",
+    "layer_data.finish",
   ],
   [LayerTypes.BASE]: [
     "layer_data.name",
@@ -690,11 +750,13 @@ export const AllowedLayerProps = {
     "layer_data",
     "layer_data.opacity",
     "layer_data.color",
+    "layer_data.finish",
   ],
   [LayerTypes.CAR]: [
     "layer_data.name",
     "layer_visible",
     "layer_data",
     "layer_data.color",
+    "layer_data.finish",
   ],
 };

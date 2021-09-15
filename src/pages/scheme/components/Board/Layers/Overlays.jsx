@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
 import config from "config";
-import { LayerTypes, MouseModes } from "constant";
+import { FinishOptions, LayerTypes, MouseModes } from "constant";
 import { getRelativeShadowOffset } from "helper";
 
 import { GroupedURLImage } from "components/konva";
@@ -14,6 +14,7 @@ export const Overlays = React.memo((props) => {
     setCurrentLayer,
     frameSize,
     mouseMode,
+    specMode,
     boardRotate,
     loadedStatuses,
     onChange,
@@ -58,7 +59,11 @@ export const Overlays = React.memo((props) => {
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
             allowFit={true}
-            filterColor={layer.layer_data.color}
+            filterColor={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.color
+            }
             width={layer.layer_data.width}
             height={layer.layer_data.height}
             rotation={layer.layer_data.rotation}
@@ -77,16 +82,24 @@ export const Overlays = React.memo((props) => {
                 ? layer.layer_data.skewY / 10
                 : layer.layer_data.skewY
             }
-            bgColor={layer.layer_data.bgColor}
+            bgColor={specMode ? null : layer.layer_data.bgColor}
             paddingX={layer.layer_data.paddingX}
             paddingY={layer.layer_data.paddingY}
-            shadowColor={layer.layer_data.shadowColor}
+            shadowColor={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.shadowColor
+            }
             shadowBlur={layer.layer_data.shadowBlur}
             shadowOpacity={layer.layer_data.shadowOpacity}
             shadowOffsetX={shadowOffset.x}
             shadowOffsetY={shadowOffset.y}
             strokeWidth={layer.layer_data.stroke}
-            stroke={layer.layer_data.scolor}
+            stroke={
+              specMode
+                ? layer.layer_data.finish || FinishOptions[0].value
+                : layer.layer_data.scolor
+            }
             onSelect={() => setCurrentLayer(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}

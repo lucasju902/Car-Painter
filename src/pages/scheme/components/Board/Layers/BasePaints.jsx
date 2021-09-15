@@ -1,13 +1,14 @@
 import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
-import { LayerTypes } from "constant";
+import { FinishOptions, LayerTypes } from "constant";
 import { basePaintAssetURL, legacyBasePaintAssetURL } from "helper";
 
 import { URLImage } from "components/konva";
 
 export const BasePaints = React.memo((props) => {
   const {
+    specMode,
     legacyMode,
     layers,
     carMake,
@@ -43,7 +44,11 @@ export const BasePaints = React.memo((props) => {
           id={layer.id}
           src={getLayerImage(layer)}
           opacity={layer.layer_data.opacity}
-          filterColor={layer.layer_data.color}
+          filterColor={
+            specMode
+              ? layer.layer_data.finish || FinishOptions[0].value
+              : layer.layer_data.color
+          }
           listening={false}
           visible={layer.layer_visible ? true : false}
           loadedStatus={loadedStatuses[layer.id]}
