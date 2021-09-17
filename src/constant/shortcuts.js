@@ -7,7 +7,7 @@ export const ShortCuts = {
   4: "Toggle Number Block Guide",
   5: "Toggle Grid Guide",
   T: "Insert Text",
-  S: "Insert Overlay",
+  S: "Insert Graphics",
   L: "Insert Logo",
   B: "Insert Basepaint",
   H: "Hide Transformer",

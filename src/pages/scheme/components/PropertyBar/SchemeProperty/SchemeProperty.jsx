@@ -22,6 +22,7 @@ import {
   deleteFavoriteItem,
   deleteScheme,
 } from "redux/reducers/schemeReducer";
+import { setPaintingGuides } from "redux/reducers/boardReducer";
 
 export const SchemeProperty = (props) => {
   const { editable } = props;
@@ -31,11 +32,15 @@ export const SchemeProperty = (props) => {
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
-  const userList = useSelector((state) => state.userReducer.list);
-  const currentUser = useSelector((state) => state.authReducer.user);
   const favoriteSchemeList = useSelector(
     (state) => state.schemeReducer.favoriteList
   );
+  const userList = useSelector((state) => state.userReducer.list);
+  const currentUser = useSelector((state) => state.authReducer.user);
+  const paintingGuides = useSelector(
+    (state) => state.boardReducer.paintingGuides
+  );
+
   const favroiteScheme = useMemo(
     () =>
       favoriteSchemeList.find((item) => item.scheme_id === currentScheme.id),
@@ -69,6 +74,12 @@ export const SchemeProperty = (props) => {
       );
     },
     [dispatch, currentScheme]
+  );
+  const handleChangePaintingGuides = useCallback(
+    (newFormats) => {
+      dispatch(setPaintingGuides(newFormats));
+    },
+    [dispatch]
   );
   const handleApplySharingSetting = useCallback(
     (data) => {
@@ -184,7 +195,9 @@ export const SchemeProperty = (props) => {
           <GuidesSetting
             editable={editable}
             guide_data={currentScheme.guide_data}
+            paintingGuides={paintingGuides}
             onApply={handleApplyGuideSettings}
+            onChangePaintingGuides={handleChangePaintingGuides}
           />
         </TabPanel>
         <TabPanel value={tabValue} index={1}>

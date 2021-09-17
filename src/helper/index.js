@@ -6,19 +6,24 @@ import TGA from "utils/tga";
 export const getDifferenceFromToday = (past_date) => {
   const difference_In_Second =
     new Date().getTime() / 1000 - new Date(past_date).getTime();
+  let returnValue;
   if (difference_In_Second < 60) {
-    return `${Math.round(difference_In_Second)} seconds ago`;
+    returnValue = Math.round(difference_In_Second);
+    return `${returnValue} second${returnValue > 1 ? "s" : ""} ago`;
   }
   const difference_In_Min = difference_In_Second / 60;
   if (difference_In_Min < 60) {
-    return `${Math.round(difference_In_Min)} minutes ago`;
+    returnValue = Math.round(difference_In_Min);
+    return `${returnValue} minute${returnValue > 1 ? "s" : ""} ago`;
   }
   const difference_In_Hour = difference_In_Min / 60;
   if (difference_In_Hour < 24) {
-    return `${Math.round(difference_In_Hour)} hours ago`;
+    returnValue = Math.round(difference_In_Hour);
+    return `${returnValue} hour${returnValue > 1 ? "s" : ""} ago`;
   }
   const difference_In_Day = difference_In_Hour / 24;
-  return `${Math.round(difference_In_Day)} days ago`;
+  returnValue = Math.round(difference_In_Day);
+  return `${returnValue} day${returnValue > 1 ? "s" : ""} ago`;
 };
 
 export const hexToRgba = (hex) => {
@@ -40,9 +45,14 @@ export const mathRound2 = (num) =>
 
 export const mathRound4 = (num) => Math.round(num * 10000) / 10000;
 
-export const colorValidator = (color) => {
+export const colorValidator = (color, allowAlpha = true) => {
   if (!color || !color.length) return true;
-  if (color[0] === "#" && (color.length === 4 || color.length === 7))
+  if (
+    color[0] === "#" &&
+    (color.length === 4 ||
+      color.length === 7 ||
+      (color.length === 9 && allowAlpha))
+  )
     return true;
   return false;
 };

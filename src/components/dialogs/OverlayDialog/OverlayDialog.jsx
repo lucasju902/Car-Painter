@@ -48,7 +48,7 @@ export const OverlayDialog = React.memo((props) => {
 
   return (
     <Dialog aria-labelledby="shape-title" open={open} onClose={onCancel}>
-      <DialogTitle id="shape-title">Insert Overlay</DialogTitle>
+      <DialogTitle id="shape-title">Insert Graphics</DialogTitle>
       <CustomDialogContent dividers>
         <Box mb={2}>
           <SearchBox value={search} onChange={(value) => setSearch(value)} />

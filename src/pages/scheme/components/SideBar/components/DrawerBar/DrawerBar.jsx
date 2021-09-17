@@ -1,10 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components/macro";
-import { spacing } from "@material-ui/system";
 
-import { Box, MenuItem, Divider as MuiDivider } from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, Divider } from "components/MaterialUI";
 import { Octagon as OctagonIcon } from "react-feather";
 import {
   SignalWifi4Bar as WedgeIcon,
@@ -40,6 +37,7 @@ import { updateScheme } from "redux/reducers/schemeReducer";
 
 import { alphaToHex, getZoomedCenterPosition, focusBoard } from "helper";
 import { DialogTypes, MouseModes } from "constant";
+import { EnglishLang } from "constant/language";
 
 import {
   BasePaintDialog,
@@ -50,34 +48,13 @@ import {
   DefaultSettingsDialog,
 } from "components/dialogs";
 import { LightTooltip } from "components/common";
-
-const Divider = styled(MuiDivider)(spacing);
-const Wrapper = styled(Box)`
-  background: #666666;
-  padding: 0px 10px 0 15px;
-`;
-const ToolWrapper = styled(Box)`
-  background: #444;
-  border-radius: 5px;
-  padding: 5px 1px;
-`;
-const CustomItem = styled(MenuItem)`
-  display: flex;
-  justify-content: center;
-  padding: 7px 10px;
-  background-color: ${(props) =>
-    props.active === "true" ? "rgba(255, 255, 255, 0.08)" : "none"};
-`;
-
-const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
-  transform: ${(props) =>
-    props.isstretch === "true" ? "scaleX(1.2) scaleY(0.8)" : "none"};
-`;
-
-const DefaultSettingsButton = styled(Box)`
-  outline: ${(props) => props.outline};
-  cursor: pointer;
-`;
+import {
+  Wrapper,
+  ToolWrapper,
+  CustomItem,
+  CustomFontAwesomeIcon,
+  DefaultSettingsButton,
+} from "./DrawerBar.style";
 
 const modes = [
   {
@@ -150,27 +127,27 @@ const modes = [
 const dialog_modes = [
   {
     value: DialogTypes.UPLOAD,
-    label: "Insert My Logo/Upload New Logo",
+    label: EnglishLang.INSERT_OR_UPLOAD_MY_LOGO,
     icon: <CustomFontAwesomeIcon icon={faFolderOpen} />,
   },
   {
     value: DialogTypes.LOGO,
-    label: "Insert Logo",
+    label: EnglishLang.INSERT_LOGO,
     icon: <CustomFontAwesomeIcon icon={faImage} />,
   },
   {
     value: DialogTypes.TEXT,
-    label: "Insert Text",
+    label: EnglishLang.INSERT_TEXT,
     icon: <CustomFontAwesomeIcon icon={faFont} />,
   },
   {
     value: DialogTypes.SHAPE,
-    label: "Insert Overlay",
+    label: EnglishLang.INSERT_GRAPHICS,
     icon: <CustomFontAwesomeIcon icon={faShapes} />,
   },
   {
     value: DialogTypes.BASEPAINT,
-    label: "Insert BasePaint",
+    label: EnglishLang.BASEPAINT,
     icon: <CustomFontAwesomeIcon icon={faCar} />,
   },
 ];

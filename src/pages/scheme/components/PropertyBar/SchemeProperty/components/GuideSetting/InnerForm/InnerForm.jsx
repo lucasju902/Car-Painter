@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Form } from "formik";
 
 import { Box, Checkbox, Grid } from "components/MaterialUI";
@@ -8,26 +8,50 @@ import { SliderInput } from "components/common";
 import { CustomFormControlLabel } from "./styles";
 
 export const InnerForm = React.memo(
-  ({ editable, initialValues, onCancel, ...formProps }) => {
+  ({
+    editable,
+    initialValues,
+    paintingGuides,
+    onCancel,
+    onChangePaintingGuides,
+    ...formProps
+  }) => {
+    const handleTogglePaintingGuide = useCallback(
+      (guideItem) => {
+        let index = paintingGuides.indexOf(guideItem);
+        let newGuide = [...paintingGuides];
+        if (index === -1) newGuide.push(guideItem);
+        else newGuide.splice(index, 1);
+        onChangePaintingGuides(newGuide);
+      },
+      [paintingGuides]
+    );
+
     return (
       <Form onSubmit={formProps.handleSubmit} noValidate>
         <Box height="100%" overflow="auto">
           <SubForm
+            guideID="car-mask"
             label="Car Mask"
             colorKey="carmask_color"
             opacityKey="carmask_opacity"
             editable={editable}
             fields={["carmask_color", "carmask_opacity"]}
             initialValues={initialValues}
+            paintingGuides={paintingGuides}
+            onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
           />
           <SubForm
+            guideID="wireframe"
             label="Wireframe"
             colorKey="wireframe_color"
             opacityKey="wireframe_opacity"
             fields={["wireframe_color", "wireframe_opacity", "show_wireframe"]}
             editable={editable}
             initialValues={initialValues}
+            paintingGuides={paintingGuides}
+            onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
             extraChildren={
               <Grid container>
@@ -47,7 +71,7 @@ export const InnerForm = React.memo(
                         }
                       />
                     }
-                    label="Show Wireframe for Repositioning"
+                    label="Show when editing"
                     labelPlacement="start"
                   />
                 </Grid>
@@ -55,6 +79,7 @@ export const InnerForm = React.memo(
             }
           />
           <SubForm
+            guideID="sponsor-blocks"
             label="Sponsor Blocks"
             colorKey="sponsor_color"
             opacityKey="sponsor_opacity"
@@ -66,6 +91,8 @@ export const InnerForm = React.memo(
             ]}
             editable={editable}
             initialValues={initialValues}
+            paintingGuides={paintingGuides}
+            onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
             extraChildren={
               <Grid container>
@@ -85,7 +112,7 @@ export const InnerForm = React.memo(
                         }
                       />
                     }
-                    label="Show Sponsor Blocks for Repositioning"
+                    label="Show when editing"
                     labelPlacement="start"
                   />
                 </Grid>
@@ -105,7 +132,7 @@ export const InnerForm = React.memo(
                         }
                       />
                     }
-                    label={`Show Sponsor Blocks on top`}
+                    label={`Display above layers`}
                     labelPlacement="start"
                   />
                 </Grid>
@@ -113,6 +140,7 @@ export const InnerForm = React.memo(
             }
           />
           <SubForm
+            guideID="number-blocks"
             label="Number Blocks"
             colorKey="numberblock_color"
             opacityKey="numberblock_opacity"
@@ -124,6 +152,8 @@ export const InnerForm = React.memo(
             ]}
             editable={editable}
             initialValues={initialValues}
+            paintingGuides={paintingGuides}
+            onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
             extraChildren={
               <Grid container>
@@ -143,7 +173,7 @@ export const InnerForm = React.memo(
                         }
                       />
                     }
-                    label="Show Number Blocks for Repositioning"
+                    label="Show when editing"
                     labelPlacement="start"
                   />
                 </Grid>
@@ -163,7 +193,7 @@ export const InnerForm = React.memo(
                         }
                       />
                     }
-                    label={`Show Number Blocks on top`}
+                    label={`Display above layers`}
                     labelPlacement="start"
                   />
                 </Grid>
@@ -171,6 +201,7 @@ export const InnerForm = React.memo(
             }
           />
           <SubForm
+            guideID="grid"
             label="Grid"
             colorKey="grid_color"
             opacityKey="grid_opacity"
@@ -183,6 +214,8 @@ export const InnerForm = React.memo(
             ]}
             editable={editable}
             initialValues={initialValues}
+            paintingGuides={paintingGuides}
+            onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
             extraChildren={
               <Grid container>
@@ -228,7 +261,7 @@ export const InnerForm = React.memo(
                         }
                       />
                     }
-                    label="Show Grid for Repositioning"
+                    label="Show when editing"
                     labelPlacement="start"
                   />
                 </Grid>
@@ -259,7 +292,7 @@ export const InnerForm = React.memo(
                         }
                       />
                     }
-                    label="Show Car Parts on top of other layers"
+                    label="Display above layers"
                     labelPlacement="start"
                   />
                 </Grid>

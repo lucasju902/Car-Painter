@@ -3,11 +3,10 @@ import React, { useCallback } from "react";
 import {
   Popover,
   Box,
-  Typography,
   Button,
   InputAdornment,
-} from "@material-ui/core";
-import { CustomOutlinedInput } from "./ZoomPopover.style";
+  OutlinedInput,
+} from "components/MaterialUI";
 
 export const ZoomPopover = React.memo(
   ({ anchorEl, zoom, setZoom, onZoomIn, onZoomOut, onZoomFit, onClose }) => {
@@ -48,40 +47,63 @@ export const ZoomPopover = React.memo(
         }}
       >
         <Box display="flex" flexDirection="column" p={4} width="200px">
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Button onClick={onZoomIn}>Zoom in</Button>
-            <Typography variant="body2">Shift +</Typography>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Button onClick={onZoomOut}>Zoom out</Button>
-            <Typography variant="body2">Shift -&nbsp;</Typography>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Button onClick={onZoomFit}>Zoom to fit</Button>
-            <Typography variant="body2">Shift 9</Typography>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
-            <Button onClick={handleZoom100}>Zoom to 100%</Button>
-            <Typography variant="body2">Shift 0</Typography>
-          </Box>
-          <CustomOutlinedInput
+          <Button onClick={onZoomIn}>
+            <Box
+              component="p"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={0}
+              width="100%"
+            >
+              <span>Zoom in</span>
+              <span>Shift +</span>
+            </Box>
+          </Button>
+
+          <Button onClick={onZoomOut}>
+            <Box
+              component="p"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={0}
+              width="100%"
+            >
+              <span>Zoom out</span>
+              <span>Shift -&nbsp;</span>
+            </Box>
+          </Button>
+
+          <Button onClick={onZoomFit}>
+            <Box
+              component="p"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={0}
+              width="100%"
+            >
+              <span>Zoom to fit</span>
+              <span>Shift 9</span>
+            </Box>
+          </Button>
+
+          <Button onClick={handleZoom100} mb={1}>
+            <Box
+              component="p"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={0}
+              width="100%"
+            >
+              <span>Zoom to 100%</span>
+              <span>Shift 0</span>
+            </Box>
+          </Button>
+
+          <OutlinedInput
             id="zoom-value"
             value={zoom * 100}
             onChange={handleZoomChange}
@@ -89,6 +111,7 @@ export const ZoomPopover = React.memo(
             onKeyDown={handleZoomKeyDown}
             endAdornment={<InputAdornment position="end">%</InputAdornment>}
             labelWidth={0}
+            width="100%"
             autoFocus={true}
           />
         </Box>

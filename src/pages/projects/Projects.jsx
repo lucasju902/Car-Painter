@@ -242,7 +242,7 @@ export const Projects = () => {
         width="100%"
         height="calc(100% - 16px)"
       >
-        <Box width="300px">
+        <Box maxWidth="300px">
           <SearchBox value={search} onChange={(value) => setSearch(value)} />
         </Box>
 
@@ -272,7 +272,7 @@ export const Projects = () => {
               options={sortedCarMakesList}
               groupBy={(option) => option.car_type}
               getOptionLabel={(option) => option.name}
-              style={{ width: 500 }}
+              style={{ maxWidth: 500, width: "100%" }}
               onChange={(event, newValue) => {
                 setSelectedVehicle(newValue);
               }}

@@ -82,7 +82,7 @@ export const ColorProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.blendType") ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={2} component={Box} mb={1}>
               <Grid item xs={6}>
                 <Box height="100%" display="flex" alignItems="center">
                   <Typography variant="body1" color="textSecondary" mr={2}>
@@ -121,7 +121,7 @@ export const ColorProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.finish") ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={2} component={Box} mb={1}>
               <Grid item xs={6}>
                 <Box height="100%" display="flex" alignItems="center">
                   <Typography variant="body1" color="textSecondary" mr={2}>
@@ -142,13 +142,6 @@ export const ColorProperty = React.memo((props) => {
                 >
                   {FinishOptions.map((finishItem, index) => (
                     <MenuItem value={finishItem.value} key={index}>
-                      <Box
-                        component="span"
-                        bgcolor={finishItem.value}
-                        height="20px"
-                        width="20px"
-                        mr={2}
-                      ></Box>
                       {finishItem.label}
                     </MenuItem>
                   ))}

@@ -7,8 +7,13 @@ import {
   Button,
   Typography,
   Grid,
+  IconButton,
 } from "components/MaterialUI";
-import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
+import {
+  ExpandMore as ExpandMoreIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+} from "@material-ui/icons";
 import { ColorPickerInput, SliderInput } from "components/common";
 import { CustomAccordionSummary } from "./styles";
 
@@ -25,11 +30,21 @@ export const SubForm = (props) => {
     extraChildren,
     fields,
     initialValues,
+    guideID,
+    paintingGuides,
+    onToggleGuideVisible,
   } = props;
   const [expanded, setExpanded] = useState(true);
   const isCustomDirty = useMemo(
     () => fields.some((item) => values[item] !== initialValues[item]),
     [values, fields, initialValues]
+  );
+  const guideVisible = useMemo(
+    () =>
+      paintingGuides && guideID
+        ? paintingGuides.indexOf(guideID) !== -1
+        : false,
+    [guideID, paintingGuides]
   );
 
   return (
@@ -38,7 +53,28 @@ export const SubForm = (props) => {
         <Typography>{label}</Typography>
       </CustomAccordionSummary>
       <AccordionDetails>
-        <Box display="flex" flexDirection="column" width="100%" mb={1}>
+        <Box display="flex" flexDirection="column" width="100%" my={1}>
+          {guideID ? (
+            <Box
+              display="flex"
+              alignItems="center"
+              flexDirection="row"
+              justifyContent="space-between"
+            >
+              <Typography variant="body1" color="textSecondary" mr={2}>
+                Visibility
+              </Typography>
+              <IconButton
+                disabled={!editable}
+                onClick={() => onToggleGuideVisible(guideID)}
+                size="small"
+              >
+                {guideVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </IconButton>
+            </Box>
+          ) : (
+            <></>
+          )}
           {colorKey || opacityKey ? (
             <Grid container>
               {colorKey ? (
@@ -70,9 +106,10 @@ export const SubForm = (props) => {
                   <SliderInput
                     label="Opacity"
                     disabled={!editable}
-                    min={0}
-                    max={1}
-                    step={0.01}
+                    min={0.0}
+                    max={1.0}
+                    step={0.1}
+                    marks
                     value={values[opacityKey]}
                     setValue={(value) => setFieldValue(opacityKey, value)}
                   />

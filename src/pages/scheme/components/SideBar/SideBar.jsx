@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { colorValidator } from "helper";
-import { FinishOptions, LayerTypes } from "constant";
+import { FinishOptions, LayerTypes, DialogTypes } from "constant";
+import { EnglishLang } from "constant/language";
 
 import { Box, Typography, Grid, Select, MenuItem } from "@material-ui/core";
+import {
+  faImage,
+  faFont,
+  faFolderOpen,
+  faShapes,
+  faCar,
+} from "@fortawesome/free-solid-svg-icons";
 import { ColorPickerInput } from "components/common";
 import { TitleBar, PartGroup, DrawerBar } from "./components";
 import {
@@ -45,7 +53,7 @@ export const SideBar = (props) => {
   const [colorDirty, setColorDirty] = useState(false);
 
   const pickerValue = useMemo(
-    () => (colorValidator(colorInput) ? colorInput : baseColor),
+    () => (colorValidator(colorInput, false) ? colorInput : baseColor),
     [colorInput, baseColor]
   );
 
@@ -134,6 +142,23 @@ export const SideBar = (props) => {
             )}
             disabled={!editable}
             hoveredLayerJSON={hoveredLayerJSON}
+            actions={[
+              {
+                icon: faFolderOpen,
+                title: EnglishLang.INSERT_OR_UPLOAD_MY_LOGO,
+                onClick: () => setDialog(DialogTypes.UPLOAD),
+              },
+              {
+                icon: faImage,
+                title: EnglishLang.INSERT_LOGO,
+                onClick: () => setDialog(DialogTypes.LOGO),
+              },
+              {
+                icon: faFont,
+                title: EnglishLang.INSERT_TEXT,
+                onClick: () => setDialog(DialogTypes.TEXT),
+              },
+            ]}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
             onDoubleClickItem={handleDoubleClickItem}
           />
@@ -148,7 +173,7 @@ export const SideBar = (props) => {
             onDoubleClickItem={handleDoubleClickItem}
           />
           <PartGroup
-            title="Overlays"
+            title="Graphics"
             layerList={layerList.filter(
               (item) => item.layer_type === LayerTypes.OVERLAY
             )}
@@ -156,6 +181,13 @@ export const SideBar = (props) => {
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
             onDoubleClickItem={handleDoubleClickItem}
+            actions={[
+              {
+                icon: faShapes,
+                title: EnglishLang.INSERT_GRAPHICS,
+                onClick: () => setDialog(DialogTypes.SHAPE),
+              },
+            ]}
           />
           <PartGroup
             title="Base Paint"
@@ -167,6 +199,13 @@ export const SideBar = (props) => {
             hoveredLayerJSON={hoveredLayerJSON}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
             onDoubleClickItem={handleDoubleClickItem}
+            actions={[
+              {
+                icon: faCar,
+                title: EnglishLang.INSERT_BASEPAINT,
+                onClick: () => setDialog(DialogTypes.BASEPAINT),
+              },
+            ]}
             extraChildren={
               <>
                 <Box
@@ -182,14 +221,14 @@ export const SideBar = (props) => {
                     onChange={handleChangeBasePaintColor}
                     onInputChange={handleChangeBasePaintColorInput}
                   />
-                  {colorDirty && colorValidator(colorInput) ? (
+                  {colorDirty && colorValidator(colorInput, false) ? (
                     <ColorApplyButton
                       onClick={handleApplyBasePaintColor}
                       variant="outlined"
                     >
                       Apply
                     </ColorApplyButton>
-                  ) : !colorValidator(colorInput) ? (
+                  ) : !colorValidator(colorInput, false) ? (
                     <Typography color="secondary" variant="body2">
                       Invalid Color
                     </Typography>
@@ -218,13 +257,6 @@ export const SideBar = (props) => {
                     >
                       {FinishOptions.map((finishItem, index) => (
                         <MenuItem value={finishItem.value} key={index}>
-                          <Box
-                            component="span"
-                            bgcolor={finishItem.value}
-                            height="20px"
-                            width="20px"
-                            mr={2}
-                          ></Box>
                           {finishItem.label}
                         </MenuItem>
                       ))}

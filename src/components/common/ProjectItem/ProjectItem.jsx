@@ -15,6 +15,7 @@ import { ConfirmDialog } from "components/dialogs";
 import {
   StyledMenu,
   ActionIcon,
+  BreakableTypography,
   faStarOn,
   faStarOff,
 } from "./ProjectItem.style";
@@ -102,11 +103,11 @@ export const ProjectItem = (props) => {
         onClick={() => onOpenScheme(scheme.id, sharedID)}
       />
       <Box display="flex" justifyContent="space-between">
-        <Box display="flex" flexDirection="column" p={4}>
+        <Box display="flex" flexDirection="column" p={4} overflow="hidden">
           <Box mb={1}>
-            <Typography variant="body1">
+            <BreakableTypography variant="body1">
               {reduceString(scheme.name, 60)}
-            </Typography>
+            </BreakableTypography>
           </Box>
           {scheme.user.id !== user.id ? (
             <Typography variant="body2">
@@ -120,7 +121,7 @@ export const ProjectItem = (props) => {
             Edited {getDifferenceFromToday(scheme.date_modified)}
           </Typography>
         </Box>
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" flexGrow={1} width="92px">
           {favoriteInPrgoress ? (
             <CircularProgress size={30} />
           ) : (

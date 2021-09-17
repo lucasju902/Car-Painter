@@ -49,7 +49,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                         }
                       />
                     }
-                    label="Show Wireframe for Repositioning"
+                    label="Show when editing"
                     labelPlacement="start"
                   />
                 </Grid>
@@ -80,7 +80,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                         }
                       />
                     }
-                    label="Show Sponsor Blocks for Repositioning"
+                    label="Show when editing"
                     labelPlacement="start"
                   />
                 </Grid>
@@ -100,7 +100,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                         }
                       />
                     }
-                    label={`Show Sponsor Blocks on top`}
+                    label={`Display above layers`}
                     labelPlacement="start"
                   />
                 </Grid>
@@ -131,7 +131,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                         }
                       />
                     }
-                    label="Show Number Blocks for Repositioning"
+                    label="Show when editing"
                     labelPlacement="start"
                   />
                 </Grid>
@@ -151,7 +151,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                         }
                       />
                     }
-                    label={`Show Number Blocks on top`}
+                    label={`Display above layers`}
                     labelPlacement="start"
                   />
                 </Grid>
@@ -208,7 +208,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                         }
                       />
                     }
-                    label="Show Grid for Repositioning"
+                    label="Show when editing"
                     labelPlacement="start"
                   />
                 </Grid>
@@ -237,7 +237,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                         }
                       />
                     }
-                    label="Show Car Parts on top of other layers"
+                    label="Display above layers"
                     labelPlacement="start"
                   />
                 </Grid>

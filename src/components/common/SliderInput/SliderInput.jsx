@@ -48,7 +48,6 @@ export const SliderInput = (props) => {
             disabled={disabled}
             margin="dense"
             type="number"
-            step={step || 1}
             onChange={(event) =>
               setValue(
                 event.target.value === ""
@@ -60,6 +59,7 @@ export const SliderInput = (props) => {
             inputProps={{
               min: min,
               max: max,
+              step: step || 1,
               "aria-labelledby": "input-slider",
             }}
           />

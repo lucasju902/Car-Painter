@@ -14,16 +14,9 @@ import {
   SettingsBackupRestore as BackUpIcon,
   Settings as SettingsIcon,
 } from "@material-ui/icons";
+import { CustomIcon, NameInput } from "./TitleBar.style";
 
 import { updateScheme } from "redux/reducers/schemeReducer";
-
-const CustomIcon = styled(FontAwesomeIcon)`
-  width: 20px !important;
-`;
-
-const NameInput = styled(TextField)`
-  width: ${(props) => props.width};
-`;
 
 export const TitleBar = React.memo((props) => {
   const { editable, onBack } = props;

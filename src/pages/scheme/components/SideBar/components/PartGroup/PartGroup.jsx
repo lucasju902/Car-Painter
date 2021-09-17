@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import clsx from "clsx";
+
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
-import styled from "styled-components/macro";
 import { ReactSortable } from "react-sortablejs";
-import { spacing } from "@material-ui/system";
 
 import { MouseModes, LayerTypes } from "constant";
 import {
@@ -13,69 +11,13 @@ import {
 } from "redux/reducers/layerReducer";
 import { setMouseMode } from "redux/reducers/boardReducer";
 
-import {
-  Box,
-  Card,
-  CardHeader,
-  CardContent,
-  Collapse,
-  IconButton,
-  Button as MuiButton,
-  ButtonGroup as MuiButtonGroup,
-} from "@material-ui/core";
-import {
-  ExpandMore as ExpandMoreIcon,
-  Add as AddIcon,
-} from "@material-ui/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, Card, Collapse } from "@material-ui/core";
+import { CustomCardHeader, CustomCardContent } from "./PartGroup.style";
 
-import { makeStyles } from "@material-ui/core/styles";
-import PartItem from "./PartItem";
-
-const useStyles = makeStyles((theme) => ({
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-}));
-
-const Button = styled(MuiButton)(spacing);
-const ButtonGroup = styled(MuiButtonGroup)(spacing);
-const AddButton = styled(Button)`
-  min-width: 40px;
-  padding: 3px 5px;
-  .MuiButton-startIcon {
-    margin-right: 2px;
-  }
-  .MuiButton-endIcon {
-    margin: 0;
-  }
-  .fa-lg {
-    font-size: 1.3333333333em !important;
-  }
-`;
-const CustomCardHeader = styled(CardHeader)`
-  .MuiCardHeader-title {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .MuiCardHeader-content {
-    width: calc(100% - 50px);
-  }
-`;
-const CustomCardContent = styled(CardContent)`
-  padding-top: 0;
-`;
+import { PartItem } from "../PartItem";
+import { PartAction } from "../PartAction";
 
 export const PartGroup = (props) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(true);
   const currentLayer = useSelector((state) => state.layerReducer.current);
@@ -176,32 +118,11 @@ export const PartGroup = (props) => {
         <CustomCardHeader
           title={title}
           action={
-            <Box display="flex">
-              {actions ? (
-                <ButtonGroup mr={1}>
-                  {actions.map((action, index) => (
-                    <AddButton
-                      key={index}
-                      onClick={action.onClick}
-                      size="small"
-                      startIcon={<AddIcon />}
-                      endIcon={<FontAwesomeIcon icon={action.icon} size="lg" />}
-                      variant="outlined"
-                    ></AddButton>
-                  ))}
-                </ButtonGroup>
-              ) : (
-                <></>
-              )}
-              <IconButton
-                onClick={handleExpandClick}
-                className={clsx(classes.expand, {
-                  [classes.expandOpen]: expanded,
-                })}
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            </Box>
+            <PartAction
+              expanded={expanded}
+              actions={actions}
+              onExpandClick={handleExpandClick}
+            />
           }
         />
         <Collapse in={expanded}>
