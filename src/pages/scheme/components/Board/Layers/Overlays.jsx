@@ -73,12 +73,12 @@ export const Overlays = React.memo((props) => {
             scaleX={layer.layer_data.flop === 1 ? -1 : 1}
             scaleY={layer.layer_data.flip === 1 ? -1 : 1}
             skewX={
-              layer.layer_data.skewX >= 1
+              Math.abs(layer.layer_data.skewX) >= 1
                 ? layer.layer_data.skewX / 10
                 : layer.layer_data.skewX
             }
             skewY={
-              layer.layer_data.skewY >= 1
+              Math.abs(layer.layer_data.skewY) >= 1
                 ? layer.layer_data.skewY / 10
                 : layer.layer_data.skewY
             }

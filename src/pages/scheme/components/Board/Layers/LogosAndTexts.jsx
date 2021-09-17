@@ -107,12 +107,12 @@ export const LogosAndTexts = React.memo((props) => {
               shadowOffsetX={shadowOffset.x}
               shadowOffsetY={shadowOffset.y}
               skewX={
-                layer.layer_data.skewX >= 1
+                Math.abs(layer.layer_data.skewX) >= 1
                   ? layer.layer_data.skewX / 10
                   : layer.layer_data.skewX
               }
               skewY={
-                layer.layer_data.skewY >= 1
+                Math.abs(layer.layer_data.skewY) >= 1
                   ? layer.layer_data.skewY / 10
                   : layer.layer_data.skewY
               }
@@ -165,12 +165,12 @@ export const LogosAndTexts = React.memo((props) => {
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
             skewX={
-              layer.layer_data.skewX >= 1
+              Math.abs(layer.layer_data.skewX) >= 1
                 ? layer.layer_data.skewX / 10
                 : layer.layer_data.skewX
             }
             skewY={
-              layer.layer_data.skewY >= 1
+              Math.abs(layer.layer_data.skewY) >= 1
                 ? layer.layer_data.skewY / 10
                 : layer.layer_data.skewY
             }

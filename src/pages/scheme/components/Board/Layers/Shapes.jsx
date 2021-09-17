@@ -152,12 +152,12 @@ export const Shapes = React.memo((props) => {
             shadowOffsetX={shadowOffset.x}
             shadowOffsetY={shadowOffset.y}
             skewX={
-              layer.layer_data.skewX >= 1
+              Math.abs(layer.layer_data.skewX) >= 1
                 ? layer.layer_data.skewX / 10
                 : layer.layer_data.skewX
             }
             skewY={
-              layer.layer_data.skewY >= 1
+              Math.abs(layer.layer_data.skewY) >= 1
                 ? layer.layer_data.skewY / 10
                 : layer.layer_data.skewY
             }
