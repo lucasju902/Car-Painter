@@ -86,7 +86,7 @@ export const ProjectItem = (props) => {
   };
 
   const schemeThumbnailURL = (id) => {
-    return `${config.assetsURL}/scheme_thumbnails/${id}.png`;
+    return `${config.assetsURL}/scheme_thumbnails/${id}.jpg`;
   };
 
   return (

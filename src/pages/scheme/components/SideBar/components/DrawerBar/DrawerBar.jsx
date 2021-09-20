@@ -147,7 +147,7 @@ const dialog_modes = [
   },
   {
     value: DialogTypes.BASEPAINT,
-    label: EnglishLang.BASEPAINT,
+    label: EnglishLang.INSERT_BASEPAINT,
     icon: <CustomFontAwesomeIcon icon={faCar} />,
   },
 ];
@@ -190,7 +190,7 @@ export const DrawerBar = React.memo(
         setDialog(null);
         focusBoard();
       },
-      [dispatch, setDialog, currentScheme && currentScheme.id]
+      [dispatch, setDialog, currentScheme.id, currentScheme.legacy_mode]
     );
     const handleOpenOverlay = useCallback(
       (shape) => {
@@ -205,15 +205,7 @@ export const DrawerBar = React.memo(
         setDialog(null);
         focusBoard();
       },
-      [
-        dispatch,
-        setDialog,
-        currentScheme && currentScheme.id,
-        getZoomedCenterPosition,
-        stageRef,
-        frameSize,
-        zoom,
-      ]
+      [dispatch, setDialog, currentScheme.id, stageRef, frameSize, zoom]
     );
     const handleOpenLogo = useCallback(
       (logo) => {
@@ -228,15 +220,7 @@ export const DrawerBar = React.memo(
         setDialog(null);
         focusBoard();
       },
-      [
-        dispatch,
-        setDialog,
-        currentScheme && currentScheme.id,
-        getZoomedCenterPosition,
-        stageRef,
-        frameSize,
-        zoom,
-      ]
+      [dispatch, setDialog, currentScheme.id, stageRef, frameSize, zoom]
     );
     const handleOpenUpload = useCallback(
       (upload) => {
@@ -251,15 +235,7 @@ export const DrawerBar = React.memo(
         setDialog(null);
         focusBoard();
       },
-      [
-        dispatch,
-        setDialog,
-        currentScheme && currentScheme.id,
-        getZoomedCenterPosition,
-        stageRef,
-        frameSize,
-        zoom,
-      ]
+      [dispatch, setDialog, currentScheme.id, stageRef, frameSize, zoom]
     );
     const handleCreateText = useCallback(
       (values) => {
@@ -275,15 +251,7 @@ export const DrawerBar = React.memo(
         setDialog(null);
         focusBoard();
       },
-      [
-        dispatch,
-        setDialog,
-        currentScheme && currentScheme.id,
-        getZoomedCenterPosition,
-        stageRef,
-        frameSize,
-        zoom,
-      ]
+      [dispatch, setDialog, currentScheme.id, stageRef, frameSize, zoom]
     );
 
     const handleApplySettings = useCallback(

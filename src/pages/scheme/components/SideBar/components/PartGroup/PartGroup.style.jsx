@@ -11,6 +11,10 @@ export const CustomCardHeader = styled(CardHeader)`
   .MuiCardHeader-content {
     width: calc(100% - 50px);
   }
+  &.MuiCardHeader-root {
+    position: relative;
+    padding: 16px 16px 16px 45px;
+  }
 `;
 export const CustomCardContent = styled(CardContent)`
   padding-top: 0;

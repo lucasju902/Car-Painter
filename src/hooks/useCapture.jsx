@@ -66,7 +66,7 @@ export const useCapture = (
       if (foundFinish) return foundFinish.base;
     }
     return FinishOptions[0].base;
-  }, [currentScheme && currentScheme.finish]);
+  }, [currentScheme]);
 
   const takeScreenshot = useCallback(
     async (isPNG = true) => {
@@ -240,14 +240,15 @@ export const useCapture = (
     },
     [
       dispatch,
-      showPropertiesRef.current,
-      frameSizeRef.current,
-      currentCarMakeRef.current,
-      stageRef.current,
-      baseLayerRef.current,
-      mainLayerRef.current,
-      carMaskLayerRef.current,
-      currentLayerRef.current,
+      showPropertiesRef,
+      frameSizeRef,
+      currentCarMakeRef,
+      stageRef,
+      baseLayerRef,
+      mainLayerRef,
+      carMaskLayerRef,
+      currentLayerRef,
+      wrapperRef,
     ]
   );
 
@@ -257,9 +258,9 @@ export const useCapture = (
         let blob = dataURItoBlob(dataURL);
         var fileOfBlob = new File(
           [blob],
-          `${currentSchemeRef.current.id}.png`,
+          `${currentSchemeRef.current.id}.jpg`,
           {
-            type: "image/png",
+            type: "image/jpeg",
           }
         );
 
@@ -272,7 +273,7 @@ export const useCapture = (
         dispatch(setMessage({ message: err.message }));
       }
     },
-    [dispatch, currentSchemeRef.current]
+    [dispatch, currentSchemeRef]
   );
 
   const handleUploadThumbnail = useCallback(
@@ -285,8 +286,9 @@ export const useCapture = (
         try {
           console.log("Uploading Thumbnail");
           dispatch(setSaving(true));
-          const { canvas } = await takeScreenshot();
-          let dataURL = canvas.toDataURL("image/png", 0.5);
+          const { canvas, ctx, carMaskLayerImg } = await takeScreenshot();
+          ctx.drawImage(carMaskLayerImg, 0, 0);
+          let dataURL = canvas.toDataURL("image/jpeg", 0.1);
           if (uploadLater) dispatch(setSaving(false));
           await uploadThumbnail(dataURL);
           if (!uploadLater) dispatch(setSaving(false));
@@ -296,13 +298,7 @@ export const useCapture = (
         }
       }
     },
-    [
-      dispatch,
-      currentSchemeRef.current,
-      !stageRef.current,
-      takeScreenshot,
-      uploadThumbnail,
-    ]
+    [dispatch, currentSchemeRef, stageRef, takeScreenshot, uploadThumbnail]
   );
 
   const handleDownloadTGA = useCallback(async () => {
@@ -319,7 +315,7 @@ export const useCapture = (
         downloadTGA(ctx, width, height, `car_${userRef.current.id}.tga`);
 
         ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
-        let dataURL = canvas.toDataURL("image/png", 0.5);
+        let dataURL = canvas.toDataURL("image/jpeg", 0.1);
         if (!currentSchemeRef.current.thumbnail_updated)
           await uploadThumbnail(dataURL);
       } catch (err) {
@@ -329,10 +325,10 @@ export const useCapture = (
     }
   }, [
     dispatch,
-    currentSchemeRef.current,
-    userRef.current,
-    currentCarMakeRef.current,
-    !stageRef.current,
+    currentSchemeRef,
+    userRef,
+    currentCarMakeRef,
+    stageRef,
     takeScreenshot,
     uploadThumbnail,
   ]);
@@ -342,8 +338,9 @@ export const useCapture = (
       dispatch(setSaving(true));
       dispatch(setViewMode(ViewModes.SPEC_VIEW));
     }
-  }, [dispatch, currentSchemeRef.current, stageRef.current]);
+  }, [dispatch, currentSchemeRef, stageRef]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (
       schemeSaving &&
@@ -373,10 +370,14 @@ export const useCapture = (
       }
     }
   }, [
+    dispatch,
     schemeSaving,
     viewMode,
     schemeFinishBase,
-    loadedStatuses[`guide-mask-${schemeFinishBase}`],
+    currentCarMakeRef,
+    loadedStatuses,
+    userRef,
+    takeScreenshot,
   ]);
 
   return [handleUploadThumbnail, handleDownloadTGA, handleDownloadSpecTGA];

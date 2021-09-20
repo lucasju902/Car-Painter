@@ -177,8 +177,8 @@ class SchemeController {
       let scheme = await SchemeService.cloneById(req.params.id);
       scheme = scheme.toJSON();
       await FileService.cloneFileOnS3(
-        `scheme_thumbnails/${req.params.id}.png`,
-        `scheme_thumbnails/${scheme.id}.png`
+        `scheme_thumbnails/${req.params.id}.jpg`,
+        `scheme_thumbnails/${scheme.id}.jpg`
       );
       res.json(scheme);
     } catch (err) {
