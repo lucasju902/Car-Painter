@@ -212,6 +212,26 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                     labelPlacement="start"
                   />
                 </Grid>
+                <Grid item xs={12} sm={12}>
+                  <CustomFormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="snap_grid"
+                        checked={formProps.values.snap_grid}
+                        disabled={!editable}
+                        onChange={(event) =>
+                          formProps.setFieldValue(
+                            "snap_grid",
+                            event.target.checked
+                          )
+                        }
+                      />
+                    }
+                    label="Snap when editing"
+                    labelPlacement="start"
+                  />
+                </Grid>
               </Grid>
             }
           />

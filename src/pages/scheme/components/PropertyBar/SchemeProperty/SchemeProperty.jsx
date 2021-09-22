@@ -44,7 +44,7 @@ export const SchemeProperty = (props) => {
   const favroiteScheme = useMemo(
     () =>
       favoriteSchemeList.find((item) => item.scheme_id === currentScheme.id),
-    [favoriteSchemeList]
+    [currentScheme.id, favoriteSchemeList]
   );
 
   const owner = useMemo(
@@ -109,6 +109,7 @@ export const SchemeProperty = (props) => {
       for (let sharedUser of data.sharedUsers) {
         if (sharedUser.editable === -1) {
           dispatch(
+            // eslint-disable-next-line no-loop-func
             deleteSharedUserItem(sharedUser.id, () => {
               if (!count)
                 dispatch(
@@ -127,6 +128,7 @@ export const SchemeProperty = (props) => {
               {
                 editable: sharedUser.editable,
               },
+              // eslint-disable-next-line no-loop-func
               () => {
                 if (!count)
                   dispatch(

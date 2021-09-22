@@ -16,6 +16,8 @@ export const Shapes = React.memo((props) => {
     mouseMode,
     specMode,
     loadedStatuses,
+    paintingGuides,
+    guideData,
     onChange,
     onHover,
     onLoadLayer,
@@ -182,6 +184,8 @@ export const Shapes = React.memo((props) => {
             visible={layer.layer_visible ? true : false}
             layer_data={layer.layer_data}
             perfectDrawEnabled={false}
+            paintingGuides={paintingGuides}
+            guideData={guideData}
             onSelect={() => setCurrentLayer(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
@@ -228,6 +232,8 @@ export const Shapes = React.memo((props) => {
           strokeEnabled={true}
           layer_data={drawingLayer.layer_data}
           perfectDrawEnabled={false}
+          paintingGuides={paintingGuides}
+          guideData={guideData}
         />
       ) : (
         <></>

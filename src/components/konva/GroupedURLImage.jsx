@@ -10,6 +10,7 @@ import Konva from "konva";
 import Canvg from "canvg";
 import { mathRound2, hexToRgba } from "helper";
 import { replaceColors, svgToURL, urlToString } from "helper/svg";
+import { PaintingGuides } from "constant";
 
 export const GroupedURLImage = ({
   id,
@@ -31,6 +32,8 @@ export const GroupedURLImage = ({
   shadowColor,
   shadowOffsetX,
   shadowOffsetY,
+  paintingGuides,
+  guideData,
   onSelect,
   onDblClick,
   onChange,
@@ -52,21 +55,18 @@ export const GroupedURLImage = ({
     allowFilter,
   ]);
 
-  const getPixelRatio = useCallback(
-    (node) => {
-      if (imageRef.current) {
-        if (imageRef.current.width && imageRef.current.height)
-          return Math.max(
-            1,
-            imageRef.current.width / node.width(),
-            imageRef.current.height / node.height()
-          );
-        return 5;
-      }
-      return 1;
-    },
-    [frameSize]
-  );
+  const getPixelRatio = useCallback((node) => {
+    if (imageRef.current) {
+      if (imageRef.current.width && imageRef.current.height)
+        return Math.max(
+          1,
+          imageRef.current.width / node.width(),
+          imageRef.current.height / node.height()
+        );
+      return 5;
+    }
+    return 1;
+  }, []);
 
   const applyCaching = useCallback(() => {
     if (imageshapeRef.current) {
@@ -75,8 +75,9 @@ export const GroupedURLImage = ({
         imageSmoothingEnabled: true,
       });
     }
-  }, [imageshapeRef, filterColor]);
+  }, [imageshapeRef, getPixelRatio]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (loadedStatus !== false && loadedStatus !== true && onLoadLayer && id)
       onLoadLayer(id, false);
@@ -90,19 +91,23 @@ export const GroupedURLImage = ({
         imageRef.current.removeEventListener("load", handleLoad);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (image && isSVG) {
       await setImgFromSVG(src);
       applyCaching();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stroke, strokeWidth, filterColor]);
 
   useEffect(() => {
     if (image) {
       applyCaching();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY]);
 
   const handleLoad = useCallback(async () => {
@@ -122,7 +127,7 @@ export const GroupedURLImage = ({
     let width = props.width || originWidth;
     let height = props.height || originHeight;
 
-    if (isSVG && navigator.userAgent.indexOf("Firefox") != -1) {
+    if (isSVG && navigator.userAgent.indexOf("Firefox") !== -1) {
       let canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       const v = await Canvg.from(ctx, imageRef.current.src, {
@@ -152,6 +157,7 @@ export const GroupedURLImage = ({
       });
     }
     if (onLoadLayer && id) onLoadLayer(id, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     frameSize,
     allowFit,
@@ -161,8 +167,6 @@ export const GroupedURLImage = ({
     onLoadLayer,
     onChange,
     setImage,
-    getPixelRatio,
-    mathRound2,
     applyCaching,
   ]);
 
@@ -192,7 +196,7 @@ export const GroupedURLImage = ({
 
       loadImage(svgToURL(svgString));
     },
-    [loadImage, src, filterColor, stroke, strokeWidth]
+    [loadImage, filterColor, stroke, strokeWidth]
   );
 
   const handleDragStart = useCallback(
@@ -212,7 +216,7 @@ export const GroupedURLImage = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [mathRound2, onChange, onDragEnd]
+    [onChange, onDragEnd]
   );
   const handleTransformStart = useCallback(
     (e) => {
@@ -220,6 +224,21 @@ export const GroupedURLImage = ({
     },
     [onDragStart]
   );
+
+  const handleDragMove = useCallback(() => {
+    if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
+      const node = shapeRef.current;
+      const nodeX = node.x();
+      const nodeY = node.y();
+      node.x(
+        Math.round(nodeX / guideData.grid_padding) * guideData.grid_padding
+      );
+      node.y(
+        Math.round(nodeY / guideData.grid_padding) * guideData.grid_padding
+      );
+    }
+  }, [guideData.grid_padding, guideData.snap_grid, paintingGuides]);
+
   const handleTransformEnd = useCallback(
     (e) => {
       if (onChange) {
@@ -258,7 +277,15 @@ export const GroupedURLImage = ({
         if (onDragEnd) onDragEnd();
       }
     },
-    [filterColor, mathRound2, getPixelRatio, onChange, onDragEnd, applyCaching]
+    [
+      onChange,
+      layer_data.shadowOffsetX,
+      layer_data.shadowOffsetY,
+      layer_data.paddingX,
+      layer_data.paddingY,
+      applyCaching,
+      onDragEnd,
+    ]
   );
 
   return (
@@ -270,6 +297,7 @@ export const GroupedURLImage = ({
       onTap={onSelect}
       draggable={onChange && editable}
       onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
       onDragEnd={handleDragEnd}
       onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}

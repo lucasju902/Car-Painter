@@ -121,7 +121,7 @@ export const Board = ({
         stage.batchDraw();
       }
     },
-    [dispatch, stageRef.current]
+    [dispatch, stageRef]
   );
   const handleImageSize = useCallback(
     (size) => {
@@ -323,6 +323,8 @@ export const Board = ({
               currentLayer={currentLayer}
               mouseMode={mouseMode}
               loadedStatuses={loadedStatuses}
+              paintingGuides={paintingGuides}
+              guideData={currentScheme.guide_data}
               handleImageSize={handleImageSize}
               setCurrentLayer={handleLayerSelect}
               onChange={handleLayerDataChange}
@@ -341,6 +343,8 @@ export const Board = ({
               mouseMode={mouseMode}
               currentLayer={currentLayer}
               loadedStatuses={loadedStatuses}
+              paintingGuides={paintingGuides}
+              guideData={currentScheme.guide_data}
               setCurrentLayer={handleLayerSelect}
               onChange={handleLayerDataChange}
               onHover={handleHoverLayer}
@@ -360,6 +364,8 @@ export const Board = ({
               boardRotate={boardRotate}
               loadedStatuses={loadedStatuses}
               currentLayer={currentLayer}
+              paintingGuides={paintingGuides}
+              guideData={currentScheme.guide_data}
               setCurrentLayer={handleLayerSelect}
               onChange={handleLayerDataChange}
               onFontLoad={handleAddFont}

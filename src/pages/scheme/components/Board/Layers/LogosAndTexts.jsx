@@ -19,6 +19,8 @@ export const LogosAndTexts = React.memo((props) => {
     specMode,
     setCurrentLayer,
     boardRotate,
+    paintingGuides,
+    guideData,
     onChange,
     onFontLoad,
     onHover,
@@ -118,6 +120,8 @@ export const LogosAndTexts = React.memo((props) => {
               }
               opacity={layer.layer_data.opacity}
               layer_data={layer.layer_data}
+              paintingGuides={paintingGuides}
+              guideData={guideData}
               onSelect={() => setCurrentLayer(layer)}
               onDblClick={onDblClick}
               listening={
@@ -198,6 +202,8 @@ export const LogosAndTexts = React.memo((props) => {
             shadowOffsetX={shadowOffset.x}
             shadowOffsetY={shadowOffset.y}
             visible={layer.layer_visible ? true : false}
+            paintingGuides={paintingGuides}
+            guideData={guideData}
             onSelect={() => setCurrentLayer(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}

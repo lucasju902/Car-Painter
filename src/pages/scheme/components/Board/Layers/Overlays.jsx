@@ -17,6 +17,8 @@ export const Overlays = React.memo((props) => {
     specMode,
     boardRotate,
     loadedStatuses,
+    paintingGuides,
+    guideData,
     onChange,
     onHover,
     onLoadLayer,
@@ -108,6 +110,8 @@ export const Overlays = React.memo((props) => {
             onChange={(values) => onChange(layer, values)}
             onHover={(flag) => onHover(layer, flag)}
             visible={layer.layer_visible ? true : false}
+            paintingGuides={paintingGuides}
+            guideData={guideData}
             onLoadLayer={onLoadLayer}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}

@@ -27,6 +27,7 @@ export const GuidesSetting = React.memo((props) => {
       show_sponsor: guide_data.show_sponsor || false,
       show_numberBlocks: guide_data.show_numberBlocks || false,
       show_grid: guide_data.show_grid || false,
+      snap_grid: guide_data.snap_grid || false,
       show_carparts_on_top: guide_data.show_carparts_on_top || false,
       show_sponsor_block_on_top: guide_data.show_sponsor_block_on_top || false,
       show_number_block_on_top: guide_data.show_number_block_on_top || false,

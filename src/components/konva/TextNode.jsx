@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 
 import { Text } from "react-konva";
 import { mathRound2 } from "helper";
+import { PaintingGuides } from "constant";
 
 export const TextNode = ({
   id,
@@ -14,6 +15,8 @@ export const TextNode = ({
   shadowOpacity,
   shadowOffsetX,
   shadowOffsetY,
+  paintingGuides,
+  guideData,
   onLoadLayer,
   onSelect,
   onDblClick,
@@ -78,6 +81,20 @@ export const TextNode = ({
     [onChange, onDragEnd]
   );
 
+  const handleDragMove = useCallback(() => {
+    if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
+      const node = shapeRef.current;
+      const nodeX = node.x();
+      const nodeY = node.y();
+      node.x(
+        Math.round(nodeX / guideData.grid_padding) * guideData.grid_padding
+      );
+      node.y(
+        Math.round(nodeY / guideData.grid_padding) * guideData.grid_padding
+      );
+    }
+  }, [guideData.grid_padding, guideData.snap_grid, paintingGuides]);
+
   const handleTransformStart = useCallback(
     (e) => {
       if (onDragStart) onDragStart();
@@ -124,6 +141,7 @@ export const TextNode = ({
       draggable={onChange}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onDragMove={handleDragMove}
       onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
       perfectDrawEnabled={false}

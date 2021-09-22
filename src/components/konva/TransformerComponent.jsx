@@ -42,7 +42,7 @@ export const TransformerComponent = ({
       }
       trRef.current.getLayer().batchDraw();
     }
-  }, [selectedLayer]);
+  }, [selectedLayer, trRef]);
 
   useEffect(() => {
     checkNode();
@@ -63,7 +63,7 @@ export const TransformerComponent = ({
       }
       return newBoundBox;
     },
-    [pressedKey, getSnapRotation, rotateAroundCenter]
+    [pressedKey]
   );
 
   if (selectedLayer)

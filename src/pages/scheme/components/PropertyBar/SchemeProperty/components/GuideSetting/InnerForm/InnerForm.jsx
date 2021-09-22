@@ -24,7 +24,7 @@ export const InnerForm = React.memo(
         else newGuide.splice(index, 1);
         onChangePaintingGuides(newGuide);
       },
-      [paintingGuides]
+      [onChangePaintingGuides, paintingGuides]
     );
 
     return (
@@ -211,6 +211,7 @@ export const InnerForm = React.memo(
               "grid_padding",
               "grid_stroke",
               "show_grid",
+              "snap_grid",
             ]}
             editable={editable}
             initialValues={initialValues}
@@ -262,6 +263,26 @@ export const InnerForm = React.memo(
                       />
                     }
                     label="Show when editing"
+                    labelPlacement="start"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <CustomFormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="snap_grid"
+                        checked={formProps.values.snap_grid}
+                        disabled={!editable}
+                        onChange={(event) =>
+                          formProps.setFieldValue(
+                            "snap_grid",
+                            event.target.checked
+                          )
+                        }
+                      />
+                    }
+                    label="Snap when editing"
                     labelPlacement="start"
                   />
                 </Grid>

@@ -13,8 +13,12 @@ import {
   Arrow,
 } from "react-konva";
 import { mathRound2 } from "helper";
-
-import { MouseModes, AllowedLayerProps, LayerTypes } from "constant";
+import {
+  MouseModes,
+  AllowedLayerProps,
+  LayerTypes,
+  PaintingGuides,
+} from "constant";
 
 export const Shape = ({
   id,
@@ -42,6 +46,8 @@ export const Shape = ({
   shadowOffsetX,
   shadowOffsetY,
   layer_data,
+  paintingGuides,
+  guideData,
   onSelect,
   onDblClick,
   onChange,
@@ -77,8 +83,21 @@ export const Shape = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [offsetsFromStroke, onChange, onDragEnd]
+    [offsetsFromStroke.x, offsetsFromStroke.y, onChange, onDragEnd, type]
   );
+  const handleDragMove = useCallback(() => {
+    if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
+      const node = shapeRef.current;
+      const nodeX = node.x();
+      const nodeY = node.y();
+      node.x(
+        Math.round(nodeX / guideData.grid_padding) * guideData.grid_padding
+      );
+      node.y(
+        Math.round(nodeY / guideData.grid_padding) * guideData.grid_padding
+      );
+    }
+  }, [guideData.grid_padding, guideData.snap_grid, paintingGuides]);
   const handleTransformStart = useCallback(
     (e) => {
       if (onDragStart) onDragStart();
@@ -172,6 +191,7 @@ export const Shape = ({
 
   useEffect(() => {
     if (onLoadLayer && id) onLoadLayer(id, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -194,6 +214,7 @@ export const Shape = ({
           onClick={onSelect}
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
+          onDragMove={handleDragMove}
           onDragEnd={handleDragEnd}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
@@ -218,6 +239,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
@@ -242,6 +264,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
@@ -267,6 +290,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
@@ -291,6 +315,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
@@ -315,6 +340,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
@@ -339,6 +365,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
@@ -364,6 +391,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           shadowForStrokeEnabled={false}
@@ -389,6 +417,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -414,6 +443,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           onMouseOver={() => props.listening && onHover && onHover(true)}
@@ -440,6 +470,7 @@ export const Shape = ({
           onDblClick={onDblClick}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
           onMouseOver={() => props.listening && onHover && onHover(true)}

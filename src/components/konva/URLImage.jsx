@@ -9,6 +9,7 @@ import { Image } from "react-konva";
 import Konva from "konva";
 import Canvg from "canvg";
 import { mathRound2, hexToRgba } from "helper";
+import { PaintingGuides } from "constant";
 import { replaceColors, svgToURL, urlToString } from "helper/svg";
 
 export const URLImage = ({
@@ -27,6 +28,8 @@ export const URLImage = ({
   shadowColor,
   shadowOffsetX,
   shadowOffsetY,
+  paintingGuides,
+  guideData,
   onSelect,
   onDblClick,
   onChange,
@@ -47,22 +50,20 @@ export const URLImage = ({
     allowFilter,
   ]);
 
-  const getPixelRatio = useCallback(
-    (node) => {
-      if (imageRef.current) {
-        if (imageRef.current.width && imageRef.current.height)
-          return Math.max(
-            1,
-            imageRef.current.width / node.width(),
-            imageRef.current.height / node.height()
-          );
-        return 5;
-      }
-      return 1;
-    },
-    [frameSize]
-  );
+  const getPixelRatio = useCallback((node) => {
+    if (imageRef.current) {
+      if (imageRef.current.width && imageRef.current.height)
+        return Math.max(
+          1,
+          imageRef.current.width / node.width(),
+          imageRef.current.height / node.height()
+        );
+      return 5;
+    }
+    return 1;
+  }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (loadedStatus !== false && loadedStatus !== true && onLoadLayer && id)
       onLoadLayer(id, false);
@@ -76,19 +77,23 @@ export const URLImage = ({
         imageRef.current.removeEventListener("load", handleLoad);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (image && isSVG) {
       await setImgFromSVG(src);
       applyCaching();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stroke, strokeWidth, filterColor]);
 
   useEffect(() => {
     if (image) {
       applyCaching();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY]);
 
   const applyCaching = useCallback(() => {
@@ -98,6 +103,7 @@ export const URLImage = ({
         imageSmoothingEnabled: true,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shapeRef, filterColor]);
 
   const handleLoad = useCallback(async () => {
@@ -147,6 +153,7 @@ export const URLImage = ({
       });
     }
     if (onLoadLayer && id) onLoadLayer(id, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     frameSize,
     allowFit,
@@ -187,7 +194,7 @@ export const URLImage = ({
 
       loadImage(svgToURL(svgString));
     },
-    [loadImage, src, filterColor, stroke, strokeWidth]
+    [loadImage, filterColor, stroke, strokeWidth]
   );
 
   const handleDragStart = useCallback(
@@ -207,8 +214,23 @@ export const URLImage = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [mathRound2, onChange, onDragEnd]
+    [onChange, onDragEnd]
   );
+
+  const handleDragMove = useCallback(() => {
+    if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
+      const node = shapeRef.current;
+      const nodeX = node.x();
+      const nodeY = node.y();
+      node.x(
+        Math.round(nodeX / guideData.grid_padding) * guideData.grid_padding
+      );
+      node.y(
+        Math.round(nodeY / guideData.grid_padding) * guideData.grid_padding
+      );
+    }
+  }, [guideData, paintingGuides]);
+
   const handleTransformStart = useCallback(
     (e) => {
       if (onDragStart) onDragStart();
@@ -249,7 +271,7 @@ export const URLImage = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [filterColor, mathRound2, getPixelRatio, onChange, onDragEnd, applyCaching]
+    [onChange, onDragEnd, layer_data, applyCaching]
   );
 
   return (
@@ -272,6 +294,7 @@ export const URLImage = ({
       filters={allowFilter ? filters : null}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onDragMove={handleDragMove}
       onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
       perfectDrawEnabled={false}
