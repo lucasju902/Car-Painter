@@ -4,7 +4,7 @@ import Konva from "konva";
 export const useDragMove = (stageRef, layerRef, guideData, frameSize) => {
   const GUIDELINE_ID = "snapping-guide-line";
   const GUIDELINE_OFFSET = useMemo(
-    () => (guideData ? guideData.grid_padding / 4 : 10),
+    () => (guideData ? Math.max(guideData.grid_padding / 10, 2) : 10),
     [guideData]
   );
 
