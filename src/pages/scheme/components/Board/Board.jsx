@@ -315,6 +315,7 @@ export const Board = ({
             )}
 
             <Overlays
+              stageRef={stageRef}
               editable={editable}
               specMode={viewMode === ViewModes.SPEC_VIEW}
               layers={layerList}
@@ -335,7 +336,9 @@ export const Board = ({
               onDblClick={handleDblClickLayer}
             />
             <Shapes
+              stageRef={stageRef}
               editable={editable}
+              frameSize={frameSize}
               specMode={viewMode === ViewModes.SPEC_VIEW}
               layers={layerList}
               drawingLayer={drawingLayerRef.current}
@@ -354,6 +357,7 @@ export const Board = ({
               onDblClick={handleDblClickLayer}
             />
             <LogosAndTexts
+              stageRef={stageRef}
               editable={editable}
               specMode={viewMode === ViewModes.SPEC_VIEW}
               layers={layerList}
@@ -434,7 +438,7 @@ export const Board = ({
           ) : (
             <></>
           )}
-          <Layer>
+          <Layer name="layer-guide-top">
             <PaintingGuideTop
               legacyMode={currentScheme.legacy_mode}
               carMake={currentCarMake}

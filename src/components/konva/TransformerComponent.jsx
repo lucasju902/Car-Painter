@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useCallback } from "react";
 
-import { MouseModes } from "constant";
 import { Transformer } from "react-konva";
-import { getSnapRotation, rotateAroundCenter } from "helper";
+import {
+  getSnapRotation,
+  rotateAroundCenter,
+  isCenterBasedShape,
+} from "helper";
 
 export const TransformerComponent = ({
   trRef,
@@ -14,14 +17,7 @@ export const TransformerComponent = ({
     () =>
       selectedLayer &&
       (selectedLayer.layer_data.sizeLocked ||
-        [
-          MouseModes.CIRCLE,
-          MouseModes.STAR,
-          MouseModes.RING,
-          MouseModes.REGULARPOLYGON,
-          MouseModes.WEDGE,
-          MouseModes.ARC,
-        ].includes(selectedLayer.layer_data.type) ||
+        isCenterBasedShape(selectedLayer.layer_data.type) ||
         pressedKey === "shift"),
     [selectedLayer, pressedKey]
   );

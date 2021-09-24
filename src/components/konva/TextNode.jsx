@@ -3,9 +3,12 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Text } from "react-konva";
 import { mathRound2 } from "helper";
 import { PaintingGuides } from "constant";
+import { useDragMove } from "hooks";
 
 export const TextNode = ({
   id,
+  stageRef,
+  frameSize,
   fontFamily,
   fontFile,
   loadedFontList,
@@ -29,6 +32,12 @@ export const TextNode = ({
 }) => {
   const [loadedFontFamily, setLoadedFontFamily] = useState(null);
   const shapeRef = useRef();
+  const [handleDragMove, handleExtraDragEnd] = useDragMove(
+    stageRef,
+    shapeRef,
+    guideData,
+    frameSize
+  );
 
   useEffect(() => {
     if (fontFamily && fontFile) {
@@ -67,6 +76,7 @@ export const TextNode = ({
 
   const handleDragEnd = useCallback(
     (e) => {
+      handleExtraDragEnd();
       if (onChange) {
         const node = shapeRef.current;
         onChange({
@@ -78,22 +88,8 @@ export const TextNode = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [onChange, onDragEnd]
+    [onChange, onDragEnd, handleExtraDragEnd]
   );
-
-  const handleDragMove = useCallback(() => {
-    if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
-      const node = shapeRef.current;
-      const nodeX = node.x();
-      const nodeY = node.y();
-      node.x(
-        Math.round(nodeX / guideData.grid_padding) * guideData.grid_padding
-      );
-      node.y(
-        Math.round(nodeY / guideData.grid_padding) * guideData.grid_padding
-      );
-    }
-  }, [guideData.grid_padding, guideData.snap_grid, paintingGuides]);
 
   const handleTransformStart = useCallback(
     (e) => {

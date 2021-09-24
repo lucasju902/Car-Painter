@@ -1,6 +1,7 @@
 import _ from "lodash";
 import config from "config";
 import TGA from "utils/tga";
+import { MouseModes } from "constant";
 // import validateColor from "validate-color";
 
 export const getDifferenceFromToday = (past_date) => {
@@ -278,3 +279,13 @@ export const downloadTGA = (ctx, width, height, fileName) => {
 export const focusBoard = () => {
   setTimeout(() => document.activeElement.blur(), 1000);
 };
+
+export const isCenterBasedShape = (type) =>
+  [
+    MouseModes.CIRCLE,
+    MouseModes.STAR,
+    MouseModes.RING,
+    MouseModes.REGULARPOLYGON,
+    MouseModes.WEDGE,
+    MouseModes.ARC,
+  ].includes(type);

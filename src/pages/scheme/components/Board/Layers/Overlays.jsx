@@ -9,6 +9,7 @@ import { GroupedURLImage } from "components/konva";
 
 export const Overlays = React.memo((props) => {
   const {
+    stageRef,
     layers,
     editable,
     setCurrentLayer,
@@ -55,6 +56,7 @@ export const Overlays = React.memo((props) => {
           <GroupedURLImage
             key={layer.id}
             id={layer.id}
+            stageRef={stageRef}
             editable={editable}
             name={layer.id.toString()}
             src={`${config.assetsURL}/${layer.layer_data.source_file}`}

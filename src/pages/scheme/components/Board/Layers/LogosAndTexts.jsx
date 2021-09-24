@@ -9,6 +9,7 @@ import { GroupedURLImage, TextNode } from "components/konva";
 
 export const LogosAndTexts = React.memo((props) => {
   const {
+    stageRef,
     editable,
     layers,
     loadedFontList,
@@ -71,6 +72,7 @@ export const LogosAndTexts = React.memo((props) => {
             <GroupedURLImage
               key={layer.id}
               id={layer.id}
+              stageRef={stageRef}
               name={layer.id.toString()}
               editable={editable}
               src={`${config.assetsURL}/${layer.layer_data.source_file}`}
@@ -142,6 +144,8 @@ export const LogosAndTexts = React.memo((props) => {
             key={layer.id}
             id={layer.id}
             editable={editable}
+            stageRef={stageRef}
+            frameSize={frameSize}
             name={layer.id.toString()}
             text={layer.layer_data.text}
             fontFamily={font.font_name}

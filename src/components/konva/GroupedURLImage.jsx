@@ -10,12 +10,13 @@ import Konva from "konva";
 import Canvg from "canvg";
 import { mathRound2, hexToRgba } from "helper";
 import { replaceColors, svgToURL, urlToString } from "helper/svg";
-import { PaintingGuides } from "constant";
+import { useDragMove } from "hooks";
 
 export const GroupedURLImage = ({
   id,
   src,
   editable,
+  stageRef,
   bgColor = null,
   paddingX = 0,
   paddingY = 0,
@@ -54,6 +55,12 @@ export const GroupedURLImage = ({
   const filters = useMemo(() => (allowFilter ? [Konva.Filters.RGBA] : []), [
     allowFilter,
   ]);
+  const [handleDragMove, handleExtraDragEnd] = useDragMove(
+    stageRef,
+    shapeRef,
+    guideData,
+    frameSize
+  );
 
   const getPixelRatio = useCallback((node) => {
     if (imageRef.current) {
@@ -225,22 +232,9 @@ export const GroupedURLImage = ({
     [onDragStart]
   );
 
-  const handleDragMove = useCallback(() => {
-    if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
-      const node = shapeRef.current;
-      const nodeX = node.x();
-      const nodeY = node.y();
-      node.x(
-        Math.round(nodeX / guideData.grid_padding) * guideData.grid_padding
-      );
-      node.y(
-        Math.round(nodeY / guideData.grid_padding) * guideData.grid_padding
-      );
-    }
-  }, [guideData.grid_padding, guideData.snap_grid, paintingGuides]);
-
   const handleTransformEnd = useCallback(
     (e) => {
+      handleExtraDragEnd();
       if (onChange) {
         const node = shapeRef.current;
         const imageNode = imageshapeRef.current;
@@ -285,6 +279,7 @@ export const GroupedURLImage = ({
       layer_data.paddingY,
       applyCaching,
       onDragEnd,
+      handleExtraDragEnd,
     ]
   );
 

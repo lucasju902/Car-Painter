@@ -86,7 +86,7 @@ export const RotationProperty = React.memo((props) => {
       }
       setFieldValue("layer_data.rotation", value);
     },
-    [currentLayer, rotateAroundCenter]
+    [currentLayer.id, currentLayer.layer_data.type, setFieldValue, stageRef]
   );
 
   const handleToggleFlop = useCallback(() => {

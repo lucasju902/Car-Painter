@@ -9,12 +9,13 @@ import { Image } from "react-konva";
 import Konva from "konva";
 import Canvg from "canvg";
 import { mathRound2, hexToRgba } from "helper";
-import { PaintingGuides } from "constant";
 import { replaceColors, svgToURL, urlToString } from "helper/svg";
+import { useDragMove } from "hooks";
 
 export const URLImage = ({
   id,
   src,
+  stageRef,
   filterColor,
   frameSize,
   allowFit,
@@ -49,6 +50,12 @@ export const URLImage = ({
   const filters = useMemo(() => (allowFilter ? [Konva.Filters.RGBA] : []), [
     allowFilter,
   ]);
+  const [handleDragMove, handleExtraDragEnd] = useDragMove(
+    stageRef,
+    shapeRef,
+    guideData,
+    frameSize
+  );
 
   const getPixelRatio = useCallback((node) => {
     if (imageRef.current) {
@@ -206,6 +213,7 @@ export const URLImage = ({
   );
   const handleDragEnd = useCallback(
     (e) => {
+      handleExtraDragEnd();
       if (onChange) {
         onChange({
           left: mathRound2(e.target.x()),
@@ -214,22 +222,8 @@ export const URLImage = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [onChange, onDragEnd]
+    [onChange, onDragEnd, handleExtraDragEnd]
   );
-
-  const handleDragMove = useCallback(() => {
-    if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
-      const node = shapeRef.current;
-      const nodeX = node.x();
-      const nodeY = node.y();
-      node.x(
-        Math.round(nodeX / guideData.grid_padding) * guideData.grid_padding
-      );
-      node.y(
-        Math.round(nodeY / guideData.grid_padding) * guideData.grid_padding
-      );
-    }
-  }, [guideData, paintingGuides]);
 
   const handleTransformStart = useCallback(
     (e) => {

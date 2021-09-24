@@ -8,8 +8,10 @@ import { Shape } from "components/konva";
 
 export const Shapes = React.memo((props) => {
   const {
+    stageRef,
     editable,
     layers,
+    frameSize,
     drawingLayer,
     setCurrentLayer,
     boardRotate,
@@ -100,7 +102,9 @@ export const Shapes = React.memo((props) => {
           <Shape
             key={layer.id}
             id={layer.id}
+            stageRef={stageRef}
             editable={editable}
+            frameSize={frameSize}
             type={layer.layer_data.type}
             x={parseFloat(layer.layer_data.left + offsetsFromStroke.x || 0)}
             y={parseFloat(layer.layer_data.top + offsetsFromStroke.y || 0)}

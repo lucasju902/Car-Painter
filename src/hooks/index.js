@@ -1,6 +1,7 @@
 export { useStateRef } from "./useStateRef";
 export { useReducerRef } from "./useReducerRef";
 export { useBoardSocket } from "./useBoardSocket";
+export { useDragMove } from "./useDragMove";
 export { useGeneralSocket } from "./useGeneralSocket";
 export { useZoom } from "./useZoom";
 export { useCapture } from "./useCapture";

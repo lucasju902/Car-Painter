@@ -13,17 +13,15 @@ import {
   Arrow,
 } from "react-konva";
 import { mathRound2 } from "helper";
-import {
-  MouseModes,
-  AllowedLayerProps,
-  LayerTypes,
-  PaintingGuides,
-} from "constant";
+import { MouseModes, AllowedLayerProps, LayerTypes } from "constant";
+import { useDragMove } from "hooks";
 
 export const Shape = ({
   id,
   type,
   editable,
+  stageRef,
+  frameSize,
   x,
   y,
   width,
@@ -58,6 +56,12 @@ export const Shape = ({
   ...props
 }) => {
   const shapeRef = useRef();
+  const [handleDragMove, handleExtraDragEnd] = useDragMove(
+    stageRef,
+    shapeRef,
+    guideData,
+    frameSize
+  );
   const handleDragStart = useCallback(
     (e) => {
       onSelect();
@@ -67,6 +71,7 @@ export const Shape = ({
   );
   const handleDragEnd = useCallback(
     (e) => {
+      handleExtraDragEnd();
       if (onChange) {
         const AllowedLayerTypes = AllowedLayerProps[LayerTypes.SHAPE][type];
         onChange(
@@ -83,21 +88,9 @@ export const Shape = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [offsetsFromStroke.x, offsetsFromStroke.y, onChange, onDragEnd, type]
+    [offsetsFromStroke, onChange, onDragEnd, type, handleExtraDragEnd]
   );
-  const handleDragMove = useCallback(() => {
-    if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
-      const node = shapeRef.current;
-      const nodeX = node.x();
-      const nodeY = node.y();
-      node.x(
-        Math.round(nodeX / guideData.grid_padding) * guideData.grid_padding
-      );
-      node.y(
-        Math.round(nodeY / guideData.grid_padding) * guideData.grid_padding
-      );
-    }
-  }, [guideData.grid_padding, guideData.snap_grid, paintingGuides]);
+
   const handleTransformStart = useCallback(
     (e) => {
       if (onDragStart) onDragStart();
