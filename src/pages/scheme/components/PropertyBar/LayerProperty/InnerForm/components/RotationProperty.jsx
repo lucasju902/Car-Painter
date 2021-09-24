@@ -24,18 +24,12 @@ import { SliderInput } from "components/common";
 export const RotationProperty = React.memo((props) => {
   const {
     editable,
-    errors,
     isValid,
     checkLayerDataDirty,
     stageRef,
     currentLayer,
-    handleBlur,
-    handleChange,
     setFieldValue,
-    toggleField,
-    touched,
     values,
-    onLayerDataUpdate,
     onLayerDataMultiUpdate,
   } = props;
   const layerDataProperties = ["rotation", "flip", "flop"];

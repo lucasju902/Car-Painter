@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 
 import { Text } from "react-konva";
 import { mathRound2 } from "helper";
-import { PaintingGuides } from "constant";
 import { useDragMove } from "hooks";
 
 export const TextNode = ({
@@ -39,17 +38,6 @@ export const TextNode = ({
     frameSize
   );
 
-  useEffect(() => {
-    if (fontFamily && fontFile) {
-      if (!loadedFontList.includes(fontFamily)) {
-        loadFont();
-      } else {
-        setLoadedFontFamily(fontFamily);
-        if (onLoadLayer && id) onLoadLayer(id, true);
-      }
-    }
-  }, [fontFamily, fontFile]);
-
   const loadFont = useCallback(() => {
     let fontObject = new FontFace(fontFamily, fontFile);
     fontObject
@@ -65,6 +53,17 @@ export const TextNode = ({
         console.warn(error, fontFamily);
       });
   }, [id, fontFamily, fontFile, onFontLoad, onLoadLayer, setLoadedFontFamily]);
+
+  useEffect(() => {
+    if (fontFamily && fontFile) {
+      if (!loadedFontList.includes(fontFamily)) {
+        loadFont();
+      } else {
+        setLoadedFontFamily(fontFamily);
+        if (onLoadLayer && id) onLoadLayer(id, true);
+      }
+    }
+  }, [fontFamily, fontFile, id, loadFont, loadedFontList, onLoadLayer]);
 
   const handleDragStart = useCallback(
     (e) => {

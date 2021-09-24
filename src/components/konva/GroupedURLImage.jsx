@@ -215,6 +215,7 @@ export const GroupedURLImage = ({
   );
   const handleDragEnd = useCallback(
     (e) => {
+      handleExtraDragEnd();
       if (onChange) {
         onChange({
           left: mathRound2(e.target.x()),
@@ -223,7 +224,7 @@ export const GroupedURLImage = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [onChange, onDragEnd]
+    [handleExtraDragEnd, onChange, onDragEnd]
   );
   const handleTransformStart = useCallback(
     (e) => {
@@ -234,7 +235,6 @@ export const GroupedURLImage = ({
 
   const handleTransformEnd = useCallback(
     (e) => {
-      handleExtraDragEnd();
       if (onChange) {
         const node = shapeRef.current;
         const imageNode = imageshapeRef.current;
@@ -279,7 +279,6 @@ export const GroupedURLImage = ({
       layer_data.paddingY,
       applyCaching,
       onDragEnd,
-      handleExtraDragEnd,
     ]
   );
 

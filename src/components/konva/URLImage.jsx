@@ -130,7 +130,7 @@ export const URLImage = ({
     let width = props.width || originWidth;
     let height = props.height || originHeight;
 
-    if (isSVG && navigator.userAgent.indexOf("Firefox") != -1) {
+    if (isSVG && navigator.userAgent.indexOf("Firefox") !== -1) {
       let canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       const v = await Canvg.from(ctx, imageRef.current.src, {

@@ -242,9 +242,9 @@ export const useDragMove = (stageRef, layerRef, guideData, frameSize) => {
     [drawGuides, getGuides, getLineGuideStops, getObjectSnappingEdges, stageRef]
   );
 
-  const handleExtraDragEnd = () => {
+  const handleExtraDragEnd = useCallback(() => {
     stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
-  };
+  }, [stageRef]);
 
   return [handleDragMove, handleExtraDragEnd];
 };

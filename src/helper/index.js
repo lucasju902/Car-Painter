@@ -1,4 +1,3 @@
-import _ from "lodash";
 import config from "config";
 import TGA from "utils/tga";
 import { MouseModes } from "constant";
