@@ -1,7 +1,14 @@
 import { useCallback, useMemo } from "react";
 import Konva from "konva";
+import { PaintingGuides } from "constant";
 
-export const useDragMove = (stageRef, layerRef, guideData, frameSize) => {
+export const useDragMove = (
+  stageRef,
+  layerRef,
+  paintingGuides,
+  guideData,
+  frameSize
+) => {
   const GUIDELINE_ID = "snapping-guide-line";
   const GUIDELINE_OFFSET = useMemo(
     () => (guideData ? Math.max(guideData.grid_padding / 10, 2) : 10),
@@ -166,80 +173,90 @@ export const useDragMove = (stageRef, layerRef, guideData, frameSize) => {
 
   const handleDragMove = useCallback(
     (e) => {
-      // clear all previous lines on the screen
-      stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
+      if (paintingGuides.includes(PaintingGuides.GRID) && guideData.snap_grid) {
+        // clear all previous lines on the screen
+        stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
 
-      // find possible snapping lines
-      var lineGuideStops = getLineGuideStops(e.target);
-      // find snapping points of current object
-      var itemBounds = getObjectSnappingEdges(e.target);
+        // find possible snapping lines
+        var lineGuideStops = getLineGuideStops(e.target);
+        // find snapping points of current object
+        var itemBounds = getObjectSnappingEdges(e.target);
 
-      // now find where can we snap current object
-      var guides = getGuides(lineGuideStops, itemBounds);
+        // now find where can we snap current object
+        var guides = getGuides(lineGuideStops, itemBounds);
 
-      // do nothing of no snapping
-      if (!guides.length) {
-        return;
-      }
-
-      drawGuides(guides);
-
-      var pos = e.target.position();
-      // now force object position
-      guides.forEach((lg) => {
-        switch (lg.snap) {
-          case "start": {
-            switch (lg.orientation) {
-              case "V": {
-                pos.x = lg.lineGuide + lg.offset;
-                break;
-              }
-              case "H": {
-                pos.y = lg.lineGuide + lg.offset;
-                break;
-              }
-              default:
-                break;
-            }
-            break;
-          }
-          case "center": {
-            switch (lg.orientation) {
-              case "V": {
-                pos.x = lg.lineGuide + lg.offset;
-                break;
-              }
-              case "H": {
-                pos.y = lg.lineGuide + lg.offset;
-                break;
-              }
-              default:
-                break;
-            }
-            break;
-          }
-          case "end": {
-            switch (lg.orientation) {
-              case "V": {
-                pos.x = lg.lineGuide + lg.offset;
-                break;
-              }
-              case "H": {
-                pos.y = lg.lineGuide + lg.offset;
-                break;
-              }
-              default:
-                break;
-            }
-            break;
-          }
-          default:
-            break;
+        // do nothing of no snapping
+        if (!guides.length) {
+          return;
         }
-      });
-      e.target.position(pos);
+
+        drawGuides(guides);
+
+        var pos = e.target.position();
+        // now force object position
+        guides.forEach((lg) => {
+          switch (lg.snap) {
+            case "start": {
+              switch (lg.orientation) {
+                case "V": {
+                  pos.x = lg.lineGuide + lg.offset;
+                  break;
+                }
+                case "H": {
+                  pos.y = lg.lineGuide + lg.offset;
+                  break;
+                }
+                default:
+                  break;
+              }
+              break;
+            }
+            case "center": {
+              switch (lg.orientation) {
+                case "V": {
+                  pos.x = lg.lineGuide + lg.offset;
+                  break;
+                }
+                case "H": {
+                  pos.y = lg.lineGuide + lg.offset;
+                  break;
+                }
+                default:
+                  break;
+              }
+              break;
+            }
+            case "end": {
+              switch (lg.orientation) {
+                case "V": {
+                  pos.x = lg.lineGuide + lg.offset;
+                  break;
+                }
+                case "H": {
+                  pos.y = lg.lineGuide + lg.offset;
+                  break;
+                }
+                default:
+                  break;
+              }
+              break;
+            }
+            default:
+              break;
+          }
+        });
+        e.target.position(pos);
+      }
     },
-    [drawGuides, getGuides, getLineGuideStops, getObjectSnappingEdges, stageRef]
+    [
+      drawGuides,
+      getGuides,
+      getLineGuideStops,
+      getObjectSnappingEdges,
+      guideData,
+      paintingGuides,
+      stageRef,
+    ]
   );
 
   const handleExtraDragEnd = useCallback(() => {

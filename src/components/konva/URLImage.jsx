@@ -53,6 +53,7 @@ export const URLImage = ({
   const [handleDragMove, handleExtraDragEnd] = useDragMove(
     stageRef,
     shapeRef,
+    paintingGuides,
     guideData,
     frameSize
   );

@@ -59,6 +59,7 @@ export const Shape = ({
   const [handleDragMove, handleExtraDragEnd] = useDragMove(
     stageRef,
     shapeRef,
+    paintingGuides,
     guideData,
     frameSize
   );

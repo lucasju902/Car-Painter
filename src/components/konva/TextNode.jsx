@@ -34,6 +34,7 @@ export const TextNode = ({
   const [handleDragMove, handleExtraDragEnd] = useDragMove(
     stageRef,
     shapeRef,
+    paintingGuides,
     guideData,
     frameSize
   );

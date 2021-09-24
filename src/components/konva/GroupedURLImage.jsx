@@ -58,6 +58,7 @@ export const GroupedURLImage = ({
   const [handleDragMove, handleExtraDragEnd] = useDragMove(
     stageRef,
     shapeRef,
+    paintingGuides,
     guideData,
     frameSize
   );
