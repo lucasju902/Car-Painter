@@ -37,7 +37,7 @@ export const useZoom = (stageRef) => {
         dispatch(setZoom(newScale));
       }
     },
-    [dispatch, currentLayer, stageRef.current]
+    [dispatch, currentLayer, stageRef]
   );
 
   const handleZoomIn = useCallback(() => {
@@ -51,21 +51,19 @@ export const useZoom = (stageRef) => {
   }, [zoom, handleZoom]);
 
   const handleZoomFit = useCallback(() => {
-    let width = stageRef.current.attrs.width;
-    let height = stageRef.current.attrs.height;
+    let width = stageRef.current.attrs.width || 1024;
+    let height = stageRef.current.attrs.height || 1024;
     const newZoom = mathRound4(
-      Math.min(width / frameSize.width, height / frameSize.height)
+      Math.min(
+        width / (frameSize.width || 1024),
+        height / (frameSize.height || 1024)
+      )
     );
 
     stageRef.current.x(width / 2);
     stageRef.current.y(height / 2);
     dispatch(setZoom(newZoom));
-  }, [
-    dispatch,
-    stageRef.current && stageRef.current.attrs && stageRef.current.attrs.width,
-    stageRef.current && stageRef.current.attrs && stageRef.current.attrs.height,
-    frameSize,
-  ]);
+  }, [dispatch, stageRef, frameSize]);
 
   return [zoom, handleZoomIn, handleZoomOut, handleZoomFit];
 };

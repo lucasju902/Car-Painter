@@ -747,6 +747,7 @@ export const AllowedLayerProps = {
   [LayerTypes.BASE]: [
     "layer_data.name",
     "layer_visible",
+    "delete",
     "layer_data",
     "layer_data.opacity",
     "layer_data.color",

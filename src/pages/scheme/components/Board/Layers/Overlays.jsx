@@ -104,6 +104,7 @@ export const Overlays = React.memo((props) => {
                 ? layer.layer_data.finish || FinishOptions[0].value
                 : layer.layer_data.scolor
             }
+            strokeScale={layer.layer_data.stroke_scale}
             onSelect={() => setCurrentLayer(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}

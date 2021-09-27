@@ -16,7 +16,7 @@ export const SVGImageWithLoad = ({
   const [imageSrc, setImageSrc] = useState();
   const [loaded, setLoaded] = useState(false);
 
-  useEffect(async () => {
+  const loadImage = async () => {
     let svgString = await urlToString(
       src + `?timestamp=${new Date().toISOString()}`
     );
@@ -25,10 +25,15 @@ export const SVGImageWithLoad = ({
         color: options.color,
         stroke: options.stroke,
         opacity: options.opacity,
-        strokeWidth: options.strokeWidth * 5,
+        strokeWidth: options.strokeWidth,
       });
     }
     setImageSrc(svgToURL(svgString));
+  };
+
+  useEffect(() => {
+    loadImage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

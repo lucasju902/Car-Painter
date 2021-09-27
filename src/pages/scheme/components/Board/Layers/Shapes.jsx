@@ -178,6 +178,7 @@ export const Shapes = React.memo((props) => {
                 ? layer.layer_data.finish || FinishOptions[0].value
                 : layer.layer_data.scolor
             }
+            strokeScale={layer.layer_data.stroke_scale}
             strokeEnabled={true}
             globalCompositeOperation={
               layer.layer_data.blendType === "normal"

@@ -76,7 +76,9 @@ export const OverlayDialog = React.memo((props) => {
                         color: guide_data.default_shape_color,
                         opacity: guide_data.default_shape_opacity || 1,
                         stroke: guide_data.default_shape_scolor,
-                        strokeWidth: guide_data.default_shape_stroke || 0,
+                        strokeWidth:
+                          guide_data.default_shape_stroke *
+                            shape.stroke_scale || 0,
                       }}
                     />
                   ) : (

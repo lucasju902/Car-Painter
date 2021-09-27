@@ -252,6 +252,7 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
         opacity: guide_data.default_shape_opacity || 1,
         scolor: guide_data.default_shape_scolor,
         stroke: guide_data.default_shape_stroke || 0,
+        stroke_scale: shape.stroke_scale,
       }),
     });
     SocketClient.emit("client-create-layer", {

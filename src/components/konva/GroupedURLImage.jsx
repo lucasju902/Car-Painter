@@ -29,6 +29,7 @@ export const GroupedURLImage = ({
   tellSize,
   stroke,
   strokeWidth,
+  strokeScale,
   shadowBlur,
   shadowColor,
   shadowOffsetX,
@@ -198,13 +199,13 @@ export const GroupedURLImage = ({
         svgString = replaceColors(svgString, {
           color: filterColor,
           stroke: stroke,
-          strokeWidth: strokeWidth * 5,
+          strokeWidth: strokeWidth * strokeScale,
         });
       }
 
       loadImage(svgToURL(svgString));
     },
-    [loadImage, filterColor, stroke, strokeWidth]
+    [loadImage, filterColor, stroke, strokeWidth, strokeScale]
   );
 
   const handleDragStart = useCallback(
