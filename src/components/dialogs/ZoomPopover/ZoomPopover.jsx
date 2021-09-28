@@ -105,7 +105,7 @@ export const ZoomPopover = React.memo(
 
           <OutlinedInput
             id="zoom-value"
-            value={zoom * 100}
+            value={(zoom * 100).toFixed(2)}
             onChange={handleZoomChange}
             onFocus={handleFocus}
             onKeyDown={handleZoomKeyDown}

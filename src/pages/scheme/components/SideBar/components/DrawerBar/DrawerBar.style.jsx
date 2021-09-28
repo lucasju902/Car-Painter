@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Wrapper = styled(Box)`
   background: #666666;
-  padding: 0px 10px 0 15px;
+  padding: 0px 10px 10px 15px;
 `;
 export const ToolWrapper = styled(Box)`
   background: #444;

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { Box } from "components/MaterialUI";
+import { Box, useMediaQuery } from "components/MaterialUI";
 import { GeneralSetting, GuidesSetting, SharingSetting } from "./components";
 import {
   StyledTabs,
@@ -28,6 +28,7 @@ export const SchemeProperty = (props) => {
   const { editable } = props;
 
   const dispatch = useDispatch();
+  const overTablet = useMediaQuery((theme) => theme.breakpoints.up("md"));
   const [tabValue, setTabValue] = useState(0);
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -182,7 +183,7 @@ export const SchemeProperty = (props) => {
   );
 
   return (
-    <Wrapper py={5} px={3}>
+    <Wrapper py={5} px={3} width={overTablet ? "300px" : "250px"}>
       <StyledTabs
         value={tabValue}
         onChange={handleTabChange}

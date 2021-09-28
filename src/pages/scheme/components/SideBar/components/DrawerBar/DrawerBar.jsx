@@ -1,13 +1,14 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Box, Divider } from "components/MaterialUI";
+import { Box, Divider, IconButton } from "components/MaterialUI";
 import { Octagon as OctagonIcon } from "react-feather";
 import {
   SignalWifi4Bar as WedgeIcon,
   ShowChart as LineIcon,
   TrendingUp as ArrowIcon,
 } from "@material-ui/icons";
+import { ChevronsLeft, ChevronsRight } from "react-feather";
 import {
   faSquare,
   faCircle,
@@ -24,7 +25,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faCuttlefish } from "@fortawesome/free-brands-svg-icons";
 
-import { setMouseMode } from "redux/reducers/boardReducer";
+import { setMouseMode, setShowLayers } from "redux/reducers/boardReducer";
 import {
   setCurrent as setCurrentLayer,
   createLayersFromBasePaint,
@@ -156,6 +157,7 @@ export const DrawerBar = React.memo(
   ({ dialog, setDialog, stageRef, editable }) => {
     const dispatch = useDispatch();
     const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
+    const showLayers = useSelector((state) => state.boardReducer.showLayers);
     const currentScheme = useSelector((state) => state.schemeReducer.current);
     const currentCarMake = useSelector((state) => state.carMakeReducer.current);
     const overlayList = useSelector((state) => state.overlayReducer.list);
@@ -267,8 +269,17 @@ export const DrawerBar = React.memo(
       [dispatch, currentScheme, setDialog]
     );
 
+    const handleToggleLayers = useCallback(() => {
+      dispatch(setShowLayers(!showLayers));
+    }, [dispatch, showLayers]);
+
     return (
-      <Wrapper>
+      <Wrapper
+        height="100%"
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
         <ToolWrapper>
           {modes.map((mode) => (
             <LightTooltip
@@ -343,6 +354,11 @@ export const DrawerBar = React.memo(
             </LightTooltip>
           </Box>
         </ToolWrapper>
+        <LightTooltip title="Toggle Layers" arrow>
+          <IconButton onClick={handleToggleLayers}>
+            {showLayers ? <ChevronsLeft /> : <ChevronsRight />}
+          </IconButton>
+        </LightTooltip>
 
         <BasePaintDialog
           open={dialog === DialogTypes.BASEPAINT}

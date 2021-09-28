@@ -4,7 +4,14 @@ import { colorValidator } from "helper";
 import { FinishOptions, LayerTypes, DialogTypes } from "constant";
 import { EnglishLang } from "constant/language";
 
-import { Box, Typography, Grid, Select, MenuItem } from "@material-ui/core";
+import {
+  Box,
+  Typography,
+  Grid,
+  Select,
+  MenuItem,
+  useMediaQuery,
+} from "@material-ui/core";
 import {
   faImage,
   faFont,
@@ -36,9 +43,11 @@ export const SideBar = (props) => {
   } = props;
 
   const dispatch = useDispatch();
+  const overTablet = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const layerList = useSelector((state) => state.layerReducer.list);
+  const showLayers = useSelector((state) => state.boardReducer.showLayers);
   const currentCarMake = useSelector((state) => state.carMakeReducer.current);
 
   const baseColor = useMemo(
@@ -75,7 +84,7 @@ export const SideBar = (props) => {
       setColorInput(correctedColor);
       setColorDirty(false);
     },
-    [dispatch, currentScheme && currentScheme.id, setColorInput, setColorDirty]
+    [dispatch, currentScheme]
   );
 
   const handleChangeBasePaintColorInput = useCallback(
@@ -94,13 +103,13 @@ export const SideBar = (props) => {
     }
     dispatch(updateScheme({ id: currentScheme.id, base_color }));
     setColorDirty(false);
-  }, [dispatch, currentScheme && currentScheme.id, colorInput, setColorDirty]);
+  }, [colorInput, dispatch, currentScheme]);
 
   const handleChangeFinishColor = useCallback(
     (color) => {
       dispatch(updateScheme({ id: currentScheme.id, finish: color }));
     },
-    [dispatch, currentScheme && currentScheme.id]
+    [currentScheme, dispatch]
   );
 
   const handleDoubleClickItem = useCallback(() => {
@@ -108,9 +117,9 @@ export const SideBar = (props) => {
   }, [dispatch]);
 
   return (
-    <Box display="flex" flexDirection="column">
-      <TitleWrapper px={3}>
-        <TitleBar editable={editable} onBack={onBack} />
+    <Box display="flex" flexDirection="column" bgcolor="#666666">
+      <TitleWrapper px={3} height="55px">
+        {showLayers ? <TitleBar editable={editable} onBack={onBack} /> : <></>}
       </TitleWrapper>
       <Wrapper display="flex">
         <DrawerBar
@@ -119,7 +128,11 @@ export const SideBar = (props) => {
           stageRef={stageRef}
           editable={editable}
         />
-        <LayerWrapper pr={3} pb={2}>
+
+        <LayerWrapper
+          width={!showLayers ? "0px" : overTablet ? "300px" : "250px"}
+          pr={3}
+        >
           <PartGroup
             title={currentCarMake ? currentCarMake.name : ""}
             layerList={layerList.filter(

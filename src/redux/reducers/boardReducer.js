@@ -19,6 +19,7 @@ const initialState = {
     height: 1024,
   },
   showProperties: true,
+  showLayers: true,
   paintingGuides: [PaintingGuides.CARMASK],
   zoom: 1,
   pressedKey: null,
@@ -53,6 +54,9 @@ export const slice = createSlice({
     },
     setShowProperties: (state, action) => {
       state.showProperties = action.payload;
+    },
+    setShowLayers: (state, action) => {
+      state.showLayers = action.payload;
     },
     setBoardRotate: (state, action) => {
       state.boardRotate = action.payload;
@@ -95,6 +99,7 @@ export const {
   setBoardRotate,
   setMouseMode,
   setShowProperties,
+  setShowLayers,
   pushToActionHistory,
   setActionHistory,
   setActionHistoryIndex,
@@ -164,6 +169,8 @@ export const historyActionBack = () => async (dispatch, getState) => {
           updateScheme(actionHistory[actionHistoryIndex].prev_data, false)
         );
         break;
+      default:
+        break;
     }
     dispatch(setActionHistoryIndex(actionHistoryIndex - 1));
   }
@@ -195,6 +202,8 @@ export const historyActionUp = () => async (dispatch, getState) => {
         dispatch(
           updateScheme(actionHistory[actionHistoryIndex + 1].next_data, false)
         );
+        break;
+      default:
         break;
     }
     dispatch(setActionHistoryIndex(actionHistoryIndex + 1));

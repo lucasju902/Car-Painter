@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import _ from "lodash";
 import { DialogTypes } from "constant";
-import styled from "styled-components/macro";
 
-import { Box, IconButton, TextField } from "@material-ui/core";
+import { Box, IconButton, useMediaQuery } from "@material-ui/core";
 import { ShortCutsDialog, SchemeSettingsDialog } from "components/dialogs";
 import { LightTooltip } from "components/common";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import {
   Save as SaveIcon,
@@ -20,6 +17,7 @@ import { updateScheme } from "redux/reducers/schemeReducer";
 
 export const TitleBar = React.memo((props) => {
   const { editable, onBack } = props;
+  const overTablet = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   const dispatch = useDispatch();
 
@@ -36,7 +34,7 @@ export const TitleBar = React.memo((props) => {
   );
   const handleSaveName = useCallback(() => {
     dispatch(updateScheme({ id: currentScheme.id, name }, true, false));
-  }, [dispatch, currentScheme && currentScheme.id, name]);
+  }, [dispatch, currentScheme, name]);
   const handleNameKeyDown = useCallback(
     (event) => {
       if (event.keyCode === 13) {
@@ -49,13 +47,13 @@ export const TitleBar = React.memo((props) => {
 
   const handleDiscardName = useCallback(() => {
     setName(currentScheme.name);
-  }, [setName, currentScheme && currentScheme.name]);
+  }, [setName, currentScheme]);
 
   useEffect(() => {
     if (currentScheme) {
       setName(currentScheme.name);
     }
-  }, [currentScheme && currentScheme.name]);
+  }, [currentScheme]);
 
   return (
     <Box
@@ -101,11 +99,13 @@ export const TitleBar = React.memo((props) => {
             <CustomIcon icon={faQuestion} size="xs" />
           </IconButton>
         </LightTooltip>
-        <LightTooltip title="Settings" arrow>
-          <IconButton ml={2} onClick={() => setDialog(DialogTypes.SETTINGS)}>
-            <SettingsIcon />
-          </IconButton>
-        </LightTooltip>
+        {overTablet && (
+          <LightTooltip title="Settings" arrow>
+            <IconButton ml={2} onClick={() => setDialog(DialogTypes.SETTINGS)}>
+              <SettingsIcon />
+            </IconButton>
+          </LightTooltip>
+        )}
       </Box>
 
       <ShortCutsDialog

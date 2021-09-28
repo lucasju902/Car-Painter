@@ -4,7 +4,6 @@ import { Tab, Tabs, Box } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 export const Wrapper = styled(Box)`
-  width: 300px;
   background: #666666;
   overflow: auto;
 `;
@@ -53,12 +52,15 @@ export const StyledTab = withStyles((theme) => ({
     textTransform: "none",
     color: "#fff",
     fontWeight: theme.typography.fontWeightRegular,
-    fontSize: "1rem",
     marginRight: "10px",
     padding: "6px 5px",
     minWidth: 50,
+    fontSize: "12px",
     "&:focus": {
       opacity: 1,
+    },
+    [theme.breakpoints.up("md")]: {
+      fontSize: "1rem",
     },
   },
 }))((props) => <Tab disableRipple {...props} />);

@@ -8,12 +8,15 @@ import { updateLayer } from "redux/reducers/layerReducer";
 import { AllowedLayerProps, LayerTypes, DefaultLayer } from "constant";
 import { colorValidator } from "helper";
 
+import { useMediaQuery } from "@material-ui/core";
 import { InnerForm } from "./InnerForm";
 import { Wrapper } from "./LayerProperty.style";
 
 export const LayerProperty = (props) => {
   const { editable, stageRef, onClone, onDelete } = props;
   const dispatch = useDispatch();
+  const overTablet = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
@@ -127,7 +130,7 @@ export const LayerProperty = (props) => {
   );
 
   return (
-    <Wrapper py={5} px={3}>
+    <Wrapper py={5} px={3} width={overTablet ? "300px" : "250px"}>
       <Formik
         initialValues={initialValues}
         validationSchema={Yup.object({

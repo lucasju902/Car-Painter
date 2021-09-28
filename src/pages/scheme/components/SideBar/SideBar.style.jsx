@@ -3,15 +3,16 @@ import styled from "styled-components/macro";
 import { Box, Button } from "@material-ui/core";
 
 export const LayerWrapper = styled(Box)`
-  width: 300px;
   background: #666666;
   overflow: auto;
+  transition: 0.25s;
 `;
 export const TitleWrapper = styled(Box)`
   background: #666666;
+  transition: 0.25s;
 `;
 export const Wrapper = styled(Box)`
-  height: calc(100% - 46px);
+  height: calc(100% - 56px);
   position: relative;
 `;
 export const ColorApplyButton = styled(Button)`
