@@ -8,8 +8,14 @@ import {
   AllowedLayerProps,
   HistoryActions,
   DrawingStatus,
+  MouseModes,
 } from "constant";
-import { getNameFromUploadFileName, parseLayer, rotatePoint } from "helper";
+import {
+  fitPoints,
+  getNameFromUploadFileName,
+  parseLayer,
+  rotatePoint,
+} from "helper";
 import LayerService from "services/layerService";
 import { setMessage } from "./messageReducer";
 import { pushToActionHistory } from "./boardReducer";
@@ -481,22 +487,34 @@ export const createShape = (schemeID, newlayer) => async (
     const currentUser = getState().authReducer.user;
     const AllowedLayerTypes =
       AllowedLayerProps[LayerTypes.SHAPE][newlayer.layer_data.type];
+    const layerData = _.pick(
+      {
+        ...DefaultLayer.layer_data,
+        ...newlayer.layer_data,
+      },
+      AllowedLayerTypes.filter((item) =>
+        item.includes("layer_data.")
+      ).map((item) => item.replace("layer_data.", ""))
+    );
+    if (
+      [
+        MouseModes.PEN,
+        MouseModes.LINE,
+        MouseModes.POLYGON,
+        MouseModes.ARROW,
+      ].includes(layerData.type)
+    ) {
+      const [leftTopOffset, newPoints] = fitPoints(layerData.points);
+      layerData.left += leftTopOffset.x;
+      layerData.top += leftTopOffset.y;
+      layerData.points = newPoints;
+    }
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
       ...newlayer,
       layer_type: LayerTypes.SHAPE,
       scheme_id: schemeID,
-      layer_data: JSON.stringify(
-        _.pick(
-          {
-            ...DefaultLayer.layer_data,
-            ...newlayer.layer_data,
-          },
-          AllowedLayerTypes.filter((item) =>
-            item.includes("layer_data.")
-          ).map((item) => item.replace("layer_data.", ""))
-        )
-      ),
+      layer_data: JSON.stringify(layerData),
     });
     SocketClient.emit("client-create-layer", {
       data: layer,

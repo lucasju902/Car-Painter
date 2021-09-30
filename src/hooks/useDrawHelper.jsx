@@ -67,6 +67,7 @@ export const useDrawHelper = (stageRef) => {
       default:
         break;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drawingStatus]);
 
   useInterval(() => {
@@ -155,13 +156,7 @@ export const useDrawHelper = (stageRef) => {
         }
       }
     },
-    [
-      mouseMode,
-      currentScheme.guide_data,
-      getRelativePointerPosition,
-      drawingLayerRef.current,
-      stageRef.current,
-    ]
+    [mouseMode, currentScheme.guide_data, drawingLayerRef, stageRef]
   );
   const handleMouseMove = useCallback(() => {
     // console.log("Mouse Move");
@@ -235,13 +230,7 @@ export const useDrawHelper = (stageRef) => {
       }
       prevTick.current = currentTick.current;
     }
-  }, [
-    mouseMode,
-    drawingLayerRef.current,
-    getRelativePointerPosition,
-    stageRef.current,
-    currentTick.current,
-  ]);
+  }, [mouseMode, drawingLayerRef, stageRef, currentTick]);
   const handleMouseUp = useCallback(
     (e) => {
       // console.log("Mouse Up");
@@ -258,7 +247,7 @@ export const useDrawHelper = (stageRef) => {
       const position = getRelativePointerPosition(stageRef.current);
       setPrevPosition(position);
     },
-    [dispatch, mouseMode, getRelativePointerPosition, setPrevPosition]
+    [mouseMode, stageRef, dispatch]
   );
   const handleDoubleClick = useCallback(
     (e) => {
@@ -277,13 +266,7 @@ export const useDrawHelper = (stageRef) => {
         dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
       }
     },
-    [
-      dispatch,
-      mouseMode,
-      getRelativePointerPosition,
-      drawingLayerRef.current,
-      prevPosition,
-    ]
+    [stageRef, mouseMode, prevPosition, dispatch]
   );
 
   const showGuideForRepositioning = useCallback(

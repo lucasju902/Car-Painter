@@ -124,10 +124,8 @@ export const TextNode = ({
   return (
     <Text
       {...props}
+      name={id ? id.toString() : null}
       fontFamily={loadedFontFamily}
-      onClick={onSelect}
-      onDblClick={onDblClick}
-      onTap={onSelect}
       ref={shapeRef}
       shadowColor={shapeRef.current ? shadowColor : null}
       shadowBlur={shapeRef.current ? shadowBlur : null}
@@ -135,15 +133,18 @@ export const TextNode = ({
       shadowOffsetX={shapeRef.current ? shadowOffsetX : null}
       shadowOffsetY={shapeRef.current ? shadowOffsetY : null}
       draggable={onChange}
+      perfectDrawEnabled={false}
+      shadowForStrokeEnabled={false}
+      onClick={onSelect}
+      onDblClick={onDblClick}
+      onTap={onSelect}
+      onMouseOver={() => props.listening && onHover && onHover(true)}
+      onMouseOut={() => props.listening && onHover && onHover(false)}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragMove={handleDragMove}
       onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
-      perfectDrawEnabled={false}
-      shadowForStrokeEnabled={false}
-      onMouseOver={() => props.listening && onHover && onHover(true)}
-      onMouseOut={() => props.listening && onHover && onHover(false)}
     />
   );
 };

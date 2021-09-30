@@ -54,7 +54,7 @@ export const PartGroup = (props) => {
         );
       }
     }
-  }, [layerList.length]);
+  }, [dispatch, layerList.length, sortedList]);
 
   const handleExpandClick = useCallback(() => {
     setExpanded((preValue) => !preValue);

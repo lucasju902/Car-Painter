@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 
-import { AllowedLayerProps, LayerTypes, MouseModes } from "constant";
-import { rotateAroundCenter } from "helper";
+import { AllowedLayerProps, LayerTypes } from "constant";
+import { rotateAroundCenter, isCenterBasedShape } from "helper";
 
 import {
   Box,
@@ -46,19 +46,7 @@ export const RotationProperty = React.memo((props) => {
 
   const handleChangeRotation = useCallback(
     (value) => {
-      if (
-        ![
-          MouseModes.CIRCLE,
-          MouseModes.ELLIPSE,
-          MouseModes.STAR,
-          MouseModes.RING,
-          MouseModes.REGULARPOLYGON,
-          MouseModes.WEDGE,
-          MouseModes.ARC,
-          MouseModes.ARROW,
-          MouseModes.PEN,
-        ].includes(currentLayer.layer_data.type)
-      ) {
+      if (!isCenterBasedShape(currentLayer.layer_data.type)) {
         const stage = stageRef.current;
         const selectedNode = stage.findOne("." + currentLayer.id);
         const newRot = (value / 180) * Math.PI;
@@ -80,7 +68,7 @@ export const RotationProperty = React.memo((props) => {
       }
       setFieldValue("layer_data.rotation", value);
     },
-    [currentLayer.id, currentLayer.layer_data.type, setFieldValue, stageRef]
+    [currentLayer, setFieldValue, stageRef]
   );
 
   const handleToggleFlop = useCallback(() => {

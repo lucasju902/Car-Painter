@@ -1,12 +1,6 @@
 import React from "react";
-import styled from "styled-components/macro";
 import { Tab, Tabs, Box } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-
-export const Wrapper = styled(Box)`
-  background: #666666;
-  overflow: auto;
-`;
 
 export const TabPanel = (props) => {
   const { children, value, index, ...other } = props;

@@ -273,10 +273,8 @@ export const URLImage = ({
   return (
     <Image
       {...props}
+      name={id ? id.toString() : null}
       image={image}
-      onDblClick={onDblClick}
-      onClick={onSelect}
-      onTap={onSelect}
       ref={shapeRef}
       draggable={onChange}
       shadowBlur={shadowBlur}
@@ -288,15 +286,18 @@ export const URLImage = ({
       blue={allowFilter ? hexToRgba(filterColor).b : null}
       alpha={allowFilter ? hexToRgba(filterColor).a / 255 : null}
       filters={allowFilter ? filters : null}
+      perfectDrawEnabled={false}
+      shadowForStrokeEnabled={false}
+      onDblClick={onDblClick}
+      onClick={onSelect}
+      onTap={onSelect}
+      onMouseOver={() => props.listening && onHover && onHover(true)}
+      onMouseOut={() => props.listening && onHover && onHover(false)}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragMove={handleDragMove}
       onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
-      perfectDrawEnabled={false}
-      shadowForStrokeEnabled={false}
-      onMouseOver={() => props.listening && onHover && onHover(true)}
-      onMouseOut={() => props.listening && onHover && onHover(false)}
     />
   );
 };

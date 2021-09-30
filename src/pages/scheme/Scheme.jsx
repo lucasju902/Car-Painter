@@ -93,9 +93,12 @@ const Scheme = (props) => {
     [setHoveredJSON]
   );
 
-  const handleChangeBoardRotation = useCallback((newRotation) => {
-    dispatch(setBoardRotate(newRotation));
-  }, []);
+  const handleChangeBoardRotation = useCallback(
+    (newRotation) => {
+      dispatch(setBoardRotate(newRotation));
+    },
+    [dispatch]
+  );
 
   const handleGoBack = useCallback(async () => {
     await onUploadThumbnail(false);

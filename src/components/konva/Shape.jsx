@@ -193,6 +193,7 @@ export const Shape = ({
       {type === MouseModes.RECT ? (
         <Rect
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           shadowColor={shapeRef.current ? shadowColor : null}
           shadowBlur={shapeRef.current ? shadowBlur : null}
@@ -219,6 +220,7 @@ export const Shape = ({
       ) : type === MouseModes.CIRCLE ? (
         <Circle
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -243,6 +245,7 @@ export const Shape = ({
       ) : type === MouseModes.ELLIPSE ? (
         <Ellipse
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -268,6 +271,7 @@ export const Shape = ({
       ) : type === MouseModes.STAR ? (
         <Star
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -294,6 +298,7 @@ export const Shape = ({
       ) : type === MouseModes.RING ? (
         <Ring
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -319,6 +324,7 @@ export const Shape = ({
       ) : type === MouseModes.REGULARPOLYGON ? (
         <RegularPolygon
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -344,6 +350,7 @@ export const Shape = ({
       ) : type === MouseModes.WEDGE ? (
         <Wedge
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -369,6 +376,7 @@ export const Shape = ({
       ) : type === MouseModes.ARC ? (
         <Arc
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -395,6 +403,7 @@ export const Shape = ({
       ) : type === MouseModes.LINE || type === MouseModes.PEN ? (
         <Line
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -420,6 +429,7 @@ export const Shape = ({
       ) : type === MouseModes.POLYGON ? (
         <Line
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -446,6 +456,7 @@ export const Shape = ({
       ) : type === MouseModes.ARROW ? (
         <Arrow
           {...props}
+          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}

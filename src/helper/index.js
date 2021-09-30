@@ -288,3 +288,24 @@ export const isCenterBasedShape = (type) =>
     MouseModes.WEDGE,
     MouseModes.ARC,
   ].includes(type);
+
+export const fitPoints = (points) => {
+  const leftTopOffset = {
+    x: 0,
+    y: 0,
+  };
+  for (let index in points) {
+    if (index % 2 === 0 && leftTopOffset.x > points[index]) {
+      leftTopOffset.x = points[index];
+    }
+    if (index % 2 === 1 && leftTopOffset.y > points[index]) {
+      leftTopOffset.y = points[index];
+    }
+  }
+
+  const newPoints = points.map((value, index) =>
+    index % 2 === 0 ? value - leftTopOffset.x : value - leftTopOffset.y
+  );
+
+  return [leftTopOffset, newPoints];
+};
