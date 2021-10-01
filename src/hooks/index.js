@@ -1,7 +1,9 @@
 export { useStateRef } from "./useStateRef";
 export { useReducerRef } from "./useReducerRef";
 export { useBoardSocket } from "./useBoardSocket";
-export { useDragMove } from "./useDragMove";
+export { useDrag } from "./useDrag";
+export { useTransform } from "./useTransform";
+export { useKonvaImageInit } from "./useKonvaImageInit";
 export { useGeneralSocket } from "./useGeneralSocket";
 export { useZoom } from "./useZoom";
 export { useCapture } from "./useCapture";

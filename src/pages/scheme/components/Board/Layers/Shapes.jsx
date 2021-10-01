@@ -102,6 +102,7 @@ export const Shapes = React.memo((props) => {
           <Shape
             key={layer.id}
             id={layer.id}
+            layer={layer}
             stageRef={stageRef}
             editable={editable}
             frameSize={frameSize}
@@ -187,7 +188,6 @@ export const Shapes = React.memo((props) => {
             }
             name={layer.id.toString()}
             visible={layer.layer_visible ? true : false}
-            layer_data={layer.layer_data}
             perfectDrawEnabled={false}
             paintingGuides={paintingGuides}
             guideData={guideData}
@@ -204,6 +204,7 @@ export const Shapes = React.memo((props) => {
       })}
       {drawingLayer ? (
         <Shape
+          layer={drawingLayer}
           type={drawingLayer.layer_data.type}
           x={parseFloat(drawingLayer.layer_data.left || 0)}
           y={parseFloat(drawingLayer.layer_data.top || 0)}
@@ -235,7 +236,6 @@ export const Shapes = React.memo((props) => {
               : drawingLayer.layer_data.scolor
           }
           strokeEnabled={true}
-          layer_data={drawingLayer.layer_data}
           perfectDrawEnabled={false}
           paintingGuides={paintingGuides}
           guideData={guideData}

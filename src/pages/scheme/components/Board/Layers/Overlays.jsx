@@ -56,6 +56,7 @@ export const Overlays = React.memo((props) => {
           <GroupedURLImage
             key={layer.id}
             id={layer.id}
+            layer={layer}
             stageRef={stageRef}
             editable={editable}
             name={layer.id.toString()}
@@ -109,7 +110,6 @@ export const Overlays = React.memo((props) => {
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             frameSize={frameSize}
-            layer_data={layer.layer_data}
             onChange={(values) => onChange(layer, values)}
             onHover={(flag) => onHover(layer, flag)}
             visible={layer.layer_visible ? true : false}

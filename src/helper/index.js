@@ -309,3 +309,24 @@ export const fitPoints = (points) => {
 
   return [leftTopOffset, newPoints];
 };
+
+export const getPixelRatio = (node, image) => {
+  if (image) {
+    if (image.width && image.height)
+      return Math.max(
+        1,
+        image.width / node.width(),
+        image.height / node.height()
+      );
+    return 5;
+  }
+  return 1;
+};
+
+export const loadImage = async (imageSource, imageRef, handleLoad) => {
+  const img = new window.Image();
+  img.src = imageSource;
+  img.crossOrigin = "anonymous";
+  imageRef.current = img;
+  if (handleLoad) imageRef.current.addEventListener("load", handleLoad);
+};

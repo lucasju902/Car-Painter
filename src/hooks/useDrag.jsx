@@ -1,14 +1,20 @@
 import { useCallback, useMemo } from "react";
 import Konva from "konva";
 import { PaintingGuides } from "constant";
+import { mathRound2 } from "helper";
 
-export const useDragMove = (
+export const useDrag = ({
   stageRef,
-  layerRef,
+  shapeRef,
   paintingGuides,
   guideData,
-  frameSize
-) => {
+  frameSize,
+  offsetsFromStroke,
+  onSelect,
+  onChange,
+  onDragStart,
+  onDragEnd,
+}) => {
   const GUIDELINE_ID = "snapping-guide-line";
   const GUIDELINE_OFFSET = useMemo(
     () => (guideData ? Math.max(guideData.grid_padding / 10, 2) : 10),
@@ -29,11 +35,11 @@ export const useDragMove = (
   }, [frameSize, guideData]);
 
   const getObjectSnappingEdges = useCallback(() => {
-    var box = layerRef.current.getClientRect({
-      relativeTo: layerRef.current.getParent().getParent(),
+    var box = shapeRef.current.getClientRect({
+      relativeTo: shapeRef.current.getParent().getParent(),
       skipShadow: true,
     });
-    var pos = layerRef.current.position();
+    var pos = shapeRef.current.position();
 
     return {
       vertical: [
@@ -71,7 +77,7 @@ export const useDragMove = (
         },
       ],
     };
-  }, [layerRef]);
+  }, [shapeRef]);
 
   // find all snapping possibilities
   const getGuides = useCallback(
@@ -259,9 +265,31 @@ export const useDragMove = (
     ]
   );
 
-  const handleExtraDragEnd = useCallback(() => {
-    stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
-  }, [stageRef]);
+  const handleDragStart = useCallback(
+    (e) => {
+      onSelect();
+      if (onDragStart) onDragStart();
+    },
+    [onSelect, onDragStart]
+  );
 
-  return [handleDragMove, handleExtraDragEnd];
+  const handleDragEnd = useCallback(
+    (e) => {
+      stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
+      if (onChange) {
+        onChange({
+          left: mathRound2(
+            e.target.x() - (offsetsFromStroke ? offsetsFromStroke.x : 0)
+          ),
+          top: mathRound2(
+            e.target.y() - (offsetsFromStroke ? offsetsFromStroke.y : 0)
+          ),
+        });
+      }
+      if (onDragEnd) onDragEnd();
+    },
+    [stageRef, offsetsFromStroke, onChange, onDragEnd]
+  );
+
+  return [handleDragStart, handleDragMove, handleDragEnd];
 };

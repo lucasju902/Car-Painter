@@ -72,6 +72,7 @@ export const LogosAndTexts = React.memo((props) => {
             <GroupedURLImage
               key={layer.id}
               id={layer.id}
+              layer={layer}
               stageRef={stageRef}
               name={layer.id.toString()}
               editable={editable}
@@ -121,7 +122,6 @@ export const LogosAndTexts = React.memo((props) => {
                   : layer.layer_data.skewY
               }
               opacity={layer.layer_data.opacity}
-              layer_data={layer.layer_data}
               paintingGuides={paintingGuides}
               guideData={guideData}
               onSelect={() => setCurrentLayer(layer)}
@@ -143,6 +143,7 @@ export const LogosAndTexts = React.memo((props) => {
           <TextNode
             key={layer.id}
             id={layer.id}
+            layer={layer}
             editable={editable}
             stageRef={stageRef}
             frameSize={frameSize}

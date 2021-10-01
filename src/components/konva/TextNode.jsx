@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 
 import { Text } from "react-konva";
-import { mathRound2 } from "helper";
-import { useDragMove } from "hooks";
+import { useDrag, useTransform } from "hooks";
 
 export const TextNode = ({
   id,
@@ -10,6 +9,7 @@ export const TextNode = ({
   frameSize,
   fontFamily,
   fontFile,
+  layer,
   loadedFontList,
   loadedList,
   shadowColor,
@@ -31,13 +31,25 @@ export const TextNode = ({
 }) => {
   const [loadedFontFamily, setLoadedFontFamily] = useState(null);
   const shapeRef = useRef();
-  const [handleDragMove, handleExtraDragEnd] = useDragMove(
+  const [handleDragStart, handleDragMove, handleDragEnd] = useDrag({
     stageRef,
     shapeRef,
     paintingGuides,
     guideData,
-    frameSize
-  );
+    frameSize,
+    onSelect,
+    onChange,
+    onDragStart,
+    onDragEnd,
+  });
+
+  const [handleTransformStart, handleTransformEnd] = useTransform({
+    shapeRef,
+    layer,
+    onChange,
+    onDragStart,
+    onDragEnd,
+  });
 
   const loadFont = useCallback(() => {
     let fontObject = new FontFace(fontFamily, fontFile);
@@ -66,65 +78,9 @@ export const TextNode = ({
     }
   }, [fontFamily, fontFile, id, loadFont, loadedFontList, onLoadLayer]);
 
-  const handleDragStart = useCallback(
-    (e) => {
-      onSelect();
-      if (onDragStart) onDragStart();
-    },
-    [onSelect, onDragStart]
-  );
-
-  const handleDragEnd = useCallback(
-    (e) => {
-      handleExtraDragEnd();
-      if (onChange) {
-        const node = shapeRef.current;
-        onChange({
-          left: mathRound2(e.target.x()),
-          top: mathRound2(e.target.y()),
-          width: mathRound2(Math.max(5, node.width())),
-          height: mathRound2(Math.max(5, node.height())),
-        });
-      }
-      if (onDragEnd) onDragEnd();
-    },
-    [onChange, onDragEnd, handleExtraDragEnd]
-  );
-
-  const handleTransformStart = useCallback(
-    (e) => {
-      if (onDragStart) onDragStart();
-    },
-    [onDragStart]
-  );
-  const handleTransformEnd = useCallback(
-    (e) => {
-      if (onChange) {
-        const node = shapeRef.current;
-        const scaleX = node.scaleX();
-        const scaleY = node.scaleY();
-        onChange({
-          left: mathRound2(node.x()),
-          top: mathRound2(node.y()),
-          // set minimal value
-          width: mathRound2(Math.max(5, node.width())),
-          height: mathRound2(Math.max(5, node.height())),
-          rotation: mathRound2(node.rotation()) || 0,
-          scaleX: mathRound2(Math.max(0.01, scaleX)),
-          scaleY: mathRound2(Math.max(0.01, scaleY)),
-          flop: scaleX > 0 ? 0 : 1,
-          flip: scaleY > 0 ? 0 : 1,
-        });
-      }
-      if (onDragEnd) onDragEnd();
-    },
-    [onChange, onDragEnd]
-  );
-
   return (
     <Text
       {...props}
-      name={id ? id.toString() : null}
       fontFamily={loadedFontFamily}
       ref={shapeRef}
       shadowColor={shapeRef.current ? shadowColor : null}

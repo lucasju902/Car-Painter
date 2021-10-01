@@ -35,15 +35,18 @@ export const PropertyBar = (props) => {
           width={overTablet ? "300px" : "250px"}
           height="100%"
         >
-          {currentLayer && (
+          {currentLayer ? (
             <LayerProperty
               editable={editable}
               stageRef={stageRef}
               onClone={onCloneLayer}
               onDelete={onDeleteLayer}
             />
+          ) : currentScheme ? (
+            <SchemeProperty editable={editable} />
+          ) : (
+            <></>
           )}
-          {currentScheme && <SchemeProperty editable={editable} />}
         </Box>
       ) : (
         <></>

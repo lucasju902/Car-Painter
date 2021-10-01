@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, useCallback } from "react";
-import _ from "lodash";
+import React, { useRef, useEffect } from "react";
 import {
   Rect,
   Circle,
@@ -12,9 +11,8 @@ import {
   Line,
   Arrow,
 } from "react-konva";
-import { mathRound2 } from "helper";
-import { MouseModes, AllowedLayerProps, LayerTypes } from "constant";
-import { useDragMove } from "hooks";
+import { MouseModes } from "constant";
+import { useDrag, useTransform } from "hooks";
 
 export const Shape = ({
   id,
@@ -43,7 +41,7 @@ export const Shape = ({
   shadowOpacity,
   shadowOffsetX,
   shadowOffsetY,
-  layer_data,
+  layer,
   paintingGuides,
   guideData,
   onSelect,
@@ -56,132 +54,28 @@ export const Shape = ({
   ...props
 }) => {
   const shapeRef = useRef();
-  const [handleDragMove, handleExtraDragEnd] = useDragMove(
+
+  const [handleDragStart, handleDragMove, handleDragEnd] = useDrag({
     stageRef,
     shapeRef,
     paintingGuides,
     guideData,
-    frameSize
-  );
-  const handleDragStart = useCallback(
-    (e) => {
-      onSelect();
-      if (onDragStart) onDragStart();
-    },
-    [onSelect, onDragStart]
-  );
-  const handleDragEnd = useCallback(
-    (e) => {
-      handleExtraDragEnd();
-      if (onChange) {
-        const AllowedLayerTypes = AllowedLayerProps[LayerTypes.SHAPE][type];
-        onChange(
-          _.pick(
-            {
-              left: mathRound2(e.target.x() - offsetsFromStroke.x),
-              top: mathRound2(e.target.y() - offsetsFromStroke.y),
-            },
-            AllowedLayerTypes.filter((item) =>
-              item.includes("layer_data.")
-            ).map((item) => item.replace("layer_data.", ""))
-          )
-        );
-      }
-      if (onDragEnd) onDragEnd();
-    },
-    [offsetsFromStroke, onChange, onDragEnd, type, handleExtraDragEnd]
-  );
+    frameSize,
+    offsetsFromStroke,
+    onSelect,
+    onChange,
+    onDragStart,
+    onDragEnd,
+  });
 
-  const handleTransformStart = useCallback(
-    (e) => {
-      if (onDragStart) onDragStart();
-    },
-    [onDragStart]
-  );
-  const handleTransformEnd = useCallback(
-    (e) => {
-      if (onChange) {
-        const AllowedLayerTypes = AllowedLayerProps[LayerTypes.SHAPE][type];
-        const node = shapeRef.current;
-        const scaleX = node.scaleX();
-        const scaleY = node.scaleY();
-        const width =
-          type !== MouseModes.ELLIPSE ? node.width() : node.radiusX();
-        const height =
-          type !== MouseModes.ELLIPSE ? node.height() : node.radiusY();
-        const xyScale = Math.abs(
-          Math.abs(mathRound2(scaleY)) !== 1 ? scaleY : scaleX
-        );
-
-        // we will reset it back
-        node.scaleX(scaleX > 0 ? 1 : -1);
-        node.scaleY(scaleY > 0 ? 1 : -1);
-
-        onChange(
-          _.pick(
-            {
-              left: mathRound2(node.x() - offsetsFromStroke.x),
-              top: mathRound2(node.y() - offsetsFromStroke.y),
-              width: mathRound2(
-                Math.max(1, width * Math.abs(scaleX)) - offsetsFromStroke.width
-              ),
-              height: mathRound2(
-                Math.max(1, height * Math.abs(scaleY)) -
-                  offsetsFromStroke.height
-              ),
-              radius: node.radius
-                ? mathRound2(
-                    Math.max(1, node.radius() * Math.abs(scaleY)) -
-                      offsetsFromStroke.radius
-                  )
-                : 0,
-              innerRadius: node.innerRadius
-                ? mathRound2(
-                    Math.max(1, node.innerRadius() * Math.abs(scaleY)) -
-                      offsetsFromStroke.innerRadius
-                  )
-                : 0,
-              outerRadius: node.outerRadius
-                ? mathRound2(
-                    Math.max(1, node.outerRadius() * Math.abs(scaleY)) -
-                      offsetsFromStroke.outerRadius
-                  )
-                : 0,
-              rotation: mathRound2(node.rotation()) || 0,
-              flop: scaleX > 0 ? 0 : 1,
-              flip: scaleY > 0 ? 0 : 1,
-              stroke: mathRound2(node.strokeWidth() * xyScale),
-              shadowBlur: mathRound2(node.shadowBlur() * xyScale),
-              shadowOffsetX: mathRound2(
-                layer_data.shadowOffsetX * Math.abs(scaleX)
-              ),
-              shadowOffsetY: mathRound2(
-                layer_data.shadowOffsetY * Math.abs(scaleY)
-              ),
-              cornerTopLeft: mathRound2(layer_data.cornerTopLeft * xyScale),
-              cornerTopRight: mathRound2(layer_data.cornerTopRight * xyScale),
-              cornerBottomLeft: mathRound2(
-                layer_data.cornerBottomLeft * xyScale
-              ),
-              cornerBottomRight: mathRound2(
-                layer_data.cornerBottomRight * xyScale
-              ),
-              points: points.map((point, index) =>
-                index % 2 === 0
-                  ? mathRound2(point * Math.abs(scaleX))
-                  : mathRound2(point * Math.abs(scaleY))
-              ),
-            },
-            AllowedLayerTypes.filter((item) =>
-              item.includes("layer_data.")
-            ).map((item) => item.replace("layer_data.", ""))
-          )
-        );
-        if (onDragEnd) onDragEnd();
-      }
-    },
-    [type, offsetsFromStroke, layer_data, points, onChange, onDragEnd]
-  );
+  const [handleTransformStart, handleTransformEnd] = useTransform({
+    shapeRef,
+    offsetsFromStroke,
+    layer,
+    onChange,
+    onDragStart,
+    onDragEnd,
+  });
 
   useEffect(() => {
     if (onLoadLayer && id) onLoadLayer(id, true);
@@ -193,7 +87,6 @@ export const Shape = ({
       {type === MouseModes.RECT ? (
         <Rect
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           shadowColor={shapeRef.current ? shadowColor : null}
           shadowBlur={shapeRef.current ? shadowBlur : null}
@@ -220,7 +113,6 @@ export const Shape = ({
       ) : type === MouseModes.CIRCLE ? (
         <Circle
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -245,7 +137,6 @@ export const Shape = ({
       ) : type === MouseModes.ELLIPSE ? (
         <Ellipse
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -271,7 +162,6 @@ export const Shape = ({
       ) : type === MouseModes.STAR ? (
         <Star
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -298,7 +188,6 @@ export const Shape = ({
       ) : type === MouseModes.RING ? (
         <Ring
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -324,7 +213,6 @@ export const Shape = ({
       ) : type === MouseModes.REGULARPOLYGON ? (
         <RegularPolygon
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -350,7 +238,6 @@ export const Shape = ({
       ) : type === MouseModes.WEDGE ? (
         <Wedge
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -376,7 +263,6 @@ export const Shape = ({
       ) : type === MouseModes.ARC ? (
         <Arc
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -403,7 +289,6 @@ export const Shape = ({
       ) : type === MouseModes.LINE || type === MouseModes.PEN ? (
         <Line
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -429,7 +314,6 @@ export const Shape = ({
       ) : type === MouseModes.POLYGON ? (
         <Line
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}
@@ -456,7 +340,6 @@ export const Shape = ({
       ) : type === MouseModes.ARROW ? (
         <Arrow
           {...props}
-          name={id ? id.toString() : null}
           ref={shapeRef}
           x={x}
           y={y}

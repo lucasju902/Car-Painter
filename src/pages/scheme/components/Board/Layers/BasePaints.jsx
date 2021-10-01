@@ -42,6 +42,7 @@ export const BasePaints = React.memo((props) => {
         <URLImage
           key={layer.id}
           id={layer.id}
+          layer={layer}
           src={getLayerImage(layer)}
           opacity={layer.layer_data.opacity}
           filterColor={
