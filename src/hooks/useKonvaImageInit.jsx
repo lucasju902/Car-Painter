@@ -20,6 +20,8 @@ export const useKonvaImageInit = ({
   loadedStatus,
   width,
   height,
+  defaultWidth,
+  defaultHeight,
   x,
   y,
   onChange,
@@ -74,7 +76,7 @@ export const useKonvaImageInit = ({
       applyCaching();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY]);
+  }, [shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY, width, height]);
 
   const handleLoad = useCallback(async () => {
     let originWidth =
@@ -90,8 +92,8 @@ export const useKonvaImageInit = ({
         ? imageRef.current.height
         : ((frameSize.width / 2) * imageRef.current.height) /
           imageRef.current.width;
-    let targetWidth = width || originWidth;
-    let targetHeight = height || originHeight;
+    let targetWidth = width || originWidth || defaultWidth || 200;
+    let targetHeight = height || originHeight || defaultHeight || 200;
 
     if (isSVG && navigator.userAgent.indexOf("Firefox") !== -1) {
       let canvas = document.createElement("canvas");
@@ -105,7 +107,7 @@ export const useKonvaImageInit = ({
       setImage(imageRef.current);
     }
 
-    if (onChange && !width && !height) {
+    if (onChange && !width && !height && targetWidth && targetHeight) {
       onChange({
         left: mathRound2(x - targetWidth / 2),
         top: mathRound2(y - targetHeight / 2),

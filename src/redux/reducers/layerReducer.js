@@ -259,6 +259,8 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
         scolor: guide_data.default_shape_scolor,
         stroke: guide_data.default_shape_stroke || 0,
         stroke_scale: shape.stroke_scale,
+        default_width: shape.default_width || 0,
+        default_height: shape.default_height || 0,
       }),
     });
     SocketClient.emit("client-create-layer", {

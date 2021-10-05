@@ -304,6 +304,8 @@ export const AllowedLayerProps = {
     "layer_data.name",
     "layer_data.width",
     "layer_data.height",
+    "layer_data.default_width",
+    "layer_data.default_height",
     "layer_data.sizeLocked",
     "layer_data.skewX",
     "layer_data.skewY",
