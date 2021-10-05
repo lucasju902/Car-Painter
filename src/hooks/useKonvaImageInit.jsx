@@ -20,8 +20,6 @@ export const useKonvaImageInit = ({
   loadedStatus,
   width,
   height,
-  defaultWidth,
-  defaultHeight,
   x,
   y,
   onChange,
@@ -92,8 +90,8 @@ export const useKonvaImageInit = ({
         ? imageRef.current.height
         : ((frameSize.width / 2) * imageRef.current.height) /
           imageRef.current.width;
-    let targetWidth = width || originWidth || defaultWidth || 200;
-    let targetHeight = height || originHeight || defaultHeight || 200;
+    let targetWidth = width || originWidth || 200;
+    let targetHeight = height || originHeight || 200;
 
     if (isSVG && navigator.userAgent.indexOf("Firefox") !== -1) {
       let canvas = document.createElement("canvas");

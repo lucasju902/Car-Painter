@@ -65,8 +65,6 @@ export const GroupedURLImage = ({
     loadedStatus,
     width: props.width,
     height: props.height,
-    defaultWidth: layer.layer_data.default_width,
-    defaultHeight: layer.layer_data.default_height,
     x: props.x,
     y: props.y,
     onChange,
