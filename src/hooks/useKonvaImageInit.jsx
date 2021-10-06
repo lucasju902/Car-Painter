@@ -142,7 +142,7 @@ export const useKonvaImageInit = ({
       let svgString = await urlToString(
         src + `?timestamp=${new Date().toISOString()}`
       );
-      if (filterColor) {
+      if (filterColor || stroke || strokeWidth) {
         svgString = replaceColors(svgString, {
           color: filterColor,
           stroke: stroke,

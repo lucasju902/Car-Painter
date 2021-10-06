@@ -25,6 +25,7 @@ import {
   historyActionBack,
   historyActionUp,
   setPaintingGuides,
+  // setViewMode,
 } from "redux/reducers/boardReducer";
 import { useZoom } from "hooks";
 
@@ -44,6 +45,7 @@ export const Toolbar = React.memo((props) => {
   const actionHistory = useSelector(
     (state) => state.boardReducer.actionHistory
   );
+  // const viewMode = useSelector((state) => state.boardReducer.viewMode);
 
   const handleChangePaintingGuides = useCallback(
     (event, newFormats) => {
@@ -51,6 +53,16 @@ export const Toolbar = React.memo((props) => {
     },
     [dispatch]
   );
+
+  // const handleToggleViewMode = useCallback(() => {
+  //   dispatch(
+  //     setViewMode(
+  //       viewMode === ViewModes.NORMAL_VIEW
+  //         ? ViewModes.SPEC_VIEW
+  //         : ViewModes.NORMAL_VIEW
+  //     )
+  //   );
+  // }, [dispatch, viewMode]);
 
   const handleUndoRedo = useCallback(
     (isUndo = true) => {
@@ -138,6 +150,9 @@ export const Toolbar = React.memo((props) => {
           </ToggleButtonGroup>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
+          {/* <Button variant="outlined" onClick={handleToggleViewMode} mx={1}>
+            Toggle View Mode
+          </Button> */}
           <Button variant="outlined" onClick={onDownloadSpecTGA} mx={1}>
             Download Spec TGA
           </Button>

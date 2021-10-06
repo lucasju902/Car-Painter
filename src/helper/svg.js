@@ -50,7 +50,18 @@ export function replaceColors(svgString, options) {
   const doc = parseSVG(svgString);
   var elements = doc.getElementsByTagName("*");
 
-  for (const element of elements) {
+  for (let element of elements) {
+    // Check and Remove existing style on svg
+    if (
+      element.tagName === "style" &&
+      (options.color ||
+        options.stroke ||
+        options.strokeWidth ||
+        options.opacity)
+    ) {
+      element.remove();
+      continue;
+    }
     // Fill
     if (options.color) element.setAttribute("fill", options.color);
 
