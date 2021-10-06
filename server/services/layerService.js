@@ -61,6 +61,16 @@ class LayerService {
     await layer.destroy();
     return true;
   }
+
+  static async deleteAllBySchemeId(scheme_id) {
+    let scheme_layers = await Layer.where({
+      scheme_id,
+    }).fetchAll();
+    for (let layer of scheme_layers) {
+      await layer.destroy();
+    }
+    return true;
+  }
 }
 
 module.exports = LayerService;

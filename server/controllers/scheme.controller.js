@@ -158,7 +158,11 @@ class SchemeController {
 
   static async delete(req, res) {
     try {
+      await LayerService.deleteAllBySchemeId(req.params.id);
       await SchemeService.deleteById(req.params.id);
+      await FileService.deleteFileFromS3(
+        `scheme_thumbnails/${req.params.id}.jpg`
+      );
       global.io.sockets.in(req.params.id).emit("client-delete-scheme");
       global.io.sockets
         .in("general")

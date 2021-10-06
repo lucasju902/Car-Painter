@@ -9,6 +9,7 @@ const Layer = bookshelf.model("Layer", {
   scheme() {
     return this.belongsTo("Scheme", "scheme_id");
   },
+  dependents: ["scheme"],
 });
 
 module.exports = Layer;
