@@ -108,7 +108,7 @@ export const RotationProperty = React.memo((props) => {
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Rotation</Typography>
+        <Typography variant="subtitle1">Rotation</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">

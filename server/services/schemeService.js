@@ -86,7 +86,7 @@ class SchemeService {
 
     let scheme = await Scheme.forge({
       ..._.omit(originalScheme, ["id", "layers"]),
-      name: originalScheme.name + " copy",
+      name: originalScheme.name.slice(0, 45) + " copy",
       date_created: Math.round(new Date().getTime() / 1000),
       date_modified: Math.round(new Date().getTime() / 1000),
     }).save();

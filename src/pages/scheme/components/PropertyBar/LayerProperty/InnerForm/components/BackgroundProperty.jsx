@@ -65,7 +65,7 @@ export const BackgroundProperty = React.memo((props) => {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Box display="flex" alignItems="center" height="100%">
-                  <Typography variant="body1" color="textSecondary">
+                  <Typography variant="subtitle1" color="textSecondary">
                     Background
                   </Typography>
                 </Box>

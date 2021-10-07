@@ -97,6 +97,7 @@ export const CreateProjectDialog = React.memo((props) => {
             label="Name"
             value={name && name.length ? name : placeHolderName}
             variant="outlined"
+            inputProps={{ maxLength: "50" }}
             onChange={(event) => setName(event.target.value)}
             onKeyDown={handleKeyDown}
           />

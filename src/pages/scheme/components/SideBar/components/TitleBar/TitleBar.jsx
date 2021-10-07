@@ -68,7 +68,7 @@ export const TitleBar = React.memo((props) => {
         onChange={handleNameChange}
         onKeyDown={handleNameKeyDown}
         width={currentScheme && name !== currentScheme.name ? "108px" : "200px"}
-        inputProps={{ maxLength: "254" }}
+        inputProps={{ maxLength: "50" }}
       />
       <Box display="flex">
         {currentScheme && name !== currentScheme.name ? (

@@ -193,7 +193,7 @@ export const Projects = () => {
             startIcon={<AddIcon />}
             mr={2}
           >
-            New
+            <Typography variant="subtitle1"> New</Typography>
           </GreyButton>
           <LightTooltip title="Log Out" arrow>
             <IconButton onClick={handleLogOut} size="small">

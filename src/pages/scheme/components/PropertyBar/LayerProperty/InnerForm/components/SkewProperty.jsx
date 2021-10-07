@@ -54,7 +54,7 @@ export const SkewProperty = React.memo((props) => {
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Skew</Typography>
+        <Typography variant="subtitle1">Skew</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">

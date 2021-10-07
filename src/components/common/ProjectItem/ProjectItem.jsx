@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import _ from "lodash";
+import React, { useState, useMemo } from "react";
 
 import config from "config";
 
@@ -42,6 +41,11 @@ export const ProjectItem = (props) => {
   const [actionMenuEl, setActionMenuEl] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [favoriteInPrgoress, setFavoriteInPrgoress] = useState(false);
+  const showActionMenu = useMemo(() => onCloneProject || onDelete || onAccept, [
+    onCloneProject,
+    onDelete,
+    onAccept,
+  ]);
 
   const handleToggleFavorite = () => {
     setFavoriteInPrgoress(true);
@@ -103,10 +107,16 @@ export const ProjectItem = (props) => {
         onClick={() => onOpenScheme(scheme.id, sharedID)}
       />
       <Box display="flex" justifyContent="space-between">
-        <Box display="flex" flexDirection="column" p={4} overflow="hidden">
+        <Box
+          display="flex"
+          flexDirection="column"
+          flexGrow={1}
+          p={4}
+          overflow="hidden"
+        >
           <Box mb={1}>
-            <BreakableTypography variant="body1">
-              {reduceString(scheme.name, 60)}
+            <BreakableTypography variant="subtitle1">
+              {reduceString(scheme.name, 50)}
             </BreakableTypography>
           </Box>
           {scheme.user.id !== user.id ? (
@@ -121,7 +131,7 @@ export const ProjectItem = (props) => {
             Edited {getDifferenceFromToday(scheme.date_modified)}
           </Typography>
         </Box>
-        <Box display="flex" alignItems="center" flexGrow={1} width="92px">
+        <Box display="flex" alignItems="center">
           {favoriteInPrgoress ? (
             <CircularProgress size={30} />
           ) : (
@@ -133,46 +143,50 @@ export const ProjectItem = (props) => {
               )}
             </IconButton>
           )}
-          <IconButton
-            aria-haspopup="true"
-            aria-controls={`action-menu-${scheme.id}`}
-            onClick={handleActionMenuClick}
-          >
-            <ActionIcon />
-          </IconButton>
-          <StyledMenu
-            id={`action-menu-${scheme.id}`}
-            elevation={0}
-            getContentAnchorEl={null}
-            anchorEl={actionMenuEl}
-            keepMounted
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            open={Boolean(actionMenuEl)}
-            onClose={handleActionMenuClose}
-          >
-            {onCloneProject && (
-              <MenuItem onClick={handleCloneProject}>Clone</MenuItem>
-            )}
+          {showActionMenu && (
+            <>
+              <IconButton
+                aria-haspopup="true"
+                aria-controls={`action-menu-${scheme.id}`}
+                onClick={handleActionMenuClick}
+              >
+                <ActionIcon />
+              </IconButton>
+              <StyledMenu
+                id={`action-menu-${scheme.id}`}
+                elevation={0}
+                getContentAnchorEl={null}
+                anchorEl={actionMenuEl}
+                keepMounted
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                open={Boolean(actionMenuEl)}
+                onClose={handleActionMenuClose}
+              >
+                {onCloneProject && (
+                  <MenuItem onClick={handleCloneProject}>Clone</MenuItem>
+                )}
 
-            {onAccept && <MenuItem onClick={handleAccept}>Accept</MenuItem>}
+                {onAccept && <MenuItem onClick={handleAccept}>Accept</MenuItem>}
 
-            {onDelete && (
-              <MenuItem onClick={handleDelete}>
-                {shared && !accepted
-                  ? "Reject"
-                  : shared && accepted
-                  ? "Remove"
-                  : "Delete"}
-              </MenuItem>
-            )}
-          </StyledMenu>
+                {onDelete && (
+                  <MenuItem onClick={handleDelete}>
+                    {shared && !accepted
+                      ? "Reject"
+                      : shared && accepted
+                      ? "Remove"
+                      : "Delete"}
+                  </MenuItem>
+                )}
+              </StyledMenu>
+            </>
+          )}
         </Box>
       </Box>
       <ConfirmDialog

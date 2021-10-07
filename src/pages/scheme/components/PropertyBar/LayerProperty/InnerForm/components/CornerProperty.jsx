@@ -59,7 +59,7 @@ export const CornerProperty = React.memo((props) => {
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Corner Radius</Typography>
+        <Typography variant="subtitle1">Corner Radius</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">

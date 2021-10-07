@@ -51,7 +51,7 @@ export const StrokeProperty = React.memo((props) => {
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Stroke</Typography>
+        <Typography variant="subtitle1">Stroke</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">

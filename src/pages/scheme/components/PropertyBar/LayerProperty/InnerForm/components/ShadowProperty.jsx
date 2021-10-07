@@ -78,7 +78,7 @@ export const ShadowProperty = React.memo((props) => {
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Shadow</Typography>
+        <Typography variant="subtitle1">Shadow</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">

@@ -157,6 +157,7 @@ const Scheme = (props) => {
       onZoomFit();
       setTimeout(onUploadThumbnail, 5000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadedStatuses, schemeLoaded]);
 
   useEffect(() => {
@@ -166,6 +167,7 @@ const Scheme = (props) => {
         clearInterval(thumbnailInterval);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editable]);
 
   return (

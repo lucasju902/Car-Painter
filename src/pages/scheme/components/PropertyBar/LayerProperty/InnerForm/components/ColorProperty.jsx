@@ -60,7 +60,7 @@ export const ColorProperty = React.memo((props) => {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Box height="100%" display="flex" alignItems="center">
-                  <Typography variant="body1" color="textSecondary" mr={2}>
+                  <Typography variant="subtitle1" color="textSecondary" mr={2}>
                     Color
                   </Typography>
                 </Box>

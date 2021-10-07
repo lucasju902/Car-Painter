@@ -50,7 +50,7 @@ export const SubForm = (props) => {
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <CustomAccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>{label}</Typography>
+        <Typography variant="subtitle1">{label}</Typography>
       </CustomAccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%" my={1}>
