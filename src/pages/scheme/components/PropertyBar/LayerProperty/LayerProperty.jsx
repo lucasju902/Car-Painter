@@ -15,6 +15,7 @@ export const LayerProperty = (props) => {
   const dispatch = useDispatch();
 
   const currentLayer = useSelector((state) => state.layerReducer.current);
+  const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   const fontList = useSelector((state) => state.fontReducer.list);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const user = useSelector((state) => state.authReducer.user);
@@ -234,6 +235,7 @@ export const LayerProperty = (props) => {
             toggleField={toggleField}
             toggleLayerDataField={toggleLayerDataField}
             currentLayer={currentLayer}
+            currentCarMake={currentCarMake}
             pressedKey={pressedKey}
             onClone={handleClone}
             onDelete={handleDelete}

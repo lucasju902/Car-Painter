@@ -36,6 +36,8 @@ export const PaintingGuideTop = React.memo((props) => {
         id="guide-wireframe"
         loadedStatus={loadedStatuses["guide-wireframe"]}
         src={getCarMakeImage("wireframe.png")}
+        x={0}
+        y={0}
         tellSize={handleImageSize}
         filterColor={guideData.wireframe_color}
         opacity={guideData.wireframe_opacity}

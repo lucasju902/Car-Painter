@@ -43,6 +43,8 @@ export const PaintingGuideCarMask = React.memo((props) => {
       id="guide-mask"
       loadedStatus={loadedStatuses["guide-mask"]}
       src={src}
+      x={0}
+      y={0}
       tellSize={handleImageSize}
       filterColor={guideData.carmask_color}
       opacity={guideData.carmask_opacity}

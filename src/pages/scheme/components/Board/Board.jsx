@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
+import { useResizeDetector } from "react-resize-detector";
 
 import { MouseModes, ViewModes, FinishOptions } from "constant";
 
@@ -37,9 +38,6 @@ import {
 import { useDrawHelper } from "hooks";
 
 export const Board = ({
-  wrapperWidth,
-  wrapperHeight,
-  wrapperRef,
   hoveredLayerJSON,
   editable,
   onChangeHoverJSONItem,
@@ -61,6 +59,7 @@ export const Board = ({
     onDoubleClick,
     onLayerDragStart,
     onLayerDragEnd,
+    onDragEnd,
   ] = useDrawHelper(stageRef);
 
   const dispatch = useDispatch();
@@ -85,6 +84,12 @@ export const Board = ({
   const loadedStatuses = useSelector(
     (state) => state.layerReducer.loadedStatuses
   );
+
+  const {
+    width: wrapperWidth,
+    height: wrapperHeight,
+    ref: wrapperRef,
+  } = useResizeDetector();
 
   const schemeFinishBase = useMemo(() => {
     const foundFinish = FinishOptions.find(
@@ -221,12 +226,13 @@ export const Board = ({
           scaleX={zoom || 1}
           scaleY={zoom || 1}
           rotation={boardRotate}
-          x={wrapperWidth / 2}
-          y={wrapperHeight / 2}
+          x={wrapperWidth / 2 || 0}
+          y={wrapperHeight / 2 || 0}
           offsetX={frameSize.width / 2}
           offsetY={frameSize.height / 2}
           ref={stageRef}
           draggable={mouseMode === MouseModes.DEFAULT}
+          onDragEnd={onDragEnd}
           style={{
             cursor: mouseMode === MouseModes.DEFAULT ? "default" : "crosshair",
           }}

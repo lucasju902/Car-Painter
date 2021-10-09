@@ -32,9 +32,6 @@ const Scheme = (props) => {
     editable,
     dialog,
     setDialog,
-    wrapperWidth,
-    wrapperHeight,
-    wrapperRef,
     stageRef,
     baseLayerRef,
     mainLayerRef,
@@ -58,8 +55,7 @@ const Scheme = (props) => {
     stageRef,
     baseLayerRef,
     mainLayerRef,
-    carMaskLayerRef,
-    wrapperRef
+    carMaskLayerRef
   );
 
   const user = useSelector((state) => state.authReducer.user);
@@ -205,9 +201,6 @@ const Scheme = (props) => {
               position="relative"
             >
               <Board
-                wrapperWidth={wrapperWidth}
-                wrapperHeight={wrapperHeight}
-                wrapperRef={wrapperRef}
                 hoveredLayerJSON={hoveredJSON}
                 editable={editable}
                 onChangeHoverJSONItem={setHoveredJSONItem}

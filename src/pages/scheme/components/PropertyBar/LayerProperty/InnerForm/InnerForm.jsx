@@ -28,6 +28,7 @@ export const InnerForm = React.memo(
     toggleField,
     toggleLayerDataField,
     currentLayer,
+    currentCarMake,
     pressedKey,
     onClone,
     onDelete,
@@ -79,6 +80,7 @@ export const InnerForm = React.memo(
         <ColorProperty
           {...formProps}
           editable={editable}
+          currentCarMake={currentCarMake}
           onLayerDataUpdate={onLayerDataUpdate}
           checkLayerDataDirty={checkLayerDataDirty}
         />
@@ -92,7 +94,6 @@ export const InnerForm = React.memo(
           {...formProps}
           editable={editable}
           checkLayerDataDirty={checkLayerDataDirty}
-          onLayerDataUpdate={onLayerDataUpdate}
           onLayerDataUpdate={onLayerDataUpdate}
         />
         <SizeProperty

@@ -24,8 +24,7 @@ export const useCapture = (
   stageRef,
   baseLayerRef,
   mainLayerRef,
-  carMaskLayerRef,
-  wrapperRef
+  carMaskLayerRef
 ) => {
   const dispatch = useDispatch();
   const [, userRef] = useReducerRef(
@@ -85,8 +84,10 @@ export const useCapture = (
       let baseLayerImg, mainLayerImg, carMaskLayerImg;
       let stageAttrs = { ...stageRef.current.attrs };
 
-      wrapperRef.current.style.width = `${frameSizeRef.current.width}px`;
-      wrapperRef.current.style.height = `${frameSizeRef.current.height}px`;
+      const boardWrapper = document.getElementById("board-wrapper");
+
+      boardWrapper.style.width = `${frameSizeRef.current.width}px`;
+      boardWrapper.style.height = `${frameSizeRef.current.height}px`;
       const originShowProperties = showPropertiesRef.current;
       dispatch(setShowProperties(false));
 
@@ -156,8 +157,8 @@ export const useCapture = (
       mainLayerRef.current.absolutePosition(mainLayerAbPos);
       carMaskLayerRef.current.absolutePosition(carMaskLayerAbPos);
 
-      wrapperRef.current.style.width = `100%`;
-      wrapperRef.current.style.height = `100%`;
+      boardWrapper.style.width = `100%`;
+      boardWrapper.style.height = `100%`;
       dispatch(setShowProperties(originShowProperties));
       canvas.width = width;
       canvas.height = height;
@@ -187,7 +188,6 @@ export const useCapture = (
       mainLayerRef,
       carMaskLayerRef,
       currentLayerRef,
-      wrapperRef,
     ]
   );
 

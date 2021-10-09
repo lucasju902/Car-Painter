@@ -325,6 +325,8 @@ export const useDrawHelper = (stageRef) => {
       showGuideForRepositioning(false);
   }, [showGuideForRepositioning, currentScheme]);
 
+  const handleDragEnd = useCallback(() => {}, []);
+
   return [
     drawingLayerRef,
     handleMouseDown,
@@ -334,5 +336,6 @@ export const useDrawHelper = (stageRef) => {
     handleDoubleClick,
     handleLayerDragStart,
     handleLayerDragEnd,
+    handleDragEnd,
   ];
 };

@@ -45,6 +45,7 @@ export const Toolbar = React.memo((props) => {
   const actionHistory = useSelector(
     (state) => state.boardReducer.actionHistory
   );
+  const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   // const viewMode = useSelector((state) => state.boardReducer.viewMode);
 
   const handleChangePaintingGuides = useCallback(
@@ -153,30 +154,37 @@ export const Toolbar = React.memo((props) => {
           {/* <Button variant="outlined" onClick={handleToggleViewMode} mx={1}>
             Toggle View Mode
           </Button> */}
-          <Button variant="outlined" onClick={onDownloadSpecTGA} mx={1}>
-            Download Spec TGA
-          </Button>
+          {currentCarMake.car_type !== "Misc" && (
+            <Button variant="outlined" onClick={onDownloadSpecTGA} mx={1}>
+              Download Spec TGA
+            </Button>
+          )}
+
           <Button variant="outlined" onClick={onDownloadTGA} mx={1}>
             Download TGA
           </Button>
           <LightTooltip title="Undo" arrow>
-            <IconButton
-              disabled={actionHistoryIndex === -1}
-              mx={1}
-              onClick={() => handleUndoRedo(true)}
-            >
-              <UndoIcon />
-            </IconButton>
+            <Box display="flex">
+              <IconButton
+                disabled={actionHistoryIndex === -1}
+                mx={1}
+                onClick={() => handleUndoRedo(true)}
+              >
+                <UndoIcon />
+              </IconButton>
+            </Box>
           </LightTooltip>
 
           <LightTooltip title="Redo" arrow>
-            <IconButton
-              disabled={actionHistoryIndex === actionHistory.length - 1}
-              mx={1}
-              onClick={() => handleUndoRedo(false)}
-            >
-              <RedoIcon />
-            </IconButton>
+            <Box display="flex">
+              <IconButton
+                disabled={actionHistoryIndex === actionHistory.length - 1}
+                mx={1}
+                onClick={() => handleUndoRedo(false)}
+              >
+                <RedoIcon />
+              </IconButton>
+            </Box>
           </LightTooltip>
 
           <ZoomButton

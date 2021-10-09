@@ -44,6 +44,8 @@ export const CarParts = React.memo((props) => {
           key={layer.id}
           id={layer.id}
           layer={layer}
+          x={0}
+          y={0}
           src={getCarMakeImage(layer.layer_data.img)}
           filterColor={
             specMode

@@ -20,6 +20,7 @@ import { ColorPickerInput } from "components/common";
 export const ColorProperty = React.memo((props) => {
   const {
     editable,
+    currentCarMake,
     errors,
     handleBlur,
     handleChange,
@@ -120,7 +121,8 @@ export const ColorProperty = React.memo((props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerTypes.includes("layer_data.finish") ? (
+          {AllowedLayerTypes.includes("layer_data.finish") &&
+          currentCarMake.car_type !== "Misc" ? (
             <Grid container spacing={2} component={Box} mb={1}>
               <Grid item xs={6}>
                 <Box height="100%" display="flex" alignItems="center">

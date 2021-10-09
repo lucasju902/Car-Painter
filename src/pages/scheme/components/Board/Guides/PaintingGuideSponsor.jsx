@@ -31,6 +31,8 @@ export const PaintingGuideSponsor = React.memo((props) => {
       id="guide-sponsorblocks"
       loadedStatus={loadedStatuses["guide-sponsorblocks"]}
       src={getCarMakeImage("sponsor_blocks.png")}
+      x={0}
+      y={0}
       tellSize={handleImageSize}
       filterColor={guideData.sponsor_color}
       opacity={guideData.sponsor_opacity}

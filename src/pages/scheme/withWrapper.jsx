@@ -1,14 +1,7 @@
 import React, { useRef, useMemo } from "react";
-import { useResizeDetector } from "react-resize-detector";
 import { useSelector } from "react-redux";
 
 export const withWrapper = (Component) => (props) => {
-  const {
-    width: wrapperWidth,
-    height: wrapperHeight,
-    ref: wrapperRef,
-  } = useResizeDetector();
-
   const stageRef = useRef(null);
   const baseLayerRef = useRef(null);
   const mainLayerRef = useRef(null);
@@ -33,9 +26,6 @@ export const withWrapper = (Component) => (props) => {
     <Component
       {...props}
       editable={editable}
-      wrapperWidth={wrapperWidth}
-      wrapperHeight={wrapperHeight}
-      wrapperRef={wrapperRef}
       stageRef={stageRef}
       baseLayerRef={baseLayerRef}
       mainLayerRef={mainLayerRef}

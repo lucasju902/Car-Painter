@@ -36,6 +36,8 @@ export const SpecPaintingGuideCarMask = React.memo((props) => {
       key={`guide-mask-${finishBase}`}
       loadedStatus={loadedStatuses[`guide-mask-${finishBase}`]}
       src={src}
+      x={0}
+      y={0}
       tellSize={handleImageSize}
       opacity={1}
       listening={false}
