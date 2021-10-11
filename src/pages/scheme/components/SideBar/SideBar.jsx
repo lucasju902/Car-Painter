@@ -249,33 +249,39 @@ export const SideBar = (props) => {
                     <></>
                   )}
                 </Box>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Box display="flex" alignItems="center" height="100%">
-                      <Typography variant="body1" color="textSecondary" mr={2}>
-                        Finish
-                      </Typography>
-                    </Box>
+                {currentCarMake.car_type !== "Misc" && (
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Box display="flex" alignItems="center" height="100%">
+                        <Typography
+                          variant="body1"
+                          color="textSecondary"
+                          mr={2}
+                        >
+                          Finish
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Select
+                        name="layer_data.finish"
+                        variant="outlined"
+                        value={currentScheme.finish || FinishOptions[0].value}
+                        disabled={!editable}
+                        onChange={(event) =>
+                          handleChangeFinishColor(event.target.value)
+                        }
+                        fullWidth
+                      >
+                        {FinishOptions.map((finishItem, index) => (
+                          <MenuItem value={finishItem.value} key={index}>
+                            {finishItem.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Select
-                      name="layer_data.finish"
-                      variant="outlined"
-                      value={currentScheme.finish || FinishOptions[0].value}
-                      disabled={!editable}
-                      onChange={(event) =>
-                        handleChangeFinishColor(event.target.value)
-                      }
-                      fullWidth
-                    >
-                      {FinishOptions.map((finishItem, index) => (
-                        <MenuItem value={finishItem.value} key={index}>
-                          {finishItem.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </Grid>
-                </Grid>
+                )}
               </>
             }
           />

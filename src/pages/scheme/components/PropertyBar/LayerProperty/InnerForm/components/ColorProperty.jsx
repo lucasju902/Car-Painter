@@ -44,15 +44,18 @@ export const ColorProperty = React.memo((props) => {
   );
 
   if (
-    layerDataProperties.every(
-      (value) => !AllowedLayerTypes.includes("layer_data." + value)
+    !(
+      AllowedLayerTypes.includes("layer_data.color") ||
+      AllowedLayerTypes.includes("layer_data.blendType") ||
+      (AllowedLayerTypes.includes("layer_data.finish") &&
+        currentCarMake.car_type !== "Misc")
     )
   )
     return <></>;
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Colors</Typography>
+        <Typography variant="subtitle1">Colors</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
@@ -61,7 +64,7 @@ export const ColorProperty = React.memo((props) => {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Box height="100%" display="flex" alignItems="center">
-                  <Typography variant="subtitle1" color="textSecondary" mr={2}>
+                  <Typography color="textSecondary" mr={2}>
                     Color
                   </Typography>
                 </Box>

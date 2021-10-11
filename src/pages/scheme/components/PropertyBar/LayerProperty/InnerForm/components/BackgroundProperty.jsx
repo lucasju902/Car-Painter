@@ -57,7 +57,7 @@ export const BackgroundProperty = React.memo((props) => {
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>Background</Typography>
+        <Typography variant="subtitle1">Background</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
@@ -65,9 +65,7 @@ export const BackgroundProperty = React.memo((props) => {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Box display="flex" alignItems="center" height="100%">
-                  <Typography variant="subtitle1" color="textSecondary">
-                    Background
-                  </Typography>
+                  <Typography color="textSecondary">Background</Typography>
                 </Box>
               </Grid>
               <Grid item xs={6}>

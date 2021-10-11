@@ -75,7 +75,13 @@ export const PartAction = (props) => {
             >
               {actions.map((action, index) => (
                 <LightTooltip title={action.title} key={index} arrow>
-                  <IconButton onClick={action.onClick} variant="text">
+                  <IconButton
+                    variant="text"
+                    onClick={() => {
+                      handleClosePoper();
+                      action.onClick();
+                    }}
+                  >
                     <CustomFontAwesomeIcon icon={action.icon} />
                   </IconButton>
                 </LightTooltip>
