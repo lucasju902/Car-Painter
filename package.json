@@ -93,8 +93,11 @@
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "server-start": "node server/index.jsx",
     "migrate": "knex migrate:latest",
+    "migrate:up": "knex migrate:up",
+    "migrate:down": "knex migrate:down",
     "migrate:make": "knex migrate:make",
-    "migrate:rollback": "knex migrate:rollback"
+    "migrate:rollback": "knex migrate:rollback",
+    "migrate:unlock": "knex migrate:unlock"
   },
   "eslintConfig": {
     "extends": [

@@ -195,6 +195,7 @@ export const useCapture = (
     async (dataURL) => {
       try {
         let blob = dataURItoBlob(dataURL);
+        console.log("blob length: ", blob.size);
         var fileOfBlob = new File(
           [blob],
           `${currentSchemeRef.current.id}.jpg`,

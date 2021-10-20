@@ -323,10 +323,16 @@ export const getPixelRatio = (node, image) => {
   return 1;
 };
 
-export const loadImage = async (imageSource, imageRef, handleLoad) => {
+export const loadImage = async (
+  imageSource,
+  imageRef,
+  handleLoad,
+  handleError
+) => {
   const img = new window.Image();
   img.src = imageSource;
   img.crossOrigin = "anonymous";
   imageRef.current = img;
   if (handleLoad) imageRef.current.addEventListener("load", handleLoad);
+  if (handleError) imageRef.current.addEventListener("error", handleError);
 };

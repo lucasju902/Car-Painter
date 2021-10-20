@@ -18,6 +18,8 @@ const initialState = {
   sharedList: [],
   sharedUsers: [],
   current: null,
+  owner: null,
+  lastModifier: null,
   loading: false,
   loaded: false,
   saving: false,
@@ -153,6 +155,12 @@ export const slice = createSlice({
       }
       state.current = scheme;
     },
+    setOwner: (state, action) => {
+      state.owner = action.payload;
+    },
+    setLastModifier: (state, action) => {
+      state.lastModifier = action.payload;
+    },
     clearCurrent: (state, action) => {
       state.current = null;
     },
@@ -190,6 +198,8 @@ export const {
   setSaving,
   setLoaded,
   setCurrent,
+  setOwner,
+  setLastModifier,
   updateListItem,
   deleteListItem,
   clearCurrent,
@@ -242,8 +252,18 @@ export const getScheme = (schemeID, callback, fallback) => async (dispatch) => {
     const result = await SchemeService.getScheme(schemeID);
     console.log("result: ", result.scheme);
     dispatch(
-      setCurrent(_.omit(result.scheme, ["carMake", "layers", "sharedUsers"]))
+      setCurrent(
+        _.omit(result.scheme, [
+          "carMake",
+          "layers",
+          "sharedUsers",
+          "user",
+          "lastModifier",
+        ])
+      )
     );
+    dispatch(setOwner(result.scheme.user));
+    dispatch(setLastModifier(result.scheme.lastModifier));
     dispatch(setCurrentCarMake(result.carMake));
     let loadedStatuses = {};
     result.layers.map((item) => {

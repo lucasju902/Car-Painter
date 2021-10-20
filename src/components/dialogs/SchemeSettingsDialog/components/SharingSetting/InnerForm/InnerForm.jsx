@@ -11,18 +11,11 @@ import {
   TextField,
 } from "components/MaterialUI";
 
-import { CustomDialogContent, CustomAutocomplete } from "./styles";
+import { CustomDialogContent } from "./styles";
+import UserService from "services/userService";
 
 export const InnerForm = React.memo(
-  ({
-    owner,
-    editable,
-    currentUserID,
-    schemeID,
-    premiumUsers,
-    onCancel,
-    ...formProps
-  }) => {
+  ({ owner, editable, currentUserID, schemeID, onCancel, ...formProps }) => {
     const {
       isSubmitting,
       isValid,
@@ -31,41 +24,32 @@ export const InnerForm = React.memo(
       values,
     } = formProps;
 
-    const unInvitedUsers = useMemo(
-      () =>
-        !owner
-          ? []
-          : premiumUsers.filter(
-              (user) =>
-                user.id !== owner.id &&
-                !values.sharedUsers.find((item) => item.user_id === user.id)
-            ),
-      [premiumUsers, owner, values]
-    );
     const isOwner = useMemo(
       () => (!owner ? false : owner.id === currentUserID),
       [owner, currentUserID]
     );
 
     const handleNewUserChange = useCallback(
-      (userID) => {
-        let foundUser = unInvitedUsers.find(
-          (item) => item.id === parseInt(userID)
-        );
-        setFieldValue(
-          `newUser`,
-          foundUser
-            ? {
+      async (userID) => {
+        if (userID && userID.length) {
+          try {
+            let foundUser = await UserService.getPremiumUserByID(userID);
+            if (
+              foundUser &&
+              !values.sharedUsers.find((item) => item.user_id === foundUser.id)
+            ) {
+              setFieldValue(`newUser`, {
                 user_id: foundUser.id,
                 user: foundUser,
                 scheme_id: schemeID,
                 accepted: 0,
                 editable: 0,
-              }
-            : null
-        );
+              });
+            }
+          } catch (error) {}
+        }
       },
-      [schemeID, unInvitedUsers]
+      [schemeID, values.sharedUsers]
     );
 
     const handleNewUserPermissionChange = useCallback((value) => {

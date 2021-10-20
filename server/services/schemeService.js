@@ -27,6 +27,7 @@ class SchemeService {
         "layers",
         "sharedUsers",
         "user",
+        "lastModifier",
       ],
     });
     return scheme;

@@ -46,7 +46,8 @@ export const CarParts = React.memo((props) => {
           layer={layer}
           x={0}
           y={0}
-          src={getCarMakeImage(layer.layer_data.img)}
+          // src={getCarMakeImage(layer.layer_data.img)}
+          src={`https://www.tradingpaints.com/builder/layers/layer_${layer.id}.png`}
           filterColor={
             specMode
               ? layer.layer_data.finish || FinishOptions[0].value

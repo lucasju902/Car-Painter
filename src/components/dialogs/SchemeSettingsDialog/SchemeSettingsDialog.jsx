@@ -28,7 +28,8 @@ export const SchemeSettingsDialog = React.memo((props) => {
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
-  const userList = useSelector((state) => state.userReducer.list);
+  const owner = useSelector((state) => state.schemeReducer.owner);
+  const modifier = useSelector((state) => state.schemeReducer.lastModifier);
   const currentUser = useSelector((state) => state.authReducer.user);
   const favoriteSchemeList = useSelector(
     (state) => state.schemeReducer.favoriteList
@@ -36,17 +37,7 @@ export const SchemeSettingsDialog = React.memo((props) => {
   const favroiteScheme = useMemo(
     () =>
       favoriteSchemeList.find((item) => item.scheme_id === currentScheme.id),
-    [favoriteSchemeList]
-  );
-
-  const owner = useMemo(
-    () => userList.find((item) => item.id === currentScheme.user_id),
-    [currentScheme, userList]
-  );
-
-  const modifier = useMemo(
-    () => userList.find((item) => item.id === currentScheme.last_modified_by),
-    [currentScheme, userList]
+    [favoriteSchemeList, currentScheme]
   );
 
   const handleTabChange = useCallback(
@@ -213,10 +204,9 @@ export const SchemeSettingsDialog = React.memo((props) => {
         <TabPanel value={tabValue} index={2}>
           <SharingSetting
             editable={editable}
-            ownerID={currentScheme.user_id}
-            currentUserID={currentUser.id}
+            owner={owner}
+            currentUser={currentUser}
             schemeID={currentScheme.id}
-            userList={userList}
             sharedUsers={sharedUsers}
             onApply={handleApplySharingSetting}
             onCancel={onCancel}

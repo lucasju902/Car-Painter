@@ -60,7 +60,8 @@ export const Overlays = React.memo((props) => {
             stageRef={stageRef}
             editable={editable}
             name={layer.id.toString()}
-            src={`${config.assetsURL}/${layer.layer_data.source_file}`}
+            // src={`${config.assetsURL}/${layer.layer_data.source_file}`}
+            src={`https://www.tradingpaints.com/builder/layers/layer_${layer.id}.png`}
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
             allowFit={true}

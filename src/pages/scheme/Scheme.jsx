@@ -23,7 +23,6 @@ import { setMessage } from "redux/reducers/messageReducer";
 import { setBoardRotate } from "redux/reducers/boardReducer";
 import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 
-import { getUserList } from "redux/reducers/userReducer";
 import { useBoardSocket, useCapture, useZoom, withKeyEvent } from "hooks";
 import { withWrapper } from "./withWrapper";
 
@@ -68,7 +67,6 @@ const Scheme = (props) => {
   const overlayList = useSelector((state) => state.overlayReducer.list);
   const logoList = useSelector((state) => state.logoReducer.list);
   const fontList = useSelector((state) => state.fontReducer.list);
-  const userList = useSelector((state) => state.userReducer.list);
   const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
   const favoriteSchemeList = useSelector(
     (state) => state.schemeReducer.favoriteList
@@ -126,7 +124,6 @@ const Scheme = (props) => {
                 if (!overlayList.length) dispatch(getOverlayList());
                 if (!logoList.length) dispatch(getLogoList());
                 if (!fontList.length) dispatch(getFontList());
-                if (!userList.length) dispatch(getUserList());
                 if (!sharedUsers.length) dispatch(getSharedUsers(params.id));
                 if (!favoriteSchemeList.length)
                   dispatch(getFavoriteList(user.id));

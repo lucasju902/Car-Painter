@@ -26,6 +26,22 @@ class UserController {
     }
   }
 
+  static async getPremiumByID(req, res) {
+    try {
+      let user = await UserService.getPremiumById(req.params.id);
+      res.json(user);
+    } catch (err) {
+      logger.log("error", err.message);
+      if (err.message === "EmptyResponse") {
+        res.status(200).json(null);
+      } else {
+        res.status(500).json({
+          message: err.message,
+        });
+      }
+    }
+  }
+
   static async create(req, res) {
     try {
       let user = await UserService.create(req.body);

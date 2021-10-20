@@ -34,7 +34,8 @@ export const SchemeProperty = (props) => {
   const favoriteSchemeList = useSelector(
     (state) => state.schemeReducer.favoriteList
   );
-  const userList = useSelector((state) => state.userReducer.list);
+  const owner = useSelector((state) => state.schemeReducer.owner);
+  const modifier = useSelector((state) => state.schemeReducer.lastModifier);
   const currentUser = useSelector((state) => state.authReducer.user);
   const paintingGuides = useSelector(
     (state) => state.boardReducer.paintingGuides
@@ -44,16 +45,6 @@ export const SchemeProperty = (props) => {
     () =>
       favoriteSchemeList.find((item) => item.scheme_id === currentScheme.id),
     [currentScheme.id, favoriteSchemeList]
-  );
-
-  const owner = useMemo(
-    () => userList.find((item) => item.id === currentScheme.user_id),
-    [currentScheme, userList]
-  );
-
-  const modifier = useMemo(
-    () => userList.find((item) => item.id === currentScheme.last_modified_by),
-    [currentScheme, userList]
   );
 
   const handleTabChange = useCallback(
@@ -218,10 +209,9 @@ export const SchemeProperty = (props) => {
         <TabPanel value={tabValue} index={2}>
           <SharingSetting
             editable={editable}
-            ownerID={currentScheme.user_id}
-            currentUserID={currentUser.id}
+            owner={owner}
+            currentUser={currentUser}
             schemeID={currentScheme.id}
-            userList={userList}
             sharedUsers={sharedUsers}
             onApply={handleApplySharingSetting}
           />

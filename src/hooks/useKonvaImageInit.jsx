@@ -49,7 +49,8 @@ export const useKonvaImageInit = ({
       loadImage(
         src + `?timestamp=${new Date().toISOString()}`,
         imageRef,
-        handleLoad
+        handleLoad,
+        handleError
       );
     }
     return () => {
@@ -137,6 +138,14 @@ export const useKonvaImageInit = ({
     applyCaching,
   ]);
 
+  const handleError = useCallback(
+    (error) => {
+      console.log("Image Loading Error: ", error);
+      if (onLoadLayer && id) onLoadLayer(id, true);
+    },
+    [onLoadLayer, id]
+  );
+
   const setImgFromSVG = useCallback(
     async (src) => {
       let svgString = await urlToString(
@@ -150,9 +159,17 @@ export const useKonvaImageInit = ({
         });
       }
 
-      loadImage(svgToURL(svgString), imageRef, handleLoad);
+      loadImage(svgToURL(svgString), imageRef, handleLoad, handleError);
     },
-    [filterColor, imageRef, handleLoad, stroke, strokeWidth, strokeScale]
+    [
+      filterColor,
+      imageRef,
+      handleLoad,
+      handleError,
+      stroke,
+      strokeWidth,
+      strokeScale,
+    ]
   );
 
   return [image, imageRef, applyCaching];

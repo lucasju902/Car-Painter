@@ -11,6 +11,11 @@ class UserService {
     return user;
   }
 
+  static async getPremiumById(id) {
+    const user = await User.where({ id, pro_user: 1 }).fetch();
+    return user;
+  }
+
   static async getByEmail(email) {
     const user = await User.where({ email }).fetch();
     return user;
