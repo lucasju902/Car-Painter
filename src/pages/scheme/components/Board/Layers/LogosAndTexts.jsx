@@ -76,8 +76,7 @@ export const LogosAndTexts = React.memo((props) => {
               stageRef={stageRef}
               name={layer.id.toString()}
               editable={editable}
-              // src={`${config.assetsURL}/${layer.layer_data.source_file}`}
-              src={`https://www.tradingpaints.com/builder/layers/layer_${layer.id}.png`}
+              src={`${config.assetsURL}/${layer.layer_data.source_file}`}
               loadedStatus={loadedStatuses[layer.id]}
               x={parseFloat(layer.layer_data.left || 0)}
               y={parseFloat(layer.layer_data.top || 0)}

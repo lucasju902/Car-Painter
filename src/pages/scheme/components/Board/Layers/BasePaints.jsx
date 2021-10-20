@@ -5,6 +5,7 @@ import { FinishOptions, LayerTypes } from "constant";
 import { basePaintAssetURL, legacyBasePaintAssetURL } from "helper";
 
 import { URLImage } from "components/konva";
+import config from "config";
 
 export const BasePaints = React.memo((props) => {
   const {
