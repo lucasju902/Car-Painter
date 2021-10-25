@@ -47,6 +47,12 @@ export const Overlays = React.memo((props) => {
     [boardRotate]
   );
 
+  const getLayerImage = useCallback((layer) => {
+    return layer.layer_data.legacy
+      ? `${config.legacyAssetURL}/layers/layer_${layer.id}.png`
+      : `${config.assetsURL}/${layer.layer_data.source_file}`;
+  }, []);
+
   return (
     <>
       {filteredLayers.map((layer) => {
@@ -60,7 +66,7 @@ export const Overlays = React.memo((props) => {
             stageRef={stageRef}
             editable={editable}
             name={layer.id.toString()}
-            src={`${config.assetsURL}/${layer.layer_data.source_file}`}
+            src={getLayerImage(layer)}
             x={parseFloat(layer.layer_data.left || 0)}
             y={parseFloat(layer.layer_data.top || 0)}
             allowFit={true}

@@ -2,7 +2,8 @@ import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
 import { FinishOptions, LayerTypes } from "constant";
-import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
+// import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
+import config from "config";
 
 import { URLImage } from "components/konva";
 
@@ -28,13 +29,17 @@ export const CarParts = React.memo((props) => {
   );
   const getCarMakeImage = useCallback(
     (image) => {
-      return (
-        (legacyMode
-          ? legacyCarMakeAssetURL(carMake)
-          : carMakeAssetURL(carMake)) + image
-      );
+      return `${
+        config.legacyAssetURL
+      }/templates/${carMake.folder_directory.replace(" ", "_")}/`;
+      // return (
+      //   (legacyMode
+      //     ? legacyCarMakeAssetURL(carMake)
+      //     : carMakeAssetURL(carMake)) + image
+      // );
     },
-    [legacyMode, carMake]
+    [carMake]
+    // [legacyMode, carMake]
   );
 
   return (

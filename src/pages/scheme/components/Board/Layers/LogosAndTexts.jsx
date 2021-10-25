@@ -62,6 +62,12 @@ export const LogosAndTexts = React.memo((props) => {
     [boardRotate]
   );
 
+  const getLayerImage = useCallback((layer) => {
+    return layer.layer_data.legacy
+      ? `${config.legacyAssetURL}/layers/layer_${layer.id}.png`
+      : `${config.assetsURL}/${layer.layer_data.source_file}`;
+  }, []);
+
   return (
     <>
       {filteredLayers.map((layer) => {
@@ -76,7 +82,7 @@ export const LogosAndTexts = React.memo((props) => {
               stageRef={stageRef}
               name={layer.id.toString()}
               editable={editable}
-              src={`${config.assetsURL}/${layer.layer_data.source_file}`}
+              src={getLayerImage(layer)}
               loadedStatus={loadedStatuses[layer.id]}
               x={parseFloat(layer.layer_data.left || 0)}
               y={parseFloat(layer.layer_data.top || 0)}

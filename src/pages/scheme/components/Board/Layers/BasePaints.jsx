@@ -30,7 +30,7 @@ export const BasePaints = React.memo((props) => {
   const getLayerImage = useCallback(
     (layer) => {
       return layer.layer_data.legacy
-        ? `https://www.tradingpaints.com/builder/layers/layer_${layer.id}.png`
+        ? `${config.legacyAssetURL}/layers/layer_${layer.id}.png`
         : legacyMode
         ? legacyBasePaintAssetURL(layer.layer_data) + layer.layer_data.img
         : basePaintAssetURL(carMake, layer.layer_data.basePaintIndex) +

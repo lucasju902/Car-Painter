@@ -5,6 +5,7 @@ const config = {
     (process.env.NODE_ENV !== "development"
       ? "/assets"
       : "http://localhost:3000/assets"),
+  legacyAssetURL: "https://www.tradingpaints.com/builder",
   backendURL:
     process.env.NODE_ENV !== "development" ? "/" : "http://localhost:3000",
   apiURL:
