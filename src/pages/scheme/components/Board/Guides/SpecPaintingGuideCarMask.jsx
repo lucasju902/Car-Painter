@@ -38,6 +38,8 @@ export const SpecPaintingGuideCarMask = React.memo((props) => {
       src={src}
       x={0}
       y={0}
+      width={legacyMode ? 1024 : 2048}
+      height={legacyMode ? 1024 : 2048}
       tellSize={handleImageSize}
       opacity={1}
       listening={false}

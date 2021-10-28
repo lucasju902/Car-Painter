@@ -49,6 +49,8 @@ export const BasePaints = React.memo((props) => {
           src={getLayerImage(layer)}
           x={0}
           y={0}
+          width={legacyMode ? 1024 : 2048}
+          height={legacyMode ? 1024 : 2048}
           opacity={layer.layer_data.opacity}
           filterColor={
             specMode

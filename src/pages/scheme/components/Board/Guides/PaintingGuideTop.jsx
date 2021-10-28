@@ -38,6 +38,8 @@ export const PaintingGuideTop = React.memo((props) => {
         src={getCarMakeImage("wireframe.png")}
         x={0}
         y={0}
+        width={legacyMode ? 1024 : 2048}
+        height={legacyMode ? 1024 : 2048}
         tellSize={handleImageSize}
         filterColor={guideData.wireframe_color}
         opacity={guideData.wireframe_opacity}

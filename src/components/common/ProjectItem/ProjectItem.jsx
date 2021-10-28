@@ -93,6 +93,10 @@ export const ProjectItem = (props) => {
     return `${config.assetsURL}/scheme_thumbnails/${id}.jpg`;
   };
 
+  const legacySchemeThumbnailURL = (id) => {
+    return `${config.legacyAssetURL}/thumbs/${id}.jpg`;
+  };
+
   return (
     <Box display="flex" flexDirection="column" border="1px solid grey">
       <ImageWithLoad
@@ -102,6 +106,7 @@ export const ProjectItem = (props) => {
           new Date().toLocaleDateString() +
           new Date().getHours()
         }
+        altSrc={legacySchemeThumbnailURL(scheme.id)}
         minHeight="200px"
         alt={scheme.name}
         onClick={() => onOpenScheme(scheme.id, sharedID)}

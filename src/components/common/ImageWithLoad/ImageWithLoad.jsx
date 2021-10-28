@@ -4,6 +4,7 @@ import { CustomImg, CustomSkeleton } from "./ImageWithLoad.style";
 
 export const ImageWithLoad = ({
   src,
+  altSrc,
   onClick,
   ImageComponent,
   minHeight = "100%",
@@ -35,6 +36,12 @@ export const ImageWithLoad = ({
           {...props}
           onClick={onClick}
           onLoad={() => setLoaded(true)}
+          onError={(e) => {
+            if (altSrc) {
+              e.target.onerror = null;
+              e.target.src = altSrc;
+            }
+          }}
         />
       )}
       {!loaded ? <CustomSkeleton variant="rect" onClick={onClick} /> : <></>}

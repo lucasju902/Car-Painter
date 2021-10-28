@@ -45,6 +45,8 @@ export const PaintingGuideCarMask = React.memo((props) => {
       src={src}
       x={0}
       y={0}
+      width={legacyMode ? 1024 : 2048}
+      height={legacyMode ? 1024 : 2048}
       tellSize={handleImageSize}
       filterColor={guideData.carmask_color}
       opacity={guideData.carmask_opacity}

@@ -33,6 +33,8 @@ export const PaintingGuideNumber = React.memo((props) => {
       src={getCarMakeImage("number_blocks.png")}
       x={0}
       y={0}
+      width={legacyMode ? 1024 : 2048}
+      height={legacyMode ? 1024 : 2048}
       tellSize={handleImageSize}
       filterColor={guideData.numberblock_color}
       opacity={guideData.numberblock_opacity}
