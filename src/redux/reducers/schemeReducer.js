@@ -403,15 +403,14 @@ export const deleteSharedUserItem = (id, callback) => async (dispatch) => {
   }
 };
 
-export const getSharedList = (userID) => async (dispatch) => {
-  dispatch(setLoading(true));
+export const getSharedList = (userID, callback) => async (dispatch) => {
   try {
     const list = await SharedSchemeService.getSharedSchemeListByUserID(userID);
     dispatch(setSharedList(list));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  dispatch(setLoading(false));
+  if (callback) callback();
 };
 
 export const updateSharedItem = (id, payload, callback, fallback) => async (
@@ -440,8 +439,7 @@ export const deleteSharedItem = (id) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const getFavoriteList = (userID) => async (dispatch) => {
-  dispatch(setLoading(true));
+export const getFavoriteList = (userID, callback) => async (dispatch) => {
   try {
     const list = await FavoriteSchemeService.getFavoriteSchemeListByUserID(
       userID
@@ -450,7 +448,7 @@ export const getFavoriteList = (userID) => async (dispatch) => {
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  dispatch(setLoading(false));
+  if (callback) callback();
 };
 
 export const createFavoriteScheme = (payload, callback) => async (dispatch) => {

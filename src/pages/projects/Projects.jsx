@@ -73,6 +73,9 @@ export const Projects = () => {
   const [predefinedCarMakeID, setPredefinedCarMakeID] = useState();
   const [tabValue, setTabValue] = useState(0);
 
+  const [loadingSharedList, setLoadingSharedList] = useState(false);
+  const [loadingFavoriteList, setLoadingFavoriteList] = useState(false);
+
   let sortedCarMakesList = useMemo(
     () =>
       _.orderBy(
@@ -103,8 +106,14 @@ export const Projects = () => {
     if (user) {
       if (!schemeList.length) dispatch(getSchemeList(user.id));
       if (!carMakeList.length) dispatch(getCarMakeList());
-      if (!sharedSchemeList.length) dispatch(getSharedList(user.id));
-      if (!favoriteSchemeList.length) dispatch(getFavoriteList(user.id));
+      if (!sharedSchemeList.length) {
+        setLoadingSharedList(true);
+        dispatch(getSharedList(user.id, () => setLoadingSharedList(false)));
+      }
+      if (!favoriteSchemeList.length) {
+        setLoadingFavoriteList(true);
+        dispatch(getFavoriteList(user.id, () => setLoadingFavoriteList(false)));
+      }
 
       const url = new URL(window.location.href);
       const makeID = url.searchParams.get("make");
@@ -295,7 +304,10 @@ export const Projects = () => {
           height="100%"
           pr={5}
         >
-          {schemeLoading || carMakeLoading ? (
+          {schemeLoading ||
+          carMakeLoading ||
+          loadingSharedList ||
+          loadingFavoriteList ? (
             <ScreenLoader />
           ) : (
             <>
