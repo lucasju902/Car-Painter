@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import _ from "lodash";
 
 import { FinishOptions, LayerTypes } from "constant";
-// import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
+import { legacyCarMakeAssetURL, carMakeAssetURL } from "helper";
 import config from "config";
 
 import { URLImage } from "components/konva";
@@ -28,18 +28,16 @@ export const CarParts = React.memo((props) => {
     [layers]
   );
   const getCarMakeImage = useCallback(
-    (image) => {
-      return `${
-        config.legacyAssetURL
-      }/templates/${carMake.folder_directory.replace(" ", "_")}/`;
-      // return (
-      //   (legacyMode
-      //     ? legacyCarMakeAssetURL(carMake)
-      //     : carMakeAssetURL(carMake)) + image
-      // );
+    (layer_data) => {
+      return layer_data.legacy
+        ? `${
+            config.legacyAssetURL
+          }/templates/${carMake.folder_directory.replace(" ", "_")}/`
+        : (legacyMode
+            ? legacyCarMakeAssetURL(carMake)
+            : carMakeAssetURL(carMake)) + layer_data.img;
     },
-    [carMake]
-    // [legacyMode, carMake]
+    [legacyMode, carMake]
   );
 
   return (
@@ -53,7 +51,7 @@ export const CarParts = React.memo((props) => {
           y={0}
           width={legacyMode ? 1024 : 2048}
           height={legacyMode ? 1024 : 2048}
-          src={getCarMakeImage(layer.layer_data.img)}
+          src={getCarMakeImage(layer.layer_data)}
           filterColor={
             specMode
               ? layer.layer_data.finish || FinishOptions[0].value
