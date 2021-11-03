@@ -19,6 +19,7 @@ import {
   faStarOff,
 } from "./ProjectItem.style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ShowroomNoCar from "assets/showroom_no_car.svg";
 
 import { getDifferenceFromToday, reduceString } from "helper";
 
@@ -107,6 +108,7 @@ export const ProjectItem = (props) => {
           new Date().getHours()
         }
         altSrc={legacySchemeThumbnailURL(scheme.id)}
+        fallbackSrc={ShowroomNoCar}
         minHeight="200px"
         alt={scheme.name}
         onClick={() => onOpenScheme(scheme.id, sharedID)}

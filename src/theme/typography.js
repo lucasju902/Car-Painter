@@ -21,31 +21,31 @@ const typography = {
   h1: {
     fontFamily: "CircularXXWeb-Bold",
     fontSize: "2rem",
-    fontWeight: 600,
+    fontWeight: 400,
     lineHeight: 1.25,
   },
   h2: {
     fontFamily: "CircularXXWeb-Bold",
     fontSize: "1.75rem",
-    fontWeight: 600,
+    fontWeight: 400,
     lineHeight: 1.25,
   },
   h3: {
     fontFamily: "CircularXXWeb-Bold",
     fontSize: "1.5rem",
-    fontWeight: 600,
+    fontWeight: 400,
     lineHeight: 1.25,
   },
   h4: {
     fontFamily: "CircularXXWeb-Bold",
     fontSize: "1.125rem",
-    fontWeight: 500,
+    fontWeight: 400,
     lineHeight: 1.25,
   },
   h5: {
     fontFamily: "CircularXXWeb-Bold",
     fontSize: "1.0625rem",
-    fontWeight: 500,
+    fontWeight: 400,
     lineHeight: 1.25,
   },
   caption: {
@@ -56,7 +56,7 @@ const typography = {
   h6: {
     fontFamily: "CircularXXWeb-Bold",
     fontSize: "1rem",
-    fontWeight: 500,
+    fontWeight: 400,
     lineHeight: 1.25,
   },
   subtitle1: {

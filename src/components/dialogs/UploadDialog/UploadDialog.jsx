@@ -105,6 +105,12 @@ export const UploadDialog = React.memo((props) => {
     [dispatch, uploadToDelete, setUploadToDelete, setAssociatedSchemes]
   );
 
+  const uploadURL = useCallback((uploadItem) => {
+    return uploadItem.legacy_mode
+      ? `${config.legacyAssetURL}/${uploadItem.file_name}`
+      : `${config.assetsURL}/${uploadItem.file_name}`;
+  }, []);
+
   return (
     <Dialog aria-labelledby="upload-title" open={open} onClose={onCancel}>
       <DialogTitle id="upload-title">My Uploads</DialogTitle>
@@ -135,7 +141,7 @@ export const UploadDialog = React.memo((props) => {
                   onClick={() => onOpenUpload(uploadItem)}
                 >
                   <ImageWithLoad
-                    src={`${config.assetsURL}/${uploadItem.file_name}`}
+                    src={uploadURL(uploadItem)}
                     alt={getNameFromUploadFileName(uploadItem.file_name, user)}
                   />
                   <GridListTileBar

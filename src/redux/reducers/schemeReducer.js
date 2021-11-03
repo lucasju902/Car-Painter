@@ -315,7 +315,13 @@ export const updateScheme = (
 
     SocketClient.emit("client-update-scheme", {
       data: {
-        ..._.omit(updatedScheme, ["carMake", "layers", "sharedUsers", "user"]),
+        ..._.omit(updatedScheme, [
+          "carMake",
+          "layers",
+          "sharedUsers",
+          "user",
+          "lastModifier",
+        ]),
         guide_data: JSON.stringify(updatedScheme.guide_data),
       },
       socketID: SocketClient.socket.id,

@@ -40,8 +40,9 @@ export const OverlayDialog = React.memo((props) => {
     () =>
       overlays.filter(
         (item) =>
-          item.name.toLowerCase().includes(search.toLowerCase()) ||
-          item.description.toLowerCase().includes(search.toLowerCase())
+          !item.legacy_mode &&
+          (item.name.toLowerCase().includes(search.toLowerCase()) ||
+            item.description.toLowerCase().includes(search.toLowerCase()))
       ),
     [overlays, search]
   );

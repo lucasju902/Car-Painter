@@ -82,9 +82,18 @@ class SocketServer {
   }
 
   async onClientUpdateScheme(socket, requestData) {
-    socket.broadcast.to(socket.room).emit("client-update-scheme", requestData);
-    socket.broadcast.to("general").emit("client-update-scheme", requestData); // Broadcast to General room
-    await SchemeService.updateById(requestData.data.id, requestData.data);
+    try {
+      socket.broadcast
+        .to(socket.room)
+        .emit("client-update-scheme", requestData);
+      socket.broadcast.to("general").emit("client-update-scheme", requestData); // Broadcast to General room
+      await SchemeService.updateById(requestData.data.id, {
+        ...requestData.data,
+        last_modified_by: requestData.userID,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async onClientDeleteScheme(socket, requestData) {

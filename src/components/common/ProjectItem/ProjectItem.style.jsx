@@ -13,6 +13,7 @@ export const StyledMenu = styled(Menu)`
 
 export const BreakableTypography = styled(Typography)`
   word-break: break-word;
+  line-height: 1.2;
 `;
 
 export { ActionIcon, faStarOn, faStarOff };

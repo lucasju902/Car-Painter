@@ -5,6 +5,7 @@ import { CustomImg, CustomSkeleton } from "./ImageWithLoad.style";
 export const ImageWithLoad = ({
   src,
   altSrc,
+  fallbackSrc,
   onClick,
   ImageComponent,
   minHeight = "100%",
@@ -21,7 +22,7 @@ export const ImageWithLoad = ({
       minWidth={minWidth}
       display="flex"
       justifyContent={justifyContent}
-      alignItems="center"
+      alignItems="start"
     >
       {ImageComponent ? (
         <ImageComponent
@@ -37,10 +38,9 @@ export const ImageWithLoad = ({
           onClick={onClick}
           onLoad={() => setLoaded(true)}
           onError={(e) => {
-            if (altSrc) {
-              e.target.onerror = null;
-              e.target.src = altSrc;
-            }
+            if (e.target.src !== altSrc && altSrc) e.target.src = altSrc;
+            else if (e.target.src !== fallbackSrc && fallbackSrc)
+              e.target.src = fallbackSrc;
           }}
         />
       )}
