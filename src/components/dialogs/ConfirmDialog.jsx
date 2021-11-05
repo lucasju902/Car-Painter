@@ -7,10 +7,11 @@ import {
   DialogContent,
   DialogActions,
   Typography,
+  CircularProgress,
 } from "components/MaterialUI";
 
 export const ConfirmDialog = React.memo((props) => {
-  const { text, open, onCancel, onConfirm } = props;
+  const { text, open, confirmLoading, onCancel, onConfirm } = props;
 
   return (
     <Dialog aria-labelledby="confirm-title" open={open} onClose={onCancel}>
@@ -22,13 +23,18 @@ export const ConfirmDialog = React.memo((props) => {
         <Button onClick={onCancel} color="primary">
           Cancel
         </Button>
+
         <Button
           onClick={onConfirm}
           color="secondary"
           variant="outlined"
           autoFocus
         >
-          Confirm
+          {confirmLoading ? (
+            <CircularProgress color="secondary" size={20} />
+          ) : (
+            "Confirm"
+          )}
         </Button>
       </DialogActions>
     </Dialog>

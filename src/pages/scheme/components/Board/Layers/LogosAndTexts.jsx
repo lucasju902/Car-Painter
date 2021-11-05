@@ -65,6 +65,8 @@ export const LogosAndTexts = React.memo((props) => {
   const getLayerImage = useCallback((layer) => {
     return layer.layer_data.legacy
       ? `${config.legacyAssetURL}/layers/layer_${layer.id}.png`
+      : layer.layer_data.fromOldSource
+      ? `${config.legacyAssetURL}/${layer.layer_data.source_file}`
       : `${config.assetsURL}/${layer.layer_data.source_file}`;
   }, []);
 

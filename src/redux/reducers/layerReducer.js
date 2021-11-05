@@ -182,6 +182,7 @@ export const createLayersFromBasePaint = (
                 ).map((item) => item.replace("layer_data.", ""))
               ),
               id: basePaintItemOrIndex.id,
+              img: base_item.img,
               opacity: 1,
             })
           : JSON.stringify({
@@ -343,6 +344,7 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
       ...DefaultLayer,
       layer_type: LayerTypes.UPLOAD,
       scheme_id: schemeID,
+      upload_id: upload.id,
       layer_data: JSON.stringify({
         ..._.pick(
           DefaultLayer.layer_data,
@@ -357,6 +359,7 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
         top: position.y,
         source_file: upload.file_name,
         preview_file: upload.file_name,
+        fromOldSource: upload.legacy_mode,
       }),
     });
     SocketClient.emit("client-create-layer", {

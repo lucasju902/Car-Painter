@@ -265,6 +265,7 @@ export const AllowedLayerProps = {
     "layer_data.shadowOffsetX",
     "layer_data.shadowOffsetY",
     "layer_data.finish",
+    "layer_data.legacy",
   ],
   [LayerTypes.LOGO]: [
     "layer_visible",
@@ -294,6 +295,7 @@ export const AllowedLayerProps = {
     "layer_data.paddingY",
     "layer_data.bgColor",
     "layer_data.finish",
+    "layer_data.legacy",
   ],
   [LayerTypes.OVERLAY]: [
     "layer_visible",
@@ -324,6 +326,7 @@ export const AllowedLayerProps = {
     "layer_data.scolor",
     "layer_data.strokeType",
     "layer_data.finish",
+    "layer_data.legacy",
   ],
   [LayerTypes.SHAPE]: {
     [MouseModes.RECT]: [
@@ -743,6 +746,8 @@ export const AllowedLayerProps = {
     "layer_data.paddingY",
     "layer_data.bgColor",
     "layer_data.finish",
+    "layer_data.legacy",
+    "layer_data.fromOldSource",
   ],
   [LayerTypes.BASE]: [
     "layer_data.name",

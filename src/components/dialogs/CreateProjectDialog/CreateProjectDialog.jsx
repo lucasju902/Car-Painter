@@ -12,7 +12,11 @@ import {
   Box,
   Autocomplete,
 } from "components/MaterialUI";
-import { CustomDialogActions, NameField } from "./CreateProjectDialog.style";
+import {
+  CustomDialogActions,
+  NameField,
+  CarMakeLabel,
+} from "./CreateProjectDialog.style";
 
 export const CreateProjectDialog = React.memo((props) => {
   const {
@@ -43,13 +47,13 @@ export const CreateProjectDialog = React.memo((props) => {
   );
 
   useEffect(() => {
-    if (predefinedCarMakeID) {
+    if (predefinedCarMakeID && carMakeList && carMakeList.length) {
       const make = carMakeList.find(
         (item) => item.id.toString() === predefinedCarMakeID
       );
       setCarMake(make);
     }
-  }, [predefinedCarMakeID]);
+  }, [carMakeList, predefinedCarMakeID]);
 
   useEffect(() => {
     if (open) {
@@ -69,30 +73,27 @@ export const CreateProjectDialog = React.memo((props) => {
       <DialogTitle id="project-select-title">Create a new paint</DialogTitle>
       <DialogContent dividers>
         <Box display="flex" flexDirection="column">
-          {carMakeList && carMakeList.length ? (
-            <Autocomplete
-              id="car-make-select"
-              value={carMake}
-              options={carMakeList}
-              groupBy={(option) => option.car_type}
-              getOptionLabel={(option) => option.name}
-              style={{ width: 500 }}
-              mb={4}
-              onChange={(event, newValue) => {
-                setCarMake(newValue);
-              }}
-              onKeyDown={handleKeyDown}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Select Vehicle"
-                  variant="outlined"
-                />
-              )}
-            />
-          ) : (
-            <></>
-          )}
+          <Autocomplete
+            id="car-make-select"
+            value={carMake}
+            options={carMakeList || []}
+            groupBy={(option) => option.car_type}
+            getOptionLabel={(option) => option.name}
+            style={{ width: 500 }}
+            mb={4}
+            onChange={(event, newValue) => {
+              setCarMake(newValue);
+            }}
+            onKeyDown={handleKeyDown}
+            renderInput={(params) => (
+              <CarMakeLabel
+                {...params}
+                label="Select Vehicle"
+                variant="outlined"
+              />
+            )}
+          />
+
           <NameField
             label="Name"
             value={name && name.length ? name : placeHolderName}

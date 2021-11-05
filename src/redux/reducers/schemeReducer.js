@@ -216,7 +216,7 @@ export const getSchemeList = (userID) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     const schemes = await SchemeService.getSchemeListByUserID(userID);
-    dispatch(setList(schemes));
+    dispatch(setList(schemes.filter((scheme) => !scheme.carMake.deleted)));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

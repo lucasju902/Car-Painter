@@ -9,7 +9,7 @@ import {
 } from "components/MaterialUI";
 import { LightTooltip } from "components/common";
 import { ConfirmDialog } from "components/dialogs";
-import { CustomButton, NameInput } from "./styles";
+import { CustomButton, NameInput, InfoIcon } from "./styles";
 
 import {
   Save as SaveIcon,
@@ -129,6 +129,16 @@ export const GeneralSetting = React.memo((props) => {
         </Typography>
         {modifier ? (
           <Typography>Last Modified By: {modifier.drivername}</Typography>
+        ) : (
+          <></>
+        )}
+        {scheme.legacy_mode ? (
+          <Box display="flex" my={2}>
+            <InfoIcon />
+            <Typography variant="subtitle1">
+              This project was created with an old version of Paint Builder.
+            </Typography>
+          </Box>
         ) : (
           <></>
         )}

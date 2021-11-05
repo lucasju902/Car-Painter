@@ -99,7 +99,12 @@ export const ProjectItem = (props) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" border="1px solid grey">
+    <Box
+      display="flex"
+      flexDirection="column"
+      border="1px solid grey"
+      position="relative"
+    >
       <ImageWithLoad
         src={
           schemeThumbnailURL(scheme.id) +
@@ -113,6 +118,23 @@ export const ProjectItem = (props) => {
         alt={scheme.name}
         onClick={() => onOpenScheme(scheme.id, sharedID)}
       />
+      {scheme.legacy_mode ? (
+        <Box
+          bgcolor="#FFFF00C0"
+          color="red"
+          p="5px 10px"
+          position="absolute"
+          borderRadius="100%"
+          border="1px dashed red"
+          fontStyle="italic"
+          right={0}
+          top={0}
+        >
+          <Typography variant="subtitle1">Legacy</Typography>
+        </Box>
+      ) : (
+        <></>
+      )}
       <Box display="flex" justifyContent="space-between">
         <Box
           display="flex"

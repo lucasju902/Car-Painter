@@ -4,7 +4,9 @@ const Scheme = require("../models/scheme.model");
 
 class SchemeService {
   static async getList() {
-    const schemes = await Scheme.forge().fetchAll({
+    const schemes = await Scheme.where({
+      avail: 1,
+    }).fetchAll({
       withRelated: ["carMake", "carMake.bases", "layers"],
     });
     return schemes;
@@ -13,6 +15,7 @@ class SchemeService {
   static async getListByUserID(user_id) {
     const schemes = await Scheme.where({
       user_id: user_id,
+      avail: 1,
     }).fetchAll({
       withRelated: ["carMake", "layers", "user"],
     });

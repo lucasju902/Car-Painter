@@ -25,6 +25,7 @@ import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 
 import { useBoardSocket, useCapture, useZoom, withKeyEvent } from "hooks";
 import { withWrapper } from "./withWrapper";
+import { LegacyBanner } from "./components/LegacyBanner";
 
 const Scheme = (props) => {
   const {
@@ -79,6 +80,8 @@ const Scheme = (props) => {
     (state) => state.uploadReducer.initialized
   );
 
+  const [showLegacyBanner, setShowLegacyBanner] = useState(false);
+
   const setHoveredJSONItem = useCallback(
     (key, value) => {
       if (value === true) setHoveredJSON({ [key]: value });
@@ -99,6 +102,13 @@ const Scheme = (props) => {
 
     history.push("/");
   }, [history, onUploadThumbnail]);
+
+  useEffect(() => {
+    if (currentScheme) {
+      setShowLegacyBanner(currentScheme.legacy_mode);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentScheme && currentScheme.legacy_mode]);
 
   useEffect(() => {
     if (user && user.id && params.id) {
@@ -210,6 +220,11 @@ const Scheme = (props) => {
                 hoveredTransformerRef={hoveredTransformerRef}
               />
               <BoardGuide />
+              <LegacyBanner
+                show={showLegacyBanner}
+                carMakeID={currentScheme.car_make}
+                onDismiss={() => setShowLegacyBanner(false)}
+              />
             </Box>
             <PropertyBar
               stageRef={stageRef}

@@ -12,10 +12,9 @@ class LayerService {
   }
 
   static async getListByUploadID(uploadID) {
-    const layers = await Layer.query((qb) => {
-      qb.whereRaw(
-        `layer_type = 5 AND (layer_data LIKE '%"id":${uploadID},%' OR layer_data LIKE '%"id":${uploadID}}%')`
-      );
+    const layers = await Layer.where({
+      layer_type: 5,
+      upload_id: uploadID,
     }).fetchAll({
       withRelated: ["scheme"],
     });

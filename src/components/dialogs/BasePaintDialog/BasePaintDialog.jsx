@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useCallback } from "react";
 
 import {
+  Box,
   Button,
+  Typography,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -13,10 +15,13 @@ import {
   CustomInfiniteScroll,
   CustomGridList,
   CustomGridListTile,
+  useStyles,
 } from "./BasePaintDialog.style";
+import { NavLink } from "react-router-dom";
 
 export const BasePaintDialog = React.memo((props) => {
   const step = 30;
+  const classes = useStyles();
   const [limit, setLimit] = useState(step);
   const { legacyMode, basePaints, carMake, onCancel, open, onOpenBase } = props;
   const bases = useMemo(
@@ -61,6 +66,28 @@ export const BasePaintDialog = React.memo((props) => {
     <Dialog aria-labelledby="base-paints-title" open={open} onClose={onCancel}>
       <DialogTitle id="base-paints-title">Select Base Paint</DialogTitle>
       <DialogContent dividers id="base-paint-dialog-content">
+        {legacyMode ? (
+          <Box
+            bgcolor="#666"
+            p="10px 16px"
+            borderRadius={10}
+            border="2px solid navajowhite"
+            position="relative"
+            mb="10px"
+          >
+            <Typography>
+              This project was created with an old version of Paint Builder.
+            </Typography>
+
+            <Typography>
+              <NavLink to={`/?make=${carMake.id}`} className={classes.link}>
+                Create a new project for more Base Paint options.
+              </NavLink>
+            </Typography>
+          </Box>
+        ) : (
+          <></>
+        )}
         <CustomInfiniteScroll
           dataLength={limit} //This is important field to render the next data
           next={increaseData}

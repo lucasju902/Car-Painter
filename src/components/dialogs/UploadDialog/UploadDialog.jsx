@@ -14,7 +14,7 @@ import {
   DialogActions,
   GridListTileBar,
 } from "components/MaterialUI";
-import { ImageWithLoad, Loader } from "components/common";
+import { ImageWithLoad, Loader, ScreenLoader } from "components/common";
 import { ConfirmDialog, YesNoDialog } from "components/dialogs";
 import {
   CustomInfiniteScroll,
@@ -42,6 +42,8 @@ export const UploadDialog = React.memo((props) => {
   const [uploadToDelete, setUploadToDelete] = useState(null);
   const [associatedSchemes, setAssociatedSchemes] = useState([]);
   const [limit, setLimit] = useState(step);
+  const [loading, setLoading] = useState(false);
+  const [fetchingDeleteList, setFetchingDeleteList] = useState(false);
   const [files, setFiles] = useState([]);
   const [dropZoneKey, setDropZoneKey] = useState(1);
 
@@ -55,9 +57,11 @@ export const UploadDialog = React.memo((props) => {
     (files_up) => {
       console.log(files_up);
       if (files_up.length) {
+        setLoading(true);
         dispatch(
           uploadFiles(user.id, currentScheme.id, files_up, () => {
             scrollToRef.current.scrollIntoView({ behavior: "smooth" });
+            setLoading(false);
           })
         );
         setFiles([]);
@@ -77,9 +81,11 @@ export const UploadDialog = React.memo((props) => {
   const handleDeleteUploadConfirm = useCallback(async () => {
     console.log("Deleting: ", uploadToDelete);
     try {
+      setFetchingDeleteList(true);
       let schemes = await SchemeService.getSchemeListByUploadID(
         uploadToDelete.id
       );
+      setFetchingDeleteList(false);
       if (schemes.length) {
         setAssociatedSchemes(schemes);
       } else {
@@ -125,7 +131,13 @@ export const UploadDialog = React.memo((props) => {
           maxFiles={10}
           key={dropZoneKey}
         />
-        <Box id="upload-dialog-content" overflow="auto" height="40vh" mt={1}>
+        <Box
+          id="upload-dialog-content"
+          overflow="auto"
+          height="40vh"
+          mt={1}
+          position="relative"
+        >
           <CustomInfiniteScroll
             dataLength={limit} //This is important field to render the next data
             next={increaseData}
@@ -162,6 +174,21 @@ export const UploadDialog = React.memo((props) => {
                 </CustomGridListTile>
               ))}
             </CustomGridList>
+            {loading ? (
+              <Box
+                position="absolute"
+                bgcolor="rgba(0, 0, 0, 0.5)"
+                width="100%"
+                height="100%"
+                left="0"
+                top="0"
+              >
+                <ScreenLoader />
+              </Box>
+            ) : (
+              <></>
+            )}
+
             <div ref={scrollToRef}></div>
           </CustomInfiniteScroll>
         </Box>
@@ -183,6 +210,7 @@ export const UploadDialog = React.memo((props) => {
         open={!!uploadToDelete}
         onCancel={() => setUploadToDelete(null)}
         onConfirm={handleDeleteUploadConfirm}
+        confirmLoading={fetchingDeleteList}
       />
       <YesNoDialog
         text={

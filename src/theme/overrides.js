@@ -179,7 +179,7 @@ const overrides = {
   },
   MuiAutocomplete: {
     input: {
-      height: "1.1876em",
+      height: "1.1876rem",
     },
   },
   MuiAccordion: {

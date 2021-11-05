@@ -121,6 +121,11 @@ export const Projects = () => {
         setPredefinedCarMakeID(makeID);
         setDialog("CreateProjectDialog");
       }
+
+      const schemeID = url.searchParams.get("scheme");
+      if (schemeID) {
+        history.push(`/scheme/${schemeID}`);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);

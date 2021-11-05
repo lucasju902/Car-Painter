@@ -1,7 +1,7 @@
 import styled from "styled-components/macro";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { GridList, GridListTile } from "@material-ui/core";
+import { GridList, GridListTile, makeStyles } from "@material-ui/core";
 
 export const CustomInfiniteScroll = styled(InfiniteScroll)`
   &.infinite-scroll-component {
@@ -16,3 +16,9 @@ export const CustomGridList = styled(GridList)`
 export const CustomGridListTile = styled(GridListTile)`
   cursor: pointer;
 `;
+
+export const useStyles = makeStyles(() => ({
+  link: {
+    color: "white",
+  },
+}));
