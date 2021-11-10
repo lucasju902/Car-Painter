@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Form } from "formik";
 
 import {
@@ -10,6 +10,7 @@ import {
   TextField,
 } from "components/MaterialUI";
 import UserService from "services/userService";
+import { CircularProgress } from "@material-ui/core";
 
 export const InnerForm = React.memo(
   ({ owner, editable, currentUserID, schemeID, onCancel, ...formProps }) => {
@@ -21,6 +22,7 @@ export const InnerForm = React.memo(
       values,
       dirty,
     } = formProps;
+    const [fetchingNew, setFetchingNew] = useState(false);
 
     const isOwner = useMemo(
       () => (!owner ? false : owner.id === currentUserID),
@@ -31,10 +33,14 @@ export const InnerForm = React.memo(
       async (userID) => {
         if (userID && userID.length) {
           try {
+            setFetchingNew(true);
             let foundUser = await UserService.getPremiumUserByID(userID);
             if (
               foundUser &&
-              !values.sharedUsers.find((item) => item.user_id === foundUser.id)
+              !values.sharedUsers.find(
+                (item) => item.user_id === foundUser.id
+              ) &&
+              foundUser.id !== owner.id
             ) {
               setFieldValue(`newUser`, {
                 user_id: foundUser.id,
@@ -43,11 +49,14 @@ export const InnerForm = React.memo(
                 accepted: 0,
                 editable: 0,
               });
+            } else {
+              setFieldValue(`newUser`, null);
             }
+            setFetchingNew(false);
           } catch (error) {}
         }
       },
-      [schemeID, values.sharedUsers]
+      [values.sharedUsers, owner.id, setFieldValue, schemeID]
     );
 
     const handleNewUserPermissionChange = useCallback((value) => {
@@ -70,7 +79,18 @@ export const InnerForm = React.memo(
                 fullWidth
                 onChange={(event) => handleNewUserChange(event.target.value)}
               />
-              {values.newUser ? (
+              {fetchingNew ? (
+                <Box
+                  display="flex"
+                  width="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                  flexGrow={1}
+                  mt={5}
+                >
+                  <CircularProgress size={30} />
+                </Box>
+              ) : values.newUser ? (
                 <Box
                   display="flex"
                   justifyContent="space-between"

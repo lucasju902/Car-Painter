@@ -1,7 +1,8 @@
 import { useRef, useMemo, useState, useEffect, useCallback } from "react";
 import Canvg from "canvg";
-import { mathRound2, getPixelRatio, loadImage } from "helper";
+import { mathRound2, getPixelRatio, loadImage, rotatePoint } from "helper";
 import { replaceColors, svgToURL, urlToString } from "helper/svg";
+import { useSelector } from "react-redux";
 
 export const useKonvaImageInit = ({
   imageshapeRef,
@@ -18,6 +19,7 @@ export const useKonvaImageInit = ({
   allowFit,
   frameSize,
   loadedStatus,
+  boardRotate = 0,
   width,
   height,
   x,
@@ -107,9 +109,10 @@ export const useKonvaImageInit = ({
     }
 
     if (onChange && !width && !height && targetWidth && targetHeight) {
+      const offset = rotatePoint(targetWidth, targetHeight, boardRotate);
       onChange({
-        left: mathRound2(x - targetWidth / 2),
-        top: mathRound2(y - targetHeight / 2),
+        left: mathRound2(x - offset.x / 2),
+        top: mathRound2(y - offset.y / 2),
         width: mathRound2(targetWidth),
         height: mathRound2(targetHeight),
       });

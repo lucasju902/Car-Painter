@@ -38,7 +38,10 @@ export const DefaultSettingsDialog = React.memo((props) => {
           default_shape_color: guide_data.default_shape_color || "#000000",
           default_shape_opacity: guide_data.default_shape_opacity || 1,
           default_shape_scolor: guide_data.default_shape_scolor || "#000000",
-          default_shape_stroke: guide_data.default_shape_stroke || 0,
+          default_shape_stroke:
+            guide_data.default_shape_stroke != null
+              ? guide_data.default_shape_stroke
+              : 1,
         }}
         validationSchema={Yup.object().shape({
           default_shape_color: Yup.string()
@@ -48,6 +51,7 @@ export const DefaultSettingsDialog = React.memo((props) => {
             .nullable()
             .test("color-validation", "Incorrect Color Format", colorValidator),
         })}
+        enableReinitialize
         validate={(values) => {
           return {};
         }}

@@ -72,9 +72,10 @@ export const SizeProperty = React.memo((props) => {
       setFieldValue("layer_data.width", parseFloat(event.target.value) || 0);
     },
     [
+      currentLayer.layer_data.height,
+      currentLayer.layer_data.width,
       setFieldValue,
-      currentLayer && currentLayer.layer_data.height,
-      currentLayer && currentLayer.layer_data.width,
+      values.layer_data.sizeLocked,
     ]
   );
   const handleChangeHeight = useCallback(
@@ -90,9 +91,10 @@ export const SizeProperty = React.memo((props) => {
       setFieldValue("layer_data.height", parseFloat(event.target.value) || 0);
     },
     [
+      currentLayer.layer_data.height,
+      currentLayer.layer_data.width,
       setFieldValue,
-      currentLayer && currentLayer.layer_data.height,
-      currentLayer && currentLayer.layer_data.width,
+      values.layer_data.sizeLocked,
     ]
   );
   const handleChangeScaleX = useCallback(
@@ -108,9 +110,10 @@ export const SizeProperty = React.memo((props) => {
       setFieldValue("layer_data.scaleX", parseFloat(event.target.value) || 0);
     },
     [
+      currentLayer.layer_data.scaleX,
+      currentLayer.layer_data.scaleY,
       setFieldValue,
-      currentLayer && currentLayer.layer_data.scaleY,
-      currentLayer && currentLayer.layer_data.scaleX,
+      values.layer_data.sizeLocked,
     ]
   );
   const handleChangeScaleY = useCallback(
@@ -126,9 +129,10 @@ export const SizeProperty = React.memo((props) => {
       setFieldValue("layer_data.scaleY", parseFloat(event.target.value) || 0);
     },
     [
+      currentLayer.layer_data.scaleX,
+      currentLayer.layer_data.scaleY,
       setFieldValue,
-      currentLayer && currentLayer.layer_data.scaleY,
-      currentLayer && currentLayer.layer_data.scaleX,
+      values.layer_data.sizeLocked,
     ]
   );
 
@@ -148,9 +152,10 @@ export const SizeProperty = React.memo((props) => {
       );
     },
     [
+      currentLayer.layer_data.innerRadius,
+      currentLayer.layer_data.outerRadius,
       setFieldValue,
-      currentLayer && currentLayer.layer_data.outerRadius,
-      currentLayer && currentLayer.layer_data.innerRadius,
+      values.layer_data.sizeLocked,
     ]
   );
   const handleChangeOuterRadius = useCallback(
@@ -169,9 +174,10 @@ export const SizeProperty = React.memo((props) => {
       );
     },
     [
+      currentLayer.layer_data.innerRadius,
+      currentLayer.layer_data.outerRadius,
       setFieldValue,
-      currentLayer && currentLayer.layer_data.outerRadius,
-      currentLayer && currentLayer.layer_data.innerRadius,
+      values.layer_data.sizeLocked,
     ]
   );
   if (

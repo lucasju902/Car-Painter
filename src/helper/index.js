@@ -165,17 +165,29 @@ export const carMakeAssetURL = (carMake) => {
   )}/`;
 };
 
-export const getZoomedCenterPosition = (stageRef, frameSize, zoom) => {
+export const uploadAssetURL = (uploadItem) => {
+  return uploadItem.legacy_mode
+    ? `${config.legacyAssetURL}/${uploadItem.file_name}`
+    : `${config.assetsURL}/${uploadItem.file_name}`;
+};
+
+export const getZoomedCenterPosition = (
+  stageRef,
+  frameSize,
+  zoom,
+  boardRotate = 0
+) => {
   const transform = stageRef.current.getTransform().m;
   let width = stageRef.current.attrs.width;
   let height = stageRef.current.attrs.height;
   const fitZoom = mathRound4(
     Math.min(width / frameSize.width, height / frameSize.height)
   );
-  return {
-    x: -transform[4] / zoom + (frameSize.width * fitZoom) / zoom / 2,
-    y: -transform[5] / zoom + (frameSize.height * fitZoom) / zoom / 2,
-  };
+  return rotatePoint(
+    -transform[4] / zoom + (frameSize.width * fitZoom) / zoom / 2,
+    -transform[5] / zoom + (frameSize.height * fitZoom) / zoom / 2,
+    boardRotate
+  );
 };
 
 export const rotatePoint = (x, y, angle) => {

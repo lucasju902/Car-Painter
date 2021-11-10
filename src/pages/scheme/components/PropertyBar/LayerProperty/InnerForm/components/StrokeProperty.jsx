@@ -56,7 +56,7 @@ export const StrokeProperty = React.memo((props) => {
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
           {AllowedLayerTypes.includes("layer_data.scolor") ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={2} component={Box} alignItems="center">
               <Grid item xs={6}>
                 <Typography variant="body1" color="textSecondary" mr={2}>
                   Stroke Color

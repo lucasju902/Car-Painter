@@ -18,18 +18,33 @@ export const GuidesSetting = React.memo((props) => {
 
   const initialValues = useMemo(
     () => ({
-      carmask_color: guide_data.carmask_color || "",
-      carmask_opacity: guide_data.carmask_opacity || 1,
-      wireframe_color: guide_data.wireframe_color || "",
-      wireframe_opacity: guide_data.wireframe_opacity || 1,
-      sponsor_color: guide_data.sponsor_color || "",
-      sponsor_opacity: guide_data.sponsor_opacity || 1,
-      numberblock_color: guide_data.numberblock_color || "",
-      numberblock_opacity: guide_data.numberblock_opacity || 1,
-      grid_color: guide_data.grid_color || "",
-      grid_opacity: guide_data.grid_opacity || 1,
-      grid_padding: guide_data.grid_padding || 10,
-      grid_stroke: guide_data.grid_stroke || 0.1,
+      carmask_color:
+        guide_data.carmask_color != null ? guide_data.carmask_color : "",
+      carmask_opacity:
+        guide_data.carmask_opacity != null ? guide_data.carmask_opacity : 1,
+      wireframe_color:
+        guide_data.wireframe_color != null ? guide_data.wireframe_color : "",
+      wireframe_opacity:
+        guide_data.wireframe_opacity != null ? guide_data.wireframe_opacity : 1,
+      sponsor_color:
+        guide_data.sponsor_color != null ? guide_data.sponsor_color : "",
+      sponsor_opacity:
+        guide_data.sponsor_opacity != null ? guide_data.sponsor_opacity : 1,
+      numberblock_color:
+        guide_data.numberblock_color != null
+          ? guide_data.numberblock_color
+          : "",
+      numberblock_opacity:
+        guide_data.numberblock_opacity != null
+          ? guide_data.numberblock_opacity
+          : 1,
+      grid_color: guide_data.grid_color != null ? guide_data.grid_color : "",
+      grid_opacity:
+        guide_data.grid_opacity != null ? guide_data.grid_opacity : 1,
+      grid_padding:
+        guide_data.grid_padding != null ? guide_data.grid_padding : 10,
+      grid_stroke:
+        guide_data.grid_stroke != null ? guide_data.grid_stroke : 0.1,
       show_wireframe: guide_data.show_wireframe || false,
       show_sponsor: guide_data.show_sponsor || false,
       show_numberBlocks: guide_data.show_numberBlocks || false,
@@ -66,6 +81,7 @@ export const GuidesSetting = React.memo((props) => {
         return {};
       }}
       onSubmit={onApply}
+      enableReinitialize
     >
       {(formProps) => (
         <InnerForm

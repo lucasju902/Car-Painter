@@ -33,7 +33,7 @@ export const FontProperty = React.memo((props) => {
     fontList,
     onLayerDataUpdate,
   } = props;
-  const layerDataProperties = ["font"];
+  const layerDataProperties = ["font", "size"];
   const [expanded, setExpanded] = useState(true);
   const AllowedLayerTypes = useMemo(
     () =>
@@ -72,7 +72,7 @@ export const FontProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.color") ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={2} component={Box} alignItems="center">
               <Grid item xs={6}>
                 <Typography variant="body1" color="textSecondary" mr={2}>
                   Font Color

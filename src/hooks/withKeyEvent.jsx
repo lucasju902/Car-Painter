@@ -77,12 +77,12 @@ export const withKeyEvent = (Component) => (props) => {
           layer,
           samePosition,
           pushingToHistory,
-          getZoomedCenterPosition(stageRef, frameSize, zoom)
+          getZoomedCenterPosition(stageRef, frameSize, zoom, boardRotate)
         )
       );
       focusBoard();
     },
-    [dispatch, getZoomedCenterPosition, stageRef, frameSize, zoom]
+    [dispatch, stageRef, frameSize, zoom, boardRotate]
   );
   const handleDeleteLayer = useCallback(
     (layer) => {

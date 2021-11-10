@@ -32,7 +32,7 @@ class LayerService {
 
     for (let layerItem of scheme_layers) {
       let item_layer_data = JSON.parse(layerItem.layer_data);
-      if (item_layer_data.name.includes(layerName)) {
+      if (item_layer_data.name === layerName) {
         const extraIndex = parseInt(
           item_layer_data.name.substr(layerName.length)
         );

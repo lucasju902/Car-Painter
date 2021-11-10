@@ -61,7 +61,9 @@ export const PaintingGuideTop = React.memo((props) => {
               frameSize.width,
             ]}
             stroke={guideData.grid_color || "#ddd"}
-            opacity={guideData.grid_opacity || 1}
+            opacity={
+              guideData.grid_opacity != null ? guideData.grid_opacity : 1
+            }
             strokeWidth={gridStroke}
             listening={false}
             visible={
@@ -81,7 +83,9 @@ export const PaintingGuideTop = React.memo((props) => {
               Math.round(i * gridPadding),
             ]}
             stroke={guideData.grid_color || "#ddd"}
-            opacity={guideData.grid_opacity || 1}
+            opacity={
+              guideData.grid_opacity != null ? guideData.grid_opacity : 1
+            }
             strokeWidth={gridStroke}
             listening={false}
             visible={

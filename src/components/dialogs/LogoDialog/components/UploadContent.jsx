@@ -2,14 +2,13 @@ import React, { useState, useMemo, useCallback } from "react";
 
 import { Box, GridListTileBar } from "components/MaterialUI";
 import { ImageWithLoad, Loader } from "components/common";
-import config from "config";
 
 import {
   CustomInfiniteScroll,
   CustomGridList,
   CustomGridListTile,
 } from "./common.style";
-import { getNameFromUploadFileName } from "helper";
+import { getNameFromUploadFileName, uploadAssetURL } from "helper";
 
 export const UploadContent = React.memo((props) => {
   const { step, uploads, search, user, onOpen } = props;
@@ -46,7 +45,7 @@ export const UploadContent = React.memo((props) => {
               onClick={() => onOpen(uploadItem)}
             >
               <ImageWithLoad
-                src={`${config.assetsURL}/${uploadItem.file_name}`}
+                src={uploadAssetURL(uploadItem)}
                 alt={getNameFromUploadFileName(uploadItem.file_name, user)}
               />
               <GridListTileBar

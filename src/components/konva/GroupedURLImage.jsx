@@ -12,6 +12,7 @@ export const GroupedURLImage = ({
   bgColor = null,
   paddingX = 0,
   paddingY = 0,
+  boardRotate = 0,
   filterColor,
   frameSize,
   allowFit,
@@ -63,6 +64,7 @@ export const GroupedURLImage = ({
     allowFit,
     frameSize,
     loadedStatus,
+    boardRotate,
     width: props.width,
     height: props.height,
     x: props.x,
@@ -129,8 +131,8 @@ export const GroupedURLImage = ({
         height={props.height}
         shadowBlur={shadowBlur}
         shadowColor={shadowColor}
-        shadowOffsetX={shadowOffsetX}
-        shadowOffsetY={shadowOffsetY}
+        shadowOffsetX={shadowOffsetX || 0}
+        shadowOffsetY={shadowOffsetY || 0}
         red={allowFilter ? hexToRgba(filterColor).r : null}
         green={allowFilter ? hexToRgba(filterColor).g : null}
         blue={allowFilter ? hexToRgba(filterColor).b : null}

@@ -13,6 +13,7 @@ export const URLImage = ({
   allowFit,
   layer,
   loadedStatus,
+  boardRotate = 0,
   onLoadLayer,
   tellSize,
   stroke,
@@ -58,6 +59,7 @@ export const URLImage = ({
     allowFit,
     frameSize,
     loadedStatus,
+    boardRotate,
     width: props.width,
     height: props.height,
     x: props.x,
@@ -95,8 +97,8 @@ export const URLImage = ({
       draggable={onChange}
       shadowBlur={shadowBlur}
       shadowColor={shadowColor}
-      shadowOffsetX={shadowOffsetX}
-      shadowOffsetY={shadowOffsetY}
+      shadowOffsetX={shadowOffsetX || 0}
+      shadowOffsetY={shadowOffsetY || 0}
       red={allowFilter ? hexToRgba(filterColor).r : null}
       green={allowFilter ? hexToRgba(filterColor).g : null}
       blue={allowFilter ? hexToRgba(filterColor).b : null}

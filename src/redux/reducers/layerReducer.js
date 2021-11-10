@@ -258,7 +258,10 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
         color: guide_data.default_shape_color,
         opacity: guide_data.default_shape_opacity || 1,
         scolor: guide_data.default_shape_scolor,
-        stroke: guide_data.default_shape_stroke || 0,
+        stroke:
+          guide_data.default_shape_stroke != null
+            ? guide_data.default_shape_stroke
+            : 1,
         stroke_scale: shape.stroke_scale,
       }),
     });
@@ -438,12 +441,13 @@ export const cloneLayer = (
     dispatch(setLoading(true));
     try {
       const currentUser = getState().authReducer.user;
+      const boardRotate = getState().boardReducer.boardRotate;
       const offset = rotatePoint(
         layerToClone.layer_data.width ? -layerToClone.layer_data.width / 2 : 0,
         layerToClone.layer_data.height
           ? -layerToClone.layer_data.height / 2
           : 0,
-        layerToClone.layer_data.rotation || 0
+        boardRotate
       );
       const layer = await LayerService.createLayer({
         ..._.omit(layerToClone, ["id"]),

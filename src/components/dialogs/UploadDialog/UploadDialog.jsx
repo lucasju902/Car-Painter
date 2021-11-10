@@ -1,8 +1,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import config from "config";
-import { getNameFromUploadFileName } from "helper";
+import { getNameFromUploadFileName, uploadAssetURL } from "helper";
 
 import { DropzoneArea } from "material-ui-dropzone";
 import { Delete as DeleteIcon } from "@material-ui/icons";
@@ -111,12 +110,6 @@ export const UploadDialog = React.memo((props) => {
     [dispatch, uploadToDelete, setUploadToDelete, setAssociatedSchemes]
   );
 
-  const uploadURL = useCallback((uploadItem) => {
-    return uploadItem.legacy_mode
-      ? `${config.legacyAssetURL}/${uploadItem.file_name}`
-      : `${config.assetsURL}/${uploadItem.file_name}`;
-  }, []);
-
   return (
     <Dialog aria-labelledby="upload-title" open={open} onClose={onCancel}>
       <DialogTitle id="upload-title">My Uploads</DialogTitle>
@@ -153,7 +146,7 @@ export const UploadDialog = React.memo((props) => {
                   onClick={() => onOpenUpload(uploadItem)}
                 >
                   <ImageWithLoad
-                    src={uploadURL(uploadItem)}
+                    src={uploadAssetURL(uploadItem)}
                     alt={getNameFromUploadFileName(uploadItem.file_name, user)}
                   />
                   <GridListTileBar

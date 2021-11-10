@@ -166,6 +166,7 @@ export const DrawerBar = React.memo(
     const fontList = useSelector((state) => state.fontReducer.list);
     const frameSize = useSelector((state) => state.boardReducer.frameSize);
     const zoom = useSelector((state) => state.boardReducer.zoom);
+    const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
     const basePaints = useSelector((state) => state.basePaintReducer.list);
     const user = useSelector((state) => state.authReducer.user);
 
@@ -201,13 +202,21 @@ export const DrawerBar = React.memo(
           createLayerFromOverlay(
             currentScheme.id,
             shape,
-            getZoomedCenterPosition(stageRef, frameSize, zoom)
+            getZoomedCenterPosition(stageRef, frameSize, zoom, boardRotate)
           )
         );
         setDialog(null);
         focusBoard();
       },
-      [dispatch, setDialog, currentScheme.id, stageRef, frameSize, zoom]
+      [
+        dispatch,
+        currentScheme.id,
+        stageRef,
+        frameSize,
+        zoom,
+        boardRotate,
+        setDialog,
+      ]
     );
     const handleOpenLogo = useCallback(
       (logo) => {
@@ -216,13 +225,21 @@ export const DrawerBar = React.memo(
           createLayerFromLogo(
             currentScheme.id,
             logo,
-            getZoomedCenterPosition(stageRef, frameSize, zoom)
+            getZoomedCenterPosition(stageRef, frameSize, zoom, boardRotate)
           )
         );
         setDialog(null);
         focusBoard();
       },
-      [dispatch, setDialog, currentScheme.id, stageRef, frameSize, zoom]
+      [
+        dispatch,
+        currentScheme.id,
+        stageRef,
+        frameSize,
+        zoom,
+        boardRotate,
+        setDialog,
+      ]
     );
     const handleOpenUpload = useCallback(
       (upload) => {
