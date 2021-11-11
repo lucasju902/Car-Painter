@@ -97,6 +97,8 @@ export const Shapes = React.memo((props) => {
       {filteredLayers.map((layer) => {
         let shadowOffset = getShadowOffset(layer);
         let offsetsFromStroke = getOffsetsFromStroke(layer);
+        const newWidth = layer.layer_data.width + offsetsFromStroke.width;
+        const newHeight = layer.layer_data.height + offsetsFromStroke.height;
 
         return (
           <Shape
@@ -109,10 +111,8 @@ export const Shapes = React.memo((props) => {
             type={layer.layer_data.type}
             x={parseFloat(layer.layer_data.left + offsetsFromStroke.x || 0)}
             y={parseFloat(layer.layer_data.top + offsetsFromStroke.y || 0)}
-            width={Math.abs(layer.layer_data.width + offsetsFromStroke.width)}
-            height={Math.abs(
-              layer.layer_data.height + offsetsFromStroke.height
-            )}
+            width={Math.abs(newWidth)}
+            height={Math.abs(newHeight)}
             radius={Math.abs(
               layer.layer_data.radius + offsetsFromStroke.radius
             )}
@@ -147,8 +147,12 @@ export const Shapes = React.memo((props) => {
             rotation={layer.layer_data.rotation}
             angle={layer.layer_data.angle}
             opacity={layer.layer_data.opacity}
-            scaleX={layer.layer_data.flop === 1 ? -1 : 1}
-            scaleY={layer.layer_data.flip === 1 ? -1 : 1}
+            scaleX={
+              (layer.layer_data.flop === 1 ? -1 : 1) * (newWidth > 0 ? 1 : -1)
+            }
+            scaleY={
+              (layer.layer_data.flip === 1 ? -1 : 1) * (newHeight > 0 ? 1 : -1)
+            }
             shadowColor={
               specMode
                 ? layer.layer_data.finish || FinishOptions[0].value

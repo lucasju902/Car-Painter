@@ -21,6 +21,9 @@ export const slice = createSlice({
       state.list = action.payload;
       state.initialized = true;
     },
+    setIntialized: (state, action) => {
+      state.initialized = action.payload;
+    },
     insertToList: (state, action) => {
       state.list.push(action.payload);
     },
@@ -57,6 +60,7 @@ export const {
   insertToList,
   updateListItem,
   deleteListItem,
+  setIntialized,
 } = slice.actions;
 
 export const getUploadListByUserID = (userID) => async (dispatch) => {

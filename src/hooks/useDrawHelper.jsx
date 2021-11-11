@@ -199,16 +199,9 @@ export const useDrawHelper = (stageRef) => {
             layer_data: {
               ...drawingLayerRef.current.layer_data,
               points: [...drawingLayerRef.current.layer_data.points],
-              width:
-                MouseModes.ELLIPSE !== drawingLayerRef.current.layer_type &&
-                width > 0
-                  ? width
-                  : 0,
+              width: MouseModes.ELLIPSE === mouseMode ? Math.abs(width) : width,
               height:
-                MouseModes.ELLIPSE !== drawingLayerRef.current.layer_type &&
-                height > 0
-                  ? height
-                  : 0,
+                MouseModes.ELLIPSE === mouseMode ? Math.abs(height) : height,
               radius: Math.abs(width),
               innerRadius: Math.abs(width) / 2.5,
               outerRadius: Math.abs(width),

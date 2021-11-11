@@ -63,13 +63,25 @@ export const TitleBar = React.memo((props) => {
       px={1}
       my={1}
     >
-      <NameInput
-        value={name}
-        onChange={handleNameChange}
-        onKeyDown={handleNameKeyDown}
-        width={currentScheme && name !== currentScheme.name ? "108px" : "200px"}
-        inputProps={{ maxLength: "50" }}
-      />
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box mr={1}>
+          <LightTooltip title="Back" arrow>
+            <IconButton onClick={onBack}>
+              <CustomIcon icon={faChevronLeft} size="xs" />
+            </IconButton>
+          </LightTooltip>
+        </Box>
+
+        <NameInput
+          value={name}
+          onChange={handleNameChange}
+          onKeyDown={handleNameKeyDown}
+          width={
+            currentScheme && name !== currentScheme.name ? "108px" : "200px"
+          }
+          inputProps={{ maxLength: "50" }}
+        />
+      </Box>
       <Box display="flex">
         {currentScheme && name !== currentScheme.name ? (
           <LightTooltip title="Discard Change" arrow>
@@ -89,11 +101,6 @@ export const TitleBar = React.memo((props) => {
         ) : (
           <></>
         )}
-        <LightTooltip title="Back" arrow>
-          <IconButton onClick={onBack}>
-            <CustomIcon icon={faChevronLeft} size="xs" />
-          </IconButton>
-        </LightTooltip>
         <LightTooltip title="Shortcuts" arrow>
           <IconButton onClick={() => setDialog(DialogTypes.SHORTCUTS)}>
             <CustomIcon icon={faQuestion} size="xs" />

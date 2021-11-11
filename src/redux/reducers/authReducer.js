@@ -8,6 +8,7 @@ import {
   clearSharedList,
   clearFavoriteList,
 } from "./schemeReducer";
+import { setIntialized } from "./uploadReducer";
 
 const initialState = {
   user: undefined,
@@ -74,6 +75,7 @@ export const signOut = () => async (dispatch) => {
   dispatch(clearSharedList());
   dispatch(clearFavoriteList());
   dispatch(setUser(null));
+  dispatch(setIntialized(false));
 };
 
 export default slice.reducer;

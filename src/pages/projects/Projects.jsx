@@ -121,11 +121,6 @@ export const Projects = () => {
         setPredefinedCarMakeID(makeID);
         setDialog("CreateProjectDialog");
       }
-
-      const schemeID = url.searchParams.get("scheme");
-      if (schemeID) {
-        history.push(`/scheme/${schemeID}`);
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -191,6 +186,12 @@ export const Projects = () => {
   useEffect(() => {
     // Set Tab based on query string
     const url = new URL(window.location.href);
+    const schemeID = url.searchParams.get("scheme");
+    if (schemeID) {
+      history.push(`/scheme/${schemeID}`);
+      return;
+    }
+
     const pathName = url.pathname.slice(1);
     const tab = tabURLs.findIndex((item) => item === pathName);
     if (tab !== -1) setTabValue(parseInt(tab));
