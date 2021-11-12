@@ -33,7 +33,7 @@ export const StyledTabs = withStyles({
     backgroundColor: "transparent",
     "& > span": {
       width: "100%",
-      backgroundColor: "#635ee7",
+      backgroundColor: "#279AF1",
     },
   },
   root: {

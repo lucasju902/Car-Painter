@@ -22,8 +22,18 @@ export const getDifferenceFromToday = (past_date) => {
     return `${returnValue} hour${returnValue > 1 ? "s" : ""} ago`;
   }
   const difference_In_Day = difference_In_Hour / 24;
-  returnValue = Math.round(difference_In_Day);
-  return `${returnValue} day${returnValue > 1 ? "s" : ""} ago`;
+  if (difference_In_Day < 30) {
+    returnValue = Math.round(difference_In_Day);
+    return `${returnValue} day${returnValue > 1 ? "s" : ""} ago`;
+  }
+  if (difference_In_Day < 365) {
+    const difference_In_Month = difference_In_Day / 30;
+    returnValue = Math.round(difference_In_Month);
+    return `${returnValue} month${returnValue > 1 ? "s" : ""} ago`;
+  }
+  const difference_In_Year = difference_In_Day / 365;
+  returnValue = Math.round(difference_In_Year);
+  return `${returnValue} year${returnValue > 1 ? "s" : ""} ago`;
 };
 
 export const hexToRgba = (hex) => {

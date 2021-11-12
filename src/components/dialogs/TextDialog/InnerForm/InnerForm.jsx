@@ -149,17 +149,6 @@ export const InnerForm = React.memo((props) => {
         </Grid>
       </Grid>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <SliderInput
-            label="Rotation"
-            min={-179}
-            max={179}
-            value={values.rotation}
-            setValue={(value) => setFieldValue("rotation", value)}
-          />
-        </Grid>
-      </Grid>
       <TextPreviewWrapper
         width="100%"
         height="200px"

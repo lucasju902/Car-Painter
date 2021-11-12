@@ -12,9 +12,9 @@ export const StyledTabs = withStyles({
     justifyContent: "center",
     backgroundColor: "transparent",
     "& > span": {
-      maxWidth: 40,
+      maxWidth: "calc(100% - 10px)",
       width: "100%",
-      backgroundColor: "#635ee7",
+      backgroundColor: "#279AF1",
     },
   },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
