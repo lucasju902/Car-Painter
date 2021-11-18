@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const Layer = require("../models/layer.model");
 const Scheme = require("../models/scheme.model");
+const { generateRandomColor } = require("../utils/common");
 
 class SchemeService {
   static async getList() {
@@ -43,6 +44,16 @@ class SchemeService {
     schemeList = schemeList.toJSON();
     let number = 0;
 
+    const defaultGuideData = {
+      wireframe_opacity: 0.1,
+      show_wireframe: true,
+      sponsor_opacity: 0.3,
+      show_sponsor: true,
+      numberblock_opacity: 0.2,
+      show_numberBlocks: true,
+      show_number_block_on_top: true,
+    };
+
     for (let item of schemeList) {
       if (item.name.includes(schemeName)) {
         const extraIndex = parseInt(item.name.substr(schemeName.length));
@@ -54,7 +65,7 @@ class SchemeService {
 
     const scheme = await Scheme.forge({
       name: schemeName,
-      base_color: "ffffff",
+      base_color: generateRandomColor(),
       car_make: carMakeID,
       user_id: userID,
       date_created: Math.round(new Date().getTime() / 1000),
@@ -66,6 +77,7 @@ class SchemeService {
       finished: 0,
       avail: 1,
       legacy_mode,
+      guide_data: JSON.stringify(defaultGuideData),
     }).save();
     return scheme;
   }

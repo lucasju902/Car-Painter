@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useCallback } from "react";
 
-import { Box, GridListTileBar } from "components/MaterialUI";
+import { Box, ImageListItemBar } from "components/MaterialUI";
 import { ImageWithLoad, Loader } from "components/common";
 import config from "config";
 
 import {
   CustomInfiniteScroll,
-  CustomGridList,
-  CustomGridListTile,
+  CustomImageList,
+  CustomImageListItem,
 } from "./common.style";
 
 export const LogoContent = React.memo((props) => {
@@ -37,9 +37,9 @@ export const LogoContent = React.memo((props) => {
         loader={<Loader />}
         scrollableTarget="logo-dialog-content"
       >
-        <CustomGridList cellHeight={178} cols={3}>
+        <CustomImageList rowHeight={178} cols={3}>
           {filteredLogos.slice(0, logoLimit).map((logo) => (
-            <CustomGridListTile
+            <CustomImageListItem
               key={logo.id}
               cols={1}
               onClick={() => onOpen(logo)}
@@ -48,10 +48,10 @@ export const LogoContent = React.memo((props) => {
                 src={`${config.assetsURL}/${logo.preview_file}`}
                 alt={logo.name}
               />
-              <GridListTileBar title={logo.name} />
-            </CustomGridListTile>
+              <ImageListItemBar title={logo.name} />
+            </CustomImageListItem>
           ))}
-        </CustomGridList>
+        </CustomImageList>
       </CustomInfiniteScroll>
     </Box>
   );

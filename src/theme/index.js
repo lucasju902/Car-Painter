@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme as createMuiTheme } from "@material-ui/core/styles";
 import variants from "./variants";
 import typography from "./typography";
 import overrides from "./overrides";

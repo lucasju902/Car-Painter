@@ -22,6 +22,8 @@ export const TransformerComponent = ({
     [selectedLayer, pressedKey]
   );
 
+  const centeredScaling = useMemo(() => pressedKey === "alt", [pressedKey]);
+
   const checkNode = useCallback(() => {
     if (selectedLayer) {
       const stage = trRef.current.getStage();
@@ -88,7 +90,7 @@ export const TransformerComponent = ({
         rotateEnabled={!hoveredTransform && pressedKey !== "h"}
         boundBoxFunc={boundBoxFunc}
         borderStroke={hoveredTransform ? "red" : null}
-        centeredScaling={true}
+        centeredScaling={centeredScaling}
       />
     );
   return <></>;

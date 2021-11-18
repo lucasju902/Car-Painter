@@ -1,7 +1,7 @@
 import styled from "styled-components/macro";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { GridList, GridListTile, makeStyles } from "@material-ui/core";
+import { ImageList, ImageListItem, makeStyles } from "@material-ui/core";
 
 export const CustomInfiniteScroll = styled(InfiniteScroll)`
   &.infinite-scroll-component {
@@ -9,11 +9,11 @@ export const CustomInfiniteScroll = styled(InfiniteScroll)`
   }
 `;
 
-export const CustomGridList = styled(GridList)`
+export const CustomImageList = styled(ImageList)`
   overflow: hidden !important;
   margin: 0 !important;
 `;
-export const CustomGridListTile = styled(GridListTile)`
+export const CustomImageListItem = styled(ImageListItem)`
   cursor: pointer;
 `;
 

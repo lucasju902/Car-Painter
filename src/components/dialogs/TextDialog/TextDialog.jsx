@@ -31,7 +31,7 @@ export const TextDialog = React.memo((props) => {
         initialValues={{
           text: "",
           font: 1,
-          size: 14,
+          size: 36,
           color: defaultColor || "#000000",
           stroke: 0,
           scolor: defaultStrokeColor || "#000000",

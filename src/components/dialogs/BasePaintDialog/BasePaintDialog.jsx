@@ -13,8 +13,8 @@ import { basePaintAssetURL, legacyBasePaintAssetURL } from "helper";
 import { ImageWithLoad, Loader } from "components/common";
 import {
   CustomInfiniteScroll,
-  CustomGridList,
-  CustomGridListTile,
+  CustomImageList,
+  CustomImageListItem,
   useStyles,
 } from "./BasePaintDialog.style";
 import { NavLink } from "react-router-dom";
@@ -95,9 +95,9 @@ export const BasePaintDialog = React.memo((props) => {
           loader={<Loader />}
           scrollableTarget="base-paint-dialog-content"
         >
-          <CustomGridList cellHeight={178} cols={3} spacing={8}>
+          <CustomImageList rowHeight={178} cols={3} spacing={8}>
             {bases.slice(0, limit).map((item, index) => (
-              <CustomGridListTile
+              <CustomImageListItem
                 key={index}
                 cols={1}
                 onClick={() => onOpenBase(item)}
@@ -108,9 +108,9 @@ export const BasePaintDialog = React.memo((props) => {
                   minHeight="100px"
                   minWidth="100px"
                 />
-              </CustomGridListTile>
+              </CustomImageListItem>
             ))}
-          </CustomGridList>
+          </CustomImageList>
         </CustomInfiniteScroll>
       </DialogContent>
       <DialogActions>

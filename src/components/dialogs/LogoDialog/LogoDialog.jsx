@@ -84,6 +84,7 @@ export const LogoDialog = React.memo((props) => {
             step={step}
             uploads={uploads}
             search={search}
+            setSearch={setSearch}
             user={user}
             onOpen={onOpenUpload}
           />

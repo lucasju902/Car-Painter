@@ -8,7 +8,7 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
-  GridListTileBar,
+  ImageListItemBar,
 } from "components/MaterialUI";
 import {
   ImageWithLoad,
@@ -18,8 +18,8 @@ import {
 } from "components/common";
 import {
   CustomInfiniteScroll,
-  CustomGridList,
-  CustomGridListTile,
+  CustomImageList,
+  CustomImageListItem,
   CustomDialogContent,
 } from "./OverlayDialog.style";
 
@@ -62,9 +62,9 @@ export const OverlayDialog = React.memo((props) => {
             loader={<Loader />}
             scrollableTarget="shape-dialog-content"
           >
-            <CustomGridList cellHeight={178} cols={3}>
+            <CustomImageList rowHeight={178} cols={3}>
               {filteredOverlays.slice(0, limit).map((shape) => (
-                <CustomGridListTile
+                <CustomImageListItem
                   key={shape.id}
                   cols={1}
                   onClick={() => onOpenOverlay(shape)}
@@ -89,13 +89,13 @@ export const OverlayDialog = React.memo((props) => {
                       alt={shape.name}
                     />
                   )}
-                  <GridListTileBar
+                  <ImageListItemBar
                     title={shape.name}
                     subtitle={shape.description}
                   />
-                </CustomGridListTile>
+                </CustomImageListItem>
               ))}
-            </CustomGridList>
+            </CustomImageList>
           </CustomInfiniteScroll>
         </Box>
       </CustomDialogContent>
