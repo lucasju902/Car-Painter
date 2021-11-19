@@ -1,7 +1,8 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import config from "config";
+import fitty from "fitty";
 
 import {
   Box,
@@ -32,6 +33,7 @@ export const InnerForm = React.memo((props) => {
   } = props;
   const dispatch = useDispatch();
   const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
+  const previewBoxRef = useRef();
 
   const loadFont = useCallback(
     (fontFamily, fontFile) => {
@@ -58,6 +60,31 @@ export const InnerForm = React.memo((props) => {
       loadFont(font.font_name, `url(${config.assetsURL}/${font.font_file})`);
     }
   }, [values.font]);
+
+  useEffect(() => {
+    fitty("#text-preview", {
+      minSize: 10,
+      maxSize: 512,
+      multiLine: false,
+    });
+  }, [values.text]);
+
+  useEffect(() => {
+    const adjustFont = (e) => {
+      setFieldValue("size", Math.round(e.detail.newValue));
+    };
+
+    if (previewBoxRef.current) {
+      previewBoxRef.current.addEventListener("fit", adjustFont);
+    }
+
+    return () => {
+      if (previewBoxRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        previewBoxRef.current.removeEventListener("fit", adjustFont);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -89,13 +116,16 @@ export const InnerForm = React.memo((props) => {
       </FormControl>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <SliderInput
-            label="Font Size"
-            min={6}
-            max={72}
-            value={values.size}
-            setValue={(value) => setFieldValue("size", value)}
-          />
+          <Grid container component={Box} alignItems="center" height="100%">
+            <Grid item xs={6}>
+              <Typography variant="body1" color="textSecondary" mr={2}>
+                Font Size
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body1">{values.size}</Typography>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Box
@@ -151,7 +181,7 @@ export const InnerForm = React.memo((props) => {
 
       <TextPreviewWrapper
         width="100%"
-        height="200px"
+        height="300px"
         my={2}
         display="flex"
         justifyContent="center"
@@ -162,9 +192,10 @@ export const InnerForm = React.memo((props) => {
           color={values.color}
           stroke={values.stroke}
           scolor={values.scolor}
-          size={values.size}
           rotate={values.rotation}
           font={fontList.find((item) => item.id === values.font).font_name}
+          id="text-preview"
+          ref={previewBoxRef}
         >
           {values.text}
         </TextPreview>

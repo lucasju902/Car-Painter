@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
@@ -40,21 +40,22 @@ export const PartGroup = (props) => {
     [layerList]
   );
 
-  useEffect(() => {
-    for (let index in sortedList) {
-      if (sortedList[index].layer_order !== parseInt(index) + 1) {
-        dispatch(
-          updateLayer(
-            {
-              ...sortedList[index],
-              layer_order: parseInt(index) + 1,
-            },
-            false
-          )
-        );
-      }
-    }
-  }, [dispatch, layerList.length, sortedList]);
+  // useEffect(() => {
+  //   for (let index in sortedList) {
+  //     if (sortedList[index].layer_order !== parseInt(index) + 1) {
+  //       console.log("updateLayer in PartGroup!");
+  //       dispatch(
+  //         updateLayer(
+  //           {
+  //             ...sortedList[index],
+  //             layer_order: parseInt(index) + 1,
+  //           },
+  //           false
+  //         )
+  //       );
+  //     }
+  //   }
+  // }, [dispatch, layerList.length, sortedList]);
 
   const handleExpandClick = useCallback(() => {
     setExpanded((preValue) => !preValue);

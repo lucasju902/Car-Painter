@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useMemo } from "react";
+import { useEffect, useCallback, useMemo, useState } from "react";
 import { useReducerRef } from "hooks";
 import _ from "lodash";
 
@@ -27,6 +27,7 @@ export const useCapture = (
   carMaskLayerRef
 ) => {
   const dispatch = useDispatch();
+  const [pauseCapturing, setPauseCapturing] = useState(false);
   const [, userRef] = useReducerRef(
     useSelector((state) => state.authReducer.user)
   );
@@ -42,6 +43,9 @@ export const useCapture = (
   );
   const loadedStatuses = useSelector(
     (state) => state.layerReducer.loadedStatuses
+  );
+  const [drawingStatus, drawingStatusRef] = useReducerRef(
+    useSelector((state) => state.layerReducer.drawingStatus)
   );
   const viewMode = useSelector((state) => state.boardReducer.viewMode);
   const [, showPropertiesRef] = useReducerRef(
@@ -223,6 +227,10 @@ export const useCapture = (
         currentSchemeRef.current &&
         !currentSchemeRef.current.thumbnail_updated
       ) {
+        if (drawingStatusRef.current) {
+          setPauseCapturing(true);
+          return;
+        }
         try {
           console.log("Uploading Thumbnail");
           dispatch(setSaving(true));
@@ -238,7 +246,14 @@ export const useCapture = (
         }
       }
     },
-    [dispatch, currentSchemeRef, stageRef, takeScreenshot, uploadThumbnail]
+    [
+      dispatch,
+      currentSchemeRef,
+      stageRef,
+      drawingStatusRef,
+      takeScreenshot,
+      uploadThumbnail,
+    ]
   );
 
   const handleDownloadTGA = useCallback(async () => {
@@ -319,6 +334,14 @@ export const useCapture = (
     userRef,
     takeScreenshot,
   ]);
+
+  useEffect(() => {
+    if (pauseCapturing && !drawingStatus) {
+      setPauseCapturing(false);
+      handleUploadThumbnail();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pauseCapturing, drawingStatus]);
 
   return [handleUploadThumbnail, handleDownloadTGA, handleDownloadSpecTGA];
 };

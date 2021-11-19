@@ -129,6 +129,7 @@ export const useDrawHelper = (stageRef) => {
             newLayer.layer_data.points = [0, 0];
           }
           drawingLayerRef.current = newLayer;
+          dispatch(setDrawingStatus(DrawingStatus.DRAWING_SHAPE));
         } else {
           if (
             [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
@@ -152,11 +153,12 @@ export const useDrawHelper = (stageRef) => {
             ]);
 
             drawingLayerRef.current = layer;
+            dispatch(setDrawingStatus(DrawingStatus.DRAWING_SHAPE));
           }
         }
       }
     },
-    [mouseMode, currentScheme.guide_data, drawingLayerRef, stageRef]
+    [dispatch, mouseMode, currentScheme.guide_data, drawingLayerRef, stageRef]
   );
   const handleMouseMove = useCallback(() => {
     // console.log("Mouse Move");
@@ -307,7 +309,8 @@ export const useDrawHelper = (stageRef) => {
       currentScheme.guide_data.show_grid
     )
       showGuideForRepositioning(true);
-  }, [showGuideForRepositioning, currentScheme]);
+    dispatch(setDrawingStatus(DrawingStatus.TRANSFORMING_SHAPE));
+  }, [dispatch, showGuideForRepositioning, currentScheme]);
   const handleLayerDragEnd = useCallback(() => {
     if (
       currentScheme.guide_data.show_wireframe ||
@@ -316,7 +319,8 @@ export const useDrawHelper = (stageRef) => {
       currentScheme.guide_data.show_grid
     )
       showGuideForRepositioning(false);
-  }, [showGuideForRepositioning, currentScheme]);
+    dispatch(setDrawingStatus(null));
+  }, [dispatch, showGuideForRepositioning, currentScheme]);
 
   const handleDragEnd = useCallback(() => {}, []);
 

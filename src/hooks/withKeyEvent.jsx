@@ -30,7 +30,7 @@ import {
   setPaintingGuides,
 } from "redux/reducers/boardReducer";
 import { useZoom } from "hooks";
-import { getZoomedCenterPosition, focusBoard } from "helper";
+import { getZoomedCenterPosition, focusBoard, isInSameSideBar } from "helper";
 
 import { ConfirmDialog } from "components/dialogs";
 
@@ -46,6 +46,7 @@ export const withKeyEvent = (Component) => (props) => {
 
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const clipboardLayer = useSelector((state) => state.layerReducer.clipboard);
+  const layerList = useSelector((state) => state.layerReducer.list);
 
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
@@ -96,11 +97,45 @@ export const withKeyEvent = (Component) => (props) => {
     setConfirmMessage("");
   }, [dispatch, currentLayer, setConfirmMessage]);
 
+  const handleChangeSelectedLayerOrder = useCallback(
+    (isUpper = true) => {
+      if (currentLayer && currentLayer.layer_type !== LayerTypes.CAR) {
+        let exchangableLayers = _.orderBy(
+          layerList.filter(
+            (layer) =>
+              (isUpper
+                ? layer.layer_order < currentLayer.layer_order
+                : layer.layer_order > currentLayer.layer_order) &&
+              isInSameSideBar(currentLayer.layer_type, layer.layer_type)
+          ),
+          ["layer_order"],
+          isUpper ? ["desc"] : ["asc"]
+        );
+        if (exchangableLayers.length) {
+          let layerToExchange = exchangableLayers[0];
+          dispatch(
+            updateLayer({
+              ...layerToExchange,
+              layer_order: parseInt(currentLayer.layer_order),
+            })
+          );
+          dispatch(
+            updateLayer({
+              ...currentLayer,
+              layer_order: parseInt(layerToExchange.layer_order),
+            })
+          );
+        }
+      }
+    },
+    [currentLayer, dispatch, layerList]
+  );
+
   const handleKeyEvent = useCallback(
     (key, event) => {
       event.preventDefault();
       // Delete Selected Layer
-      // console.log("KeyEvent: ", key, event);
+      console.log("KeyEvent: ", key, event);
       if (event.target.tagName !== "INPUT" && event.type === "keydown") {
         if (pressedKey !== key) {
           dispatch(setPressedKey(key));
@@ -131,6 +166,10 @@ export const withKeyEvent = (Component) => (props) => {
           dispatch(setZoom(1));
         } else if (event.key === "(" && event.shiftKey) {
           onZoomFit();
+        } else if (event.key === "{" && event.shiftKey) {
+          handleChangeSelectedLayerOrder(false);
+        } else if (event.key === "}" && event.shiftKey) {
+          handleChangeSelectedLayerOrder(true);
         } else if (event.key === "D" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.DEFAULT));
         } else if (event.key === "B" && event.shiftKey && editable) {
@@ -282,19 +321,19 @@ export const withKeyEvent = (Component) => (props) => {
       }
     },
     [
-      dispatch,
+      editable,
       pressedKey,
       currentLayer,
       clipboardLayer,
-      prevTick.current,
-      tick.current,
-      editable,
+      dispatch,
       handleDeleteLayer,
-      handleCloneLayer,
-      togglePaintingGuides,
-      onZoomFit,
+      mouseMode,
       onZoomIn,
       onZoomOut,
+      onZoomFit,
+      handleCloneLayer,
+      togglePaintingGuides,
+      boardRotate,
     ]
   );
 

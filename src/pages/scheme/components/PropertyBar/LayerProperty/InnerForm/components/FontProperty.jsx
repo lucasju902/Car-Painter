@@ -99,7 +99,7 @@ export const FontProperty = React.memo((props) => {
               label="Font Size"
               disabled={!editable}
               min={6}
-              max={72}
+              max={512}
               value={values.layer_data.size}
               setValue={(value) => setFieldValue("layer_data.size", value)}
             />

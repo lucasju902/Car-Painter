@@ -1,6 +1,6 @@
 import config from "config";
 import TGA from "utils/tga";
-import { MouseModes } from "constant";
+import { LayerTypes, MouseModes } from "constant";
 // import validateColor from "validate-color";
 
 export const getDifferenceFromToday = (past_date) => {
@@ -357,4 +357,14 @@ export const loadImage = async (
   imageRef.current = img;
   if (handleLoad) imageRef.current.addEventListener("load", handleLoad);
   if (handleError) imageRef.current.addEventListener("error", handleError);
+};
+
+export const isInSameSideBar = (type1, type2) => {
+  if (
+    [LayerTypes.LOGO, LayerTypes.TEXT, LayerTypes.UPLOAD].includes(type1) &&
+    [LayerTypes.LOGO, LayerTypes.TEXT, LayerTypes.UPLOAD].includes(type2)
+  )
+    return true;
+  if (type1 === type2) return true;
+  return false;
 };

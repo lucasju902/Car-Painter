@@ -62,6 +62,8 @@ export const DialogTypes = {
 export const DrawingStatus = {
   CLEAR_COMMAND: "CLEAR_COMMAND",
   ADD_TO_SHAPE: "ADD_TO_SHAPE",
+  DRAWING_SHAPE: "DRAWING_SHAPE",
+  TRANSFORMING_SHAPE: "TRANSFORMING_SHAPE",
 };
 
 export const FinishOptions = [
