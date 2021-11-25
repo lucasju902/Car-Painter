@@ -34,6 +34,7 @@ export const GeneralSetting = React.memo((props) => {
     onClose,
     onDelete,
     onRename,
+    onRenewCarMakeLayers,
   } = props;
   const history = useHistory();
 
@@ -152,19 +153,28 @@ export const GeneralSetting = React.memo((props) => {
           </Typography>
         </Box>
 
-        {owner.id === currentUser.id ? (
-          <CustomButton
-            mt={2}
-            onClick={() =>
-              setDeleteMessage(`Are you sure to delete "${scheme.name}"?`)
-            }
-            color="secondary"
-          >
-            Delete Project
-          </CustomButton>
-        ) : (
-          <></>
-        )}
+        <Box mt={2}>
+          {editable ? (
+            <CustomButton mr={2} onClick={onRenewCarMakeLayers}>
+              Renew CarMake Layers
+            </CustomButton>
+          ) : (
+            <></>
+          )}
+
+          {owner.id === currentUser.id ? (
+            <CustomButton
+              onClick={() =>
+                setDeleteMessage(`Are you sure to delete "${scheme.name}"?`)
+              }
+              color="secondary"
+            >
+              Delete Project
+            </CustomButton>
+          ) : (
+            <></>
+          )}
+        </Box>
       </CustomDialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary" variant="outlined">

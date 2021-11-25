@@ -19,6 +19,7 @@ import {
   createFavoriteScheme,
   deleteFavoriteItem,
   deleteScheme,
+  deleteAndCreateNewCarMakeLayers,
 } from "redux/reducers/schemeReducer";
 
 export const SchemeSettingsDialog = React.memo((props) => {
@@ -159,6 +160,10 @@ export const SchemeSettingsDialog = React.memo((props) => {
     [dispatch]
   );
 
+  const handleRenewCarMakeLayers = useCallback(() => {
+    dispatch(deleteAndCreateNewCarMakeLayers(currentScheme.id));
+  }, [dispatch, currentScheme]);
+
   return (
     <Dialog
       aria-labelledby="insert-text-title"
@@ -191,6 +196,7 @@ export const SchemeSettingsDialog = React.memo((props) => {
             onRename={handleSaveName}
             onDelete={handleDeleteProject}
             onClose={onCancel}
+            onRenewCarMakeLayers={handleRenewCarMakeLayers}
           />
         </TabPanel>
         <TabPanel value={tabValue} index={1}>

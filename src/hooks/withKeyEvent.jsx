@@ -25,6 +25,7 @@ import {
   setZoom,
   setMouseMode,
   setPressedKey,
+  setPressedEventKey,
   historyActionUp,
   historyActionBack,
   setPaintingGuides,
@@ -49,6 +50,9 @@ export const withKeyEvent = (Component) => (props) => {
   const layerList = useSelector((state) => state.layerReducer.list);
 
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
+  const pressedEventKey = useSelector(
+    (state) => state.boardReducer.pressedEventKey
+  );
   const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const zoom = useSelector((state) => state.boardReducer.zoom);
@@ -68,7 +72,7 @@ export const withKeyEvent = (Component) => (props) => {
       }
       dispatch(setPaintingGuides(newPaintingGuides));
     },
-    [paintingGuides]
+    [dispatch, paintingGuides]
   );
 
   const handleCloneLayer = useCallback(
@@ -135,10 +139,16 @@ export const withKeyEvent = (Component) => (props) => {
     (key, event) => {
       event.preventDefault();
       // Delete Selected Layer
-      console.log("KeyEvent: ", key, event);
+      // console.log("KeyEvent: ", key, event);
       if (event.target.tagName !== "INPUT" && event.type === "keydown") {
+        if (pressedKey === key && pressedEventKey === event.key) {
+          return;
+        }
         if (pressedKey !== key) {
           dispatch(setPressedKey(key));
+        }
+        if (pressedEventKey !== event.key) {
+          dispatch(setPressedEventKey(event.key));
         }
         if (
           (key === "del" || key === "backspace") &&
@@ -204,21 +214,7 @@ export const withKeyEvent = (Component) => (props) => {
           setDialog(DialogTypes.LOGO);
         } else if (key === "b" && editable) {
           setDialog(DialogTypes.BASEPAINT);
-        } else if (key === "enter" && editable) {
-          if (
-            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-              mouseMode
-            )
-          ) {
-            dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
-          } else if (currentLayer) {
-            dispatch(setCurrentLayer(null));
-          }
-        }
-      }
-
-      if (event.target.tagName !== "INPUT" && event.type === "keyup") {
-        if (
+        } else if (
           event.key === "c" &&
           (event.ctrlKey || event.metaKey) &&
           currentLayer &&
@@ -254,6 +250,16 @@ export const withKeyEvent = (Component) => (props) => {
           togglePaintingGuides(PaintingGuides.NUMBERBLOCKS);
         } else if (key === "5") {
           togglePaintingGuides(PaintingGuides.GRID);
+        } else if (key === "enter" && editable) {
+          if (
+            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+              mouseMode
+            )
+          ) {
+            dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
+          } else if (currentLayer) {
+            dispatch(setCurrentLayer(null));
+          }
         }
       }
 
@@ -261,6 +267,7 @@ export const withKeyEvent = (Component) => (props) => {
       if (event.target.tagName !== "INPUT" && editable) {
         if (event.type === "keyup") {
           dispatch(setPressedKey(null));
+          dispatch(setPressedEventKey(null));
         }
         if (
           ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(
@@ -327,6 +334,7 @@ export const withKeyEvent = (Component) => (props) => {
     [
       editable,
       pressedKey,
+      pressedEventKey,
       currentLayer,
       clipboardLayer,
       dispatch,
@@ -335,6 +343,7 @@ export const withKeyEvent = (Component) => (props) => {
       onZoomIn,
       onZoomOut,
       onZoomFit,
+      handleChangeSelectedLayerOrder,
       handleCloneLayer,
       togglePaintingGuides,
       boardRotate,

@@ -62,7 +62,7 @@ class SchemeController {
         legacyMode
       );
       scheme = scheme.toJSON();
-      await SchemeService.createCarmakeLayers(scheme, legacyMode);
+      await SchemeService.createCarmakeLayers(scheme, carMake, legacyMode);
       scheme = await SchemeService.getById(scheme.id);
       res.json(scheme);
     } catch (err) {
@@ -82,7 +82,7 @@ class SchemeController {
         layer_type: 6,
       });
       scheme = scheme.toJSON();
-      await SchemeService.createCarmakeLayers(scheme);
+      await SchemeService.createCarmakeLayers(scheme, scheme.carMake);
       scheme = await SchemeService.getById(scheme.id);
       res.json(scheme);
     } catch (err) {

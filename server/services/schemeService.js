@@ -83,8 +83,7 @@ class SchemeService {
     return scheme;
   }
 
-  static async createCarmakeLayers(scheme, legacy = false) {
-    let carMake = scheme.carMake;
+  static async createCarmakeLayers(scheme, carMake, legacy = false) {
     let carMake_builder_layers = JSON.parse(
       legacy ? carMake.builder_layers : carMake.builder_layers_2048
     );

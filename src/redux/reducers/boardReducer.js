@@ -23,6 +23,7 @@ const initialState = {
   paintingGuides: [PaintingGuides.CARMASK],
   zoom: 1,
   pressedKey: null,
+  pressedEventKey: null,
   boardRotate: 0,
   mouseMode: MouseModes.DEFAULT,
   actionHistory: [],
@@ -51,6 +52,9 @@ export const slice = createSlice({
     },
     setPressedKey: (state, action) => {
       state.pressedKey = action.payload;
+    },
+    setPressedEventKey: (state, action) => {
+      state.pressedEventKey = action.payload;
     },
     setShowProperties: (state, action) => {
       state.showProperties = action.payload;
@@ -96,6 +100,7 @@ export const {
   setPaintingGuides,
   setZoom,
   setPressedKey,
+  setPressedEventKey,
   setBoardRotate,
   setMouseMode,
   setShowProperties,
