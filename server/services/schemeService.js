@@ -2,6 +2,7 @@ const _ = require("lodash");
 const Layer = require("../models/layer.model");
 const Scheme = require("../models/scheme.model");
 const { generateRandomColor } = require("../utils/common");
+const LayerService = require("./layerService");
 
 class SchemeService {
   static async getList() {
@@ -80,6 +81,35 @@ class SchemeService {
       guide_data: JSON.stringify(defaultGuideData),
     }).save();
     return scheme;
+  }
+
+  static async createCarmakeLayers(scheme, legacy = false) {
+    let carMake = scheme.carMake;
+    let carMake_builder_layers = JSON.parse(
+      legacy ? carMake.builder_layers : carMake.builder_layers_2048
+    );
+    let layer_index = 1;
+    let builder_layers = [];
+    for (let layer of carMake_builder_layers) {
+      builder_layers.push(
+        await LayerService.create({
+          layer_type: 6,
+          scheme_id: scheme.id,
+          upload_id: 0,
+          layer_data: JSON.stringify({
+            img: layer.img,
+            name: layer.name,
+          }),
+          layer_visible: layer.visible,
+          layer_order: layer_index++,
+          layer_locked: 0,
+          time_modified: 0,
+          confirm: "",
+        })
+      );
+    }
+
+    return builder_layers;
   }
 
   static async updateById(id, payload) {

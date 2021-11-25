@@ -1,13 +1,14 @@
 import styled from "styled-components/macro";
 
-import { Button } from "@material-ui/core";
+import { Button, ButtonGroup } from "@material-ui/core";
 import {
   Undo as UndoIcon,
   Redo as RedoIcon,
   KeyboardArrowUp as ArrowUpIcon,
+  ArrowDropUp as DropUpIcon,
 } from "@material-ui/icons";
 
-export { UndoIcon, RedoIcon, ArrowUpIcon };
+export { UndoIcon, RedoIcon, ArrowUpIcon, DropUpIcon };
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -23,4 +24,8 @@ export const ZoomButton = styled(Button)`
     color: #fff;
     background-color: rgba(255, 255, 255, 0.12);
   }
+`;
+
+export const CustomButtonGroup = styled(ButtonGroup)`
+  height: 100%;
 `;

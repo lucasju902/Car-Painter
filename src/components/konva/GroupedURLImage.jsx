@@ -74,21 +74,28 @@ export const GroupedURLImage = ({
     onLoadLayer,
   });
 
-  const [handleDragStart, handleDragMove, handleDragEnd] = useDrag({
+  const [, handleDragStart, handleDragMove, handleDragEnd] = useDrag({
     stageRef,
     shapeRef,
     paintingGuides,
     guideData,
     frameSize,
+    opacity: layer.layer_data.opacity,
     onSelect,
     onChange,
     onDragStart,
     onDragEnd,
   });
-  const [handleTransformStart, handleTransformEnd] = useTransform({
+  const [
+    ,
+    handleTransformStart,
+    handleTransformEnd,
+    handleTransform,
+  ] = useTransform({
     shapeRef,
     layer,
     imageshapeRef,
+    frameSize,
     onChange,
     onDragStart,
     onDragEnd,
@@ -109,6 +116,7 @@ export const GroupedURLImage = ({
       onDragEnd={handleDragEnd}
       onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
+      onTransform={handleTransform}
       onMouseOver={() => props.listening && onHover && onHover(true)}
       onMouseOut={() => props.listening && onHover && onHover(false)}
     >

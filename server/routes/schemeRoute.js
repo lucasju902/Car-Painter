@@ -22,6 +22,10 @@ router
 router.route("/clone/:id").post(isAuthenticated, SchemeController.clone);
 
 router
+  .route("/renewCarMakeLayers/:id")
+  .post(isAuthenticated, SchemeController.renewCarMakeLayers);
+
+router
   .route("/thumbnail")
   .post(isAuthenticated, SchemeController.uploadThumbnail);
 

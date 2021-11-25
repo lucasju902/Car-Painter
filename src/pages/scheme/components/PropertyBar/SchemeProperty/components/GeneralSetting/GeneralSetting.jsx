@@ -31,6 +31,7 @@ export const GeneralSetting = React.memo((props) => {
     onAddFavorite,
     onDelete,
     onRename,
+    onRenewCarMakeLayers,
   } = props;
   const history = useHistory();
 
@@ -164,6 +165,19 @@ export const GeneralSetting = React.memo((props) => {
         >
           Favorite
         </CustomButton>
+      )}
+
+      {editable ? (
+        <CustomButton
+          onClick={onRenewCarMakeLayers}
+          fullWidth
+          mb={2}
+          variant="outlined"
+        >
+          Renew CarMake Layers
+        </CustomButton>
+      ) : (
+        <></>
       )}
 
       {owner && currentUser && owner.id === currentUser.id ? (

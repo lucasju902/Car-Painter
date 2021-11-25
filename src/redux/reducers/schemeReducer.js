@@ -246,6 +246,19 @@ export const createScheme = (
   dispatch(setLoading(false));
 };
 
+export const deleteAndCreateNewCarMakeLayers = (schemeID) => async (
+  dispatch
+) => {
+  dispatch(setLoading(true));
+  try {
+    const scheme = await SchemeService.renewCarMakeLayers(schemeID);
+    dispatch(setLayerList(scheme.layers));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
 export const getScheme = (schemeID, callback, fallback) => async (dispatch) => {
   dispatch(setLoading(true));
   try {

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState, useRef } from "react";
 import Konva from "konva";
 import { PaintingGuides } from "constant";
 import { mathRound2 } from "helper";
@@ -10,16 +10,25 @@ export const useDrag = ({
   guideData,
   frameSize,
   offsetsFromStroke,
+  opacity,
   onSelect,
   onChange,
   onDragStart,
   onDragEnd,
 }) => {
   const GUIDELINE_ID = "snapping-guide-line";
+  const [dragging, setDragging] = useState(false);
+
   const GUIDELINE_OFFSET = useMemo(
     () => (guideData ? Math.max(guideData.grid_padding / 10, 2) : 10),
     [guideData]
   );
+  const getShapeClientRect = useCallback(() => {
+    return shapeRef.current.getClientRect({
+      relativeTo: shapeRef.current.getParent().getParent(),
+      skipShadow: true,
+    });
+  }, [shapeRef]);
 
   const getLineGuideStops = useCallback(() => {
     var vertical = Array.from(
@@ -35,10 +44,7 @@ export const useDrag = ({
   }, [frameSize, guideData]);
 
   const getObjectSnappingEdges = useCallback(() => {
-    var box = shapeRef.current.getClientRect({
-      relativeTo: shapeRef.current.getParent().getParent(),
-      skipShadow: true,
-    });
+    var box = getShapeClientRect();
     var pos = shapeRef.current.position();
 
     return {
@@ -77,7 +83,7 @@ export const useDrag = ({
         },
       ],
     };
-  }, [shapeRef]);
+  }, [shapeRef, getShapeClientRect]);
 
   // find all snapping possibilities
   const getGuides = useCallback(
@@ -253,20 +259,36 @@ export const useDrag = ({
         });
         e.target.position(pos);
       }
+
+      var box = getShapeClientRect();
+      if (
+        box.x < 0 ||
+        box.y < 0 ||
+        box.x + box.width > frameSize.width ||
+        box.y + box.height > frameSize.height
+      ) {
+        e.target.opacity(opacity / 2);
+      } else {
+        e.target.opacity(opacity);
+      }
     },
     [
-      drawGuides,
-      getGuides,
+      paintingGuides,
+      guideData,
+      stageRef,
       getLineGuideStops,
       getObjectSnappingEdges,
-      guideData,
-      paintingGuides,
-      stageRef,
+      getGuides,
+      drawGuides,
+      getShapeClientRect,
+      frameSize,
+      opacity,
     ]
   );
 
   const handleDragStart = useCallback(
     (e) => {
+      setDragging(true);
       onSelect();
       if (onDragStart) onDragStart();
     },
@@ -275,6 +297,8 @@ export const useDrag = ({
 
   const handleDragEnd = useCallback(
     (e) => {
+      setDragging(false);
+      e.target.opacity(opacity);
       stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
       if (onChange) {
         onChange({
@@ -288,8 +312,8 @@ export const useDrag = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [stageRef, offsetsFromStroke, onChange, onDragEnd]
+    [stageRef, offsetsFromStroke, opacity, onChange, onDragEnd]
   );
 
-  return [handleDragStart, handleDragMove, handleDragEnd];
+  return [dragging, handleDragStart, handleDragMove, handleDragEnd];
 };

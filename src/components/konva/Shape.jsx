@@ -55,23 +55,30 @@ export const Shape = ({
 }) => {
   const shapeRef = useRef();
 
-  const [handleDragStart, handleDragMove, handleDragEnd] = useDrag({
+  const [, handleDragStart, handleDragMove, handleDragEnd] = useDrag({
     stageRef,
     shapeRef,
     paintingGuides,
     guideData,
     frameSize,
     offsetsFromStroke,
+    opacity: layer.layer_data.opacity,
     onSelect,
     onChange,
     onDragStart,
     onDragEnd,
   });
 
-  const [handleTransformStart, handleTransformEnd] = useTransform({
+  const [
+    ,
+    handleTransformStart,
+    handleTransformEnd,
+    handleTransform,
+  ] = useTransform({
     shapeRef,
     offsetsFromStroke,
     layer,
+    frameSize,
     onChange,
     onDragStart,
     onDragEnd,
@@ -106,6 +113,7 @@ export const Shape = ({
           onDragEnd={handleDragEnd}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -130,6 +138,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -155,6 +164,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -181,6 +191,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -206,6 +217,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -231,6 +243,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -256,6 +269,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -282,6 +296,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           shadowForStrokeEnabled={false}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
@@ -308,6 +323,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
@@ -334,6 +350,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />
@@ -361,6 +378,7 @@ export const Shape = ({
           onDragMove={handleDragMove}
           onTransformStart={handleTransformStart}
           onTransformEnd={handleTransformEnd}
+          onTransform={handleTransform}
           onMouseOver={() => props.listening && onHover && onHover(true)}
           onMouseOut={() => props.listening && onHover && onHover(false)}
         />

@@ -30,6 +30,9 @@ export default class SchemeService extends BaseAPIService {
   static cloneScheme = async (id) => {
     return this.requestWithAuth(`/scheme/clone/${id}`, "POST");
   };
+  static renewCarMakeLayers = async (id) => {
+    return this.requestWithAuth(`/scheme/renewCarMakeLayers/${id}`, "POST");
+  };
 
   static uploadThumbnail = async (formData) => {
     return this.requestWithAuth(

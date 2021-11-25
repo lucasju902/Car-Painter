@@ -256,37 +256,47 @@ export const useCapture = (
     ]
   );
 
-  const handleDownloadTGA = useCallback(async () => {
-    if (stageRef.current && currentSchemeRef.current) {
-      try {
-        dispatch(setSaving(true));
-        const width =
-          currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
-        const height =
-          currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
-        const { canvas, ctx, carMaskLayerImg } = await takeScreenshot(false);
+  const handleDownloadTGA = useCallback(
+    async (isCustomNumberTGA = false) => {
+      if (stageRef.current && currentSchemeRef.current) {
+        try {
+          dispatch(setSaving(true));
+          const width =
+            currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
+          const height =
+            currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
+          const { canvas, ctx, carMaskLayerImg } = await takeScreenshot(false);
 
-        dispatch(setSaving(false));
-        downloadTGA(ctx, width, height, `car_${userRef.current.id}.tga`);
+          dispatch(setSaving(false));
+          downloadTGA(
+            ctx,
+            width,
+            height,
+            isCustomNumberTGA
+              ? `car_num_${userRef.current.id}.tga`
+              : `car_${userRef.current.id}.tga`
+          );
 
-        ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
-        let dataURL = canvas.toDataURL("image/jpeg", 0.1);
-        if (!currentSchemeRef.current.thumbnail_updated)
-          await uploadThumbnail(dataURL);
-      } catch (err) {
-        console.log(err);
-        dispatch(setMessage({ message: err.message }));
+          ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
+          let dataURL = canvas.toDataURL("image/jpeg", 0.1);
+          if (!currentSchemeRef.current.thumbnail_updated)
+            await uploadThumbnail(dataURL);
+        } catch (err) {
+          console.log(err);
+          dispatch(setMessage({ message: err.message }));
+        }
       }
-    }
-  }, [
-    dispatch,
-    currentSchemeRef,
-    userRef,
-    currentCarMakeRef,
-    stageRef,
-    takeScreenshot,
-    uploadThumbnail,
-  ]);
+    },
+    [
+      dispatch,
+      currentSchemeRef,
+      userRef,
+      currentCarMakeRef,
+      stageRef,
+      takeScreenshot,
+      uploadThumbnail,
+    ]
+  );
 
   const handleDownloadSpecTGA = useCallback(() => {
     if (stageRef.current && currentSchemeRef.current) {

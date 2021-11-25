@@ -70,6 +70,14 @@ class LayerService {
     }
     return true;
   }
+
+  static async deleteByQuery(query) {
+    let scheme_layers = await Layer.where(query).fetchAll();
+    for (let layer of scheme_layers) {
+      await layer.destroy();
+    }
+    return true;
+  }
 }
 
 module.exports = LayerService;

@@ -8248,10 +8248,10 @@ mariadb@^2.5.3:
     moment-timezone "^0.5.33"
     please-upgrade-node "^3.2.0"
 
-material-ui-color@^0.4.9:
-  version "0.4.11"
-  resolved "https://registry.yarnpkg.com/material-ui-color/-/material-ui-color-0.4.11.tgz#bc737a5a59cfda4ff85dc07b6b66d9fcb2d1171c"
-  integrity sha512-6BgxEPJuoTXrV6Xx0hBybd53ULrKcMLgfMubZkwdtLgp22D38B2wDV7aUwX8+75huGzGFLWy4kfKzBRj4axyfw==
+material-ui-color@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/material-ui-color/-/material-ui-color-1.2.0.tgz#3dde809e9f5f4a29499add83640aeadaaec36f6c"
+  integrity sha512-bD2Rww+hakJxD2/19uxc280Vh292DnRStLke2LDFavVtGd5fzOz09zIrHO3ZHlMkJFsvwx6IwiB4/932ftv0sQ==
 
 material-ui-dropzone@^3.5.0:
   version "3.5.0"

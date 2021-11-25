@@ -166,9 +166,9 @@ export const withKeyEvent = (Component) => (props) => {
           dispatch(setZoom(1));
         } else if (event.key === "(" && event.shiftKey) {
           onZoomFit();
-        } else if (event.key === "{" && event.shiftKey) {
+        } else if (event.key === "{" && event.shiftKey && editable) {
           handleChangeSelectedLayerOrder(false);
-        } else if (event.key === "}" && event.shiftKey) {
+        } else if (event.key === "}" && event.shiftKey && editable) {
           handleChangeSelectedLayerOrder(true);
         } else if (event.key === "D" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.DEFAULT));
@@ -196,7 +196,29 @@ export const withKeyEvent = (Component) => (props) => {
           dispatch(setMouseMode(MouseModes.LINE));
         } else if (event.key === ">" && event.shiftKey && editable) {
           dispatch(setMouseMode(MouseModes.ARROW));
-        } else if (
+        } else if (key === "t" && editable) {
+          setDialog(DialogTypes.TEXT);
+        } else if (key === "s" && editable) {
+          setDialog(DialogTypes.SHAPE);
+        } else if (key === "l" && editable) {
+          setDialog(DialogTypes.LOGO);
+        } else if (key === "b" && editable) {
+          setDialog(DialogTypes.BASEPAINT);
+        } else if (key === "enter" && editable) {
+          if (
+            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
+              mouseMode
+            )
+          ) {
+            dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
+          } else if (currentLayer) {
+            dispatch(setCurrentLayer(null));
+          }
+        }
+      }
+
+      if (event.target.tagName !== "INPUT" && event.type === "keyup") {
+        if (
           event.key === "c" &&
           (event.ctrlKey || event.metaKey) &&
           currentLayer &&
@@ -232,24 +254,6 @@ export const withKeyEvent = (Component) => (props) => {
           togglePaintingGuides(PaintingGuides.NUMBERBLOCKS);
         } else if (key === "5") {
           togglePaintingGuides(PaintingGuides.GRID);
-        } else if (key === "t" && editable) {
-          setDialog(DialogTypes.TEXT);
-        } else if (key === "s" && editable) {
-          setDialog(DialogTypes.SHAPE);
-        } else if (key === "l" && editable) {
-          setDialog(DialogTypes.LOGO);
-        } else if (key === "b" && editable) {
-          setDialog(DialogTypes.BASEPAINT);
-        } else if (key === "enter" && editable) {
-          if (
-            [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-              mouseMode
-            )
-          ) {
-            dispatch(setDrawingStatus(DrawingStatus.ADD_TO_SHAPE));
-          } else if (currentLayer) {
-            dispatch(setCurrentLayer(null));
-          }
         }
       }
 

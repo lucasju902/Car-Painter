@@ -9,6 +9,7 @@ import {
   Button,
   ToggleButton,
   ToggleButtonGroup,
+  Popover,
 } from "components/MaterialUI";
 import {
   Wrapper,
@@ -16,6 +17,8 @@ import {
   UndoIcon,
   RedoIcon,
   ArrowUpIcon,
+  DropUpIcon,
+  CustomButtonGroup,
 } from "./Toolbar.style";
 import { LightTooltip } from "components/common";
 import { ZoomPopover } from "components/dialogs";
@@ -34,6 +37,7 @@ export const Toolbar = React.memo((props) => {
   const [zoom, onZoomIn, onZoomOut, onZoomFit] = useZoom(stageRef);
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [tgaAnchorEl, setTGAAnchorEl] = useState(null);
 
   const dispatch = useDispatch();
   const paintingGuides = useSelector(
@@ -54,6 +58,19 @@ export const Toolbar = React.memo((props) => {
     },
     [dispatch]
   );
+
+  const handleOpenTGAOptions = (event) => {
+    setTGAAnchorEl(event.currentTarget);
+  };
+
+  const handleTGAOptionsClose = () => {
+    setTGAAnchorEl(null);
+  };
+
+  const handleDownloadCustomNumberTGA = () => {
+    onDownloadTGA(true);
+    handleTGAOptionsClose();
+  };
 
   // const handleToggleViewMode = useCallback(() => {
   //   dispatch(
@@ -159,10 +176,19 @@ export const Toolbar = React.memo((props) => {
               Download Spec TGA
             </Button>
           )}
-
-          <Button variant="outlined" onClick={onDownloadTGA} mx={1}>
-            Download TGA
-          </Button>
+          <Box mx={1} height="100%">
+            <CustomButtonGroup variant="outlined">
+              <Button onClick={onDownloadTGA}>Download TGA</Button>
+              <Button
+                aria-controls="tga-options-menu"
+                aria-haspopup="true"
+                size="small"
+                onClick={handleOpenTGAOptions}
+              >
+                <DropUpIcon />
+              </Button>
+            </CustomButtonGroup>
+          </Box>
           <LightTooltip title="Undo" arrow>
             <Box display="flex">
               <IconButton
@@ -204,6 +230,26 @@ export const Toolbar = React.memo((props) => {
             onZoomFit={onZoomFit}
             onClose={handleCloseZoomPoper}
           />
+
+          <Popover
+            open={Boolean(tgaAnchorEl)}
+            anchorEl={tgaAnchorEl}
+            onClose={handleTGAOptionsClose}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <Box py={1}>
+              <Button onClick={handleDownloadCustomNumberTGA}>
+                Download Custom Number TGA
+              </Button>
+            </Box>
+          </Popover>
         </Box>
       </Box>
     </Wrapper>

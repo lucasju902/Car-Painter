@@ -20,6 +20,7 @@ import {
   createFavoriteScheme,
   deleteFavoriteItem,
   deleteScheme,
+  deleteAndCreateNewCarMakeLayers,
 } from "redux/reducers/schemeReducer";
 import { setPaintingGuides } from "redux/reducers/boardReducer";
 
@@ -171,6 +172,10 @@ export const SchemeProperty = (props) => {
     [dispatch]
   );
 
+  const handleRenewCarMakeLayers = useCallback(() => {
+    dispatch(deleteAndCreateNewCarMakeLayers(currentScheme.id));
+  }, [dispatch, currentScheme]);
+
   return (
     <>
       <StyledTabs
@@ -204,6 +209,7 @@ export const SchemeProperty = (props) => {
             onAddFavorite={handleCreateFavorite}
             onRename={handleSaveName}
             onDelete={handleDeleteProject}
+            onRenewCarMakeLayers={handleRenewCarMakeLayers}
           />
         </TabPanel>
         <TabPanel value={tabValue} index={2}>

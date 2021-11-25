@@ -69,20 +69,27 @@ export const URLImage = ({
     onLoadLayer,
   });
 
-  const [handleDragStart, handleDragMove, handleDragEnd] = useDrag({
+  const [, handleDragStart, handleDragMove, handleDragEnd] = useDrag({
     stageRef,
     shapeRef,
     paintingGuides,
     guideData,
     frameSize,
+    opacity: layer ? layer.layer_data.opacity : 1,
     onSelect,
     onChange,
     onDragStart,
     onDragEnd,
   });
-  const [handleTransformStart, handleTransformEnd] = useTransform({
+  const [
+    ,
+    handleTransformStart,
+    handleTransformEnd,
+    handleTransform,
+  ] = useTransform({
     shapeRef,
     layer,
+    frameSize,
     onChange,
     onDragStart,
     onDragEnd,
@@ -116,6 +123,7 @@ export const URLImage = ({
       onDragMove={handleDragMove}
       onTransformStart={handleTransformStart}
       onTransformEnd={handleTransformEnd}
+      onTransform={handleTransform}
     />
   );
 };

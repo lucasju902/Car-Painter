@@ -62,29 +62,27 @@ class SchemeController {
         legacyMode
       );
       scheme = scheme.toJSON();
-      let carMake_builder_layers = JSON.parse(
-        legacyMode ? carMake.builder_layers : carMake.builder_layers_2048
-      );
-      let layer_index = 1;
-      let builder_layers = [];
-      for (let layer of carMake_builder_layers) {
-        builder_layers.push(
-          await LayerService.create({
-            layer_type: 6,
-            scheme_id: scheme.id,
-            upload_id: 0,
-            layer_data: JSON.stringify({
-              img: layer.img,
-              name: layer.name,
-            }),
-            layer_visible: layer.visible,
-            layer_order: layer_index++,
-            layer_locked: 0,
-            time_modified: 0,
-            confirm: "",
-          })
-        );
-      }
+      await SchemeService.createCarmakeLayers(scheme, legacyMode);
+      scheme = await SchemeService.getById(scheme.id);
+      res.json(scheme);
+    } catch (err) {
+      logger.log("error", err.stack);
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
+
+  static async renewCarMakeLayers(req, res) {
+    try {
+      const schemeID = req.params.id;
+      let scheme = await SchemeService.getById(schemeID);
+      await LayerService.deleteByQuery({
+        scheme_id: schemeID,
+        layer_type: 6,
+      });
+      scheme = scheme.toJSON();
+      await SchemeService.createCarmakeLayers(scheme);
       scheme = await SchemeService.getById(scheme.id);
       res.json(scheme);
     } catch (err) {
