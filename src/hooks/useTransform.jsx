@@ -8,7 +8,7 @@ export const useTransform = ({
   imageshapeRef,
   layer,
   offsetsFromStroke,
-  frameSize,
+  // frameSize,
   onChange,
   onDragStart,
   onDragEnd,
@@ -25,12 +25,12 @@ export const useTransform = ({
     [layer]
   );
 
-  const getShapeClientRect = useCallback((node) => {
-    return node.getClientRect({
-      relativeTo: node.getParent().getParent(),
-      skipShadow: true,
-    });
-  }, []);
+  // const getShapeClientRect = useCallback((node) => {
+  //   return node.getClientRect({
+  //     relativeTo: node.getParent().getParent(),
+  //     skipShadow: true,
+  //   });
+  // }, []);
 
   const handleTransformStart = useCallback(
     (e) => {
@@ -43,8 +43,8 @@ export const useTransform = ({
   const handleTransformEnd = useCallback(
     (e) => {
       setTransforming(false);
-      const opacity = layer ? layer.layer_data.opacity : 1;
-      e.target.opacity(opacity);
+      // const opacity = layer ? layer.layer_data.opacity : 1;
+      // e.target.opacity(opacity);
       if (onChange) {
         var transform = {};
         const node = shapeRef.current;
@@ -189,23 +189,20 @@ export const useTransform = ({
     ]
   );
 
-  const handleTransform = useCallback(
-    (e) => {
-      let opacity = layer ? layer.layer_data.opacity : 1;
-      var box = getShapeClientRect(e.target);
-      if (
-        box.x < 0 ||
-        box.y < 0 ||
-        box.x + box.width > frameSize.width ||
-        box.y + box.height > frameSize.height
-      ) {
-        e.target.opacity(opacity / 2);
-      } else {
-        e.target.opacity(opacity);
-      }
-    },
-    [frameSize, getShapeClientRect, layer]
-  );
+  const handleTransform = useCallback((e) => {
+    // let opacity = layer ? layer.layer_data.opacity : 1;
+    // var box = getShapeClientRect(e.target);
+    // if (
+    //   box.x < 0 ||
+    //   box.y < 0 ||
+    //   box.x + box.width > frameSize.width ||
+    //   box.y + box.height > frameSize.height
+    // ) {
+    //   e.target.opacity(opacity / 2);
+    // } else {
+    //   e.target.opacity(opacity);
+    // }
+  }, []);
 
   return [
     transforming,

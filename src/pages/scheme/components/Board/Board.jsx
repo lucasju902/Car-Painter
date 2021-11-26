@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useEffect } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
@@ -305,7 +305,13 @@ export const Board = ({
             <></>
           )}
 
-          <Layer ref={mainLayerRef}>
+          <Layer
+            ref={mainLayerRef}
+            clipX={0}
+            clipY={0}
+            clipWidth={frameSize.width}
+            clipHeight={frameSize.height}
+          >
             {!currentScheme.guide_data.show_carparts_on_top ? (
               <CarParts
                 layers={layerList}

@@ -10,7 +10,7 @@ export const useDrag = ({
   guideData,
   frameSize,
   offsetsFromStroke,
-  opacity,
+  // opacity,
   onSelect,
   onChange,
   onDragStart,
@@ -260,17 +260,17 @@ export const useDrag = ({
         e.target.position(pos);
       }
 
-      var box = getShapeClientRect();
-      if (
-        box.x < 0 ||
-        box.y < 0 ||
-        box.x + box.width > frameSize.width ||
-        box.y + box.height > frameSize.height
-      ) {
-        e.target.opacity(opacity / 2);
-      } else {
-        e.target.opacity(opacity);
-      }
+      // var box = getShapeClientRect();
+      // if (
+      //   box.x < 0 ||
+      //   box.y < 0 ||
+      //   box.x + box.width > frameSize.width ||
+      //   box.y + box.height > frameSize.height
+      // ) {
+      //   e.target.opacity(opacity / 2);
+      // } else {
+      //   e.target.opacity(opacity);
+      // }
     },
     [
       paintingGuides,
@@ -280,9 +280,9 @@ export const useDrag = ({
       getObjectSnappingEdges,
       getGuides,
       drawGuides,
-      getShapeClientRect,
-      frameSize,
-      opacity,
+      // getShapeClientRect,
+      // frameSize,
+      // opacity,
     ]
   );
 
@@ -298,7 +298,7 @@ export const useDrag = ({
   const handleDragEnd = useCallback(
     (e) => {
       setDragging(false);
-      e.target.opacity(opacity);
+      // e.target.opacity(opacity);
       stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
       if (onChange) {
         onChange({
@@ -312,7 +312,7 @@ export const useDrag = ({
       }
       if (onDragEnd) onDragEnd();
     },
-    [stageRef, offsetsFromStroke, opacity, onChange, onDragEnd]
+    [stageRef, offsetsFromStroke, onChange, onDragEnd]
   );
 
   return [dragging, handleDragStart, handleDragMove, handleDragEnd];

@@ -242,6 +242,7 @@ export const useCapture = (
           if (!uploadLater) dispatch(setSaving(false));
           console.log("Uploaded Thumbnail");
         } catch (err) {
+          console.log(err);
           dispatch(setMessage({ message: err.message }));
         }
       }
