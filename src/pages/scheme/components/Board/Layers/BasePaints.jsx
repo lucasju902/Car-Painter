@@ -45,6 +45,7 @@ export const BasePaints = React.memo((props) => {
         <URLImage
           key={layer.id}
           id={layer.id}
+          name={layer.id.toString()}
           layer={layer}
           src={getLayerImage(layer)}
           x={0}

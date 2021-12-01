@@ -105,7 +105,6 @@ export const GroupedURLImage = ({
   return (
     <Group
       {...props}
-      name={id ? id.toString() : null}
       ref={shapeRef}
       onClick={onSelect}
       onDblClick={onDblClick}

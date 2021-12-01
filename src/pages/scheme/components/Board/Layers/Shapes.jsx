@@ -97,13 +97,16 @@ export const Shapes = React.memo((props) => {
       {filteredLayers.map((layer) => {
         let shadowOffset = getShadowOffset(layer);
         let offsetsFromStroke = getOffsetsFromStroke(layer);
-        const newWidth = layer.layer_data.width + offsetsFromStroke.width;
-        const newHeight = layer.layer_data.height + offsetsFromStroke.height;
+        const newWidth =
+          (layer.layer_data.width || 0) + offsetsFromStroke.width;
+        const newHeight =
+          (layer.layer_data.height || 0) + offsetsFromStroke.height;
 
         return (
           <Shape
             key={layer.id}
             id={layer.id}
+            name={layer.id ? layer.id.toString() : null}
             layer={layer}
             stageRef={stageRef}
             editable={editable}
@@ -148,10 +151,10 @@ export const Shapes = React.memo((props) => {
             angle={layer.layer_data.angle}
             opacity={layer.layer_data.opacity}
             scaleX={
-              (layer.layer_data.flop === 1 ? -1 : 1) * (newWidth > 0 ? 1 : -1)
+              (layer.layer_data.flop === 1 ? -1 : 1) * (newWidth >= 0 ? 1 : -1)
             }
             scaleY={
-              (layer.layer_data.flip === 1 ? -1 : 1) * (newHeight > 0 ? 1 : -1)
+              (layer.layer_data.flip === 1 ? -1 : 1) * (newHeight >= 0 ? 1 : -1)
             }
             shadowColor={
               specMode

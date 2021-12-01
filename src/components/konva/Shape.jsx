@@ -94,6 +94,7 @@ export const Shape = ({
       {type === MouseModes.RECT ? (
         <Rect
           {...props}
+          id={id}
           ref={shapeRef}
           shadowColor={shapeRef.current ? shadowColor : null}
           shadowBlur={shapeRef.current ? shadowBlur : null}
@@ -121,6 +122,7 @@ export const Shape = ({
       ) : type === MouseModes.CIRCLE ? (
         <Circle
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
@@ -146,6 +148,7 @@ export const Shape = ({
       ) : type === MouseModes.ELLIPSE ? (
         <Ellipse
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
@@ -172,6 +175,7 @@ export const Shape = ({
       ) : type === MouseModes.STAR ? (
         <Star
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
@@ -199,6 +203,7 @@ export const Shape = ({
       ) : type === MouseModes.RING ? (
         <Ring
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
@@ -225,6 +230,7 @@ export const Shape = ({
       ) : type === MouseModes.REGULARPOLYGON ? (
         <RegularPolygon
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
@@ -251,6 +257,7 @@ export const Shape = ({
       ) : type === MouseModes.WEDGE ? (
         <Wedge
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
@@ -277,6 +284,7 @@ export const Shape = ({
       ) : type === MouseModes.ARC ? (
         <Arc
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
@@ -304,9 +312,11 @@ export const Shape = ({
       ) : type === MouseModes.LINE || type === MouseModes.PEN ? (
         <Line
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
+          hitStrokeWidth={20}
           points={points}
           lineCap={lineCap}
           lineJoin={lineJoin}
@@ -330,12 +340,14 @@ export const Shape = ({
       ) : type === MouseModes.POLYGON ? (
         <Line
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
           points={points}
           lineCap={lineCap}
           lineJoin={lineJoin}
+          hitStrokeWidth={20}
           shadowColor={shapeRef.current ? shadowColor : null}
           shadowBlur={shapeRef.current ? shadowBlur : null}
           shadowOpacity={shapeRef.current ? shadowOpacity : null}
@@ -357,9 +369,11 @@ export const Shape = ({
       ) : type === MouseModes.ARROW ? (
         <Arrow
           {...props}
+          id={id}
           ref={shapeRef}
           x={x}
           y={y}
+          hitStrokeWidth={20}
           points={points}
           lineCap={lineCap}
           lineJoin={lineJoin}

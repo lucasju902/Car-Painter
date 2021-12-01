@@ -74,30 +74,39 @@ export const RotationProperty = React.memo((props) => {
   const handleToggleFlop = useCallback(() => {
     const newFlop = values.layer_data.flop ? 0 : 1;
     const rot = (values.layer_data.rotation / 180) * Math.PI;
+    const node = stageRef.current.find(`.${currentLayer.id}`)[0];
+    const width =
+      values.layer_data.width ||
+      (node &&
+        node.getClientRect({
+          relativeTo: node.getParent().getParent(),
+          skipShadow: true,
+        }).width);
     onLayerDataMultiUpdate({
-      left:
-        values.layer_data.left +
-        (newFlop ? 1 : -1) * Math.cos(rot) * values.layer_data.width,
-      top:
-        values.layer_data.top +
-        (newFlop ? 1 : -1) * Math.sin(rot) * values.layer_data.width,
+      left: values.layer_data.left + (newFlop ? 1 : -1) * Math.cos(rot) * width,
+      top: values.layer_data.top + (newFlop ? 1 : -1) * Math.sin(rot) * width,
       flop: newFlop,
     });
-  }, [onLayerDataMultiUpdate, values.layer_data]);
+  }, [currentLayer, onLayerDataMultiUpdate, stageRef, values.layer_data]);
 
   const handleToggleFlip = useCallback(() => {
     const newFlip = values.layer_data.flip ? 0 : 1;
     const rot = (values.layer_data.rotation / 180) * Math.PI;
+    const node = stageRef.current.find(`.${currentLayer.id}`)[0];
+    const height =
+      values.layer_data.height ||
+      (node &&
+        node.getClientRect({
+          relativeTo: node.getParent().getParent(),
+          skipShadow: true,
+        }).height);
     onLayerDataMultiUpdate({
       left:
-        values.layer_data.left +
-        (newFlip ? -1 : 1) * Math.sin(rot) * values.layer_data.height,
-      top:
-        values.layer_data.top +
-        (newFlip ? 1 : -1) * Math.cos(rot) * values.layer_data.height,
+        values.layer_data.left + (newFlip ? -1 : 1) * Math.sin(rot) * height,
+      top: values.layer_data.top + (newFlip ? 1 : -1) * Math.cos(rot) * height,
       flip: newFlip,
     });
-  }, [onLayerDataMultiUpdate, values.layer_data]);
+  }, [currentLayer, onLayerDataMultiUpdate, stageRef, values.layer_data]);
 
   if (
     layerDataProperties.every(

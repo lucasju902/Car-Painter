@@ -46,6 +46,7 @@ export const CarParts = React.memo((props) => {
         <URLImage
           key={layer.id}
           id={layer.id}
+          name={layer.id.toString()}
           layer={layer}
           x={0}
           y={0}
