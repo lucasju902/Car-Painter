@@ -37,11 +37,8 @@ export const ColorPickerInput = (props) => {
 
   useInterval(() => {
     const hexInput = document.getElementById("hex");
-    if (hexInput) hexInput.addEventListener("keydown", handleHexInputKeyDown);
-    return () => {
-      if (hexInput)
-        hexInput.removeEventListener("keydown", handleHexInputKeyDown);
-    };
+    if (hexInput && !hexInput.onkeydown)
+      hexInput.onkeydown = handleHexInputKeyDown;
   }, [200]);
 
   return (
