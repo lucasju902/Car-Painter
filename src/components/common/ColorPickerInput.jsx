@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import useInterval from "react-useinterval";
 import { ColorPicker } from "material-ui-color";
 import { Box, TextField, Typography } from "@material-ui/core";
 import { Palette } from "constant";
@@ -23,6 +24,25 @@ export const ColorPickerInput = (props) => {
     },
     [onChange]
   );
+
+  const handleHexInputKeyDown = useCallback((event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.target
+        .closest(".MuiPaper-root")
+        .getElementsByClassName("muicc-colorbox-controls")[0]
+        .children[0].click();
+    }
+  }, []);
+
+  useInterval(() => {
+    const hexInput = document.getElementById("hex");
+    if (hexInput) hexInput.addEventListener("keydown", handleHexInputKeyDown);
+    return () => {
+      if (hexInput)
+        hexInput.removeEventListener("keydown", handleHexInputKeyDown);
+    };
+  }, [200]);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
