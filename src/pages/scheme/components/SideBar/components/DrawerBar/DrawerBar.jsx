@@ -128,7 +128,7 @@ const modes = [
 const dialog_modes = [
   {
     value: DialogTypes.UPLOAD,
-    label: EnglishLang.INSERT_OR_UPLOAD_MY_LOGO,
+    label: EnglishLang.INSERT_MY_LOGO,
     icon: <CustomFontAwesomeIcon icon={faFolderOpen} />,
   },
   {

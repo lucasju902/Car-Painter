@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import clsx from "clsx";
 
-import { Box, IconButton, Popover } from "@material-ui/core";
+import { Box, IconButton, Popover, Typography } from "@material-ui/core";
 import {
   ExpandMore as ExpandMoreIcon,
   Add as AddIcon,
@@ -9,7 +9,11 @@ import {
 import { LightTooltip } from "components/common";
 
 import { EnglishLang } from "constant/language";
-import { useStyles, CustomFontAwesomeIcon } from "./PartAction.style";
+import {
+  useStyles,
+  CustomFontAwesomeIcon,
+  CustomIconButton,
+} from "./PartAction.style";
 
 export const PartAction = (props) => {
   const classes = useStyles();
@@ -74,17 +78,19 @@ export const PartAction = (props) => {
               p={1}
             >
               {actions.map((action, index) => (
-                <LightTooltip title={action.title} key={index} arrow>
-                  <IconButton
-                    variant="text"
-                    onClick={() => {
-                      handleClosePoper();
-                      action.onClick();
-                    }}
-                  >
+                <CustomIconButton
+                  variant="text"
+                  key={index}
+                  onClick={() => {
+                    handleClosePoper();
+                    action.onClick();
+                  }}
+                >
+                  <Box display="flex" justifyContent="flex-start" width="100%">
                     <CustomFontAwesomeIcon icon={action.icon} />
-                  </IconButton>
-                </LightTooltip>
+                    <Typography>{action.title}</Typography>
+                  </Box>
+                </CustomIconButton>
               ))}
             </Box>
           </Popover>

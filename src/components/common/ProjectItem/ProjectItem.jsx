@@ -79,7 +79,7 @@ export const ProjectItem = (props) => {
   };
   const handleDelete = () => {
     setDeleteMessage(
-      `Are you sure to ${
+      `Are you sure you want to ${
         shared && !accepted
           ? "reject"
           : shared && accepted

@@ -187,7 +187,7 @@ export const UploadListContent = React.memo((props) => {
       <ConfirmDialog
         text={
           uploadToDelete
-            ? `Are you sure to delete "${getNameFromUploadFileName(
+            ? `Are you sure you want to delete "${getNameFromUploadFileName(
                 uploadToDelete.file_name,
                 user
               )}"?`

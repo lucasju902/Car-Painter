@@ -158,7 +158,7 @@ export const SideBar = (props) => {
             actions={[
               {
                 icon: faFolderOpen,
-                title: EnglishLang.INSERT_OR_UPLOAD_MY_LOGO,
+                title: EnglishLang.INSERT_MY_LOGO,
                 onClick: () => setDialog(DialogTypes.UPLOAD),
               },
               {

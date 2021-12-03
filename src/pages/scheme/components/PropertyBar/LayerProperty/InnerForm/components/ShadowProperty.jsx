@@ -161,7 +161,7 @@ export const ShadowProperty = React.memo((props) => {
               {AllowedLayerTypes.includes("layer_data.shadowOffsetX") ? (
                 <CustomeTextField
                   name="layer_data.shadowOffsetX"
-                  label="Shadow OffsetX"
+                  label="Offset (X)"
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.shadowOffsetX)}
@@ -195,7 +195,7 @@ export const ShadowProperty = React.memo((props) => {
               {AllowedLayerTypes.includes("layer_data.shadowOffsetY") ? (
                 <CustomeTextField
                   name="layer_data.shadowOffsetY"
-                  label="Shadow OffsetY"
+                  label="Offset (Y)"
                   variant="outlined"
                   type="number"
                   value={mathRound2(values.layer_data.shadowOffsetY)}

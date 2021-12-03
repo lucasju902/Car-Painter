@@ -91,7 +91,9 @@ export const withKeyEvent = (Component) => (props) => {
   );
   const handleDeleteLayer = useCallback(
     (layer) => {
-      setConfirmMessage(`Are you sure to delete "${layer.layer_data.name}"?`);
+      setConfirmMessage(
+        `Are you sure you want to delete "${layer.layer_data.name}"?`
+      );
     },
     [setConfirmMessage]
   );

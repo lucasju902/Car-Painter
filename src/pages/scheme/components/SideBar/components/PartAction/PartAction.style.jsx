@@ -1,6 +1,6 @@
 import styled from "styled-components/macro";
 
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, IconButton } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const useStyles = makeStyles((theme) => ({
@@ -20,6 +20,12 @@ export const useStyles = makeStyles((theme) => ({
 }));
 
 export const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
+  margin-right: 10px;
+  width: 25px !important;
   transform: ${(props) =>
     props.isstretch === "true" ? "scaleX(1.2) scaleY(0.8)" : "none"};
+`;
+
+export const CustomIconButton = styled(IconButton)`
+  border-radius: 5px;
 `;

@@ -165,7 +165,9 @@ export const GeneralSetting = React.memo((props) => {
           {owner.id === currentUser.id ? (
             <CustomButton
               onClick={() =>
-                setDeleteMessage(`Are you sure to delete "${scheme.name}"?`)
+                setDeleteMessage(
+                  `Are you sure you want to delete "${scheme.name}"?`
+                )
               }
               color="secondary"
             >

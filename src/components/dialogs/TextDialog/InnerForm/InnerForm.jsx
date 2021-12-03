@@ -67,7 +67,7 @@ export const InnerForm = React.memo((props) => {
       maxSize: 512,
       multiLine: false,
     });
-  }, [values.text]);
+  }, [values.text, values.font]);
 
   useEffect(() => {
     const adjustFont = (e) => {
@@ -104,6 +104,7 @@ export const InnerForm = React.memo((props) => {
         InputLabelProps={{
           shrink: true,
         }}
+        inputProps={{ maxLength: 100 }}
         autoFocus={true}
       />
       <FormControl variant="outlined">
@@ -116,17 +117,17 @@ export const InnerForm = React.memo((props) => {
       </FormControl>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <Grid container component={Box} alignItems="center" height="100%">
-            <Grid item xs={6}>
-              <Typography variant="body1" color="textSecondary" mr={2}>
-                Font Size
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="body1">{values.size}</Typography>
-            </Grid>
-          </Grid>
+          <SliderInput
+            label="Stroke Width"
+            min={0}
+            max={10}
+            value={values.stroke}
+            setValue={(value) => setFieldValue("stroke", value)}
+          />
         </Grid>
+      </Grid>
+
+      <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Box
             display="flex"
@@ -145,18 +146,6 @@ export const InnerForm = React.memo((props) => {
               helperText={errors.color}
             />
           </Box>
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <SliderInput
-            label="Stroke Width"
-            min={0}
-            max={10}
-            value={values.stroke}
-            setValue={(value) => setFieldValue("stroke", value)}
-          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <Box

@@ -63,7 +63,7 @@ export const SkewProperty = React.memo((props) => {
               {AllowedLayerTypes.includes("layer_data.skewX") ? (
                 <CustomeTextField
                   name="layer_data.skewX"
-                  label="SkewX"
+                  label="Skew (X)"
                   variant="outlined"
                   type="number"
                   inputProps={{
@@ -100,7 +100,7 @@ export const SkewProperty = React.memo((props) => {
               {AllowedLayerTypes.includes("layer_data.skewY") ? (
                 <CustomeTextField
                   name="layer_data.skewY"
-                  label="SkewY"
+                  label="Skew (Y)"
                   variant="outlined"
                   type="number"
                   inputProps={{
