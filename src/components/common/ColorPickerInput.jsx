@@ -54,8 +54,10 @@ export const ColorPickerInput = (props) => {
           ></Box>
         ) : (
           <ColorPicker
-            value={separateValues ? valuePicker : value || ""}
-            onChange={(color) => onChange(color.css.backgroundColor)}
+            value={separateValues ? valuePicker : value || "#"}
+            onChange={(color) =>
+              onChange(color.error ? "" : color.css.backgroundColor)
+            }
             palette={Palette}
             deferred
             hideTextfield

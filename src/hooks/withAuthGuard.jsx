@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { Box } from "components/MaterialUI";
+import { useTheme } from "@material-ui/core";
 import { ScreenLoader } from "components/common";
 import { setPreviousPath, signInWithCookie } from "redux/reducers/authReducer";
 
@@ -13,6 +14,7 @@ export const withAuthGuard = (Component, redirectToSignIn = false) => (
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.authReducer);
   const history = useHistory();
+  const theme = useTheme();
 
   useEffect(() => {
     if (!auth.user) {
@@ -29,7 +31,7 @@ export const withAuthGuard = (Component, redirectToSignIn = false) => (
   }, []);
 
   return auth.loading ? (
-    <Box bgcolor="#1B2635" height="100vh" p={0} m={0}>
+    <Box bgcolor={theme.palette.background.default} height="100vh" p={0} m={0}>
       <ScreenLoader />
     </Box>
   ) : (

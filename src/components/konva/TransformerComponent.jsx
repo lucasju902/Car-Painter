@@ -6,6 +6,7 @@ import {
   rotateAroundCenter,
   isCenterBasedShape,
 } from "helper";
+import { LayerTypes } from "constant";
 
 export const TransformerComponent = ({
   trRef,
@@ -25,7 +26,7 @@ export const TransformerComponent = ({
   const centeredScaling = useMemo(() => pressedKey === "alt", [pressedKey]);
 
   const checkNode = useCallback(() => {
-    if (selectedLayer) {
+    if (selectedLayer && trRef.current) {
       const stage = trRef.current.getStage();
 
       const selectedNode = stage.findOne("." + selectedLayer.id);
@@ -64,7 +65,10 @@ export const TransformerComponent = ({
     [pressedKey]
   );
 
-  if (selectedLayer)
+  if (
+    selectedLayer &&
+    ![LayerTypes.CAR, LayerTypes.BASE].includes(selectedLayer.layer_type)
+  )
     return (
       <Transformer
         id="defaultTransformer"

@@ -1,5 +1,7 @@
 function generateRandomColor() {
-  return Math.floor(Math.random() * 16777215).toString(16);
+  return [...Array(6)]
+    .map(() => Math.floor(Math.random() * 16).toString(16))
+    .join("");
 }
 
 module.exports = {

@@ -50,7 +50,7 @@ export const SignIn = () => {
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
-        bgcolor="#333"
+        bgcolor="#444"
         borderRadius={20}
       >
         <Typography variant="h1" mb={5}>

@@ -173,8 +173,9 @@ export const GeneralSetting = React.memo((props) => {
           fullWidth
           mb={2}
           variant="outlined"
+          color="secondary"
         >
-          Renew CarMake Layers
+          Reset CarMake Layers
         </CustomButton>
       ) : (
         <></>

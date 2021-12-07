@@ -27,6 +27,7 @@ export const GeneralSetting = React.memo((props) => {
     favoriteID,
     scheme,
     currentUser,
+    currentCarMake,
     owner,
     modifier,
     onRemoveFavorite,
@@ -155,8 +156,12 @@ export const GeneralSetting = React.memo((props) => {
 
         <Box mt={2}>
           {editable ? (
-            <CustomButton mr={2} onClick={onRenewCarMakeLayers}>
-              Renew CarMake Layers
+            <CustomButton
+              color="secondary"
+              mr={2}
+              onClick={onRenewCarMakeLayers}
+            >
+              {`Reset ${currentCarMake.name} template layers`}
             </CustomButton>
           ) : (
             <></>

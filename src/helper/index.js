@@ -41,7 +41,13 @@ export const hexToRgba = (hex) => {
     hex.length > 7
       ? /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
       : /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) return null;
+  if (!result)
+    return {
+      r: null,
+      g: null,
+      b: null,
+      a: null,
+    };
   return {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
@@ -59,7 +65,8 @@ export const colorValidator = (color, allowAlpha = true) => {
   if (!color || !color.length) return true;
   if (
     color[0] === "#" &&
-    (color.length === 4 ||
+    (color.length === 1 ||
+      color.length === 4 ||
       color.length === 7 ||
       (color.length === 9 && allowAlpha))
   )

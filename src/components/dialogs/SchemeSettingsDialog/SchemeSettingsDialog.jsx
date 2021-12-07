@@ -31,6 +31,7 @@ export const SchemeSettingsDialog = React.memo((props) => {
   const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);
   const owner = useSelector((state) => state.schemeReducer.owner);
   const modifier = useSelector((state) => state.schemeReducer.lastModifier);
+  const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   const currentUser = useSelector((state) => state.authReducer.user);
   const favoriteSchemeList = useSelector(
     (state) => state.schemeReducer.favoriteList
@@ -187,6 +188,7 @@ export const SchemeSettingsDialog = React.memo((props) => {
           <GeneralSetting
             editable={editable}
             scheme={currentScheme}
+            currentCarMake={currentCarMake}
             currentUser={currentUser}
             owner={owner}
             modifier={modifier}

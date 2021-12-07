@@ -26,9 +26,11 @@ const Message = () => {
         horizontal: "right",
       }}
     >
-      <Alert onClose={handleClose} severity={message.type}>
-        {message.msg}
-      </Alert>
+      {message.msg && message.msg.length && (
+        <Alert onClose={handleClose} severity={message.type}>
+          {message.msg}
+        </Alert>
+      )}
     </Snackbar>
   );
 };
