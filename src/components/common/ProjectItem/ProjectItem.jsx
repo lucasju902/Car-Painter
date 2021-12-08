@@ -9,7 +9,7 @@ import {
   MenuItem,
   CircularProgress,
 } from "@material-ui/core";
-import { ImageWithLoad } from "components/common";
+import { ImageWithLoad, LightTooltip } from "components/common";
 import { ConfirmDialog } from "components/dialogs";
 import {
   StyledMenu,
@@ -118,23 +118,6 @@ export const ProjectItem = (props) => {
         alt={scheme.name}
         onClick={() => onOpenScheme(scheme.id, sharedID)}
       />
-      {scheme.legacy_mode ? (
-        <Box
-          bgcolor="#FFFF00C0"
-          color="red"
-          p="5px 10px"
-          position="absolute"
-          borderRadius="100%"
-          border="1px dashed red"
-          fontStyle="italic"
-          right={0}
-          top={0}
-        >
-          <Typography variant="subtitle1">Legacy</Typography>
-        </Box>
-      ) : (
-        <></>
-      )}
       <Box display="flex" justifyContent="space-between">
         <Box
           display="flex"
@@ -143,6 +126,24 @@ export const ProjectItem = (props) => {
           p={4}
           overflow="hidden"
         >
+          {scheme.legacy_mode ? (
+            <Box
+              bgcolor="#FF0833"
+              color="white"
+              p="0px 5px"
+              mb={2}
+              width="72px"
+            >
+              <LightTooltip
+                title="This project was created with an old version of Paint Builder."
+                arrow
+              >
+                <Typography variant="body1">LEGACY</Typography>
+              </LightTooltip>
+            </Box>
+          ) : (
+            <></>
+          )}
           <Box mb={1}>
             <BreakableTypography variant="subtitle1">
               {reduceString(scheme.name, 50)}
