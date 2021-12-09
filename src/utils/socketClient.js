@@ -3,7 +3,9 @@ import config from "config";
 
 class SocketClient {
   static connect = () => {
-    this.socket = socketIOClient(config.backendURL);
+    this.socket = socketIOClient(config.backendURL, {
+      transports: ["websocket"],
+    });
     console.log("Connecting Socket: ", this.socket, config.backendURL);
   };
 
