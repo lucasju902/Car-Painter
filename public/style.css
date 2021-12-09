@@ -73,3 +73,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Custom Styles */
+.muicc-colorbox-error {
+  visibility: hidden !important;
+}
