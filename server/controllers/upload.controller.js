@@ -63,6 +63,7 @@ class UploadController {
       }
       uploadFiles(req, res, async function (err) {
         if (err) {
+          console.log(err);
           res.status(500).json({
             message: err.message,
           });

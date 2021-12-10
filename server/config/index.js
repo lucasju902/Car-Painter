@@ -30,4 +30,5 @@ module.exports = {
   awsSecret: process.env.AWS_API_SECRET,
   awsRegion: process.env.AWS_REGION,
   bucketURL: process.env.BUCKET_URL,
+  storageType: process.env.STORAGE_TYPE || "S3",
 };
