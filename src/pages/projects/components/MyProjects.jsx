@@ -23,6 +23,7 @@ export const MyProjects = (props) => {
     sortBy,
     search,
     selectedVehicle,
+    hideLegacy,
     onDeleteProject,
     onCloneProject,
     onRemoveFavorite,
@@ -40,7 +41,8 @@ export const MyProjects = (props) => {
           (item) =>
             (item.name.toLowerCase().includes(search.toLowerCase()) ||
               item.carMake.name.toLowerCase().includes(search.toLowerCase())) &&
-            (!selectedVehicle || selectedVehicle.id === item.carMake.id)
+            (!selectedVehicle || selectedVehicle.id === item.carMake.id) &&
+            (!hideLegacy || !item.legacy_mode)
         ),
         sortBy === 1
           ? ["name"]
@@ -49,11 +51,11 @@ export const MyProjects = (props) => {
           : ["date_modified"],
         sortBy === 1 ? ["asc"] : sortBy === 2 ? ["asc"] : ["desc"]
       ),
-    [schemeList, search, selectedVehicle, sortBy]
+    [schemeList, search, selectedVehicle, sortBy, hideLegacy]
   );
 
   const openScheme = (schemeID) => {
-    history.push(`/scheme/${schemeID}`);
+    history.push(`/project/${schemeID}`);
   };
 
   const increaseData = () => {

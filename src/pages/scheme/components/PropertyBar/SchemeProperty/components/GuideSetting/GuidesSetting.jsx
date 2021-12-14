@@ -90,6 +90,7 @@ export const GuidesSetting = React.memo((props) => {
           paintingGuides={paintingGuides}
           initialValues={initialValues}
           onCancel={onCancel}
+          onApply={onApply}
           onChangePaintingGuides={onChangePaintingGuides}
         />
       )}

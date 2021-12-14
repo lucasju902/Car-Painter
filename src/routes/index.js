@@ -33,10 +33,10 @@ const authRoutes = {
   component: null,
 };
 
-const projectRoute = {
-  id: "Project",
+const projectsRoute = {
+  id: "Projects",
   path: "/",
-  name: "Project",
+  name: "Projects",
   component: Projects,
   guarded: true,
   redirectToSignIn: true,
@@ -69,10 +69,10 @@ const favoriteProjectRoute = {
   redirectToSignIn: true,
 };
 
-const schemeRoute = {
-  id: "Scheme",
-  path: "/scheme/:id",
-  name: "scheme",
+const projectRoute = {
+  id: "Project",
+  path: "/project/:id",
+  name: "project",
   component: Scheme,
   guarded: true,
   redirectToSignIn: true,
@@ -80,11 +80,11 @@ const schemeRoute = {
 
 // Routes using the Dashboard layout
 export const mainLayoutRoutes = [
-  projectRoute,
+  projectsRoute,
   myProjectRoute,
   sharedProjectRoute,
   favoriteProjectRoute,
-  schemeRoute,
+  projectRoute,
 ];
 
 // Routes using the Auth layout

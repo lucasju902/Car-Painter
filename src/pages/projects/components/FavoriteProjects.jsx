@@ -22,6 +22,7 @@ export const FavoriteProjects = (props) => {
     sortBy,
     search,
     selectedVehicle,
+    hideLegacy,
     onRemoveFavorite,
     onAddFavorite,
   } = props;
@@ -39,7 +40,9 @@ export const FavoriteProjects = (props) => {
               item.scheme.carMake.name
                 .toLowerCase()
                 .includes(search.toLowerCase())) &&
-            (!selectedVehicle || selectedVehicle.id === item.scheme.carMake.id)
+            (!selectedVehicle ||
+              selectedVehicle.id === item.scheme.carMake.id) &&
+            (!hideLegacy || !item.scheme.legacy_mode)
         ),
         sortBy === 1
           ? ["name"]
@@ -48,11 +51,11 @@ export const FavoriteProjects = (props) => {
           : ["date_modified"],
         sortBy === 1 ? ["asc"] : sortBy === 2 ? ["asc"] : ["desc"]
       ),
-    [favoriteSchemeList, search, selectedVehicle, sortBy]
+    [favoriteSchemeList, search, selectedVehicle, sortBy, hideLegacy]
   );
 
   const openScheme = (schemeID) => {
-    history.push(`/scheme/${schemeID}`);
+    history.push(`/project/${schemeID}`);
   };
 
   const increaseData = () => {

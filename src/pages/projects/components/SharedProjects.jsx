@@ -23,6 +23,7 @@ export const SharedProjects = (props) => {
     sortBy,
     search,
     selectedVehicle,
+    hideLegacy,
     onAccept,
     onRemove,
     onRemoveFavorite,
@@ -42,7 +43,9 @@ export const SharedProjects = (props) => {
               item.scheme.carMake.name
                 .toLowerCase()
                 .includes(search.toLowerCase())) &&
-            (!selectedVehicle || selectedVehicle.id === item.scheme.carMake.id)
+            (!selectedVehicle ||
+              selectedVehicle.id === item.scheme.carMake.id) &&
+            (!hideLegacy || !item.scheme.legacy_mode)
         ),
         sortBy === 1
           ? ["scheme.name"]
@@ -51,7 +54,7 @@ export const SharedProjects = (props) => {
           : ["scheme.date_modified"],
         sortBy === 1 ? ["asc"] : sortBy === 2 ? ["asc"] : ["desc"]
       ),
-    [sharedSchemeList, search, selectedVehicle, sortBy]
+    [sharedSchemeList, search, selectedVehicle, sortBy, hideLegacy]
   );
 
   const pendingSharedSchemeList = useMemo(
@@ -66,9 +69,9 @@ export const SharedProjects = (props) => {
 
   const openScheme = (schemeID, sharedID) => {
     if (sharedID) {
-      onAccept(sharedID, () => history.push(`/scheme/${schemeID}`));
+      onAccept(sharedID, () => history.push(`/project/${schemeID}`));
     } else {
-      history.push(`/scheme/${schemeID}`);
+      history.push(`/project/${schemeID}`);
     }
   };
 

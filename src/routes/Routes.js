@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import { mainLayoutRoutes, authLayoutRoutes } from "./index";
 
 import MainLayout from "layouts/Main";
@@ -40,6 +45,9 @@ const Routes = () => (
     <Switch>
       {renderChildRoutes(MainLayout, mainLayoutRoutes)}
       {renderChildRoutes(AuthLayout, authLayoutRoutes)}
+      <Route exact path="/scheme/:id">
+        <Redirect to="/project/:id" />
+      </Route>
       <Route
         render={() => (
           <AuthLayout>

@@ -14,6 +14,7 @@ export const InnerForm = React.memo(
     paintingGuides,
     onCancel,
     onChangePaintingGuides,
+    onApply,
     ...formProps
   }) => {
     const handleTogglePaintingGuide = useCallback(
