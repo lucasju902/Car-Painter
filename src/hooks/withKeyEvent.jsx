@@ -61,6 +61,8 @@ export const withKeyEvent = (Component) => (props) => {
     (state) => state.boardReducer.paintingGuides
   );
 
+  const unsetConfirmMessage = useCallback(() => setConfirmMessage(""), []);
+
   const togglePaintingGuides = useCallback(
     (guide) => {
       let newPaintingGuides = [...paintingGuides];
@@ -121,13 +123,13 @@ export const withKeyEvent = (Component) => (props) => {
           let layerToExchange = exchangableLayers[0];
           dispatch(
             updateLayer({
-              ...layerToExchange,
+              id: layerToExchange.id,
               layer_order: parseInt(currentLayer.layer_order),
             })
           );
           dispatch(
             updateLayer({
-              ...currentLayer,
+              id: currentLayer.id,
               layer_order: parseInt(layerToExchange.layer_order),
             })
           );
@@ -311,7 +313,7 @@ export const withKeyEvent = (Component) => (props) => {
             }
             dispatch(
               updateLayer({
-                ...currentLayer,
+                id: currentLayer.id,
                 layer_data: layer_data,
               })
             );
@@ -378,7 +380,7 @@ export const withKeyEvent = (Component) => (props) => {
       <ConfirmDialog
         text={confirmMessage}
         open={confirmMessage.length !== 0}
-        onCancel={() => setConfirmMessage("")}
+        onCancel={unsetConfirmMessage}
         onConfirm={handleConfirm}
       />
     </>

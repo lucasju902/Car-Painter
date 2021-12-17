@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import {
   Accordion,
@@ -47,6 +47,16 @@ export const SubForm = (props) => {
     [guideID, paintingGuides]
   );
 
+  const handleChangeOpacity = useCallback(
+    (value) => setFieldValue(opacityKey, value),
+    [opacityKey, setFieldValue]
+  );
+
+  const handleChangeColor = useCallback(
+    (color) => setFieldValue(colorKey, color),
+    [colorKey, setFieldValue]
+  );
+
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <CustomAccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -91,8 +101,8 @@ export const SubForm = (props) => {
                     <ColorPickerInput
                       disabled={!editable}
                       value={values[colorKey]}
-                      onChange={(color) => setFieldValue(colorKey, color)}
-                      onInputChange={(color) => setFieldValue(colorKey, color)}
+                      onChange={handleChangeColor}
+                      onInputChange={handleChangeColor}
                       error={Boolean(errors[colorKey])}
                       helperText={errors[colorKey]}
                     />
@@ -111,7 +121,7 @@ export const SubForm = (props) => {
                     step={0.1}
                     marks
                     value={values[opacityKey]}
-                    setValue={(value) => setFieldValue(opacityKey, value)}
+                    setValue={handleChangeOpacity}
                   />
                 </Grid>
               ) : (

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import _ from "lodash";
 import { useHistory } from "react-router";
 
@@ -54,9 +54,12 @@ export const MyProjects = (props) => {
     [schemeList, search, selectedVehicle, sortBy, hideLegacy]
   );
 
-  const openScheme = (schemeID) => {
-    history.push(`/project/${schemeID}`);
-  };
+  const openScheme = useCallback(
+    (schemeID) => {
+      history.push(`/project/${schemeID}`);
+    },
+    [history]
+  );
 
   const increaseData = () => {
     setLimit(limit + step);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import _ from "lodash";
 import styled from "styled-components/macro";
 import { useSelector, useDispatch } from "react-redux";
@@ -55,26 +55,38 @@ export const LeftBar = ({ tabValue, setTabValue }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const openScheme = (schemeID) => {
-    history.push(`/project/${schemeID}`);
-  };
+  const hideDialog = useCallback(() => setDialog(null), []);
 
-  const createSchemeFromCarMake = (carMake, name) => {
-    setDialog(null);
-    dispatch(createScheme(carMake, name, user.id, 0, openScheme));
-  };
+  const openScheme = useCallback(
+    (schemeID) => {
+      history.push(`/project/${schemeID}`);
+    },
+    [history]
+  );
 
-  const handleCreateNew = () => {
+  const createSchemeFromCarMake = useCallback(
+    (carMake, name) => {
+      setDialog(null);
+      dispatch(createScheme(carMake, name, user.id, 0, openScheme));
+    },
+    [dispatch, openScheme, user.id]
+  );
+
+  const handleCreateNew = useCallback(() => {
     setDialog("CreateProjectDialog");
-  };
+  }, []);
 
-  const handleLogOut = () => {
+  const handleLogOut = useCallback(() => {
     dispatch(signOut());
-  };
-  const handleClickTabItem = (tabIndex) => {
-    window.history.replaceState({}, "", tabURLs[tabIndex]);
-    setTabValue(tabIndex);
-  };
+  }, [dispatch]);
+
+  const handleClickTabItem = useCallback(
+    (tabIndex) => {
+      window.history.replaceState({}, "", tabURLs[tabIndex]);
+      setTabValue(tabIndex);
+    },
+    [setTabValue]
+  );
 
   useEffect(() => {
     // Set Tab based on query string
@@ -141,8 +153,8 @@ export const LeftBar = ({ tabValue, setTabValue }) => {
         carMakeList={sortedCarMakesList}
         predefinedCarMakeID={predefinedCarMakeID}
         open={dialog === "CreateProjectDialog"}
-        onContinue={(carMake, name) => createSchemeFromCarMake(carMake, name)}
-        onCancel={() => setDialog(null)}
+        onContinue={createSchemeFromCarMake}
+        onCancel={hideDialog}
       />
     </Box>
   );

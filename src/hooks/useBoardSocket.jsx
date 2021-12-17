@@ -8,7 +8,7 @@ import {
 } from "redux/reducers/schemeReducer";
 import { setMessage } from "redux/reducers/messageReducer";
 import {
-  updateListItem as updateLayerListItem,
+  mergeListItem as mergeLayerListItem,
   deleteListItem as deleteLayerListItem,
   insertToList as insertToLayerList,
 } from "redux/reducers/layerReducer";
@@ -32,7 +32,7 @@ export const useBoardSocket = () => {
     });
 
     SocketClient.on("client-update-layer", (response) => {
-      dispatch(updateLayerListItem(response.data));
+      dispatch(mergeLayerListItem(response.data));
     });
 
     SocketClient.on("client-delete-layer", (response) => {

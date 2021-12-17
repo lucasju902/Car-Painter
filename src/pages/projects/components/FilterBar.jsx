@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import _ from "lodash";
 import { useSelector } from "react-redux";
 import styled from "styled-components/macro";
@@ -37,10 +37,14 @@ export const FilterBar = ({
     [carMakeList]
   );
 
+  const handleSearchChange = useCallback((value) => setSearch(value), [
+    setSearch,
+  ]);
+
   return (
     <>
       <Box maxWidth="300px">
-        <SearchBox value={search} onChange={(value) => setSearch(value)} />
+        <SearchBox value={search} onChange={handleSearchChange} />
       </Box>
 
       <Box

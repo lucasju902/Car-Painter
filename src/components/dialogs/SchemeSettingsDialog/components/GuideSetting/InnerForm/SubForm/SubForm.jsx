@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
 import {
   Accordion,
@@ -11,21 +11,29 @@ import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import { ColorPickerInput, SliderInput } from "components/common";
 import { CustomAccordionSummary } from "./styles";
 
-export const SubForm = (props) => {
+export const SubForm = React.memo((props) => {
   const {
     label,
     editable,
     colorKey,
     opacityKey,
     errors,
-    handleBlur,
-    handleChange,
     setFieldValue,
-    touched,
     values,
     extraChildren,
   } = props;
   const [expanded, setExpanded] = useState(true);
+
+  const handleChangeColor = useCallback(
+    (color) => setFieldValue(colorKey, color),
+    [colorKey, setFieldValue]
+  );
+
+  const handleChangeOpacity = useCallback(
+    (value) => setFieldValue(opacityKey, value),
+    [opacityKey, setFieldValue]
+  );
+
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <CustomAccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -49,8 +57,8 @@ export const SubForm = (props) => {
                     <ColorPickerInput
                       disabled={!editable}
                       value={values[colorKey]}
-                      onChange={(color) => setFieldValue(colorKey, color)}
-                      onInputChange={(color) => setFieldValue(colorKey, color)}
+                      onChange={handleChangeColor}
+                      onInputChange={handleChangeColor}
                       error={Boolean(errors[colorKey])}
                       helperText={errors[colorKey]}
                     />
@@ -68,7 +76,7 @@ export const SubForm = (props) => {
                     max={1}
                     step={0.01}
                     value={values[opacityKey]}
-                    setValue={(value) => setFieldValue(opacityKey, value)}
+                    setValue={handleChangeOpacity}
                   />
                 </Grid>
               ) : (
@@ -84,4 +92,4 @@ export const SubForm = (props) => {
       </AccordionDetails>
     </Accordion>
   );
-};
+});

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 
@@ -52,9 +52,16 @@ export const GeneralProperty = React.memo((props) => {
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
   );
-  if (JSON.stringify(errors) !== "{}") {
-    console.log(errors);
-  }
+
+  const handleChangeAngle = useCallback(
+    (value) => setFieldValue("layer_data.angle", value),
+    [setFieldValue]
+  );
+
+  const handleChangeOpacity = useCallback(
+    (value) => setFieldValue("layer_data.opacity", value),
+    [setFieldValue]
+  );
 
   if (
     layerDataProperties.every(
@@ -140,7 +147,7 @@ export const GeneralProperty = React.memo((props) => {
               min={0}
               max={360}
               value={Math.round(values.layer_data.angle)}
-              setValue={(value) => setFieldValue("layer_data.angle", value)}
+              setValue={handleChangeAngle}
             />
           ) : (
             <></>
@@ -154,7 +161,7 @@ export const GeneralProperty = React.memo((props) => {
                 max={1}
                 step={0.01}
                 value={values.layer_data.opacity}
-                setValue={(value) => setFieldValue("layer_data.opacity", value)}
+                setValue={handleChangeOpacity}
               />
             </Box>
           ) : (

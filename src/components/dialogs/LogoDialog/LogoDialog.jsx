@@ -41,6 +41,8 @@ export const LogoDialog = React.memo((props) => {
     [setTabValue, setSearch]
   );
 
+  const handleSearchChange = useCallback((value) => setSearch(value), []);
+
   return (
     <Dialog aria-labelledby="logo-title" open={open} onClose={onCancel}>
       <DialogTitle id="logo-title">
@@ -61,7 +63,7 @@ export const LogoDialog = React.memo((props) => {
       </DialogTitle>
       <CustomDialogContent dividers>
         <Box mb={2}>
-          <SearchBox value={search} onChange={(value) => setSearch(value)} />
+          <SearchBox value={search} onChange={handleSearchChange} />
         </Box>
         <TabPanel value={tabValue} index={0}>
           <LogoContent

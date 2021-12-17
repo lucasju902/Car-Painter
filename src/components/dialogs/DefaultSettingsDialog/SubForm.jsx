@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { Box, Typography, Grid } from "components/MaterialUI";
 import { ColorPickerInput, SliderInput } from "components/common";
@@ -12,6 +12,17 @@ export const SubForm = (props) => {
     values,
     extraChildren,
   } = props;
+
+  const handleColorChange = useCallback(
+    (color) => setFieldValue(colorKey, color),
+    [colorKey, setFieldValue]
+  );
+
+  const handleOpacityChange = useCallback(
+    (value) => setFieldValue(opacityKey, value),
+    [opacityKey, setFieldValue]
+  );
+
   return (
     <Box display="flex" flexDirection="column" width="100%" mb={1}>
       <Grid container spacing={2}>
@@ -27,8 +38,8 @@ export const SubForm = (props) => {
             </Typography>
             <ColorPickerInput
               value={values[colorKey]}
-              onChange={(color) => setFieldValue(colorKey, color)}
-              onInputChange={(color) => setFieldValue(colorKey, color)}
+              onChange={handleColorChange}
+              onInputChange={handleColorChange}
               error={Boolean(errors[colorKey])}
               helperText={errors[colorKey]}
             />
@@ -41,7 +52,7 @@ export const SubForm = (props) => {
             max={1}
             step={0.01}
             value={values[opacityKey]}
-            setValue={(value) => setFieldValue(opacityKey, value)}
+            setValue={handleOpacityChange}
           />
         </Grid>
       </Grid>

@@ -77,6 +77,20 @@ export const slice = createSlice({
         state.list = layerList;
       }
     },
+    mergeListItem: (state, action) => {
+      let layerList = [...state.list];
+      let foundIndex = layerList.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (foundIndex !== -1) {
+        let item = { ...layerList[foundIndex], ...action.payload };
+        if (typeof item.layer_data === "string") {
+          item.layer_data = JSON.parse(item.layer_data);
+        }
+        layerList[foundIndex] = item;
+        state.list = layerList;
+      }
+    },
     deleteItemsByUploadID: (state, action) => {
       let layerList = [...state.list];
       state.list = layerList.filter(
@@ -97,6 +111,13 @@ export const slice = createSlice({
     },
     setCurrent: (state, action) => {
       let layer = action.payload;
+      if (layer && typeof layer.layer_data === "string") {
+        layer.layer_data = JSON.parse(layer.layer_data);
+      }
+      state.current = layer;
+    },
+    mergeCurrent: (state, action) => {
+      let layer = { ...state.current, ...action.payload };
       if (layer && typeof layer.layer_data === "string") {
         layer.layer_data = JSON.parse(layer.layer_data);
       }
@@ -135,11 +156,13 @@ export const slice = createSlice({
 const { setLoading } = slice.actions;
 export const {
   setCurrent,
+  mergeCurrent,
   setList,
   setDrawingStatus,
   insertToList,
   concatList,
   updateListItem,
+  mergeListItem,
   deleteListItem,
   setClipboard,
   setHoveredJSON,
@@ -548,30 +571,27 @@ export const updateLayer = (layer, pushingToHistory = true) => async (
   getState
 ) => {
   // dispatch(setLoading(true));
-  let configuredLayer = {
-    ...layer,
-    layer_order: layer.layer_order || 1,
-  };
   try {
     const currentUser = getState().authReducer.user;
     let previousLayer = getState().layerReducer.list.find(
       (item) => item.id === layer.id
     );
 
-    dispatch(updateListItem(configuredLayer));
+    dispatch(mergeListItem(layer));
     const currentLayer = getState().layerReducer.current;
-    if (currentLayer && currentLayer.id === configuredLayer.id) {
-      dispatch(setCurrent(configuredLayer));
+    if (currentLayer && currentLayer.id === layer.id) {
+      dispatch(mergeCurrent(layer));
     }
     // await LayerService.updateLayer(configuredLayer.id, {
     //   ...configuredLayer,
     //   layer_data: JSON.stringify(configuredLayer.layer_data),
     // });
+    let layerForSocket = { ...layer };
+    if (layerForSocket.layer_data) {
+      layerForSocket.layer_data = JSON.stringify(layerForSocket.layer_data);
+    }
     SocketClient.emit("client-update-layer", {
-      data: {
-        ...configuredLayer,
-        layer_data: JSON.stringify(configuredLayer.layer_data),
-      },
+      data: layerForSocket,
       socketID: SocketClient.socket.id,
       userID: currentUser.id,
     });
@@ -581,7 +601,10 @@ export const updateLayer = (layer, pushingToHistory = true) => async (
         pushToActionHistory({
           action: HistoryActions.LAYER_CHANGE_ACTION,
           prev_data: previousLayer,
-          next_data: configuredLayer,
+          next_data: {
+            ...previousLayer,
+            ...layer,
+          },
         })
       );
     }
@@ -592,15 +615,10 @@ export const updateLayer = (layer, pushingToHistory = true) => async (
 };
 
 export const updateLayerOnly = (layer) => async (dispatch, getState) => {
-  let configuredLayer = {
-    ...layer,
-    layer_order: layer.layer_order || 1,
-  };
-
-  dispatch(updateListItem(configuredLayer));
+  dispatch(mergeListItem(layer));
   const currentLayer = getState().layerReducer.current;
-  if (currentLayer && currentLayer.id === configuredLayer.id) {
-    dispatch(setCurrent(configuredLayer));
+  if (currentLayer && currentLayer.id === layer.id) {
+    dispatch(mergeCurrent(layer));
   }
 };
 

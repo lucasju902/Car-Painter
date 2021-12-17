@@ -145,7 +145,7 @@ export const Board = ({
     (layer, values) => {
       dispatch(
         updateLayer({
-          ...layer,
+          id: layer.id,
           layer_data: {
             ...layer.layer_data,
             ...values,

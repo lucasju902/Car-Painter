@@ -43,41 +43,44 @@ class SocketServer {
   async onClientUpdateLayer(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-update-layer", requestData);
     await LayerService.updateById(requestData.data.id, requestData.data);
-    let scheme = await SchemeService.updateById(socket.room, {
+    const schemeUpdatePayload = {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
       thumbnail_updated: 0,
-    });
+    };
+    await SchemeService.updateById(socket.room, schemeUpdatePayload);
     this.io.sockets.in(socket.room).emit("client-update-scheme", {
       ...requestData,
-      data: scheme.toJSON(),
+      data: { id: socket.room, ...schemeUpdatePayload },
     });
   }
 
   async onClientCreateLayer(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-create-layer", requestData);
-    let scheme = await SchemeService.updateById(socket.room, {
+    const schemeUpdatePayload = {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
       thumbnail_updated: 0,
-    });
+    };
+    await SchemeService.updateById(socket.room, schemeUpdatePayload);
     this.io.sockets.in(socket.room).emit("client-update-scheme", {
       ...requestData,
-      data: scheme.toJSON(),
+      data: { id: socket.room, ...schemeUpdatePayload },
     });
   }
 
   async onClientDeleteLayer(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-delete-layer", requestData);
     await LayerService.deleteById(requestData.data.id);
-    let scheme = await SchemeService.updateById(socket.room, {
+    const schemeUpdatePayload = {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
       thumbnail_updated: 0,
-    });
+    };
+    await SchemeService.updateById(socket.room, schemeUpdatePayload);
     this.io.sockets.in(socket.room).emit("client-update-scheme", {
       ...requestData,
-      data: scheme.toJSON(),
+      data: { id: socket.room, ...schemeUpdatePayload },
     });
   }
 

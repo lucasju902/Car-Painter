@@ -77,7 +77,7 @@ export const LayerProperty = (props) => {
     (field) => {
       dispatch(
         updateLayer({
-          ...currentLayer,
+          id: currentLayer.id,
           [field]: currentLayer[field] ? 0 : 1,
         })
       );
@@ -88,7 +88,7 @@ export const LayerProperty = (props) => {
     (key, value) => {
       dispatch(
         updateLayer({
-          ...currentLayer,
+          id: currentLayer.id,
           layer_data: {
             ...currentLayer.layer_data,
             [key]: value,
@@ -102,7 +102,7 @@ export const LayerProperty = (props) => {
     (updatedValues) => {
       dispatch(
         updateLayer({
-          ...currentLayer,
+          id: currentLayer.id,
           layer_data: {
             ...currentLayer.layer_data,
             ...updatedValues,
@@ -116,7 +116,7 @@ export const LayerProperty = (props) => {
     (field) => {
       dispatch(
         updateLayer({
-          ...currentLayer,
+          id: currentLayer.id,
           layer_data: {
             ...currentLayer.layer_data,
             [field]: currentLayer.layer_data[field] ? 0 : 1,

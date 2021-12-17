@@ -28,6 +28,16 @@ export const InnerForm = React.memo(
       [onChangePaintingGuides, paintingGuides]
     );
 
+    const handleChangeGridPadding = useCallback(
+      (value) => formProps.setFieldValue("grid_padding", value),
+      [formProps]
+    );
+
+    const handleChangeGridStroke = useCallback(
+      (value) => formProps.setFieldValue("grid_stroke", value),
+      [formProps]
+    );
+
     return (
       <Form onSubmit={formProps.handleSubmit} noValidate>
         <Box height="100%" overflow="auto">
@@ -229,9 +239,7 @@ export const InnerForm = React.memo(
                     step={1}
                     value={formProps.values.grid_padding}
                     disabled={!editable}
-                    setValue={(value) =>
-                      formProps.setFieldValue("grid_padding", value)
-                    }
+                    setValue={handleChangeGridPadding}
                   />
                 </Grid>
                 <Grid item xs={12} sm={12}>
@@ -242,9 +250,7 @@ export const InnerForm = React.memo(
                     step={0.01}
                     value={formProps.values.grid_stroke}
                     disabled={!editable}
-                    setValue={(value) =>
-                      formProps.setFieldValue("grid_stroke", value)
-                    }
+                    setValue={handleChangeGridStroke}
                   />
                 </Grid>
                 <Grid item xs={12} sm={12}>

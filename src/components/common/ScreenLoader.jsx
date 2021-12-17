@@ -3,7 +3,7 @@ import React from "react";
 import { Box } from "@material-ui/core";
 import Loading from "assets/loading.svg";
 
-export const ScreenLoader = () => {
+export const ScreenLoader = React.memo(() => {
   return (
     <Box
       width="100%"
@@ -12,9 +12,9 @@ export const ScreenLoader = () => {
       alignItems="center"
       justifyContent="center"
     >
-      <img src={Loading} width="200px" height="200px" />
+      <img src={Loading} alt="ScreenLoader" width="200px" height="200px" />
     </Box>
   );
-};
+});
 
 export default ScreenLoader;

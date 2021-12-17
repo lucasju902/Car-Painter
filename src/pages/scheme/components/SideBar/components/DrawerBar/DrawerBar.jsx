@@ -170,6 +170,8 @@ export const DrawerBar = React.memo(
     const basePaints = useSelector((state) => state.basePaintReducer.list);
     const user = useSelector((state) => state.authReducer.user);
 
+    const hideDialog = useCallback(() => setDialog(null), [setDialog]);
+
     const handleModeChange = useCallback(
       (value) => {
         dispatch(setMouseMode(value));
@@ -383,13 +385,13 @@ export const DrawerBar = React.memo(
           carMake={currentCarMake}
           basePaints={basePaints}
           onOpenBase={handleOpenBase}
-          onCancel={() => setDialog(null)}
+          onCancel={hideDialog}
         />
         <OverlayDialog
           open={dialog === DialogTypes.SHAPE}
           overlays={overlayList}
           onOpenOverlay={handleOpenOverlay}
-          onCancel={() => setDialog(null)}
+          onCancel={hideDialog}
         />
         <LogoDialog
           open={dialog === DialogTypes.LOGO}
@@ -398,13 +400,13 @@ export const DrawerBar = React.memo(
           user={user}
           onOpenLogo={handleOpenLogo}
           onOpenUpload={handleOpenUpload}
-          onCancel={() => setDialog(null)}
+          onCancel={hideDialog}
         />
         <UploadDialog
           open={dialog === DialogTypes.UPLOAD}
           uploads={uploadList}
           onOpenUpload={handleOpenUpload}
-          onCancel={() => setDialog(null)}
+          onCancel={hideDialog}
         />
         <TextDialog
           open={dialog === DialogTypes.TEXT}
@@ -413,12 +415,12 @@ export const DrawerBar = React.memo(
           defaultColor={currentScheme.guide_data.default_shape_color}
           defaultStrokeColor={currentScheme.guide_data.default_shape_scolor}
           onCreate={handleCreateText}
-          onCancel={() => setDialog(null)}
+          onCancel={hideDialog}
         />
         <DefaultSettingsDialog
           open={dialog === DialogTypes.DEFAULT_SHAPE_SETTINGS}
           onApply={handleApplySettings}
-          onCancel={() => setDialog(null)}
+          onCancel={hideDialog}
         />
       </Wrapper>
     );

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 
@@ -25,10 +25,7 @@ export const FontProperty = React.memo((props) => {
     errors,
     isValid,
     checkLayerDataDirty,
-    handleBlur,
-    handleChange,
     setFieldValue,
-    touched,
     values,
     fontList,
     onLayerDataUpdate,
@@ -43,6 +40,26 @@ export const FontProperty = React.memo((props) => {
         ? AllowedLayerProps[values.layer_type]
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
+  );
+
+  const handleChangeFont = useCallback(
+    (e) => onLayerDataUpdate("font", e.target.value),
+    [onLayerDataUpdate]
+  );
+
+  const handleChangeSize = useCallback(
+    (value) => setFieldValue("layer_data.size", value),
+    [setFieldValue]
+  );
+
+  const handleColorInstantChange = useCallback(
+    (color) => onLayerDataUpdate("color", color),
+    [onLayerDataUpdate]
+  );
+
+  const handleColorChange = useCallback(
+    (color) => setFieldValue("layer_data.color", color),
+    [setFieldValue]
   );
 
   if (
@@ -64,7 +81,7 @@ export const FontProperty = React.memo((props) => {
               <FontSelect
                 value={values.layer_data.font}
                 disabled={!editable}
-                onChange={(e) => onLayerDataUpdate("font", e.target.value)}
+                onChange={handleChangeFont}
                 fontList={fontList}
               />
             </FormControl>
@@ -82,10 +99,8 @@ export const FontProperty = React.memo((props) => {
                 <ColorPickerInput
                   value={values.layer_data.color}
                   disabled={!editable}
-                  onChange={(color) => onLayerDataUpdate("color", color)}
-                  onInputChange={(color) =>
-                    setFieldValue("layer_data.color", color)
-                  }
+                  onChange={handleColorInstantChange}
+                  onInputChange={handleColorChange}
                   error={Boolean(errors.layer_data && errors.layer_data.color)}
                   helperText={errors.layer_data && errors.layer_data.color}
                 />
@@ -101,7 +116,7 @@ export const FontProperty = React.memo((props) => {
               min={6}
               max={512}
               value={values.layer_data.size}
-              setValue={(value) => setFieldValue("layer_data.size", value)}
+              setValue={handleChangeSize}
             />
           ) : (
             <></>

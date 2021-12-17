@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Form } from "formik";
 
 import {
@@ -14,6 +14,16 @@ import { SliderInput } from "components/common";
 import { CustomFormControlLabel, CustomDialogContent } from "./styles";
 
 export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
+  const handleGridPaddingChange = useCallback(
+    (value) => formProps.setFieldValue("grid_padding", value),
+    [formProps]
+  );
+
+  const handleGridStrokeChange = useCallback(
+    (value) => formProps.setFieldValue("grid_stroke", value),
+    [formProps]
+  );
+
   return (
     <Form onSubmit={formProps.handleSubmit} noValidate>
       <CustomDialogContent dividers id="insert-text-dialog-content">
@@ -174,9 +184,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                     step={1}
                     value={formProps.values.grid_padding}
                     disabled={!editable}
-                    setValue={(value) =>
-                      formProps.setFieldValue("grid_padding", value)
-                    }
+                    setValue={handleGridPaddingChange}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -187,9 +195,7 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                     step={0.01}
                     value={formProps.values.grid_stroke}
                     disabled={!editable}
-                    setValue={(value) =>
-                      formProps.setFieldValue("grid_stroke", value)
-                    }
+                    setValue={handleGridStrokeChange}
                   />
                 </Grid>
                 <Grid item xs={12} sm={12}>

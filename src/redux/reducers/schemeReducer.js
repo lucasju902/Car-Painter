@@ -301,13 +301,16 @@ export const updateScheme = (
   try {
     const currentScheme = getState().schemeReducer.current;
     const currentUser = getState().authReducer.user;
-    let updatedScheme;
+    let updatedScheme, payloadForSocket;
+    payloadForSocket = {
+      ...payload,
+      date_modified: Math.round(new Date().getTime() / 1000),
+      last_modified_by: currentUser.id,
+    };
     if (currentScheme && currentScheme.id === payload.id) {
       updatedScheme = {
         ...currentScheme,
-        ...payload,
-        date_modified: Math.round(new Date().getTime() / 1000),
-        last_modified_by: currentUser.id,
+        ...payloadForSocket,
       };
       if (update_thumbnail) updatedScheme.thumbnail_updated = 0;
       dispatch(setCurrent(updatedScheme));
@@ -316,27 +319,15 @@ export const updateScheme = (
       const foundScheme = schemeList.find((item) => item.id === payload.id);
       updatedScheme = {
         ...foundScheme,
-        date_modified: Math.round(new Date().getTime() / 1000),
-        last_modified_by: currentUser.id,
+        ...payloadForSocket,
       };
     }
-
-    // const scheme = await SchemeService.updateScheme(payload.id, {
-    //   ..._.omit(payload, ["carMake", "layers"]),
-    //   guide_data: JSON.stringify(payload.guide_data),
-    // });
+    if (payloadForSocket.guide_data) {
+      payloadForSocket.guide_data = JSON.stringify(payloadForSocket.guide_data);
+    }
 
     SocketClient.emit("client-update-scheme", {
-      data: {
-        ..._.omit(updatedScheme, [
-          "carMake",
-          "layers",
-          "sharedUsers",
-          "user",
-          "lastModifier",
-        ]),
-        guide_data: JSON.stringify(updatedScheme.guide_data),
-      },
+      data: payloadForSocket,
       socketID: SocketClient.socket.id,
       userID: currentUser.id,
     });

@@ -68,7 +68,7 @@ export const PartGroup = (props) => {
           dispatch(
             updateLayer(
               {
-                ...layer,
+                id: layer.id,
                 layer_order: parseInt(index) + 1,
               },
               false
@@ -84,7 +84,7 @@ export const PartGroup = (props) => {
       const layer = layerList.find((item) => item.id === id);
       dispatch(
         updateLayer({
-          ...layer,
+          id: layer.id,
           [field]: layer[field] ? 0 : 1,
         })
       );

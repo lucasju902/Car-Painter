@@ -49,16 +49,22 @@ export const InnerForm = React.memo(
           } catch (error) {}
         }
       },
-      [schemeID, values.sharedUsers]
+      [schemeID, setFieldValue, values.sharedUsers]
     );
 
-    const handleNewUserPermissionChange = useCallback((value) => {
-      setFieldValue(`newUser['editable']`, value);
-    }, []);
+    const handleNewUserPermissionChange = useCallback(
+      (value) => {
+        setFieldValue(`newUser['editable']`, value);
+      },
+      [setFieldValue]
+    );
 
-    const handleSharedUserChange = useCallback((value, index) => {
-      setFieldValue(`sharedUsers[${index}]['editable']`, value);
-    }, []);
+    const handleSharedUserChange = useCallback(
+      (value, index) => {
+        setFieldValue(`sharedUsers[${index}]['editable']`, value);
+      },
+      [setFieldValue]
+    );
 
     return (
       <Form onSubmit={handleSubmit} noValidate>

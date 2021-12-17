@@ -43,6 +43,8 @@ export const GeneralSetting = React.memo((props) => {
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [name, setName] = useState(scheme.name);
 
+  const hideDeleteMessage = useCallback(() => setDeleteMessage(null), []);
+
   const handleToggleFavorite = useCallback(() => {
     setFavoriteInPrgoress(true);
     if (favoriteID)
@@ -51,13 +53,7 @@ export const GeneralSetting = React.memo((props) => {
       onAddFavorite(currentUser.id, scheme.id, () =>
         setFavoriteInPrgoress(false)
       );
-  }, [
-    favoriteID,
-    currentUser,
-    onRemoveFavorite,
-    onAddFavorite,
-    setFavoriteInPrgoress,
-  ]);
+  }, [favoriteID, onRemoveFavorite, onAddFavorite, currentUser.id, scheme.id]);
 
   const handleNameChange = useCallback(
     (event) => {
@@ -67,7 +63,7 @@ export const GeneralSetting = React.memo((props) => {
   );
   const handleSaveName = useCallback(() => {
     onRename(scheme.id, name);
-  }, [scheme, name]);
+  }, [onRename, scheme.id, name]);
   const handleDiscardName = useCallback(() => {
     setName(scheme.name);
   }, [setName, scheme.name]);
@@ -83,7 +79,7 @@ export const GeneralSetting = React.memo((props) => {
 
   const handleDelete = useCallback(() => {
     onDelete(scheme.id, () => history.push("/"));
-  }, [onDelete, scheme]);
+  }, [history, onDelete, scheme.id]);
 
   useEffect(() => {
     setName(scheme.name);
@@ -192,7 +188,7 @@ export const GeneralSetting = React.memo((props) => {
       <ConfirmDialog
         text={deleteMessage}
         open={!!deleteMessage}
-        onCancel={() => setDeleteMessage(null)}
+        onCancel={hideDeleteMessage}
         onConfirm={handleDelete}
       />
     </>

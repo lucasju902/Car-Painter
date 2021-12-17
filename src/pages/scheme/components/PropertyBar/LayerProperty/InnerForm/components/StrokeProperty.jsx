@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import { AllowedLayerProps, LayerTypes } from "constant";
 
@@ -23,10 +23,7 @@ export const StrokeProperty = React.memo((props) => {
     errors,
     isValid,
     checkLayerDataDirty,
-    handleBlur,
-    handleChange,
     setFieldValue,
-    touched,
     values,
     onLayerDataUpdate,
   } = props;
@@ -40,6 +37,11 @@ export const StrokeProperty = React.memo((props) => {
         ? AllowedLayerProps[values.layer_type]
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
+  );
+
+  const handleChangeStrokeWidth = useCallback(
+    (value) => setFieldValue("layer_data.stroke", value),
+    [setFieldValue]
   );
 
   if (
@@ -86,7 +88,7 @@ export const StrokeProperty = React.memo((props) => {
                 max={10}
                 value={values.layer_data.stroke}
                 disabled={!editable}
-                setValue={(value) => setFieldValue("layer_data.stroke", value)}
+                setValue={handleChangeStrokeWidth}
               />
             </Box>
           ) : (

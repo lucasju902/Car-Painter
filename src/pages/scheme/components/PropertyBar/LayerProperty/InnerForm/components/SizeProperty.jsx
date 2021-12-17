@@ -180,6 +180,12 @@ export const SizeProperty = React.memo((props) => {
       values.layer_data.sizeLocked,
     ]
   );
+
+  const handleToggleSizeLocked = useCallback(
+    () => toggleLayerDataField("sizeLocked"),
+    [toggleLayerDataField]
+  );
+
   if (
     layerDataProperties.every(
       (value) => !AllowedLayerTypes.includes("layer_data." + value)
@@ -244,7 +250,7 @@ export const SizeProperty = React.memo((props) => {
                     ? "true"
                     : "false"
                 }
-                onClick={() => toggleLayerDataField("sizeLocked")}
+                onClick={handleToggleSizeLocked}
               />
             ) : (
               <></>
@@ -333,7 +339,7 @@ export const SizeProperty = React.memo((props) => {
                     ? "true"
                     : "false"
                 }
-                onClick={() => toggleLayerDataField("sizeLocked")}
+                onClick={handleToggleSizeLocked}
               />
             ) : (
               <></>
@@ -413,7 +419,7 @@ export const SizeProperty = React.memo((props) => {
             AllowedLayerTypes.includes("layer_data.outerRadius") ? (
               <LockButton
                 disabled={!editable}
-                onClick={() => toggleLayerDataField("sizeLocked")}
+                onClick={handleToggleSizeLocked}
                 locked={
                   values.layer_data.sizeLocked || pressingShiftKey
                     ? "true"

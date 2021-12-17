@@ -4,7 +4,7 @@ import { ColorPicker } from "material-ui-color";
 import { Box, TextField, Typography } from "@material-ui/core";
 import { Palette } from "constant";
 
-export const ColorPickerInput = (props) => {
+export const ColorPickerInput = React.memo((props) => {
   const {
     separateValues,
     valuePicker,
@@ -81,6 +81,6 @@ export const ColorPickerInput = (props) => {
       )}
     </Box>
   );
-};
+});
 
 export default ColorPickerInput;

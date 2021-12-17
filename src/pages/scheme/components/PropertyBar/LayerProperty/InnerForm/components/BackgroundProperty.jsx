@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import styled from "styled-components/macro";
 
 import { AllowedLayerProps, LayerTypes } from "constant";
@@ -48,6 +48,16 @@ export const BackgroundProperty = React.memo((props) => {
     [values]
   );
 
+  const handleBGColorInstantChange = useCallback(
+    (color) => onLayerDataUpdate("bgColor", color),
+    [onLayerDataUpdate]
+  );
+
+  const handleBGColorChange = useCallback(
+    (color) => setFieldValue("layer_data.bgColor", color),
+    [setFieldValue]
+  );
+
   if (
     layerDataProperties.every(
       (value) => !AllowedLayerTypes.includes("layer_data." + value)
@@ -72,10 +82,8 @@ export const BackgroundProperty = React.memo((props) => {
                 <ColorPickerInput
                   value={values.layer_data.bgColor}
                   disabled={!editable}
-                  onChange={(color) => onLayerDataUpdate("bgColor", color)}
-                  onInputChange={(color) =>
-                    setFieldValue("layer_data.bgColor", color)
-                  }
+                  onChange={handleBGColorInstantChange}
+                  onInputChange={handleBGColorChange}
                   error={Boolean(
                     errors.layer_data && errors.layer_data.bgColor
                   )}

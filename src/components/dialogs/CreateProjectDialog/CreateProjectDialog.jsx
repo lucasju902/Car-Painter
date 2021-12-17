@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import _ from "lodash";
 import { funWords } from "constant";
 import { getTwoRandomNumbers } from "helper";
 
@@ -8,7 +7,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  TextField,
   Box,
   Autocomplete,
 } from "components/MaterialUI";

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import _ from "lodash";
 import { useHistory } from "react-router";
 
@@ -67,13 +67,16 @@ export const SharedProjects = (props) => {
     [filteredSharedSchemeList]
   );
 
-  const openScheme = (schemeID, sharedID) => {
-    if (sharedID) {
-      onAccept(sharedID, () => history.push(`/project/${schemeID}`));
-    } else {
-      history.push(`/project/${schemeID}`);
-    }
-  };
+  const openScheme = useCallback(
+    (schemeID, sharedID) => {
+      if (sharedID) {
+        onAccept(sharedID, () => history.push(`/project/${schemeID}`));
+      } else {
+        history.push(`/project/${schemeID}`);
+      }
+    },
+    [history, onAccept]
+  );
 
   const increaseData = () => {
     setLimit(limit + step);

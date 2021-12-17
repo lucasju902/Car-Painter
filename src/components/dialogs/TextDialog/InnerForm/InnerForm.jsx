@@ -49,7 +49,29 @@ export const InnerForm = React.memo((props) => {
           console.warn(error, fontFamily);
         });
     },
-    [insertToLoadedFontList]
+    [dispatch]
+  );
+
+  const handleChangeFont = useCallback(
+    (e) => {
+      setFieldValue("font", e.target.value);
+    },
+    [setFieldValue]
+  );
+
+  const handleChangeStroke = useCallback(
+    (value) => setFieldValue("stroke", value),
+    [setFieldValue]
+  );
+
+  const handleChangeColor = useCallback(
+    (color) => setFieldValue("color", color),
+    [setFieldValue]
+  );
+
+  const handleChangeSColor = useCallback(
+    (color) => setFieldValue("scolor", color),
+    [setFieldValue]
   );
 
   useEffect(() => {
@@ -59,6 +81,7 @@ export const InnerForm = React.memo((props) => {
     if (font && !loadedFontList.includes(font.font_name)) {
       loadFont(font.font_name, `url(${config.assetsURL}/${font.font_file})`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.font]);
 
   useEffect(() => {
@@ -84,6 +107,7 @@ export const InnerForm = React.memo((props) => {
         previewBoxRef.current.removeEventListener("fit", adjustFont);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -111,7 +135,7 @@ export const InnerForm = React.memo((props) => {
         <InputLabel id="font-select-label">Font</InputLabel>
         <FontSelect
           value={values.font}
-          onChange={(e) => setFieldValue("font", e.target.value)}
+          onChange={handleChangeFont}
           fontList={fontList}
         />
       </FormControl>
@@ -122,7 +146,7 @@ export const InnerForm = React.memo((props) => {
             min={0}
             max={10}
             value={values.stroke}
-            setValue={(value) => setFieldValue("stroke", value)}
+            setValue={handleChangeStroke}
           />
         </Grid>
       </Grid>
@@ -140,8 +164,8 @@ export const InnerForm = React.memo((props) => {
             </Typography>
             <ColorPickerInput
               value={values.color}
-              onChange={(color) => setFieldValue("color", color)}
-              onInputChange={(color) => setFieldValue("color", color)}
+              onChange={handleChangeColor}
+              onInputChange={handleChangeColor}
               error={Boolean(errors.color)}
               helperText={errors.color}
             />
@@ -159,8 +183,8 @@ export const InnerForm = React.memo((props) => {
             </Typography>
             <ColorPickerInput
               value={values.scolor}
-              onChange={(color) => setFieldValue("scolor", color)}
-              onInputChange={(color) => setFieldValue("scolor", color)}
+              onChange={handleChangeSColor}
+              onInputChange={handleChangeSColor}
               error={Boolean(errors.scolor)}
               helperText={errors.scolor}
             />

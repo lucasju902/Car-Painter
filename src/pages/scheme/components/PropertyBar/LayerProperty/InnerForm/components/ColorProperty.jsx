@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import { AllowedLayerProps, LayerTypes, FinishOptions } from "constant";
 
@@ -22,12 +22,9 @@ export const ColorProperty = React.memo((props) => {
     editable,
     currentCarMake,
     errors,
-    handleBlur,
-    handleChange,
     isValid,
     checkLayerDataDirty,
     setFieldValue,
-    touched,
     values,
     onLayerDataUpdate,
   } = props;
@@ -41,6 +38,16 @@ export const ColorProperty = React.memo((props) => {
         ? AllowedLayerProps[values.layer_type]
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
+  );
+
+  const handleColorInstantChange = useCallback(
+    (color) => onLayerDataUpdate("color", color),
+    [onLayerDataUpdate]
+  );
+
+  const handleColorChange = useCallback(
+    (color) => setFieldValue("layer_data.color", color),
+    [setFieldValue]
   );
 
   if (
@@ -73,10 +80,8 @@ export const ColorProperty = React.memo((props) => {
                 <ColorPickerInput
                   value={values.layer_data.color}
                   disabled={!editable}
-                  onChange={(color) => onLayerDataUpdate("color", color)}
-                  onInputChange={(color) =>
-                    setFieldValue("layer_data.color", color)
-                  }
+                  onChange={handleColorInstantChange}
+                  onInputChange={handleColorChange}
                   error={Boolean(errors.layer_data && errors.layer_data.color)}
                   helperText={errors.layer_data && errors.layer_data.color}
                 />

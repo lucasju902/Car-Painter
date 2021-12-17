@@ -17,6 +17,7 @@ import {
 } from "components/MaterialUI";
 import { ColorPickerInput, SliderInput } from "components/common";
 import { SubForm } from "./SubForm";
+import { useCallback } from "react";
 
 export const DefaultSettingsDialog = React.memo((props) => {
   const { onCancel, open, onApply } = props;
@@ -58,83 +59,85 @@ export const DefaultSettingsDialog = React.memo((props) => {
         onSubmit={onApply}
       >
         {(formProps) => (
-          <Form onSubmit={formProps.handleSubmit} noValidate>
-            <DialogContent dividers id="insert-text-dialog-content">
-              <SubForm
-                label="Default Shapes"
-                colorKey="default_shape_color"
-                opacityKey="default_shape_opacity"
-                {...formProps}
-                extraChildren={
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <Box
-                        display="flex"
-                        flexDirection="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        <Typography
-                          variant="body1"
-                          color="textSecondary"
-                          mr={2}
-                        >
-                          Stroke Color
-                        </Typography>
-                        <ColorPickerInput
-                          value={formProps.values["default_shape_scolor"]}
-                          onChange={(color) =>
-                            formProps.setFieldValue(
-                              "default_shape_scolor",
-                              color
-                            )
-                          }
-                          onInputChange={(color) =>
-                            formProps.setFieldValue(
-                              "default_shape_scolor",
-                              color
-                            )
-                          }
-                          error={Boolean(
-                            formProps.errors["default_shape_scolor"]
-                          )}
-                          helperText={formProps.errors["default_shape_scolor"]}
-                        />
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <SliderInput
-                        label="Stroke Width"
-                        min={0}
-                        max={10}
-                        step={1}
-                        value={formProps.values["default_shape_stroke"]}
-                        setValue={(value) =>
-                          formProps.setFieldValue("default_shape_stroke", value)
-                        }
-                      />
-                    </Grid>
-                  </Grid>
-                }
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={onCancel} color="secondary">
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                color="primary"
-                variant="outlined"
-                disabled={formProps.isSubmitting || !formProps.isValid}
-              >
-                Apply
-              </Button>
-            </DialogActions>
-          </Form>
+          <DefaultSettingsForm onCancel={onCancel} {...formProps} />
         )}
       </Formik>
     </Dialog>
+  );
+});
+
+const DefaultSettingsForm = React.memo(({ onCancel, ...formProps }) => {
+  const handleDefaultShapeSColorChange = useCallback(
+    (color) => {
+      formProps.setFieldValue("default_shape_scolor", color);
+    },
+    [formProps]
+  );
+
+  const handleDefaultShapeStrokeChange = useCallback(
+    (value) => {
+      formProps.setFieldValue("default_shape_stroke", value);
+    },
+    [formProps]
+  );
+
+  return (
+    <Form onSubmit={formProps.handleSubmit} noValidate>
+      <DialogContent dividers id="insert-text-dialog-content">
+        <SubForm
+          label="Default Shapes"
+          colorKey="default_shape_color"
+          opacityKey="default_shape_opacity"
+          {...formProps}
+          extraChildren={
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Stroke Color
+                  </Typography>
+                  <ColorPickerInput
+                    value={formProps.values["default_shape_scolor"]}
+                    onChange={handleDefaultShapeSColorChange}
+                    onInputChange={handleDefaultShapeSColorChange}
+                    error={Boolean(formProps.errors["default_shape_scolor"])}
+                    helperText={formProps.errors["default_shape_scolor"]}
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <SliderInput
+                  label="Stroke Width"
+                  min={0}
+                  max={10}
+                  step={1}
+                  value={formProps.values["default_shape_stroke"]}
+                  setValue={handleDefaultShapeStrokeChange}
+                />
+              </Grid>
+            </Grid>
+          }
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel} color="secondary">
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          color="primary"
+          variant="outlined"
+          disabled={formProps.isSubmitting || !formProps.isValid}
+        >
+          Apply
+        </Button>
+      </DialogActions>
+    </Form>
   );
 });
 

@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { InputBase } from "@material-ui/core";
 import { useStyles, SearchIcon } from "./SearchBox.style";
 
-export const SearchBox = (props) => {
+export const SearchBox = React.memo((props) => {
   const { value, onChange } = props;
 
   const classes = useStyles();
@@ -30,4 +30,4 @@ export const SearchBox = (props) => {
       />
     </div>
   );
-};
+});

@@ -35,7 +35,6 @@ export const ShadowProperty = React.memo((props) => {
     setFieldValue,
     touched,
     values,
-    onLayerDataUpdate,
     onApply,
   } = props;
   const layerDataProperties = [
@@ -55,6 +54,7 @@ export const ShadowProperty = React.memo((props) => {
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
   );
+
   const handleColorChange = useCallback(
     (value, applyNow = true) => {
       if (
@@ -66,7 +66,17 @@ export const ShadowProperty = React.memo((props) => {
       setFieldValue("layer_data.shadowColor", value);
       if (applyNow) onApply(values);
     },
-    [setFieldValue, onLayerDataUpdate, values]
+    [values, setFieldValue, onApply]
+  );
+
+  const handleColorChangeOnly = useCallback(
+    (value) => handleColorChange(value, false),
+    [handleColorChange]
+  );
+
+  const handleChangeShadowOpacity = useCallback(
+    (value) => setFieldValue("layer_data.shadowOpacity", value),
+    [setFieldValue]
   );
 
   if (
@@ -95,8 +105,8 @@ export const ShadowProperty = React.memo((props) => {
                 <ColorPickerInput
                   value={values.layer_data.shadowColor}
                   disabled={!editable}
-                  onChange={(color) => handleColorChange(color)}
-                  onInputChange={(color) => handleColorChange(color, false)}
+                  onChange={handleColorChange}
+                  onInputChange={handleColorChangeOnly}
                   error={Boolean(
                     errors.layer_data && errors.layer_data.shadowColor
                   )}
@@ -149,9 +159,7 @@ export const ShadowProperty = React.memo((props) => {
               step={0.01}
               value={values.layer_data.shadowOpacity}
               disabled={!editable}
-              setValue={(value) =>
-                setFieldValue("layer_data.shadowOpacity", value)
-              }
+              setValue={handleChangeShadowOpacity}
             />
           ) : (
             <></>

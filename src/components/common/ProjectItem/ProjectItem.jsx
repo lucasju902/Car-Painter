@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import config from "config";
 
@@ -23,7 +23,7 @@ import ShowroomNoCar from "assets/showroom_no_car.svg";
 
 import { getDifferenceFromToday, reduceString } from "helper";
 
-export const ProjectItem = (props) => {
+export const ProjectItem = React.memo((props) => {
   const {
     user,
     scheme,
@@ -48,12 +48,21 @@ export const ProjectItem = (props) => {
     onAccept,
   ]);
 
-  const handleToggleFavorite = () => {
+  const unsetDeleteMessage = useCallback(() => setDeleteMessage(null), []);
+
+  const handleToggleFavorite = useCallback(() => {
     setFavoriteInPrgoress(true);
     if (isFavorite)
       onRemoveFavorite(favoriteID, () => setFavoriteInPrgoress(false));
     else onAddFavorite(user.id, scheme.id, () => setFavoriteInPrgoress(false));
-  };
+  }, [
+    favoriteID,
+    isFavorite,
+    onAddFavorite,
+    onRemoveFavorite,
+    scheme.id,
+    user.id,
+  ]);
 
   const handleActionMenuClick = (event) => {
     setActionMenuEl(event.currentTarget);
@@ -61,23 +70,27 @@ export const ProjectItem = (props) => {
   const handleActionMenuClose = () => {
     setActionMenuEl(null);
   };
-  const handleDeleteItem = () => {
+
+  const handleDeleteItem = useCallback(() => {
     if (shared) {
       onDelete(sharedID);
     } else {
       onDelete(scheme.id);
     }
     handleActionMenuClose();
-  };
-  const handleCloneProject = () => {
+  }, [onDelete, scheme.id, shared, sharedID]);
+
+  const handleCloneProject = useCallback(() => {
     onCloneProject(scheme.id);
     handleActionMenuClose();
-  };
-  const handleAccept = () => {
+  }, [onCloneProject, scheme.id]);
+
+  const handleAccept = useCallback(() => {
     onAccept(sharedID);
     handleActionMenuClose();
-  };
-  const handleDelete = () => {
+  }, [onAccept, sharedID]);
+
+  const handleDelete = useCallback(() => {
     setDeleteMessage(
       `Are you sure you want to ${
         shared && !accepted
@@ -88,15 +101,19 @@ export const ProjectItem = (props) => {
       } "${scheme.name}"?`
     );
     handleActionMenuClose();
-  };
+  }, [accepted, scheme.name, shared]);
 
-  const schemeThumbnailURL = (id) => {
+  const handleOpenScheme = useCallback(() => {
+    onOpenScheme(scheme.id, sharedID);
+  }, [onOpenScheme, scheme.id, sharedID]);
+
+  const schemeThumbnailURL = useCallback((id) => {
     return `${config.assetsURL}/scheme_thumbnails/${id}.jpg`;
-  };
+  }, []);
 
-  const legacySchemeThumbnailURL = (id) => {
+  const legacySchemeThumbnailURL = useCallback((id) => {
     return `${config.legacyAssetURL}/thumbs/${id}.jpg`;
-  };
+  }, []);
 
   return (
     <Box
@@ -116,7 +133,7 @@ export const ProjectItem = (props) => {
         fallbackSrc={ShowroomNoCar}
         minHeight="200px"
         alt={scheme.name}
-        onClick={() => onOpenScheme(scheme.id, sharedID)}
+        onClick={handleOpenScheme}
       />
       <Box display="flex" justifyContent="space-between">
         <Box
@@ -222,11 +239,11 @@ export const ProjectItem = (props) => {
       <ConfirmDialog
         text={deleteMessage}
         open={!!deleteMessage}
-        onCancel={() => setDeleteMessage(null)}
+        onCancel={unsetDeleteMessage}
         onConfirm={handleDeleteItem}
       />
     </Box>
   );
-};
+});
 
 export default ProjectItem;

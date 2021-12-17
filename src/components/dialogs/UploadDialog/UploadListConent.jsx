@@ -113,6 +113,13 @@ export const UploadListContent = React.memo((props) => {
     [dispatch, uploadToDelete, setUploadToDelete, setAssociatedSchemes]
   );
 
+  const handleCancelForDeleteUploadFinally = useCallback(
+    () => handleDeleteUploadFinally(false),
+    [handleDeleteUploadFinally]
+  );
+
+  const unsetUploadToDelete = useCallback(() => setUploadToDelete(null), []);
+
   return (
     <>
       <DropzoneArea
@@ -194,7 +201,7 @@ export const UploadListContent = React.memo((props) => {
             : ""
         }
         open={!!uploadToDelete}
-        onCancel={() => setUploadToDelete(null)}
+        onCancel={unsetUploadToDelete}
         onConfirm={handleDeleteUploadConfirm}
         confirmLoading={fetchingDeleteList}
       />
@@ -215,8 +222,8 @@ export const UploadListContent = React.memo((props) => {
           )
         }
         open={!!associatedSchemes.length}
-        onYes={() => handleDeleteUploadFinally(true)}
-        onNo={() => handleDeleteUploadFinally(false)}
+        onYes={handleDeleteUploadFinally}
+        onNo={handleCancelForDeleteUploadFinally}
       />
     </>
   );

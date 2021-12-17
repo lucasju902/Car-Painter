@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Slider, Tooltip, Box, Grid, Typography } from "components/MaterialUI";
 import { CustomInput, SliderWrapper, Wrapper } from "./SliderInput.style";
 
-export const SliderInput = (props) => {
+export const SliderInput = React.memo((props) => {
   const { label, disabled, min, max, value, setValue, step } = props;
 
   const handleBlur = useCallback(() => {
@@ -67,6 +67,6 @@ export const SliderInput = (props) => {
       </Grid>
     </Wrapper>
   );
-};
+});
 
 export default SliderInput;

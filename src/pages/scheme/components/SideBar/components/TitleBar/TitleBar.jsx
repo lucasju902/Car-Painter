@@ -26,6 +26,8 @@ export const TitleBar = React.memo((props) => {
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
 
+  const hideDialog = useCallback(() => setDialog(null), []);
+
   const handleNameChange = useCallback(
     (event) => {
       setName(event.target.value);
@@ -117,12 +119,12 @@ export const TitleBar = React.memo((props) => {
 
       <ShortCutsDialog
         open={dialog === DialogTypes.SHORTCUTS}
-        onCancel={() => setDialog(null)}
+        onCancel={hideDialog}
       />
       <SchemeSettingsDialog
         editable={editable}
         open={dialog === DialogTypes.SETTINGS}
-        onCancel={() => setDialog(null)}
+        onCancel={hideDialog}
       />
     </Box>
   );

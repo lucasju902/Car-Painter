@@ -5,7 +5,7 @@ import { MenuItem } from "@material-ui/core";
 import { CustomSelect, FontImage } from "./FontSelect.style";
 import { ImageWithLoad } from "components/common";
 
-export const FontSelect = (props) => {
+export const FontSelect = React.memo((props) => {
   const { fontList, value, disabled, onChange } = props;
 
   return (
@@ -46,4 +46,4 @@ export const FontSelect = (props) => {
       ))}
     </CustomSelect>
   );
-};
+});

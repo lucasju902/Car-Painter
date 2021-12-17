@@ -36,6 +36,8 @@ export const OverlayDialog = React.memo((props) => {
     setLimit(limit + step);
   }, [limit, step, setLimit]);
 
+  const handleSearchChange = useCallback((value) => setSearch(value), []);
+
   const filteredOverlays = useMemo(
     () =>
       overlays.filter(
@@ -52,7 +54,7 @@ export const OverlayDialog = React.memo((props) => {
       <DialogTitle id="shape-title">Insert Graphics</DialogTitle>
       <CustomDialogContent dividers>
         <Box mb={2}>
-          <SearchBox value={search} onChange={(value) => setSearch(value)} />
+          <SearchBox value={search} onChange={handleSearchChange} />
         </Box>
         <Box id="shape-dialog-content" overflow="auto" height="70vh">
           <CustomInfiniteScroll
