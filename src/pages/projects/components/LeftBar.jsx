@@ -15,7 +15,7 @@ import { Add as AddIcon } from "@material-ui/icons";
 
 const tabURLs = ["mine", "shared", "favorite"];
 
-export const LeftBar = ({ tabValue, setTabValue }) => {
+export const LeftBar = React.memo(({ tabValue, setTabValue }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -158,7 +158,7 @@ export const LeftBar = ({ tabValue, setTabValue }) => {
       />
     </Box>
   );
-};
+});
 
 const GreyButton = styled(Button)`
   background-color: #444;

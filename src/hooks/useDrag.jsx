@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, useRef } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Konva from "konva";
 import { PaintingGuides } from "constant";
 import { mathRound2 } from "helper";

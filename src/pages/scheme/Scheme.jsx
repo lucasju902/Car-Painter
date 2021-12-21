@@ -27,7 +27,7 @@ import { useBoardSocket, useCapture, useZoom, withKeyEvent } from "hooks";
 import { withWrapper } from "./withWrapper";
 import { LegacyBanner } from "./components/LegacyBanner";
 
-const Scheme = (props) => {
+const Scheme = React.memo((props) => {
   const {
     editable,
     dialog,
@@ -102,6 +102,10 @@ const Scheme = (props) => {
 
     history.push("/");
   }, [history, onUploadThumbnail]);
+
+  const hideLegacyBanner = useCallback(() => {
+    setShowLegacyBanner(false);
+  }, []);
 
   useEffect(() => {
     if (currentScheme) {
@@ -223,7 +227,7 @@ const Scheme = (props) => {
               <LegacyBanner
                 show={showLegacyBanner}
                 carMakeID={currentScheme.car_make}
-                onDismiss={() => setShowLegacyBanner(false)}
+                onDismiss={hideLegacyBanner}
               />
             </Box>
             <PropertyBar
@@ -243,7 +247,7 @@ const Scheme = (props) => {
       )}
     </>
   );
-};
+});
 
 const SchemeWithWrapper = withWrapper(withKeyEvent(Scheme));
 

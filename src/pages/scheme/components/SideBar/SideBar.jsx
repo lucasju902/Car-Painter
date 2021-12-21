@@ -31,7 +31,7 @@ import {
 import { updateScheme } from "redux/reducers/schemeReducer";
 import { setShowProperties } from "redux/reducers/boardReducer";
 
-export const SideBar = (props) => {
+export const SideBar = React.memo((props) => {
   const {
     dialog,
     setDialog,
@@ -116,6 +116,26 @@ export const SideBar = (props) => {
     dispatch(setShowProperties(true));
   }, [dispatch]);
 
+  const showUploadDialog = useCallback(() => setDialog(DialogTypes.UPLOAD), [
+    setDialog,
+  ]);
+
+  const showLogoDialog = useCallback(() => setDialog(DialogTypes.LOGO), [
+    setDialog,
+  ]);
+
+  const showTextDialog = useCallback(() => setDialog(DialogTypes.TEXT), [
+    setDialog,
+  ]);
+
+  const showShapeDialog = useCallback(() => setDialog(DialogTypes.SHAPE), [
+    setDialog,
+  ]);
+
+  const showBaseDialog = useCallback(() => setDialog(DialogTypes.BASEPAINT), [
+    setDialog,
+  ]);
+
   return (
     <Box display="flex" flexDirection="column" bgcolor="#666666">
       <TitleWrapper px={3} height="55px">
@@ -159,17 +179,17 @@ export const SideBar = (props) => {
               {
                 icon: faFolderOpen,
                 title: EnglishLang.INSERT_MY_LOGO,
-                onClick: () => setDialog(DialogTypes.UPLOAD),
+                onClick: showUploadDialog,
               },
               {
                 icon: faImage,
                 title: EnglishLang.INSERT_LOGO,
-                onClick: () => setDialog(DialogTypes.LOGO),
+                onClick: showLogoDialog,
               },
               {
                 icon: faFont,
                 title: EnglishLang.INSERT_TEXT,
-                onClick: () => setDialog(DialogTypes.TEXT),
+                onClick: showTextDialog,
               },
             ]}
             onChangeHoverJSONItem={onChangeHoverJSONItem}
@@ -198,7 +218,7 @@ export const SideBar = (props) => {
               {
                 icon: faShapes,
                 title: EnglishLang.INSERT_GRAPHICS,
-                onClick: () => setDialog(DialogTypes.SHAPE),
+                onClick: showShapeDialog,
               },
             ]}
           />
@@ -216,7 +236,7 @@ export const SideBar = (props) => {
               {
                 icon: faCar,
                 title: EnglishLang.INSERT_BASEPAINT,
-                onClick: () => setDialog(DialogTypes.BASEPAINT),
+                onClick: showBaseDialog,
               },
             ]}
             extraChildren={
@@ -289,6 +309,6 @@ export const SideBar = (props) => {
       </Wrapper>
     </Box>
   );
-};
+});
 
 export default SideBar;

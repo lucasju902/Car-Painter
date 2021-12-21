@@ -17,7 +17,7 @@ import {
 import { ColorPickerInput, SliderInput } from "components/common";
 import { CustomAccordionSummary } from "./styles";
 
-export const SubForm = (props) => {
+export const SubForm = React.memo((props) => {
   const {
     label,
     editable,
@@ -150,4 +150,4 @@ export const SubForm = (props) => {
       </AccordionDetails>
     </Accordion>
   );
-};
+});

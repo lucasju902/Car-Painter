@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Button, Typography } from "components/MaterialUI";
 import { Wrapper } from "./Page500.style";
 
-export const Page500 = () => {
+export const Page500 = React.memo(() => {
   return (
     <Wrapper>
       <Helmet title="500 Error" />
@@ -31,6 +31,6 @@ export const Page500 = () => {
       </Button>
     </Wrapper>
   );
-};
+});
 
 export default Page500;

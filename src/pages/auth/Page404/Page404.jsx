@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Button, Typography } from "components/MaterialUI";
 import { Wrapper } from "./Page404.style";
 
-export const Page404 = () => {
+export const Page404 = React.memo(() => {
   return (
     <Wrapper>
       <Helmet title="404 Error" />
@@ -30,6 +30,6 @@ export const Page404 = () => {
       </Button>
     </Wrapper>
   );
-};
+});
 
 export default Page404;

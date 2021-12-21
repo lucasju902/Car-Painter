@@ -15,7 +15,7 @@ import {
   CustomIconButton,
 } from "./PartAction.style";
 
-export const PartAction = (props) => {
+export const PartAction = React.memo((props) => {
   const classes = useStyles();
   const { expanded, actions, onExpandClick } = props;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -98,6 +98,6 @@ export const PartAction = (props) => {
       )}
     </Box>
   );
-};
+});
 
 export default PartAction;

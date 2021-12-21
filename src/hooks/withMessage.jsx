@@ -5,7 +5,7 @@ import { Alert } from "@material-ui/lab";
 
 import { setMessage } from "redux/reducers/messageReducer";
 
-const Message = () => {
+const Message = React.memo(() => {
   const dispatch = useDispatch();
   const message = useSelector((state) => state.messageReducer);
 
@@ -33,13 +33,14 @@ const Message = () => {
       )}
     </Snackbar>
   );
-};
+});
 
-export const withMessage = (Component) => (props) => {
-  return (
-    <React.Fragment>
-      <Message />
-      <Component {...props} />
-    </React.Fragment>
-  );
-};
+export const withMessage = (Component) =>
+  React.memo((props) => {
+    return (
+      <React.Fragment>
+        <Message />
+        <Component {...props} />
+      </React.Fragment>
+    );
+  });

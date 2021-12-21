@@ -12,11 +12,10 @@ import {
 
 export const PartItem = React.memo((props) => {
   const {
+    item,
     layer_visible,
     layer_locked,
     text,
-    toggleVisible,
-    toggleLocked,
     selected,
     disabled,
     disableLock,
@@ -24,6 +23,7 @@ export const PartItem = React.memo((props) => {
     onDoubleClick,
     hovered,
     onHover,
+    toggleField,
   } = props;
 
   const wrapperRef = useRef(null);
@@ -32,18 +32,18 @@ export const PartItem = React.memo((props) => {
     (e) => {
       e.stopPropagation();
       e.nativeEvent.stopImmediatePropagation();
-      toggleVisible();
+      toggleField(item.id, "layer_visible");
     },
-    [toggleVisible]
+    [item.id, toggleField]
   );
 
   const handleToggleLock = useCallback(
     (e) => {
       e.stopPropagation();
       e.nativeEvent.stopImmediatePropagation();
-      toggleLocked();
+      toggleField(item.id, "layer_locked");
     },
-    [toggleVisible]
+    [item.id, toggleField]
   );
 
   return (
@@ -57,10 +57,10 @@ export const PartItem = React.memo((props) => {
       border={1}
       borderColor="grey.700"
       borderRadius={5}
-      onClick={onSelect}
+      onClick={() => onSelect(item)}
       onDoubleClick={onDoubleClick}
-      onMouseEnter={() => onHover(true)}
-      onMouseLeave={() => onHover(false)}
+      onMouseEnter={() => onHover(item, true)}
+      onMouseLeave={() => onHover(item, false)}
       className={clsx(selected && "activeItem", hovered && "hoveredItem")}
     >
       <Box

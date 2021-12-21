@@ -9,7 +9,7 @@ import { ChevronsLeft, ChevronsRight } from "react-feather";
 
 import { setShowProperties } from "redux/reducers/boardReducer";
 
-export const PropertyBar = (props) => {
+export const PropertyBar = React.memo((props) => {
   const { editable, stageRef, onCloneLayer, onDeleteLayer } = props;
   const dispatch = useDispatch();
   const overTablet = useMediaQuery((theme) => theme.breakpoints.up("md"));
@@ -60,6 +60,6 @@ export const PropertyBar = (props) => {
       </Box>
     </Box>
   );
-};
+});
 
 export default PropertyBar;

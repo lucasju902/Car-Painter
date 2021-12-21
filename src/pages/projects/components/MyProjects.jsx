@@ -15,7 +15,7 @@ const CustomInfiniteScroll = styled(InfiniteScroll)`
   }
 `;
 
-export const MyProjects = (props) => {
+export const MyProjects = React.memo((props) => {
   const {
     user,
     schemeList,
@@ -114,6 +114,6 @@ export const MyProjects = (props) => {
       )}
     </Box>
   );
-};
+});
 
 export default MyProjects;

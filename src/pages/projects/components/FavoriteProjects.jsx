@@ -15,7 +15,7 @@ const CustomInfiniteScroll = styled(InfiniteScroll)`
   }
 `;
 
-export const FavoriteProjects = (props) => {
+export const FavoriteProjects = React.memo((props) => {
   const {
     user,
     favoriteSchemeList,
@@ -104,6 +104,6 @@ export const FavoriteProjects = (props) => {
       )}
     </Box>
   );
-};
+});
 
 export default FavoriteProjects;

@@ -15,7 +15,7 @@ import {
 } from "components/MaterialUI";
 import { FullForm, VisibilityIcon, VisibilityOffIcon } from "./InnerForm.style";
 
-export const InnerForm = (props) => {
+export const InnerForm = React.memo((props) => {
   const {
     errors,
     isSubmitting,
@@ -108,4 +108,4 @@ export const InnerForm = (props) => {
       </Button>
     </FullForm>
   );
-};
+});

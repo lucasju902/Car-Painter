@@ -5,7 +5,7 @@ import { Box, Typography, IconButton } from "@material-ui/core";
 import { HighlightOff as CloseIcon } from "@material-ui/icons";
 import { useStyles } from "./LegacyBanner.style";
 
-export const LegacyBanner = ({ show, carMakeID, onDismiss }) => {
+export const LegacyBanner = React.memo(({ show, carMakeID, onDismiss }) => {
   const classes = useStyles();
 
   return (
@@ -44,4 +44,4 @@ export const LegacyBanner = ({ show, carMakeID, onDismiss }) => {
       )}
     </Box>
   );
-};
+});

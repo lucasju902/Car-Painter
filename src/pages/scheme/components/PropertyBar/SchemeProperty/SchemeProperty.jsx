@@ -24,7 +24,7 @@ import {
 } from "redux/reducers/schemeReducer";
 import { setPaintingGuides } from "redux/reducers/boardReducer";
 
-export const SchemeProperty = (props) => {
+export const SchemeProperty = React.memo((props) => {
   const { editable } = props;
 
   const dispatch = useDispatch();
@@ -225,6 +225,6 @@ export const SchemeProperty = (props) => {
       </Box>
     </>
   );
-};
+});
 
 export default SchemeProperty;

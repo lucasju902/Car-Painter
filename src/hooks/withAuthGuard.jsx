@@ -8,33 +8,37 @@ import { ScreenLoader } from "components/common";
 import { setPreviousPath, signInWithCookie } from "redux/reducers/authReducer";
 
 // For routes that can only be accessed by authenticated users
-export const withAuthGuard = (Component, redirectToSignIn = false) => (
-  props
-) => {
-  const dispatch = useDispatch();
-  const auth = useSelector((state) => state.authReducer);
-  const history = useHistory();
-  const theme = useTheme();
+export const withAuthGuard = (Component, redirectToSignIn = false) =>
+  React.memo((props) => {
+    const dispatch = useDispatch();
+    const auth = useSelector((state) => state.authReducer);
+    const history = useHistory();
+    const theme = useTheme();
 
-  useEffect(() => {
-    if (!auth.user) {
-      dispatch(
-        signInWithCookie(null, () => {
-          if (redirectToSignIn) {
-            dispatch(setPreviousPath(window.location.pathname));
-            history.push("/auth/sign-in");
-          }
-        })
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    useEffect(() => {
+      if (!auth.user) {
+        dispatch(
+          signInWithCookie(null, () => {
+            if (redirectToSignIn) {
+              dispatch(setPreviousPath(window.location.pathname));
+              history.push("/auth/sign-in");
+            }
+          })
+        );
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-  return auth.loading ? (
-    <Box bgcolor={theme.palette.background.default} height="100vh" p={0} m={0}>
-      <ScreenLoader />
-    </Box>
-  ) : (
-    <Component {...props} />
-  );
-};
+    return auth.loading ? (
+      <Box
+        bgcolor={theme.palette.background.default}
+        height="100vh"
+        p={0}
+        m={0}
+      >
+        <ScreenLoader />
+      </Box>
+    ) : (
+      <Component {...props} />
+    );
+  });

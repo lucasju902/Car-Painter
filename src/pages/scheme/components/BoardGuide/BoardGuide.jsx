@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Box, Typography } from "@material-ui/core";
 import { useStyles } from "./BoardGuide.style";
 
-export const BoardGuide = () => {
+export const BoardGuide = React.memo(() => {
   const classes = useStyles();
 
   const drawingStatus = useSelector(
@@ -46,4 +46,4 @@ export const BoardGuide = () => {
       )}
     </Box>
   );
-};
+});

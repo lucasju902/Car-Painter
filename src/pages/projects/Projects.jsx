@@ -32,7 +32,7 @@ import { getCarMakeList } from "redux/reducers/carMakeReducer";
 import { setMessage } from "redux/reducers/messageReducer";
 import { useGeneralSocket } from "hooks";
 
-export const Projects = () => {
+export const Projects = React.memo(() => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.authReducer.user);
@@ -65,7 +65,7 @@ export const Projects = () => {
     dispatch(setSchemeLoaded(false));
     dispatch(resetLayerReducer());
     dispatch(resetBoardReducer());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (user) {
@@ -206,6 +206,6 @@ export const Projects = () => {
       </Wrapper>
     </Box>
   );
-};
+});
 
 export default Projects;

@@ -15,7 +15,7 @@ const CustomInfiniteScroll = styled(InfiniteScroll)`
   }
 `;
 
-export const SharedProjects = (props) => {
+export const SharedProjects = React.memo((props) => {
   const {
     user,
     sharedSchemeList,
@@ -187,6 +187,6 @@ export const SharedProjects = (props) => {
       )}
     </Box>
   );
-};
+});
 
 export default SharedProjects;

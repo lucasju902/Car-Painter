@@ -10,7 +10,7 @@ import { InnerForm } from "./InnerForm";
 
 import { signIn } from "redux/reducers/authReducer";
 
-export const SignIn = () => {
+export const SignIn = React.memo(() => {
   const dispatch = useDispatch();
   const history = useHistory();
   const previousPath = useSelector((state) => state.authReducer.previousPath);
@@ -85,6 +85,6 @@ export const SignIn = () => {
       </Box>
     </>
   );
-};
+});
 
 export default SignIn;

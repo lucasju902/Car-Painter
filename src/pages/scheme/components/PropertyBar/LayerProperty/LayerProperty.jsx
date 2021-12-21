@@ -10,7 +10,7 @@ import { colorValidator } from "helper";
 
 import { InnerForm } from "./InnerForm";
 
-export const LayerProperty = (props) => {
+export const LayerProperty = React.memo((props) => {
   const { editable, stageRef, onClone, onDelete } = props;
   const dispatch = useDispatch();
 
@@ -246,6 +246,6 @@ export const LayerProperty = (props) => {
       </Formik>
     </>
   );
-};
+});
 
 export default LayerProperty;
