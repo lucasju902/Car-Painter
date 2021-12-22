@@ -32,5 +32,6 @@ export const useGeneralSocket = () => {
     return () => {
       SocketClient.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
