@@ -44,6 +44,16 @@ export const StrokeProperty = React.memo((props) => {
     [setFieldValue]
   );
 
+  const handleChangeScolorInstantly = useCallback(
+    (color) => onLayerDataUpdate("scolor", color),
+    [onLayerDataUpdate]
+  );
+
+  const handleChangeScolorOnly = useCallback(
+    (color) => setFieldValue("layer_data.scolor", color),
+    [setFieldValue]
+  );
+
   if (
     layerDataProperties.every(
       (value) => !AllowedLayerTypes.includes("layer_data." + value)
@@ -68,10 +78,8 @@ export const StrokeProperty = React.memo((props) => {
                 <ColorPickerInput
                   value={values.layer_data.scolor}
                   disabled={!editable}
-                  onChange={(color) => onLayerDataUpdate("scolor", color)}
-                  onInputChange={(color) =>
-                    setFieldValue("layer_data.scolor", color)
-                  }
+                  onChange={handleChangeScolorInstantly}
+                  onInputChange={handleChangeScolorOnly}
                   error={Boolean(errors.layer_data && errors.layer_data.scolor)}
                   helperText={errors.layer_data && errors.layer_data.scolor}
                 />
