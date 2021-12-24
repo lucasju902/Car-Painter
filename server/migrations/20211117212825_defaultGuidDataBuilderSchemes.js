@@ -7,6 +7,7 @@ exports.up = function (knex) {
     numberblock_opacity: 0.2,
     show_numberBlocks: true,
     show_number_block_on_top: true,
+    show_carparts_on_top: true,
   };
 
   return knex("builder_schemes")

@@ -53,6 +53,7 @@ class SchemeService {
       numberblock_opacity: 0.2,
       show_numberBlocks: true,
       show_number_block_on_top: true,
+      show_carparts_on_top: true,
     };
 
     for (let item of schemeList) {

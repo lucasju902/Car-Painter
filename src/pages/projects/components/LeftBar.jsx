@@ -69,7 +69,7 @@ export const LeftBar = React.memo(({ tabValue, setTabValue }) => {
       setDialog(null);
       dispatch(createScheme(carMake, name, user.id, 0, openScheme));
     },
-    [dispatch, openScheme, user.id]
+    [dispatch, openScheme, user]
   );
 
   const handleCreateNew = useCallback(() => {

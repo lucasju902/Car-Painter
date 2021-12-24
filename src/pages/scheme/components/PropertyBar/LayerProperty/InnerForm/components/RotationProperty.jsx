@@ -16,6 +16,8 @@ import {
   ExpandMore as ExpandMoreIcon,
   SwapHoriz as SwapHorizIcon,
   SwapVert as SwapVertIcon,
+  RotateLeft as RotateLeftIcon,
+  RotateRight as RotateRightIcon,
 } from "@material-ui/icons";
 import { faSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -71,6 +73,46 @@ export const RotationProperty = React.memo((props) => {
     [currentLayer, setFieldValue, stageRef]
   );
 
+  const handleRotate90 = useCallback(
+    (isLeft = true) => {
+      const stage = stageRef.current;
+      const selectedNode = stage.findOne("." + currentLayer.id);
+      let value = selectedNode.rotation() + (isLeft ? -90 : 90);
+      if (value <= -180) value += 360;
+      else if (value >= 180) value -= 360;
+      if (!isCenterBasedShape(currentLayer.layer_data.type)) {
+        const newRot = (value / 180) * Math.PI;
+        const boundBox = {
+          x: selectedNode.x(),
+          y: selectedNode.y(),
+          width: selectedNode.width(),
+          height: selectedNode.height(),
+          rotation: (selectedNode.rotation() / 180) * Math.PI,
+        };
+
+        const newBoundBox = rotateAroundCenter(
+          boundBox,
+          newRot - boundBox.rotation
+        );
+        onLayerDataMultiUpdate({
+          left: newBoundBox.x,
+          top: newBoundBox.y,
+          rotation: value,
+        });
+      } else {
+        onLayerDataMultiUpdate({
+          rotation: value,
+        });
+      }
+    },
+    [
+      currentLayer.id,
+      currentLayer.layer_data.type,
+      onLayerDataMultiUpdate,
+      stageRef,
+    ]
+  );
+
   const handleToggleFlop = useCallback(() => {
     const newFlop = values.layer_data.flop ? 0 : 1;
     const rot = (values.layer_data.rotation / 180) * Math.PI;
@@ -122,14 +164,50 @@ export const RotationProperty = React.memo((props) => {
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
           {AllowedLayerTypes.includes("layer_data.rotation") ? (
-            <SliderInput
-              label="Rotation"
-              min={-179}
-              max={179}
-              value={Math.round(values.layer_data.rotation)}
-              disabled={!editable}
-              setValue={handleChangeRotation}
-            />
+            <>
+              <SliderInput
+                label="Rotation"
+                min={-179}
+                max={179}
+                value={Math.round(values.layer_data.rotation)}
+                disabled={!editable}
+                setValue={handleChangeRotation}
+              />
+              <Box
+                display="flex"
+                alignItems="center"
+                flexDirection="row"
+                justifyContent="space-between"
+              >
+                <Typography variant="body1" color="textSecondary" mr={2}>
+                  Rotate Left
+                </Typography>
+                <IconButton
+                  disabled={!editable}
+                  onClick={() => handleRotate90()}
+                  size="small"
+                >
+                  <RotateLeftIcon />
+                </IconButton>
+              </Box>
+              <Box
+                display="flex"
+                alignItems="center"
+                flexDirection="row"
+                justifyContent="space-between"
+              >
+                <Typography variant="body1" color="textSecondary" mr={2}>
+                  Rotate Right
+                </Typography>
+                <IconButton
+                  disabled={!editable}
+                  onClick={() => handleRotate90(false)}
+                  size="small"
+                >
+                  <RotateRightIcon />
+                </IconButton>
+              </Box>
+            </>
           ) : (
             <></>
           )}

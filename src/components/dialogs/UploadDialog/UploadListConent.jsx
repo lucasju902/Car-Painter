@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
 
 import { getNameFromUploadFileName, uploadAssetURL } from "helper";
 
@@ -42,7 +43,7 @@ export const UploadListContent = React.memo((props) => {
 
   const filteredUploads = useMemo(
     () =>
-      uploads.filter((item) =>
+      _.orderBy(uploads, ["id"], "desc").filter((item) =>
         getNameFromUploadFileName(item.file_name, user)
           .toLowerCase()
           .includes(search.toLowerCase())
@@ -61,7 +62,6 @@ export const UploadListContent = React.memo((props) => {
         setLoading(true);
         dispatch(
           uploadFiles(user.id, currentScheme.id, files_up, () => {
-            scrollToRef.current.scrollIntoView({ behavior: "smooth" });
             setLoading(false);
           })
         );

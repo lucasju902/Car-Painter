@@ -178,7 +178,7 @@ export const Toolbar = React.memo((props) => {
           )}
           <Box mx={1} height="100%">
             <CustomButtonGroup variant="outlined">
-              <Button onClick={onDownloadTGA}>Download TGA</Button>
+              <Button onClick={() => onDownloadTGA()}>Download TGA</Button>
               <Button
                 aria-controls="tga-options-menu"
                 aria-haspopup="true"

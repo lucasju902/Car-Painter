@@ -10,7 +10,7 @@ import {
 } from "components/MaterialUI";
 import { SubForm } from "./SubForm";
 
-import { SliderInput } from "components/common";
+import { SliderInput, LightTooltip } from "components/common";
 import { CustomFormControlLabel, CustomDialogContent } from "./styles";
 
 export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
@@ -44,24 +44,29 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
             extraChildren={
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
-                  <CustomFormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        name="show_wireframe"
-                        checked={formProps.values.show_wireframe}
-                        disabled={!editable}
-                        onChange={(event) =>
-                          formProps.setFieldValue(
-                            "show_wireframe",
-                            event.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label="Show when editing"
-                    labelPlacement="start"
-                  />
+                  <LightTooltip
+                    title="Automatically display the wireframe guide when actively moving, resizing, or rotating a layer"
+                    arrow
+                  >
+                    <CustomFormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          name="show_wireframe"
+                          checked={formProps.values.show_wireframe}
+                          disabled={!editable}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "show_wireframe",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="Show when editing"
+                      labelPlacement="start"
+                    />
+                  </LightTooltip>
                 </Grid>
               </Grid>
             }
@@ -75,44 +80,54 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
             extraChildren={
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
-                  <CustomFormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        name="show_sponsor"
-                        checked={formProps.values.show_sponsor}
-                        disabled={!editable}
-                        onChange={(event) =>
-                          formProps.setFieldValue(
-                            "show_sponsor",
-                            event.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label="Show when editing"
-                    labelPlacement="start"
-                  />
+                  <LightTooltip
+                    title="Automatically display the sponsor blocks guide when actively moving, resizing, or rotating a layer"
+                    arrow
+                  >
+                    <CustomFormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          name="show_sponsor"
+                          checked={formProps.values.show_sponsor}
+                          disabled={!editable}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "show_sponsor",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="Show when editing"
+                      labelPlacement="start"
+                    />
+                  </LightTooltip>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                  <CustomFormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        name="show_sponsor_block_on_top"
-                        checked={formProps.values.show_sponsor_block_on_top}
-                        disabled={!editable}
-                        onChange={(event) =>
-                          formProps.setFieldValue(
-                            "show_sponsor_block_on_top",
-                            event.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label={`Display above layers`}
-                    labelPlacement="start"
-                  />
+                  <LightTooltip
+                    title="If checked, when the sponsor guide is visible, it will appear on top of all the layers"
+                    arrow
+                  >
+                    <CustomFormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          name="show_sponsor_block_on_top"
+                          checked={formProps.values.show_sponsor_block_on_top}
+                          disabled={!editable}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "show_sponsor_block_on_top",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label={`Display above layers`}
+                      labelPlacement="start"
+                    />
+                  </LightTooltip>
                 </Grid>
               </Grid>
             }
@@ -126,44 +141,54 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
             extraChildren={
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
-                  <CustomFormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        name="show_numberBlocks"
-                        checked={formProps.values.show_numberBlocks}
-                        disabled={!editable}
-                        onChange={(event) =>
-                          formProps.setFieldValue(
-                            "show_numberBlocks",
-                            event.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label="Show when editing"
-                    labelPlacement="start"
-                  />
+                  <LightTooltip
+                    title="Automatically display the number blocks guide when actively moving, resizing, or rotating a layer"
+                    arrow
+                  >
+                    <CustomFormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          name="show_numberBlocks"
+                          checked={formProps.values.show_numberBlocks}
+                          disabled={!editable}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "show_numberBlocks",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="Show when editing"
+                      labelPlacement="start"
+                    />
+                  </LightTooltip>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                  <CustomFormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        name="show_number_block_on_top"
-                        checked={formProps.values.show_number_block_on_top}
-                        disabled={!editable}
-                        onChange={(event) =>
-                          formProps.setFieldValue(
-                            "show_number_block_on_top",
-                            event.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label={`Display above layers`}
-                    labelPlacement="start"
-                  />
+                  <LightTooltip
+                    title="If checked, when the number blocks guide is visible, it will appear on top of all the layers"
+                    arrow
+                  >
+                    <CustomFormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          name="show_number_block_on_top"
+                          checked={formProps.values.show_number_block_on_top}
+                          disabled={!editable}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "show_number_block_on_top",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label={`Display above layers`}
+                      labelPlacement="start"
+                    />
+                  </LightTooltip>
                 </Grid>
               </Grid>
             }
@@ -199,24 +224,29 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                  <CustomFormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        name="show_grid"
-                        checked={formProps.values.show_grid}
-                        disabled={!editable}
-                        onChange={(event) =>
-                          formProps.setFieldValue(
-                            "show_grid",
-                            event.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label="Show when editing"
-                    labelPlacement="start"
-                  />
+                  <LightTooltip
+                    title="Automatically display the grid guide when actively moving, resizing, or rotating a layer"
+                    arrow
+                  >
+                    <CustomFormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          name="show_grid"
+                          checked={formProps.values.show_grid}
+                          disabled={!editable}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "show_grid",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="Show when editing"
+                      labelPlacement="start"
+                    />
+                  </LightTooltip>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <CustomFormControlLabel
@@ -248,24 +278,29 @@ export const InnerForm = React.memo(({ editable, onCancel, ...formProps }) => {
             extraChildren={
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
-                  <CustomFormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        name="show_carparts_on_top"
-                        checked={formProps.values.show_carparts_on_top}
-                        disabled={!editable}
-                        onChange={(event) =>
-                          formProps.setFieldValue(
-                            "show_carparts_on_top",
-                            event.target.checked
-                          )
-                        }
-                      />
-                    }
-                    label="Display above layers"
-                    labelPlacement="start"
-                  />
+                  <LightTooltip
+                    title="If checked, it will appear on top of all the layers"
+                    arrow
+                  >
+                    <CustomFormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          name="show_carparts_on_top"
+                          checked={formProps.values.show_carparts_on_top}
+                          disabled={!editable}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "show_carparts_on_top",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="Display above layers"
+                      labelPlacement="start"
+                    />
+                  </LightTooltip>
                 </Grid>
               </Grid>
             }

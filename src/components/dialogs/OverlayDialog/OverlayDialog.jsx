@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import config from "config";
+import _ from "lodash";
 
 import {
   Box,
@@ -40,7 +41,7 @@ export const OverlayDialog = React.memo((props) => {
 
   const filteredOverlays = useMemo(
     () =>
-      overlays.filter(
+      _.orderBy(overlays, ["name"], ["asc"]).filter(
         (item) =>
           !item.legacy_mode &&
           (item.name.toLowerCase().includes(search.toLowerCase()) ||
