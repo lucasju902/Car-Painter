@@ -19,6 +19,8 @@ import {
 import LayerService from "services/layerService";
 import { setMessage } from "./messageReducer";
 import { pushToActionHistory } from "./boardReducer";
+import SchemeService from "services/schemeService";
+import { setIdToAskToDelete } from "./uploadReducer";
 
 const initialState = {
   list: [],
@@ -630,6 +632,15 @@ export const deleteLayer = (layer, pushingToHistory = true) => async (
 
   try {
     const currentUser = getState().authReducer.user;
+    if (layer.layer_type === LayerTypes.UPLOAD) {
+      let schemes = await SchemeService.getSchemeListByUploadID(
+        layer.layer_data.id
+      );
+      if (schemes.length <= 1) {
+        dispatch(setIdToAskToDelete(layer.layer_data.id));
+      }
+    }
+
     dispatch(deleteListItem(layer));
     dispatch(setCurrent(null));
     // await LayerService.deleteLayer(layer.id);

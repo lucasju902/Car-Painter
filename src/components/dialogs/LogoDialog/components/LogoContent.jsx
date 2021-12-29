@@ -19,7 +19,8 @@ export const LogoContent = React.memo((props) => {
       logos.filter(
         (item) =>
           item.name.toLowerCase().includes(search.toLowerCase()) &&
-          item.type !== "flag"
+          item.type !== "flag" &&
+          item.active
       ),
     [logos, search]
   );

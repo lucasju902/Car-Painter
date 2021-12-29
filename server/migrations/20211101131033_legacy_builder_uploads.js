@@ -6,6 +6,6 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
   return knex.schema.table("builder_uploads", (table) => {
-    table.boolean("legacy_mode").default(false);
+    table.dropColumn("legacy_mode");
   });
 };

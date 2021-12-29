@@ -34,6 +34,10 @@ import { useZoom } from "hooks";
 import { getZoomedCenterPosition, focusBoard, isInSameSideBar } from "helper";
 
 import { ConfirmDialog } from "components/dialogs";
+import {
+  deleteUploadFromIDToAskDelete,
+  setIdToAskToDelete,
+} from "redux/reducers/uploadReducer";
 
 export const withKeyEvent = (Component) =>
   React.memo((props) => {
@@ -60,6 +64,9 @@ export const withKeyEvent = (Component) =>
     const frameSize = useSelector((state) => state.boardReducer.frameSize);
     const paintingGuides = useSelector(
       (state) => state.boardReducer.paintingGuides
+    );
+    const idToAskToDelete = useSelector(
+      (state) => state.uploadReducer.idToAskToDelete
     );
 
     const unsetConfirmMessage = useCallback(() => setConfirmMessage(""), []);
@@ -100,6 +107,12 @@ export const withKeyEvent = (Component) =>
       },
       [setConfirmMessage]
     );
+    const unsetIdToAskToDelete = useCallback(() => {
+      dispatch(setIdToAskToDelete(null));
+    }, [dispatch]);
+    const handleDeleteUploadFromLibrary = useCallback(() => {
+      dispatch(deleteUploadFromIDToAskDelete());
+    }, [dispatch]);
 
     const handleConfirm = useCallback(() => {
       dispatch(deleteLayer(currentLayer));
@@ -383,6 +396,12 @@ export const withKeyEvent = (Component) =>
           open={confirmMessage.length !== 0}
           onCancel={unsetConfirmMessage}
           onConfirm={handleConfirm}
+        />
+        <ConfirmDialog
+          text={"Would you like to delete it from your logos list too?"}
+          open={idToAskToDelete}
+          onCancel={unsetIdToAskToDelete}
+          onConfirm={handleDeleteUploadFromLibrary}
         />
       </>
     );
