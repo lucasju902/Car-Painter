@@ -13,6 +13,8 @@ import overlayReducer from "./overlayReducer";
 import logoReducer from "./logoReducer";
 import uploadReducer from "./uploadReducer";
 import fontReducer from "./fontReducer";
+import teamReducer from "./teamReducer";
+import leagueSeriesReducer from "./leagueSeriesReducer";
 
 const reducers = (history) =>
   combineReducers({
@@ -29,6 +31,8 @@ const reducers = (history) =>
     logoReducer,
     uploadReducer,
     fontReducer,
+    teamReducer,
+    leagueSeriesReducer,
   });
 
 export default reducers;
