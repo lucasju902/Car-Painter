@@ -1,4 +1,4 @@
-const TeamService = require("../services/TeamService");
+const TeamService = require("../services/teamService");
 const logger = require("../config/winston");
 
 class TeamController {
