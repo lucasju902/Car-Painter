@@ -8,7 +8,6 @@ const initialState = {
   current: null,
   loading: false,
   initialized: false,
-  idToAskToDelete: null,
 };
 
 export const slice = createSlice({
@@ -50,9 +49,6 @@ export const slice = createSlice({
     setCurrent: (state, action) => {
       state.current = action.payload;
     },
-    setIdToAskToDelete: (state, action) => {
-      state.idToAskToDelete = action.payload;
-    },
   },
 });
 
@@ -65,7 +61,6 @@ export const {
   updateListItem,
   deleteListItem,
   setIntialized,
-  setIdToAskToDelete,
 } = slice.actions;
 
 export const getUploadListByUserID = (userID) => async (dispatch) => {
@@ -142,26 +137,6 @@ export const deleteUpload = (upload, deleteFromAll) => async (dispatch) => {
     dispatch(setMessage({ message: err.message }));
   }
   // dispatch(setLoading(false));
-};
-
-export const deleteUploadFromIDToAskDelete = () => async (
-  dispatch,
-  getState
-) => {
-  try {
-    const idToAskToDelete = getState().uploadReducer.idToAskToDelete;
-    dispatch(deleteListItem({ id: idToAskToDelete }));
-    dispatch(setIdToAskToDelete(null));
-    await UploadService.deleteUpload(idToAskToDelete, false);
-    dispatch(
-      setMessage({
-        message: "Deleted your uploaded file successfully!",
-        type: "success",
-      })
-    );
-  } catch (err) {
-    dispatch(setMessage({ message: err.message }));
-  }
 };
 
 export default slice.reducer;

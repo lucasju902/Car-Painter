@@ -33,18 +33,16 @@ import {
 import { useZoom } from "hooks";
 import { getZoomedCenterPosition, focusBoard, isInSameSideBar } from "helper";
 
-import { ConfirmDialog } from "components/dialogs";
-import {
-  deleteUploadFromIDToAskDelete,
-  setIdToAskToDelete,
-} from "redux/reducers/uploadReducer";
+import LayerDeleteDialog from "components/dialogs/LayerDeleteDialog";
+import SchemeService from "services/schemeService";
+import { deleteUpload } from "redux/reducers/uploadReducer";
 
 export const withKeyEvent = (Component) =>
   React.memo((props) => {
     const dispatch = useDispatch();
     const { editable, stageRef } = props;
     const [, onZoomIn, onZoomOut, onZoomFit] = useZoom(stageRef);
-    const [confirmMessage, setConfirmMessage] = useState("");
+    const [deleteLayerState, setDeleteLayerState] = useState({});
     const [dialog, setDialog] = useState(null);
 
     const tick = useRef(0);
@@ -65,11 +63,11 @@ export const withKeyEvent = (Component) =>
     const paintingGuides = useSelector(
       (state) => state.boardReducer.paintingGuides
     );
-    const idToAskToDelete = useSelector(
-      (state) => state.uploadReducer.idToAskToDelete
-    );
 
-    const unsetConfirmMessage = useCallback(() => setConfirmMessage(""), []);
+    const unsetDeleteLayerState = useCallback(
+      () => setDeleteLayerState({}),
+      []
+    );
 
     const togglePaintingGuides = useCallback(
       (guide) => {
@@ -99,25 +97,34 @@ export const withKeyEvent = (Component) =>
       },
       [dispatch, stageRef, frameSize, zoom, boardRotate]
     );
-    const handleDeleteLayer = useCallback(
-      (layer) => {
-        setConfirmMessage(
-          `Are you sure you want to delete "${layer.layer_data.name}"?`
+    const handleDeleteLayer = useCallback(async (layer) => {
+      let nothingLeft = false;
+      if (layer.layer_type === LayerTypes.UPLOAD) {
+        let schemes = await SchemeService.getSchemeListByUploadID(
+          layer.layer_data.id
         );
-      },
-      [setConfirmMessage]
-    );
-    const unsetIdToAskToDelete = useCallback(() => {
-      dispatch(setIdToAskToDelete(null));
-    }, [dispatch]);
-    const handleDeleteUploadFromLibrary = useCallback(() => {
-      dispatch(deleteUploadFromIDToAskDelete());
-    }, [dispatch]);
+        if (schemes.length <= 1) {
+          nothingLeft = true;
+        }
+      }
+      setDeleteLayerState({
+        show: true,
+        nothingLeft,
+        message: `Are you sure you want to delete "${layer.layer_data.name}"?`,
+      });
+    }, []);
 
-    const handleConfirm = useCallback(() => {
-      dispatch(deleteLayer(currentLayer));
-      setConfirmMessage("");
-    }, [dispatch, currentLayer, setConfirmMessage]);
+    const handleConfirm = useCallback(
+      (gonnaDeleteAll) => {
+        dispatch(deleteLayer(currentLayer));
+        if (gonnaDeleteAll) {
+          // This is Uploads Layer, and gonna Delete it from uploads
+          dispatch(deleteUpload({ id: currentLayer.layer_data.id }, false));
+        }
+        setDeleteLayerState({});
+      },
+      [dispatch, currentLayer, setDeleteLayerState]
+    );
 
     const handleChangeSelectedLayerOrder = useCallback(
       (isUpper = true) => {
@@ -391,17 +398,12 @@ export const withKeyEvent = (Component) =>
           onCloneLayer={handleCloneLayer}
           onTogglePaintingGuides={togglePaintingGuides}
         />
-        <ConfirmDialog
-          text={confirmMessage}
-          open={confirmMessage.length !== 0}
-          onCancel={unsetConfirmMessage}
+        <LayerDeleteDialog
+          text={deleteLayerState && deleteLayerState.message}
+          open={deleteLayerState && deleteLayerState.show}
+          nothingLeft={deleteLayerState && deleteLayerState.nothingLeft}
+          onCancel={unsetDeleteLayerState}
           onConfirm={handleConfirm}
-        />
-        <ConfirmDialog
-          text={"Would you like to delete it from your logos list too?"}
-          open={idToAskToDelete}
-          onCancel={unsetIdToAskToDelete}
-          onConfirm={handleDeleteUploadFromLibrary}
         />
       </>
     );
