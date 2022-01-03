@@ -57,6 +57,7 @@ export const DialogTypes = {
   DEFAULT_SHAPE_SETTINGS: "DEFAULT_SHAPE_SETTINGS",
   SHORTCUTS: "SHORTCUTS",
   SETTINGS: "SETTINGS",
+  RACE: "RACE",
 };
 
 export const DrawingStatus = {

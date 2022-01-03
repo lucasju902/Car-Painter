@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { PaintingGuides } from "constant";
+import { DialogTypes, PaintingGuides } from "constant";
 
 import {
   IconButton,
@@ -31,6 +31,7 @@ import {
   // setViewMode,
 } from "redux/reducers/boardReducer";
 import { useZoom } from "hooks";
+import RaceDialog from "components/dialogs/RaceDialog/RaceDialog";
 
 export const Toolbar = React.memo((props) => {
   const { stageRef, onDownloadTGA, onDownloadSpecTGA } = props;
@@ -38,6 +39,7 @@ export const Toolbar = React.memo((props) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [tgaAnchorEl, setTGAAnchorEl] = useState(null);
+  const [dialog, setDialog] = useState(null);
 
   const dispatch = useDispatch();
   const paintingGuides = useSelector(
@@ -52,11 +54,21 @@ export const Toolbar = React.memo((props) => {
   const currentCarMake = useSelector((state) => state.carMakeReducer.current);
   // const viewMode = useSelector((state) => state.boardReducer.viewMode);
 
+  const handleCloseDialog = useCallback(() => setDialog(null), []);
+
   const handleChangePaintingGuides = useCallback(
     (event, newFormats) => {
       dispatch(setPaintingGuides(newFormats));
     },
     [dispatch]
+  );
+
+  const handleApplyRace = useCallback(
+    (values) => {
+      console.log("Values: ", values);
+      handleCloseDialog();
+    },
+    [handleCloseDialog]
   );
 
   const handleOpenTGAOptions = (event) => {
@@ -189,6 +201,15 @@ export const Toolbar = React.memo((props) => {
               </Button>
             </CustomButtonGroup>
           </Box>
+
+          <Button
+            variant="outlined"
+            mx={1}
+            onClick={() => setDialog(DialogTypes.RACE)}
+          >
+            Race
+          </Button>
+
           <LightTooltip title="Undo" arrow>
             <Box display="flex">
               <IconButton
@@ -252,6 +273,11 @@ export const Toolbar = React.memo((props) => {
           </Popover>
         </Box>
       </Box>
+      <RaceDialog
+        open={dialog === DialogTypes.RACE}
+        onCancel={handleCloseDialog}
+        onApply={handleApplyRace}
+      />
     </Wrapper>
   );
 });
