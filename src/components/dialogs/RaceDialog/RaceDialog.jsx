@@ -15,12 +15,20 @@ import {
   Select,
   Switch,
   Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  FormControl,
+  Grid,
+  InputLabel,
 } from "components/MaterialUI";
-import { FormControl, Grid, InputLabel } from "@material-ui/core";
+import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import styled from "styled-components";
+import { useState } from "react";
 
 export const RaceDialog = React.memo((props) => {
   const { onCancel, open, onApply } = props;
+  const activeCar = useSelector((state) => state.carReducer.current);
   const leagueSeriesList = useSelector(
     (state) => state.leagueSeriesReducer.list
   );
@@ -31,11 +39,11 @@ export const RaceDialog = React.memo((props) => {
       <DialogTitle>Race this paint?</DialogTitle>
       <Formik
         initialValues={{
-          night: false,
-          number: false,
-          primary: false,
-          series: "",
-          team: "",
+          night: activeCar ? activeCar.night : false,
+          number: activeCar ? activeCar.number : false,
+          primary: activeCar ? activeCar.in_downloader : true,
+          series: activeCar ? activeCar.series_id : "",
+          team: activeCar ? activeCar.team_id : "",
         }}
         validationSchema={Yup.object().shape({
           night: Yup.boolean(),
@@ -45,6 +53,7 @@ export const RaceDialog = React.memo((props) => {
           team: Yup.number(),
         })}
         enableReinitialize
+        validateOnMount
         validate={(values) => {
           return {};
         }}
@@ -65,6 +74,8 @@ export const RaceDialog = React.memo((props) => {
 
 const RaceForm = React.memo(
   ({ onCancel, leagueSeriesList, teamList, ...formProps }) => {
+    const [expanded, setExpanded] = useState(false);
+
     return (
       <Form onSubmit={formProps.handleSubmit} noValidate>
         <DialogContent dividers id="insert-text-dialog-content">
@@ -102,64 +113,88 @@ const RaceForm = React.memo(
                 </CustomGrid>
               </Grid>
             </Box>
-            <Box mb={1}>
-              <FormControlLabel
-                control={<Switch />}
-                label="Primary paint"
-                value={formProps.values.primary}
-                onChange={(event) =>
-                  formProps.setFieldValue("primary", event.target.checked)
-                }
-              />
-            </Box>
-            <Box mb={4}>
-              <FormControlLabel
-                control={<Switch />}
-                label="Night races"
-                value={formProps.values.night}
-                onChange={(event) =>
-                  formProps.setFieldValue("night", event.target.checked)
-                }
-              />
-            </Box>
+            <Accordion
+              expanded={expanded}
+              onChange={() => setExpanded(!expanded)}
+            >
+              <CustomAccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1">More Options</Typography>
+              </CustomAccordionSummary>
+              <AccordionDetails>
+                <Box display="flex" flexDirection="column" width="100%">
+                  <Box mb={1}>
+                    <FormControlLabel
+                      label="Primary paint"
+                      control={
+                        <Switch
+                          checked={formProps.values.primary}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "primary",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </Box>
+                  <Box mb={4}>
+                    <FormControlLabel
+                      label="Night races"
+                      control={
+                        <Switch
+                          checked={formProps.values.night}
+                          onChange={(event) =>
+                            formProps.setFieldValue(
+                              "night",
+                              event.target.checked
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </Box>
 
-            <CustomFormControl variant="outlined">
-              <InputLabel id="leagues-and-series">
-                Leagues and series
-              </InputLabel>
-              <Select
-                labelId="leagues-and-series"
-                label="Leagues and series"
-                value={formProps.values.series}
-                onChange={(event) =>
-                  formProps.setFieldValue("series", event.target.value)
-                }
-              >
-                {leagueSeriesList.map((leatueSeriesItem, index) => (
-                  <MenuItem value={leatueSeriesItem.id} key={index}>
-                    {leatueSeriesItem.series_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </CustomFormControl>
+                  <CustomFormControl variant="outlined">
+                    <InputLabel id="leagues-and-series">
+                      Leagues and series
+                    </InputLabel>
+                    <Select
+                      labelId="leagues-and-series"
+                      label="Leagues and series"
+                      value={formProps.values.series}
+                      onChange={(event) =>
+                        formProps.setFieldValue("series", event.target.value)
+                      }
+                    >
+                      {leagueSeriesList.map((leatueSeriesItem, index) => (
+                        <MenuItem value={leatueSeriesItem.id} key={index}>
+                          {leatueSeriesItem.series_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </CustomFormControl>
 
-            <CustomFormControl variant="outlined">
-              <InputLabel id="teams">Teams</InputLabel>
-              <Select
-                labelId="teams"
-                label="Teams"
-                value={formProps.values.team}
-                onChange={(event) =>
-                  formProps.setFieldValue("team", event.target.value)
-                }
-              >
-                {teamList.map((teamItem, index) => (
-                  <MenuItem value={teamItem.id} key={index}>
-                    {teamItem.team_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </CustomFormControl>
+                  <CustomFormControl variant="outlined">
+                    <InputLabel id="teams">Teams</InputLabel>
+                    <Select
+                      labelId="teams"
+                      label="Teams"
+                      value={formProps.values.team}
+                      onChange={(event) =>
+                        formProps.setFieldValue("team", event.target.value)
+                      }
+                    >
+                      {teamList.map((teamItem, index) => (
+                        <MenuItem value={teamItem.id} key={index}>
+                          {teamItem.team_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </CustomFormControl>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
           </Box>
         </DialogContent>
         <DialogActions>
@@ -189,6 +224,11 @@ const CustomFormControl = styled(FormControl)`
 
 const CustomGrid = styled(Grid)`
   cursor: pointer;
+`;
+
+export const CustomAccordionSummary = styled(AccordionSummary)`
+  background: #3f3f3f;
+  border-radius: 5px;
 `;
 
 export default RaceDialog;

@@ -28,6 +28,7 @@ import { withWrapper } from "./withWrapper";
 import { LegacyBanner } from "./components/LegacyBanner";
 import { getTeamListByUserID } from "redux/reducers/teamReducer";
 import { getLeagueSeriesListByUserID } from "redux/reducers/leagueSeriesReducer";
+import { getActiveCar } from "redux/reducers/carReducer";
 
 const Scheme = React.memo((props) => {
   const {
@@ -148,6 +149,7 @@ const Scheme = React.memo((props) => {
                 if (!teamList.length) dispatch(getTeamListByUserID(user.id));
                 if (!leagueSeriesList.length)
                   dispatch(getLeagueSeriesListByUserID(user.id));
+                dispatch(getActiveCar(scheme.user_id, scheme.car_make));
               }
             },
             () => {

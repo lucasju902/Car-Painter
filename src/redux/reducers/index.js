@@ -7,6 +7,7 @@ import messageReducer from "./messageReducer";
 import themeReducer from "./themeReducer";
 import schemeReducer from "./schemeReducer";
 import carMakeReducer from "./carMakeReducer";
+import carReducer from "./carReducer";
 import basePaintReducer from "./basePaintReducer";
 import layerReducer from "./layerReducer";
 import overlayReducer from "./overlayReducer";
@@ -24,6 +25,7 @@ const reducers = (history) =>
     messageReducer,
     themeReducer,
     schemeReducer,
+    carReducer,
     carMakeReducer,
     basePaintReducer,
     layerReducer,
