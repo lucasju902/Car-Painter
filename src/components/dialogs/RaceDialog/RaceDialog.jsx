@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -21,10 +22,12 @@ import {
   FormControl,
   Grid,
   InputLabel,
+  Input,
 } from "components/MaterialUI";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import styled from "styled-components";
 import { useState } from "react";
+import { useMemo } from "react";
 
 export const RaceDialog = React.memo((props) => {
   const { onCancel, open, onApply } = props;
@@ -42,8 +45,10 @@ export const RaceDialog = React.memo((props) => {
           night: activeCar ? activeCar.night : false,
           number: activeCar ? activeCar.number : false,
           primary: activeCar ? activeCar.in_downloader : true,
-          series: activeCar ? activeCar.series_id : "",
-          team: activeCar ? activeCar.team_id : "",
+          // series: activeCar ? [activeCar.series_id] : [],
+          // team: activeCar ? [activeCar.team_id] : [],
+          series: [],
+          team: [],
         }}
         validationSchema={Yup.object().shape({
           night: Yup.boolean(),
@@ -75,6 +80,22 @@ export const RaceDialog = React.memo((props) => {
 const RaceForm = React.memo(
   ({ onCancel, leagueSeriesList, teamList, ...formProps }) => {
     const [expanded, setExpanded] = useState(false);
+
+    const leagueSeriesMap = useMemo(() => {
+      let map = {};
+      for (let item of leagueSeriesList) {
+        map[item.id] = item.series_name;
+      }
+      return map;
+    }, [leagueSeriesList]);
+
+    const teamMap = useMemo(() => {
+      let map = {};
+      for (let item of teamList) {
+        map[item.id] = item.team_name;
+      }
+      return map;
+    }, [teamList]);
 
     return (
       <Form onSubmit={formProps.handleSubmit} noValidate>
@@ -163,9 +184,19 @@ const RaceForm = React.memo(
                       labelId="leagues-and-series"
                       label="Leagues and series"
                       value={formProps.values.series}
+                      multiple
                       onChange={(event) =>
                         formProps.setFieldValue("series", event.target.value)
                       }
+                      renderValue={(selected) => (
+                        <Box display="flex">
+                          {selected.map((value, index) => (
+                            <Box key={index} mx={2}>
+                              <Chip label={leagueSeriesMap[value]} />
+                            </Box>
+                          ))}
+                        </Box>
+                      )}
                     >
                       {leagueSeriesList.map((leatueSeriesItem, index) => (
                         <MenuItem value={leatueSeriesItem.id} key={index}>
@@ -180,10 +211,20 @@ const RaceForm = React.memo(
                     <Select
                       labelId="teams"
                       label="Teams"
+                      multiple
                       value={formProps.values.team}
                       onChange={(event) =>
                         formProps.setFieldValue("team", event.target.value)
                       }
+                      renderValue={(selected) => (
+                        <Box display="flex">
+                          {selected.map((value, index) => (
+                            <Box key={index} margin={2}>
+                              <Chip label={teamMap[value]} />
+                            </Box>
+                          ))}
+                        </Box>
+                      )}
                     >
                       {teamList.map((teamItem, index) => (
                         <MenuItem value={teamItem.id} key={index}>
