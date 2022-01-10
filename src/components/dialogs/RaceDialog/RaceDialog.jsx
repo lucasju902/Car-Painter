@@ -22,7 +22,6 @@ import {
   FormControl,
   Grid,
   InputLabel,
-  Input,
 } from "components/MaterialUI";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import styled from "styled-components";
@@ -31,28 +30,29 @@ import { useMemo } from "react";
 
 export const RaceDialog = React.memo((props) => {
   const { onCancel, open, onApply } = props;
-  const activeCar = useSelector((state) => state.carReducer.current);
-  const leagueSeriesList = useSelector(
-    (state) => state.leagueSeriesReducer.list
-  );
-  const teamList = useSelector((state) => state.teamReducer.list);
+  const [number, setNumber] = useState(0);
+  const cars = useSelector((state) => state.carReducer.cars);
 
   return (
     <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
       <DialogTitle>Race this paint?</DialogTitle>
       <Formik
         initialValues={{
-          night: activeCar ? activeCar.night : false,
-          number: activeCar ? activeCar.number : false,
-          primary: activeCar ? activeCar.in_downloader : true,
-          // series: activeCar ? [activeCar.series_id] : [],
-          // team: activeCar ? [activeCar.team_id] : [],
-          series: [],
-          team: [],
+          night: cars[number] ? cars[number].night : false,
+          primary: cars[number] ? cars[number].primary : true,
+          series: cars[number]
+            ? cars[number].leagues
+                .filter((item) => item.racing)
+                .map((item) => item.series_id)
+            : [],
+          team: cars[number]
+            ? cars[number].teams
+                .filter((item) => item.racing)
+                .map((item) => item.team_id)
+            : [],
         }}
         validationSchema={Yup.object().shape({
           night: Yup.boolean(),
-          number: Yup.boolean(),
           primary: Yup.boolean(),
           series: Yup.number(),
           team: Yup.number(),
@@ -67,8 +67,10 @@ export const RaceDialog = React.memo((props) => {
         {(formProps) => (
           <RaceForm
             onCancel={onCancel}
-            leagueSeriesList={leagueSeriesList}
-            teamList={teamList}
+            number={number}
+            setNumber={setNumber}
+            leagueList={cars[number].leagues}
+            teamList={cars[number].teams}
             {...formProps}
           />
         )}
@@ -78,21 +80,23 @@ export const RaceDialog = React.memo((props) => {
 });
 
 const RaceForm = React.memo(
-  ({ onCancel, leagueSeriesList, teamList, ...formProps }) => {
+  ({ onCancel, leagueList, teamList, number, setNumber, ...formProps }) => {
     const [expanded, setExpanded] = useState(false);
+    const [enableLeague, setEnableLeague] = useState(true);
+    const [enableTeam, setEnableTeam] = useState(true);
 
     const leagueSeriesMap = useMemo(() => {
       let map = {};
-      for (let item of leagueSeriesList) {
-        map[item.id] = item.series_name;
+      for (let item of leagueList) {
+        map[item.series_id] = item.series_name;
       }
       return map;
-    }, [leagueSeriesList]);
+    }, [leagueList]);
 
     const teamMap = useMemo(() => {
       let map = {};
       for (let item of teamList) {
-        map[item.id] = item.team_name;
+        map[item.team_id] = item.team_name;
       }
       return map;
     }, [teamList]);
@@ -119,9 +123,9 @@ const RaceForm = React.memo(
                 </CustomGrid>
                 <Grid item>
                   <Switch
-                    checked={formProps.values.number}
+                    checked={number ? true : false}
                     onChange={(event) =>
-                      formProps.setFieldValue("number", event.target.checked)
+                      setNumber(event.target.checked ? 1 : 0)
                     }
                     name="number"
                   />
@@ -176,63 +180,104 @@ const RaceForm = React.memo(
                     />
                   </Box>
 
-                  <CustomFormControl variant="outlined">
-                    <InputLabel id="leagues-and-series">
-                      Leagues and series
-                    </InputLabel>
-                    <Select
-                      labelId="leagues-and-series"
-                      label="Leagues and series"
-                      value={formProps.values.series}
-                      multiple
-                      onChange={(event) =>
-                        formProps.setFieldValue("series", event.target.value)
+                  <Box
+                    display="flex"
+                    width="100%"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={4}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={enableLeague}
+                          onChange={(event) => {
+                            setEnableLeague(event.target.checked);
+                            formProps.setFieldValue("series", []);
+                          }}
+                        />
                       }
-                      renderValue={(selected) => (
-                        <Box display="flex">
-                          {selected.map((value, index) => (
-                            <Box key={index} mx={2}>
-                              <Chip label={leagueSeriesMap[value]} />
-                            </Box>
-                          ))}
-                        </Box>
-                      )}
-                    >
-                      {leagueSeriesList.map((leatueSeriesItem, index) => (
-                        <MenuItem value={leatueSeriesItem.id} key={index}>
-                          {leatueSeriesItem.series_name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </CustomFormControl>
-
-                  <CustomFormControl variant="outlined">
-                    <InputLabel id="teams">Teams</InputLabel>
-                    <Select
-                      labelId="teams"
-                      label="Teams"
-                      multiple
-                      value={formProps.values.team}
-                      onChange={(event) =>
-                        formProps.setFieldValue("team", event.target.value)
+                    />
+                    <CustomFormControl variant="outlined">
+                      <InputLabel id="leagues-and-series">
+                        Leagues and series
+                      </InputLabel>
+                      <Select
+                        labelId="leagues-and-series"
+                        label="Leagues and series"
+                        value={formProps.values.series}
+                        multiple
+                        disabled={!enableLeague}
+                        onChange={(event) =>
+                          formProps.setFieldValue("series", event.target.value)
+                        }
+                        renderValue={(selected) => (
+                          <Box display="flex">
+                            {selected.map((value, index) => (
+                              <Box key={index} mx={2}>
+                                <Chip label={leagueSeriesMap[value]} />
+                              </Box>
+                            ))}
+                          </Box>
+                        )}
+                      >
+                        {leagueList.map((leatueSeriesItem, index) => (
+                          <MenuItem
+                            value={leatueSeriesItem.series_id}
+                            key={index}
+                          >
+                            {leatueSeriesItem.series_name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </CustomFormControl>
+                  </Box>
+                  <Box
+                    display="flex"
+                    width="100%"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={enableTeam}
+                          onChange={(event) => {
+                            setEnableTeam(event.target.checked);
+                            formProps.setFieldValue("team", []);
+                          }}
+                        />
                       }
-                      renderValue={(selected) => (
-                        <Box display="flex">
-                          {selected.map((value, index) => (
-                            <Box key={index} margin={2}>
-                              <Chip label={teamMap[value]} />
-                            </Box>
-                          ))}
-                        </Box>
-                      )}
-                    >
-                      {teamList.map((teamItem, index) => (
-                        <MenuItem value={teamItem.id} key={index}>
-                          {teamItem.team_name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </CustomFormControl>
+                    />
+                    <CustomFormControl variant="outlined">
+                      <InputLabel id="teams">Teams</InputLabel>
+                      <Select
+                        labelId="teams"
+                        label="Teams"
+                        multiple
+                        disabled={!enableTeam}
+                        value={formProps.values.team}
+                        onChange={(event) =>
+                          formProps.setFieldValue("team", event.target.value)
+                        }
+                        renderValue={(selected) => (
+                          <Box display="flex">
+                            {selected.map((value, index) => (
+                              <Box key={index} margin={2}>
+                                <Chip label={teamMap[value]} />
+                              </Box>
+                            ))}
+                          </Box>
+                        )}
+                      >
+                        {teamList.map((teamItem, index) => (
+                          <MenuItem value={teamItem.team_id} key={index}>
+                            {teamItem.team_name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </CustomFormControl>
+                  </Box>
                 </Box>
               </AccordionDetails>
             </Accordion>
@@ -257,9 +302,9 @@ const RaceForm = React.memo(
 );
 
 const CustomFormControl = styled(FormControl)`
+  flex-grow: 1;
   .MuiInputBase-root {
     height: 48px;
-    margin-bottom: 16px;
   }
 `;
 

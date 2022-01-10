@@ -13,6 +13,12 @@ export default class CarService extends BaseAPIService {
       "GET"
     );
   };
+  static getCarRace = async (builderID, number) => {
+    return this.directRequestWithAuth(
+      `https://www.tradingpaints.com/builder.php?cmd=loadrace&builder_id=${builderID}&number=${number}`,
+      "GET"
+    );
+  };
   static createCar = async (payload) => {
     return this.requestWithAuth(`/car`, "POST", payload);
   };

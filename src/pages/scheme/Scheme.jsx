@@ -26,9 +26,7 @@ import { getUploadListByUserID } from "redux/reducers/uploadReducer";
 import { useBoardSocket, useCapture, useZoom, withKeyEvent } from "hooks";
 import { withWrapper } from "./withWrapper";
 import { LegacyBanner } from "./components/LegacyBanner";
-import { getTeamListByUserID } from "redux/reducers/teamReducer";
-import { getLeagueSeriesListByUserID } from "redux/reducers/leagueSeriesReducer";
-import { getActiveCar } from "redux/reducers/carReducer";
+import { getCarRaces } from "redux/reducers/carReducer";
 
 const Scheme = React.memo((props) => {
   const {
@@ -75,8 +73,6 @@ const Scheme = React.memo((props) => {
   const favoriteSchemeList = useSelector(
     (state) => state.schemeReducer.favoriteList
   );
-  const teamList = useSelector((state) => state.schemeReducer.list);
-  const leagueSeriesList = useSelector((state) => state.schemeReducer.list);
 
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
@@ -146,10 +142,7 @@ const Scheme = React.memo((props) => {
                 if (!sharedUsers.length) dispatch(getSharedUsers(params.id));
                 if (!favoriteSchemeList.length)
                   dispatch(getFavoriteList(user.id));
-                if (!teamList.length) dispatch(getTeamListByUserID(user.id));
-                if (!leagueSeriesList.length)
-                  dispatch(getLeagueSeriesListByUserID(user.id));
-                dispatch(getActiveCar(scheme.user_id, scheme.car_make));
+                dispatch(getCarRaces(scheme.id));
               }
             },
             () => {

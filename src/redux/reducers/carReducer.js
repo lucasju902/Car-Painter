@@ -3,7 +3,7 @@ import CarService from "services/carService";
 import { setMessage } from "./messageReducer";
 
 const initialState = {
-  current: null,
+  cars: [],
   loading: false,
 };
 
@@ -14,21 +14,27 @@ export const slice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
-    setCurrent: (state, action) => {
-      state.current = action.payload;
+    setCars: (state, action) => {
+      state.cars = action.payload;
     },
   },
 });
 
 const { setLoading } = slice.actions;
-export const { setCurrent } = slice.actions;
+export const { setCars } = slice.actions;
 
-export const getActiveCar = (userID, carMakeID) => async (dispatch) => {
+export const getCarRaces = (schemeID) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const activeCar = await CarService.getActiveCar(userID, carMakeID);
-    dispatch(setCurrent(activeCar));
+    let carRaces = [];
+    const stampedCarResult = await CarService.getCarRace(schemeID, 0);
+    console.log("stampedCarResult: ", stampedCarResult);
+    carRaces.push(stampedCarResult.output);
+    const customCarResult = await CarService.getCarRace(schemeID, 1);
+    carRaces.push(customCarResult.output);
+    dispatch(setCars(carRaces));
   } catch (err) {
+    console.log("Error: ", err);
     dispatch(setMessage({ message: err.message }));
   }
   dispatch(setLoading(false));

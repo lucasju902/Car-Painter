@@ -52,4 +52,51 @@ export default class BaseAPIService {
       })
       .then((res) => res.data);
   };
+
+  static directRequest = (
+    url,
+    method,
+    data,
+    timeout = 0,
+    contentType = "application/json"
+  ) => {
+    return axios
+      .request({
+        url: url,
+        headers: {
+          "Content-Type": contentType,
+        },
+        method,
+        data,
+        timeout,
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false,
+        }),
+      })
+      .then((res) => res.data);
+  };
+
+  static directRequestWithAuth = (
+    url,
+    method,
+    data,
+    timeout = 0,
+    contentType = "application/json"
+  ) => {
+    return axios
+      .request({
+        url: url,
+        headers: {
+          Authorization: JSON.stringify(CookieService.getSiteLogin()),
+          "Content-Type": contentType,
+        },
+        method,
+        data,
+        timeout,
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false,
+        }),
+      })
+      .then((res) => res.data);
+  };
 }
