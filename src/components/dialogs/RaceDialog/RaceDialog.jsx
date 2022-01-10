@@ -27,6 +27,7 @@ import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import styled from "styled-components";
 import { useState } from "react";
 import { useMemo } from "react";
+import { useCallback } from "react";
 
 export const RaceDialog = React.memo((props) => {
   const { onCancel, open, onApply } = props;
@@ -54,8 +55,8 @@ export const RaceDialog = React.memo((props) => {
         validationSchema={Yup.object().shape({
           night: Yup.boolean(),
           primary: Yup.boolean(),
-          series: Yup.number(),
-          team: Yup.number(),
+          series: Yup.array().of(Yup.number()),
+          team: Yup.array().of(Yup.number()),
         })}
         enableReinitialize
         validateOnMount
@@ -101,6 +102,14 @@ const RaceForm = React.memo(
       return map;
     }, [teamList]);
 
+    const handleChangeNumber = useCallback(
+      (number) => {
+        setNumber(number ? 1 : 0);
+        formProps.resetForm();
+      },
+      [formProps, setNumber]
+    );
+
     return (
       <Form onSubmit={formProps.handleSubmit} noValidate>
         <DialogContent dividers id="insert-text-dialog-content">
@@ -115,25 +124,19 @@ const RaceForm = React.memo(
                 alignItems="center"
                 spacing={1}
               >
-                <CustomGrid
-                  item
-                  onClick={() => formProps.setFieldValue("number", false)}
-                >
+                <CustomGrid item onClick={() => handleChangeNumber(0)}>
                   <Typography>Sim-Stamped Number</Typography>
                 </CustomGrid>
                 <Grid item>
                   <Switch
                     checked={number ? true : false}
                     onChange={(event) =>
-                      setNumber(event.target.checked ? 1 : 0)
+                      handleChangeNumber(event.target.checked)
                     }
                     name="number"
                   />
                 </Grid>
-                <CustomGrid
-                  item
-                  onClick={() => formProps.setFieldValue("number", true)}
-                >
+                <CustomGrid item onClick={() => handleChangeNumber(1)}>
                   <Typography>Custom Number</Typography>
                 </CustomGrid>
               </Grid>
