@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -31,8 +32,9 @@ import { useCallback } from "react";
 import { TextField } from "components/MaterialUI";
 
 export const RaceDialog = React.memo((props) => {
-  const { onCancel, open, onApply } = props;
+  const { open, applying, onApply, onCancel } = props;
   const [number, setNumber] = useState(0);
+  const [expanded, setExpanded] = useState(false);
   const cars = useSelector((state) => state.carReducer.cars);
 
   const initialValues = useMemo(
@@ -68,12 +70,16 @@ export const RaceDialog = React.memo((props) => {
 
   const handleSubmit = useCallback(
     (values) => {
-      onApply({
+      let payload = {
         ...values,
         number: number,
-      });
+      };
+      if (!expanded) {
+        payload.primary = true;
+      }
+      onApply(payload);
     },
-    [onApply, number]
+    [number, expanded, onApply]
   );
 
   return (
@@ -90,9 +96,12 @@ export const RaceDialog = React.memo((props) => {
           <RaceForm
             onCancel={onCancel}
             number={number}
+            applying={applying}
             setNumber={setNumber}
             leagueList={cars[number].leagues}
             teamList={cars[number].teams}
+            expanded={expanded}
+            setExpanded={setExpanded}
             {...formProps}
           />
         )}
@@ -102,8 +111,17 @@ export const RaceDialog = React.memo((props) => {
 });
 
 const RaceForm = React.memo(
-  ({ onCancel, leagueList, teamList, number, setNumber, ...formProps }) => {
-    const [expanded, setExpanded] = useState(false);
+  ({
+    onCancel,
+    leagueList,
+    teamList,
+    applying,
+    number,
+    setNumber,
+    expanded,
+    setExpanded,
+    ...formProps
+  }) => {
     const [enableLeague, setEnableLeague] = useState(true);
     const [enableTeam, setEnableTeam] = useState(true);
 
@@ -334,13 +352,14 @@ const RaceForm = React.memo(
           <Button onClick={onCancel} color="secondary">
             Cancel
           </Button>
+
           <Button
             type="submit"
             color="primary"
             variant="outlined"
             disabled={formProps.isSubmitting || !formProps.isValid}
           >
-            Apply
+            {applying ? <CircularProgress size={20} /> : "Apply"}
           </Button>
         </DialogActions>
       </Form>

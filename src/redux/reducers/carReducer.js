@@ -27,7 +27,9 @@ export const slice = createSlice({
 const { setLoading, setSubmitting } = slice.actions;
 export const { setCars } = slice.actions;
 
-export const getCarRaces = (schemeID) => async (dispatch) => {
+export const getCarRaces = (schemeID, onSuccess, onError) => async (
+  dispatch
+) => {
   dispatch(setLoading(true));
   try {
     let carRaces = [];
@@ -36,14 +38,20 @@ export const getCarRaces = (schemeID) => async (dispatch) => {
     const customCarResult = await CarService.getCarRace(schemeID, 1);
     carRaces.push(customCarResult.output);
     dispatch(setCars(carRaces));
+    if (onSuccess) {
+      onSuccess();
+    }
   } catch (err) {
     console.log("Error: ", err);
     dispatch(setMessage({ message: err.message }));
+    if (onError) {
+      onError();
+    }
   }
   dispatch(setLoading(false));
 };
 
-export const setCarRace = (payload, onSuccess) => async (dispatch) => {
+export const setCarRace = (payload, onSuccess, onError) => async (dispatch) => {
   dispatch(setSubmitting(true));
   try {
     const result = await CarService.setCarRace(payload);
@@ -56,6 +64,9 @@ export const setCarRace = (payload, onSuccess) => async (dispatch) => {
   } catch (err) {
     console.log("Error: ", err);
     dispatch(setMessage({ message: err.message }));
+    if (onError) {
+      onError();
+    }
   }
   dispatch(setSubmitting(false));
 };

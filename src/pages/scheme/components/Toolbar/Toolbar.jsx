@@ -47,6 +47,7 @@ export const Toolbar = React.memo((props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [tgaAnchorEl, setTGAAnchorEl] = useState(null);
   const [dialog, setDialog] = useState(null);
+  const [applyingRace, setApplyingRace] = useState(false);
 
   const dispatch = useDispatch();
   const paintingGuides = useSelector(
@@ -73,6 +74,7 @@ export const Toolbar = React.memo((props) => {
 
   const handleApplyRace = useCallback(
     async (values) => {
+      setApplyingRace(true);
       const dataURL = await retrieveTGADataURL();
       let blob = dataURItoBlob(dataURL);
       var fileOfBlob = new File([blob], `${currentScheme.id}.png`, {
@@ -90,11 +92,27 @@ export const Toolbar = React.memo((props) => {
       formData.append("team", values.team);
 
       dispatch(
-        setCarRace(formData, () => {
-          dispatch(getCarRaces(currentScheme.id));
-        })
+        setCarRace(
+          formData,
+          () => {
+            dispatch(
+              getCarRaces(
+                currentScheme.id,
+                () => {
+                  setApplyingRace(false);
+                  handleCloseDialog();
+                },
+                () => {
+                  setApplyingRace(false);
+                }
+              )
+            );
+          },
+          () => {
+            setApplyingRace(false);
+          }
+        )
       );
-      handleCloseDialog();
     },
     [retrieveTGADataURL, dispatch, currentScheme.id, handleCloseDialog]
   );
@@ -303,6 +321,7 @@ export const Toolbar = React.memo((props) => {
       </Box>
       <RaceDialog
         open={dialog === DialogTypes.RACE}
+        applying={applyingRace}
         onCancel={handleCloseDialog}
         onApply={handleApplyRace}
       />
