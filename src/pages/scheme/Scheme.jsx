@@ -52,12 +52,12 @@ const Scheme = React.memo((props) => {
   const activeTransformerRef = useRef(null);
   const hoveredTransformerRef = useRef(null);
 
-  const [onUploadThumbnail, onDownloadTGA, onDownloadSpecTGA] = useCapture(
-    stageRef,
-    baseLayerRef,
-    mainLayerRef,
-    carMaskLayerRef
-  );
+  const [
+    onUploadThumbnail,
+    onDownloadTGA,
+    onDownloadSpecTGA,
+    retrieveTGADataURL,
+  ] = useCapture(stageRef, baseLayerRef, mainLayerRef, carMaskLayerRef);
 
   const user = useSelector((state) => state.authReducer.user);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -244,6 +244,7 @@ const Scheme = React.memo((props) => {
             stageRef={stageRef}
             onDownloadTGA={onDownloadTGA}
             onDownloadSpecTGA={onDownloadSpecTGA}
+            retrieveTGADataURL={retrieveTGADataURL}
           />
         </Box>
       )}

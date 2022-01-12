@@ -32,9 +32,16 @@ import {
 } from "redux/reducers/boardReducer";
 import { useZoom } from "hooks";
 import RaceDialog from "components/dialogs/RaceDialog/RaceDialog";
+import { getCarRaces, setCarRace } from "redux/reducers/carReducer";
+import { dataURItoBlob } from "helper";
 
 export const Toolbar = React.memo((props) => {
-  const { stageRef, onDownloadTGA, onDownloadSpecTGA } = props;
+  const {
+    stageRef,
+    onDownloadTGA,
+    onDownloadSpecTGA,
+    retrieveTGADataURL,
+  } = props;
   const [zoom, onZoomIn, onZoomOut, onZoomFit] = useZoom(stageRef);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -52,6 +59,7 @@ export const Toolbar = React.memo((props) => {
     (state) => state.boardReducer.actionHistory
   );
   const currentCarMake = useSelector((state) => state.carMakeReducer.current);
+  const currentScheme = useSelector((state) => state.schemeReducer.current);
   // const viewMode = useSelector((state) => state.boardReducer.viewMode);
 
   const handleCloseDialog = useCallback(() => setDialog(null), []);
@@ -64,11 +72,31 @@ export const Toolbar = React.memo((props) => {
   );
 
   const handleApplyRace = useCallback(
-    (values) => {
-      console.log("Values: ", values);
+    async (values) => {
+      const dataURL = await retrieveTGADataURL();
+      let blob = dataURItoBlob(dataURL);
+      var fileOfBlob = new File([blob], `${currentScheme.id}.png`, {
+        type: "image/png",
+      });
+
+      let formData = new FormData();
+      formData.append("car_tga", fileOfBlob);
+      formData.append("builder_id", currentScheme.id);
+      formData.append("night", values.night);
+      formData.append("primary", values.primary);
+      formData.append("num", values.num);
+      formData.append("number", values.number);
+      formData.append("series", values.series);
+      formData.append("team", values.team);
+
+      dispatch(
+        setCarRace(formData, () => {
+          dispatch(getCarRaces(currentScheme.id));
+        })
+      );
       handleCloseDialog();
     },
-    [handleCloseDialog]
+    [retrieveTGADataURL, dispatch, currentScheme.id, handleCloseDialog]
   );
 
   const handleOpenTGAOptions = (event) => {

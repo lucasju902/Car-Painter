@@ -28,42 +28,63 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useMemo } from "react";
 import { useCallback } from "react";
+import { TextField } from "components/MaterialUI";
 
 export const RaceDialog = React.memo((props) => {
   const { onCancel, open, onApply } = props;
   const [number, setNumber] = useState(0);
   const cars = useSelector((state) => state.carReducer.cars);
 
+  const initialValues = useMemo(
+    () => ({
+      night: cars[number] ? cars[number].night : false,
+      primary: cars[number] ? cars[number].primary : true,
+      num: cars[number] ? cars[number].num || "" : "",
+      series: cars[number]
+        ? cars[number].leagues
+            .filter((item) => item.racing)
+            .map((item) => item.series_id)
+        : [],
+      team: cars[number]
+        ? cars[number].teams
+            .filter((item) => item.racing)
+            .map((item) => item.team_id)
+        : [],
+    }),
+    [cars, number]
+  );
+
+  const validationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        night: Yup.boolean(),
+        primary: Yup.boolean(),
+        num: Yup.number(),
+        series: Yup.array().of(Yup.number()),
+        team: Yup.array().of(Yup.number()),
+      }),
+    []
+  );
+
+  const handleSubmit = useCallback(
+    (values) => {
+      onApply({
+        ...values,
+        number: number,
+      });
+    },
+    [onApply, number]
+  );
+
   return (
     <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
       <DialogTitle>Race this paint?</DialogTitle>
       <Formik
-        initialValues={{
-          night: cars[number] ? cars[number].night : false,
-          primary: cars[number] ? cars[number].primary : true,
-          series: cars[number]
-            ? cars[number].leagues
-                .filter((item) => item.racing)
-                .map((item) => item.series_id)
-            : [],
-          team: cars[number]
-            ? cars[number].teams
-                .filter((item) => item.racing)
-                .map((item) => item.team_id)
-            : [],
-        }}
-        validationSchema={Yup.object().shape({
-          night: Yup.boolean(),
-          primary: Yup.boolean(),
-          series: Yup.array().of(Yup.number()),
-          team: Yup.array().of(Yup.number()),
-        })}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
         enableReinitialize
         validateOnMount
-        validate={(values) => {
-          return {};
-        }}
-        onSubmit={onApply}
       >
         {(formProps) => (
           <RaceForm
@@ -117,7 +138,12 @@ const RaceForm = React.memo(
             <Typography mb={4}>
               Race this paint as your NASCAR Cup Series Next Gen Ford Mustang?
             </Typography>
-            <Box mb={2}>
+            <Box
+              mb={2}
+              display="flex"
+              justifyContent="space-between"
+              position="relative"
+            >
               <Grid
                 container
                 justifyContent="center"
@@ -140,6 +166,24 @@ const RaceForm = React.memo(
                   <Typography>Custom Number</Typography>
                 </CustomGrid>
               </Grid>
+              <Box position="absolute" right={0} top="7px">
+                {number ? (
+                  <CustomTextField
+                    placeholder="Number"
+                    name="num"
+                    type="number"
+                    value={formProps.values.num}
+                    onChange={(event) =>
+                      formProps.setFieldValue(
+                        "num",
+                        parseInt(event.target.value)
+                      )
+                    }
+                  />
+                ) : (
+                  <></>
+                )}
+              </Box>
             </Box>
             <Accordion
               expanded={expanded}
@@ -313,6 +357,16 @@ const CustomFormControl = styled(FormControl)`
 
 const CustomGrid = styled(Grid)`
   cursor: pointer;
+`;
+
+const CustomTextField = styled(TextField)`
+  margin: 0 10px;
+  width: 80px;
+  & .MuiInputBase-input {
+    height: auto;
+    border-bottom: 1px solid white;
+    padding: 3px 0 4px;
+  }
 `;
 
 export const CustomAccordionSummary = styled(AccordionSummary)`

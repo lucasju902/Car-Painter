@@ -19,6 +19,15 @@ export default class CarService extends BaseAPIService {
       "GET"
     );
   };
+  static setCarRace = async (payload) => {
+    return this.directRequestWithAuth(
+      `https://www.tradingpaints.com/builder.php?cmd=set`,
+      "POST",
+      payload,
+      0,
+      "multipart/form-data"
+    );
+  };
   static createCar = async (payload) => {
     return this.requestWithAuth(`/car`, "POST", payload);
   };

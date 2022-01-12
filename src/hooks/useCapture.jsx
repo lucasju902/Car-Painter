@@ -17,7 +17,7 @@ import {
   setLoadedStatus,
 } from "redux/reducers/layerReducer";
 import { setShowProperties, setViewMode } from "redux/reducers/boardReducer";
-import { dataURItoBlob, addImageProcess, downloadTGA } from "helper";
+import { dataURItoBlob, addImageProcess, downloadTGA, getTGA } from "helper";
 import SchemeService from "services/schemeService";
 
 export const useCapture = (
@@ -257,6 +257,23 @@ export const useCapture = (
     ]
   );
 
+  const retrieveTGADataURL = useCallback(async () => {
+    if (stageRef.current && currentSchemeRef.current) {
+      try {
+        dispatch(setSaving(true));
+        const { canvas } = await takeScreenshot(false);
+
+        let dataURL = canvas.toDataURL("image/png", 1);
+        dispatch(setSaving(false));
+        return dataURL;
+      } catch (err) {
+        console.log(err);
+        dispatch(setMessage({ message: err.message }));
+        return null;
+      }
+    }
+  }, [dispatch, currentSchemeRef, stageRef, takeScreenshot]);
+
   const handleDownloadTGA = useCallback(
     async (isCustomNumberTGA = false) => {
       if (stageRef.current && currentSchemeRef.current) {
@@ -354,5 +371,10 @@ export const useCapture = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pauseCapturing, drawingStatus]);
 
-  return [handleUploadThumbnail, handleDownloadTGA, handleDownloadSpecTGA];
+  return [
+    handleUploadThumbnail,
+    handleDownloadTGA,
+    handleDownloadSpecTGA,
+    retrieveTGADataURL,
+  ];
 };

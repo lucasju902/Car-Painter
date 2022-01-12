@@ -284,7 +284,7 @@ export const getNameFromUploadFileName = (file_name, user) => {
   return temp;
 };
 
-export const downloadTGA = (ctx, width, height, fileName) => {
+export const getTGA = (ctx, width, height) => {
   let imageData = ctx.getImageData(0, 0, width, height);
   var tga = new TGA({
     width: width,
@@ -292,8 +292,18 @@ export const downloadTGA = (ctx, width, height, fileName) => {
     imageType: TGA.Type.RGB,
   });
   tga.setImageData(imageData);
+  return tga.getDataURL("image/x-tga");
+};
 
+export const downloadTGA = (ctx, width, height, fileName) => {
   // get a blob url which can be used to download the file
+  let imageData = ctx.getImageData(0, 0, width, height);
+  var tga = new TGA({
+    width: width,
+    height: height,
+    imageType: TGA.Type.RGB,
+  });
+  tga.setImageData(imageData);
   var url = tga.getBlobURL();
 
   var a = document.createElement("a");
