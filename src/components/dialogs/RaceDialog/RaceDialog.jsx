@@ -28,7 +28,7 @@ import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import styled from "styled-components";
 import { useState } from "react";
 import { useMemo } from "react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { TextField } from "components/MaterialUI";
 
 export const RaceDialog = React.memo((props) => {
@@ -61,11 +61,11 @@ export const RaceDialog = React.memo((props) => {
       Yup.object().shape({
         night: Yup.boolean(),
         primary: Yup.boolean(),
-        num: Yup.number(),
+        num: number ? Yup.string().required() : Yup.string(),
         series: Yup.array().of(Yup.number()),
         team: Yup.array().of(Yup.number()),
       }),
-    []
+    [number]
   );
 
   const handleSubmit = useCallback(
@@ -81,6 +81,17 @@ export const RaceDialog = React.memo((props) => {
     },
     [number, expanded, onApply]
   );
+
+  useEffect(() => {
+    if (cars && cars.length) {
+      if (cars[1].primary === true) {
+        setNumber(1);
+      } else {
+        setNumber(0);
+      }
+    }
+    // Should Initialize when open status changes too.
+  }, [open, cars]);
 
   return (
     <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
@@ -124,6 +135,7 @@ const RaceForm = React.memo(
   }) => {
     const [enableLeague, setEnableLeague] = useState(true);
     const [enableTeam, setEnableTeam] = useState(true);
+    const currentCarMake = useSelector((state) => state.carMakeReducer.current);
 
     const leagueSeriesMap = useMemo(() => {
       let map = {};
@@ -154,7 +166,7 @@ const RaceForm = React.memo(
         <DialogContent dividers id="insert-text-dialog-content">
           <Box display="flex" flexDirection="column">
             <Typography mb={4}>
-              Race this paint as your NASCAR Cup Series Next Gen Ford Mustang?
+              Race this paint as your {currentCarMake.name}?
             </Typography>
             <Box
               mb={2}
@@ -189,13 +201,11 @@ const RaceForm = React.memo(
                   <CustomTextField
                     placeholder="Number"
                     name="num"
-                    type="number"
+                    type="tel"
                     value={formProps.values.num}
+                    inputProps={{ maxLength: 3 }}
                     onChange={(event) =>
-                      formProps.setFieldValue(
-                        "num",
-                        parseInt(event.target.value)
-                      )
+                      formProps.setFieldValue("num", event.target.value)
                     }
                   />
                 ) : (
