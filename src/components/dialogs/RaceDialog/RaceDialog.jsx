@@ -221,7 +221,7 @@ const RaceForm = React.memo(
                 <Typography variant="subtitle1">More Options</Typography>
               </CustomAccordionSummary>
               <AccordionDetails>
-                <Box display="flex" flexDirection="column" width="100%">
+                <Box display="flex" flexDirection="column" width="100%" pt={3}>
                   <Box mb={1}>
                     <FormControlLabel
                       label="Primary paint"
@@ -379,6 +379,7 @@ const RaceForm = React.memo(
 
 const CustomFormControl = styled(FormControl)`
   flex-grow: 1;
+  margin-left: -16px;
   .MuiInputBase-root {
     height: 48px;
   }
@@ -390,7 +391,7 @@ const CustomGrid = styled(Grid)`
 
 const CustomTextField = styled(TextField)`
   margin: 0 10px;
-  width: 80px;
+  width: 60px;
   & .MuiInputBase-input {
     height: auto;
     border-bottom: 1px solid white;
