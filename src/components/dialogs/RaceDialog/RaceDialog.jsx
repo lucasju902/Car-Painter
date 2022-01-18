@@ -94,7 +94,7 @@ export const RaceDialog = React.memo((props) => {
   }, [open, cars]);
 
   return (
-    <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onCancel} fullWidth maxWidth="md">
       <DialogTitle>Race this paint?</DialogTitle>
       <Formik
         initialValues={initialValues}
@@ -138,7 +138,7 @@ const RaceForm = React.memo(
     const leagueSeriesMap = useMemo(() => {
       let map = {};
       for (let item of leagueList) {
-        map[item.series_id] = item.series_name;
+        map[item.series_id] = item.league_name + " " + item.series_name;
       }
       return map;
     }, [leagueList]);
@@ -273,9 +273,9 @@ const RaceForm = React.memo(
                             )
                           }
                           renderValue={(selected) => (
-                            <Box display="flex">
+                            <Box display="flex" flexWrap="wrap">
                               {selected.map((value, index) => (
-                                <Box key={index} mx={2}>
+                                <Box key={index} m={2}>
                                   <Chip label={leagueSeriesMap[value]} />
                                 </Box>
                               ))}
@@ -287,6 +287,7 @@ const RaceForm = React.memo(
                               value={leatueSeriesItem.series_id}
                               key={index}
                             >
+                              {leatueSeriesItem.league_name}{" "}
                               {leatueSeriesItem.series_name}
                             </MenuItem>
                           ))}
@@ -310,9 +311,9 @@ const RaceForm = React.memo(
                             formProps.setFieldValue("team", event.target.value)
                           }
                           renderValue={(selected) => (
-                            <Box display="flex">
+                            <Box display="flex" flexWrap="wrap">
                               {selected.map((value, index) => (
-                                <Box key={index} margin={2}>
+                                <Box key={index} m={2}>
                                   <Chip label={teamMap[value]} />
                                 </Box>
                               ))}
@@ -358,7 +359,7 @@ const CustomFormControl = styled(FormControl)`
   flex-grow: 1;
   width: 100%;
   .MuiInputBase-root {
-    height: 48px;
+    min-height: 48px;
   }
 `;
 
