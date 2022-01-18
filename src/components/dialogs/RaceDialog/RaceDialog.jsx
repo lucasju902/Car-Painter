@@ -275,7 +275,7 @@ const RaceForm = React.memo(
                           renderValue={(selected) => (
                             <Box display="flex" flexWrap="wrap">
                               {selected.map((value, index) => (
-                                <Box key={index} m={2}>
+                                <Box key={index} m={1}>
                                   <Chip label={leagueSeriesMap[value]} />
                                 </Box>
                               ))}
@@ -313,7 +313,7 @@ const RaceForm = React.memo(
                           renderValue={(selected) => (
                             <Box display="flex" flexWrap="wrap">
                               {selected.map((value, index) => (
-                                <Box key={index} m={2}>
+                                <Box key={index} m={1}>
                                   <Chip label={teamMap[value]} />
                                 </Box>
                               ))}
