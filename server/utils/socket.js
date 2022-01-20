@@ -47,6 +47,7 @@ class SocketServer {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
       thumbnail_updated: 0,
+      race_updated: 0,
     };
     await SchemeService.updateById(socket.room, schemeUpdatePayload);
     this.io.sockets.in(socket.room).emit("client-update-scheme", {
@@ -61,6 +62,7 @@ class SocketServer {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
       thumbnail_updated: 0,
+      race_updated: 0,
     };
     await SchemeService.updateById(socket.room, schemeUpdatePayload);
     this.io.sockets.in(socket.room).emit("client-update-scheme", {
@@ -76,6 +78,7 @@ class SocketServer {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,
       thumbnail_updated: 0,
+      race_updated: 0,
     };
     await SchemeService.updateById(socket.room, schemeUpdatePayload);
     this.io.sockets.in(socket.room).emit("client-update-scheme", {

@@ -312,7 +312,10 @@ export const updateScheme = (
         ...currentScheme,
         ...payloadForSocket,
       };
-      if (update_thumbnail) updatedScheme.thumbnail_updated = 0;
+      if (update_thumbnail) {
+        updatedScheme.thumbnail_updated = 0;
+        updatedScheme.race_updated = 0;
+      }
       dispatch(setCurrent(updatedScheme));
     } else {
       const schemeList = getState().schemeReducer.list;

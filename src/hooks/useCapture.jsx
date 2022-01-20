@@ -17,7 +17,7 @@ import {
   setLoadedStatus,
 } from "redux/reducers/layerReducer";
 import { setShowProperties, setViewMode } from "redux/reducers/boardReducer";
-import { dataURItoBlob, addImageProcess, downloadTGA, getTGA } from "helper";
+import { dataURItoBlob, addImageProcess, downloadTGA } from "helper";
 import SchemeService from "services/schemeService";
 
 export const useCapture = (

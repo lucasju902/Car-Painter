@@ -28,4 +28,5 @@ export const ZoomButton = styled(Button)`
 
 export const CustomButtonGroup = styled(ButtonGroup)`
   height: 100%;
+  margin-right: 4px;
 `;

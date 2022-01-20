@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import CarService from "services/carService";
 import { setMessage } from "./messageReducer";
+import { updateScheme, setCurrent as setCurrentScheme } from "./schemeReducer";
 
 const initialState = {
   cars: [],
@@ -51,13 +52,21 @@ export const getCarRaces = (schemeID, onSuccess, onError) => async (
   dispatch(setLoading(false));
 };
 
-export const setCarRace = (payload, onSuccess, onError) => async (dispatch) => {
+export const setCarRace = (payload, onSuccess, onError) => async (
+  dispatch,
+  getState
+) => {
   dispatch(setSubmitting(true));
   try {
     const result = await CarService.setCarRace(payload);
     if (result.status != 1) {
       dispatch(setMessage({ message: result.output }));
     }
+    const currentScheme = getState().schemeReducer.current;
+    dispatch(
+      updateScheme({ id: currentScheme.id, race_updated: 1 }, false, false)
+    );
+    dispatch(setCurrentScheme({ race_updated: 1 }));
     if (onSuccess) {
       onSuccess();
     }
