@@ -16,6 +16,7 @@ import {
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { ColorPickerInput } from "components/common";
+import { useSelector } from "react-redux";
 
 export const ColorProperty = React.memo((props) => {
   const {
@@ -30,6 +31,7 @@ export const ColorProperty = React.memo((props) => {
   } = props;
   const layerDataProperties = ["color", "blendType", "finish"];
   const [expanded, setExpanded] = useState(true);
+  const currentScheme = useSelector((state) => state.schemeReducer.current);
   const AllowedLayerTypes = useMemo(
     () =>
       !values.layer_type
@@ -129,7 +131,8 @@ export const ColorProperty = React.memo((props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerTypes.includes("layer_data.finish") &&
+          {!currentScheme.hide_spec &&
+          AllowedLayerTypes.includes("layer_data.finish") &&
           currentCarMake.car_type !== "Misc" ? (
             <Grid container spacing={2} component={Box} mb={1}>
               <Grid item xs={6}>
