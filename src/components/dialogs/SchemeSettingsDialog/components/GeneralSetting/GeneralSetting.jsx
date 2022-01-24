@@ -6,12 +6,18 @@ import {
   Button,
   IconButton,
   CircularProgress,
+  Checkbox,
   DialogActions,
   Typography,
 } from "components/MaterialUI";
 import { LightTooltip } from "components/common";
 import { ConfirmDialog } from "components/dialogs";
-import { CustomDialogContent, CustomButton, NameInput } from "./styles";
+import {
+  CustomDialogContent,
+  CustomButton,
+  NameInput,
+  CustomFormControlLabel,
+} from "./styles";
 
 import {
   Save as SaveIcon,
@@ -20,6 +26,8 @@ import {
 import { faStar as faStarOn } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarOff } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch, useSelector } from "react-redux";
+import { updateScheme } from "redux/reducers/schemeReducer";
 
 export const GeneralSetting = React.memo((props) => {
   const {
@@ -38,10 +46,24 @@ export const GeneralSetting = React.memo((props) => {
     onRenewCarMakeLayers,
   } = props;
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [favoriteInPrgoress, setFavoriteInPrgoress] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [name, setName] = useState(scheme.name);
+  const currentScheme = useSelector((state) => state.schemeReducer.current);
+
+  const handleUpdateHideSpec = useCallback(
+    (flag) => {
+      dispatch(
+        updateScheme({
+          ...currentScheme,
+          hide_spec: flag,
+        })
+      );
+    },
+    [dispatch, currentScheme]
+  );
 
   const hideDeleteMessage = useCallback(() => setDeleteMessage(null), []);
 
@@ -149,6 +171,19 @@ export const GeneralSetting = React.memo((props) => {
             {modifier.drivername}
           </Typography>
         </Box>
+
+        <CustomFormControlLabel
+          control={
+            <Checkbox
+              color="primary"
+              checked={!currentScheme.hide_spec}
+              disabled={!editable}
+              onChange={(event) => handleUpdateHideSpec(!event.target.checked)}
+            />
+          }
+          label="Show Spec TGA/Finish"
+          labelPlacement="start"
+        />
 
         <Box mt={2}>
           {editable ? (

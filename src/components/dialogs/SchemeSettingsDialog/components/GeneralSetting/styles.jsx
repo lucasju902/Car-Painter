@@ -1,5 +1,10 @@
 import styled from "styled-components/macro";
-import { Button, DialogContent, TextField } from "components/MaterialUI";
+import {
+  Button,
+  DialogContent,
+  TextField,
+  FormControlLabel,
+} from "components/MaterialUI";
 
 export const CustomDialogContent = styled(DialogContent)`
   padding-right: 0;
@@ -12,4 +17,8 @@ export const CustomButton = styled(Button)`
 
 export const NameInput = styled(TextField)`
   width: ${(props) => props.width};
+`;
+
+export const CustomFormControlLabel = styled(FormControlLabel)`
+  margin-left: 8px;
 `;

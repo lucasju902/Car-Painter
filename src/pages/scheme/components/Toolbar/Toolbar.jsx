@@ -273,7 +273,7 @@ export const Toolbar = React.memo((props) => {
           {/* <Button variant="outlined" onClick={handleToggleViewMode} mx={1}>
             Toggle View Mode
           </Button> */}
-          {currentCarMake.car_type !== "Misc" && (
+          {!currentScheme.hide_spec && currentCarMake.car_type !== "Misc" && (
             <Button variant="outlined" onClick={onDownloadSpecTGA} mx={1}>
               Download Spec TGA
             </Button>
