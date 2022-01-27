@@ -123,12 +123,7 @@ export const ProjectItem = React.memo((props) => {
       position="relative"
     >
       <ImageWithLoad
-        src={
-          schemeThumbnailURL(scheme.id) +
-          "?date=" +
-          new Date().toLocaleDateString() +
-          new Date().getHours()
-        }
+        src={schemeThumbnailURL(scheme.id) + "?date=" + scheme.date_modified}
         altSrc={legacySchemeThumbnailURL(scheme.id)}
         fallbackSrc={ShowroomNoCar}
         minHeight="200px"
@@ -162,7 +157,11 @@ export const ProjectItem = React.memo((props) => {
             <></>
           )}
           <Box mb={1}>
-            <BreakableTypography variant="subtitle1">
+            <BreakableTypography
+              variant="subtitle1"
+              className="cursor-pointer"
+              onClick={handleOpenScheme}
+            >
               {reduceString(scheme.name, 50)}
             </BreakableTypography>
           </Box>

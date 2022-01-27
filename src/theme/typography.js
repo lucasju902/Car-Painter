@@ -49,7 +49,7 @@ const typography = {
     lineHeight: 1.25,
   },
   caption: {
-    fontFamily: "CircularXXWeb-Bold",
+    fontFamily: "AkkuratMonoLLWeb-Regular",
     textTransform: "uppercase",
     fontSize: "0.7rem",
   },
@@ -64,7 +64,7 @@ const typography = {
     fontSize: "1rem",
   },
   subtitle2: {
-    fontFamily: "CircularXXWeb-Bold",
+    fontFamily: "AkkuratMonoLLWeb-Regular",
     fontSize: "0.7rem",
   },
   body1: {

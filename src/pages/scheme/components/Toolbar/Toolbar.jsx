@@ -275,12 +275,14 @@ export const Toolbar = React.memo((props) => {
           </Button> */}
           {!currentScheme.hide_spec && currentCarMake.car_type !== "Misc" && (
             <Button variant="outlined" onClick={onDownloadSpecTGA} mx={1}>
-              Download Spec TGA
+              <Typography variant="subtitle2">Download Spec TGA</Typography>
             </Button>
           )}
           <Box mx={1} height="100%">
             <CustomButtonGroup variant="outlined">
-              <Button onClick={() => onDownloadTGA()}>Download TGA</Button>
+              <Button onClick={() => onDownloadTGA()}>
+                <Typography variant="subtitle2">Download TGA</Typography>
+              </Button>
               <Button
                 aria-controls="tga-options-menu"
                 aria-haspopup="true"
@@ -300,7 +302,11 @@ export const Toolbar = React.memo((props) => {
                 disabled={currentScheme.race_updated || applyingRace}
                 onClick={() => handleApplyRace()}
               >
-                {applyingRace ? <CircularProgress size={20} /> : "Update"}
+                {applyingRace ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  <Typography variant="subtitle2">Update</Typography>
+                )}
               </Button>
               <Button
                 variant="outlined"
@@ -319,7 +325,7 @@ export const Toolbar = React.memo((props) => {
               mx={1}
               onClick={() => setDialog(DialogTypes.RACE)}
             >
-              Race
+              <Typography variant="subtitle2">Race</Typography>
             </Button>
           )}
 
@@ -352,7 +358,9 @@ export const Toolbar = React.memo((props) => {
             endIcon={<ArrowUpIcon />}
             onClick={handleZoomPoperOpen}
           >
-            {(zoom * 100).toFixed(2)} %
+            <Typography variant="subtitle2">
+              {(zoom * 100).toFixed(2)} %
+            </Typography>
           </ZoomButton>
 
           <ZoomPopover
@@ -379,7 +387,9 @@ export const Toolbar = React.memo((props) => {
             }}
           >
             <Box py={1}>
-              <Button onClick={handleOpenRaceDialog}>Open Race Settings</Button>
+              <Button onClick={handleOpenRaceDialog}>
+                <Typography variant="subtitle2">Open Race Settings</Typography>
+              </Button>
             </Box>
           </Popover>
           <Popover
@@ -397,7 +407,9 @@ export const Toolbar = React.memo((props) => {
           >
             <Box py={1}>
               <Button onClick={handleDownloadCustomNumberTGA}>
-                Download Custom Number TGA
+                <Typography variant="subtitle2">
+                  Download Custom Number TGA
+                </Typography>
               </Button>
             </Box>
           </Popover>

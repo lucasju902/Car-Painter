@@ -80,6 +80,7 @@ class SchemeService {
       avail: 1,
       legacy_mode,
       guide_data: JSON.stringify(defaultGuideData),
+      hide_spec: 1,
     }).save();
     return scheme;
   }

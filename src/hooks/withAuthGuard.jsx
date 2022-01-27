@@ -25,9 +25,13 @@ export const withAuthGuard = (Component, redirectToSignIn = false) =>
             }
           })
         );
+      } else {
+        if (!auth.user.pro_user) {
+          window.location.href = "https://www.tradingpaints.com/page/Builder";
+        }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [auth.user]);
 
     return auth.loading ? (
       <Box

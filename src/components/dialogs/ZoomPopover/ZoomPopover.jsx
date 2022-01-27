@@ -7,6 +7,7 @@ import {
   InputAdornment,
   OutlinedInput,
 } from "components/MaterialUI";
+import { Typography } from "@material-ui/core";
 
 export const ZoomPopover = React.memo(
   ({ anchorEl, zoom, setZoom, onZoomIn, onZoomOut, onZoomFit, onClose }) => {
@@ -56,8 +57,8 @@ export const ZoomPopover = React.memo(
               margin={0}
               width="100%"
             >
-              <span>Zoom in</span>
-              <span>Shift +</span>
+              <Typography variant="subtitle2">Zoom in</Typography>
+              <Typography variant="subtitle2">Shift +</Typography>
             </Box>
           </Button>
 
@@ -70,8 +71,8 @@ export const ZoomPopover = React.memo(
               margin={0}
               width="100%"
             >
-              <span>Zoom out</span>
-              <span>Shift -&nbsp;</span>
+              <Typography variant="subtitle2">Zoom out</Typography>
+              <Typography variant="subtitle2">Shift -&nbsp;</Typography>
             </Box>
           </Button>
 
@@ -84,8 +85,8 @@ export const ZoomPopover = React.memo(
               margin={0}
               width="100%"
             >
-              <span>Zoom to fit</span>
-              <span>Shift 9</span>
+              <Typography variant="subtitle2">Zoom to fit</Typography>
+              <Typography variant="subtitle2">Shift 9</Typography>
             </Box>
           </Button>
 
@@ -98,8 +99,8 @@ export const ZoomPopover = React.memo(
               margin={0}
               width="100%"
             >
-              <span>Zoom to 100%</span>
-              <span>Shift 0</span>
+              <Typography variant="subtitle2">Zoom to 100%</Typography>
+              <Typography variant="subtitle2">Shift 0</Typography>
             </Box>
           </Button>
 

@@ -42,7 +42,8 @@ export const MyProjects = React.memo((props) => {
             (item.name.toLowerCase().includes(search.toLowerCase()) ||
               item.carMake.name.toLowerCase().includes(search.toLowerCase())) &&
             (!selectedVehicle || selectedVehicle.id === item.carMake.id) &&
-            (!hideLegacy || !item.legacy_mode)
+            (!hideLegacy || !item.legacy_mode) &&
+            !item.carMake.deleted
         ),
         sortBy === 1
           ? ["name"]

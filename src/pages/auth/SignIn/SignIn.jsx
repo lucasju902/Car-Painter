@@ -24,7 +24,10 @@ export const SignIn = React.memo(() => {
         signIn(
           { usr: values.usr, password: values.password },
           (returnedUser) => {
-            if (returnedUser) {
+            if (!returnedUser.pro_user) {
+              window.location.href =
+                "https://www.tradingpaints.com/page/Builder";
+            } else if (returnedUser) {
               history.push(previousPath ? previousPath : "/");
             }
           }

@@ -69,6 +69,26 @@
   src: url("./fonts/CircularXXSub-BoldSubset.woff") format("woff");
 }
 
+@font-face {
+  font-family: "AkkuratMonoLLWeb-Regular";
+  src: url("./fonts/AkkuratMonoLLWeb-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "AkkuratMonoLLWeb-Regular";
+  src: url("./fonts/AkkuratMonoLLWeb-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "AkkuratMonoLLSub-RegularSubset";
+  src: url("./fonts/AkkuratMonoLLSub-RegularSubset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "AkkuratMonoLLSub-RegularSubset";
+  src: url("./fonts/AkkuratMonoLLSub-RegularSubset.woff") format("woff");
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -77,4 +97,8 @@ body {
 /* Custom Styles */
 .muicc-colorbox-error {
   visibility: hidden !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

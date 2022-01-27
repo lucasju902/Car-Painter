@@ -45,7 +45,8 @@ export const SharedProjects = React.memo((props) => {
                 .includes(search.toLowerCase())) &&
             (!selectedVehicle ||
               selectedVehicle.id === item.scheme.carMake.id) &&
-            (!hideLegacy || !item.scheme.legacy_mode)
+            (!hideLegacy || !item.scheme.legacy_mode) &&
+            !item.scheme.carMake.deleted
         ),
         sortBy === 1
           ? ["scheme.name"]
