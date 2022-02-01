@@ -20,10 +20,11 @@ import {
   faImage,
   faFont,
   faFolderOpen,
-  faShapes,
-  faCar,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCuttlefish } from "@fortawesome/free-brands-svg-icons";
+import BasepaintIcon from "assets/base-paint.svg";
+import GraphicsIcon from "assets/insert-graphics.svg";
+import LogoIcon from "assets/insert-logo.svg";
 
 import { setMouseMode, setShowLayers } from "redux/reducers/boardReducer";
 import {
@@ -129,27 +130,29 @@ const dialog_modes = [
   {
     value: DialogTypes.UPLOAD,
     label: EnglishLang.INSERT_MY_LOGO,
-    icon: <CustomFontAwesomeIcon icon={faFolderOpen} />,
+    icon: (
+      <CustomFontAwesomeIcon style={{ height: "30px" }} icon={faFolderOpen} />
+    ),
   },
   {
     value: DialogTypes.LOGO,
     label: EnglishLang.INSERT_LOGO,
-    icon: <CustomFontAwesomeIcon icon={faImage} />,
+    icon: <img src={LogoIcon} alt="Logos" />,
   },
   {
     value: DialogTypes.TEXT,
     label: EnglishLang.INSERT_TEXT,
-    icon: <CustomFontAwesomeIcon icon={faFont} />,
+    icon: <CustomFontAwesomeIcon style={{ height: "30px" }} icon={faFont} />,
   },
   {
     value: DialogTypes.SHAPE,
     label: EnglishLang.INSERT_GRAPHICS,
-    icon: <CustomFontAwesomeIcon icon={faShapes} />,
+    icon: <img src={GraphicsIcon} alt="Graphics" />,
   },
   {
     value: DialogTypes.BASEPAINT,
     label: EnglishLang.INSERT_BASEPAINT,
-    icon: <CustomFontAwesomeIcon icon={faCar} />,
+    icon: <img src={BasepaintIcon} alt="BasePaint" />,
   },
 ];
 

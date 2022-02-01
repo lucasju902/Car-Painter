@@ -62,6 +62,7 @@ export const InnerForm = React.memo(
           {...formProps}
           editable={editable}
           user={user}
+          layerType={currentLayer && currentLayer.layer_type}
           checkLayerDataDirty={checkLayerDataDirty}
         />
         <GeneralProperty

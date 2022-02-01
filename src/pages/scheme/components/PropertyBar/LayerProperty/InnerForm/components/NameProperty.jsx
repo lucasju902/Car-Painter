@@ -9,6 +9,9 @@ const CustomeTextField = styled(TextField)`
   .MuiInputBase-input {
     height: 2rem;
   }
+  [disabled] {
+    color: white;
+  }
 `;
 
 export const NameProperty = React.memo((props) => {
@@ -22,6 +25,7 @@ export const NameProperty = React.memo((props) => {
     handleChange,
     touched,
     values,
+    layerType,
   } = props;
   const layerDataProperties = ["name"];
   const AllowedLayerTypes = useMemo(
@@ -63,7 +67,7 @@ export const NameProperty = React.memo((props) => {
           <CustomeTextField
             name="layer_data.name"
             value={layerName(values.layer_data.name, values.layer_type)}
-            disabled={!editable}
+            disabled={!editable || layerType === LayerTypes.CAR}
             error={Boolean(
               touched.layer_data &&
                 touched.layer_data.name &&

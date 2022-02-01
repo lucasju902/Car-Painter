@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
+import _ from "lodash";
 
 import {
   Box,
@@ -20,9 +21,6 @@ import {
 import { LogoContent, FlagContent, UploadContent } from "./components";
 
 export const LogoDialog = React.memo((props) => {
-  const step = 30;
-  const [tabValue, setTabValue] = useState(0);
-  const [search, setSearch] = useState("");
   const {
     logos,
     uploads,
@@ -32,6 +30,12 @@ export const LogoDialog = React.memo((props) => {
     onOpenUpload,
     onCancel,
   } = props;
+  const step = 30;
+  const [tabValue, setTabValue] = useState(0);
+  const [search, setSearch] = useState("");
+  const sortedLogos = useMemo(() => _.orderBy(logos, ["name"], ["asc"]), [
+    logos,
+  ]);
 
   const handleTabChange = useCallback(
     (event, newValue) => {
@@ -68,7 +72,7 @@ export const LogoDialog = React.memo((props) => {
         <TabPanel value={tabValue} index={0}>
           <LogoContent
             step={step}
-            logos={logos}
+            logos={sortedLogos}
             search={search}
             onOpen={onOpenLogo}
           />

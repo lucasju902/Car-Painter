@@ -25,6 +25,7 @@ export const FilterBar = React.memo(
     setHideLegacy,
     sortBy,
     setSortBy,
+    legacyFilter,
   }) => {
     const carMakeList = useSelector((state) => state.carMakeReducer.list);
 
@@ -89,15 +90,19 @@ export const FilterBar = React.memo(
           ) : (
             <></>
           )}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={hideLegacy}
-                onChange={(e) => setHideLegacy(e.target.checked)}
-              />
-            }
-            label="Hide Legacy"
-          />
+          {legacyFilter ? (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={hideLegacy}
+                  onChange={(e) => setHideLegacy(e.target.checked)}
+                />
+              }
+              label="Hide Legacy"
+            />
+          ) : (
+            <></>
+          )}
         </Box>
       </>
     );

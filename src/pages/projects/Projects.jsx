@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Box } from "components/MaterialUI";
@@ -55,6 +55,18 @@ export const Projects = React.memo(() => {
 
   const [loadingSharedList, setLoadingSharedList] = useState(false);
   const [loadingFavoriteList, setLoadingFavoriteList] = useState(false);
+  const legacyFilter = useMemo(() => {
+    for (let scheme of schemeList) {
+      if (scheme.legacy_mode) return true;
+    }
+    for (let favoriteScheme of favoriteSchemeList) {
+      if (favoriteScheme.scheme.legacy_mode) return true;
+    }
+    for (let sharedScheme of sharedSchemeList) {
+      if (sharedScheme.scheme.legacy_mode) return true;
+    }
+    return false;
+  }, [schemeList, favoriteSchemeList, sharedSchemeList]);
 
   useGeneralSocket();
 
@@ -143,6 +155,7 @@ export const Projects = React.memo(() => {
           setHideLegacy={setHideLegacy}
           sortBy={sortBy}
           setSortBy={setSortBy}
+          legacyFilter={legacyFilter}
         />
         <Box
           id="scheme-list-content"

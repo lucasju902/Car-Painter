@@ -6,6 +6,7 @@ import { Box, IconButton, useMediaQuery } from "@material-ui/core";
 import { ShortCutsDialog, SchemeSettingsDialog } from "components/dialogs";
 import { LightTooltip } from "components/common";
 import { faQuestion, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import ShortcutIcon from "assets/keyboard-shortcuts.svg";
 import {
   Save as SaveIcon,
   SettingsBackupRestore as BackUpIcon,
@@ -105,7 +106,7 @@ export const TitleBar = React.memo((props) => {
         )}
         <LightTooltip title="Shortcuts" arrow>
           <IconButton onClick={() => setDialog(DialogTypes.SHORTCUTS)}>
-            <CustomIcon icon={faQuestion} size="xs" />
+            <img src={ShortcutIcon} width="20px" alt="shortcuts" />
           </IconButton>
         </LightTooltip>
         {overTablet && (

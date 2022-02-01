@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Box, Dialog, DialogTitle } from "components/MaterialUI";
-import { GeneralSetting, GuidesSetting, SharingSetting } from "./components";
+import { GeneralSetting, SharingSetting } from "./components";
 import {
   StyledTabs,
   StyledTab,
@@ -49,18 +49,18 @@ export const SchemeSettingsDialog = React.memo((props) => {
     [setTabValue]
   );
 
-  const handleApplyGuideSettings = useCallback(
-    (guide_data) => {
-      dispatch(
-        updateScheme({
-          ...currentScheme,
-          guide_data: guide_data,
-        })
-      );
-      onCancel();
-    },
-    [dispatch, currentScheme, onCancel]
-  );
+  // const handleApplyGuideSettings = useCallback(
+  //   (guide_data) => {
+  //     dispatch(
+  //       updateScheme({
+  //         ...currentScheme,
+  //         guide_data: guide_data,
+  //       })
+  //     );
+  //     onCancel();
+  //   },
+  //   [dispatch, currentScheme, onCancel]
+  // );
   const handleApplySharingSetting = useCallback(
     (data) => {
       console.log(data);
@@ -180,8 +180,8 @@ export const SchemeSettingsDialog = React.memo((props) => {
         aria-label="Project Settings Tab"
       >
         <StyledTab label="General" {...a11yProps(0)} />
-        <StyledTab label="Painting Guides" {...a11yProps(1)} />
-        <StyledTab label="Sharing" {...a11yProps(2)} />
+        {/* <StyledTab label="Painting Guides" {...a11yProps(1)} /> */}
+        <StyledTab label="Sharing" {...a11yProps(1)} />
       </StyledTabs>
       <Box>
         <TabPanel value={tabValue} index={0}>
@@ -201,15 +201,15 @@ export const SchemeSettingsDialog = React.memo((props) => {
             onRenewCarMakeLayers={handleRenewCarMakeLayers}
           />
         </TabPanel>
-        <TabPanel value={tabValue} index={1}>
+        {/* <TabPanel value={tabValue} index={1}>
           <GuidesSetting
             editable={editable}
             guide_data={currentScheme.guide_data}
             onApply={handleApplyGuideSettings}
             onCancel={onCancel}
           />
-        </TabPanel>
-        <TabPanel value={tabValue} index={2}>
+        </TabPanel> */}
+        <TabPanel value={tabValue} index={1}>
           <SharingSetting
             editable={editable}
             owner={owner}

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 
-import { Box, ImageListItemBar } from "components/MaterialUI";
+import { Box } from "components/MaterialUI";
 import { ImageWithLoad, Loader } from "components/common";
 import config from "config";
 
@@ -49,7 +49,6 @@ export const LogoContent = React.memo((props) => {
                 src={`${config.assetsURL}/${logo.preview_file}`}
                 alt={logo.name}
               />
-              <ImageListItemBar title={logo.name} />
             </CustomImageListItem>
           ))}
         </CustomImageList>
