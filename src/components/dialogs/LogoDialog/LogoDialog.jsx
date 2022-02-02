@@ -33,9 +33,19 @@ export const LogoDialog = React.memo((props) => {
   const step = 30;
   const [tabValue, setTabValue] = useState(0);
   const [search, setSearch] = useState("");
-  const sortedLogos = useMemo(() => _.orderBy(logos, ["name"], ["asc"]), [
-    logos,
-  ]);
+  const sortedLogos = useMemo(
+    () =>
+      _.orderBy(
+        logos,
+        [
+          function (o) {
+            return o.name.toLowerCase();
+          },
+        ],
+        ["asc"]
+      ),
+    [logos]
+  );
 
   const handleTabChange = useCallback(
     (event, newValue) => {

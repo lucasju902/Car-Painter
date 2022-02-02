@@ -19,6 +19,7 @@ import {
   faShapes,
   faCar,
 } from "@fortawesome/free-solid-svg-icons";
+import LogoIcon from "assets/insert-logo.svg";
 import { ColorPickerInput } from "components/common";
 import { TitleBar, PartGroup, DrawerBar } from "./components";
 import {
@@ -26,6 +27,7 @@ import {
   TitleWrapper,
   Wrapper,
   ColorApplyButton,
+  CustomFontAwesomeIcon,
 } from "./SideBar.style";
 
 import { updateScheme } from "redux/reducers/schemeReducer";
@@ -174,17 +176,24 @@ export const SideBar = React.memo((props) => {
               hoveredLayerJSON={hoveredLayerJSON}
               actions={[
                 {
-                  icon: faFolderOpen,
+                  icon: <CustomFontAwesomeIcon icon={faFolderOpen} />,
                   title: EnglishLang.INSERT_MY_LOGO,
                   onClick: showUploadDialog,
                 },
                 {
-                  icon: faImage,
+                  icon: (
+                    <img
+                      src={LogoIcon}
+                      alt="logo"
+                      width={30}
+                      style={{ marginLeft: "-3px", marginRight: "8px" }}
+                    />
+                  ),
                   title: EnglishLang.INSERT_LOGO,
                   onClick: showLogoDialog,
                 },
                 {
-                  icon: faFont,
+                  icon: <CustomFontAwesomeIcon icon={faFont} />,
                   title: EnglishLang.INSERT_TEXT,
                   onClick: showTextDialog,
                 },

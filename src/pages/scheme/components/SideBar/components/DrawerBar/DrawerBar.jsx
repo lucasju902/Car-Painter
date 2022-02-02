@@ -17,7 +17,6 @@ import {
   faMousePointer,
   faDrawPolygon,
   faPaintBrush,
-  faImage,
   faFont,
   faFolderOpen,
 } from "@fortawesome/free-solid-svg-icons";

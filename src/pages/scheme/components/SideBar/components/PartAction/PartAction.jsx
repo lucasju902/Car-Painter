@@ -9,11 +9,7 @@ import {
 import { LightTooltip } from "components/common";
 
 import { EnglishLang } from "constant/language";
-import {
-  useStyles,
-  CustomFontAwesomeIcon,
-  CustomIconButton,
-} from "./PartAction.style";
+import { useStyles, CustomIconButton } from "./PartAction.style";
 
 export const PartAction = React.memo((props) => {
   const classes = useStyles();
@@ -86,8 +82,13 @@ export const PartAction = React.memo((props) => {
                     action.onClick();
                   }}
                 >
-                  <Box display="flex" justifyContent="flex-start" width="100%">
-                    <CustomFontAwesomeIcon icon={action.icon} />
+                  <Box
+                    display="flex"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    width="100%"
+                  >
+                    {action.icon}
                     <Typography>{action.title}</Typography>
                   </Box>
                 </CustomIconButton>
