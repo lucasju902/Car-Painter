@@ -17,6 +17,7 @@ import {
   Select,
   Switch,
   Typography,
+  TextField,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -29,7 +30,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useMemo } from "react";
 import { useCallback, useEffect } from "react";
-import { TextField } from "components/MaterialUI";
+import { NumberModSwitch } from "./NumberModSwitch";
 
 export const RaceDialog = React.memo((props) => {
   const { open, applying, onApply, onCancel } = props;
@@ -61,7 +62,7 @@ export const RaceDialog = React.memo((props) => {
       Yup.object().shape({
         night: Yup.boolean(),
         primary: Yup.boolean(),
-        num: number ? Yup.string().required() : Yup.string(),
+        num: number ? Yup.string().required("Required") : Yup.string(),
         series: Yup.array().of(Yup.number()),
         team: Yup.array().of(Yup.number()),
       }),
@@ -167,7 +168,7 @@ const RaceForm = React.memo(
               Race this paint as your {currentCarMake.name}?
             </Typography>
             <Box
-              mb={2}
+              mb={4}
               display="flex"
               justifyContent="space-between"
               position="relative"
@@ -182,7 +183,7 @@ const RaceForm = React.memo(
                   <Typography>Sim-Stamped Number</Typography>
                 </CustomGrid>
                 <Grid item>
-                  <Switch
+                  <NumberModSwitch
                     checked={number ? true : false}
                     onChange={(event) =>
                       handleChangeNumber(event.target.checked)
@@ -194,7 +195,7 @@ const RaceForm = React.memo(
                   <Typography>Custom Number</Typography>
                 </CustomGrid>
               </Grid>
-              <Box position="absolute" right={0} top="7px">
+              <Box position="absolute" left="calc(50% + 180px)" top="6px">
                 {number ? (
                   <CustomTextField
                     placeholder="Number"
@@ -202,9 +203,12 @@ const RaceForm = React.memo(
                     type="tel"
                     value={formProps.values.num}
                     inputProps={{ maxLength: 3 }}
-                    onChange={(event) =>
-                      formProps.setFieldValue("num", event.target.value)
-                    }
+                    onBlur={formProps.handleBlur}
+                    onChange={formProps.handleChange}
+                    error={Boolean(
+                      formProps.touched.num && formProps.errors.num
+                    )}
+                    helperText={formProps.touched.num && formProps.errors.num}
                   />
                 ) : (
                   <></>
@@ -369,7 +373,7 @@ const CustomGrid = styled(Grid)`
 
 const CustomTextField = styled(TextField)`
   margin: 0 10px;
-  width: 60px;
+  width: 65px;
   & .MuiInputBase-input {
     height: auto;
     border-bottom: 1px solid white;

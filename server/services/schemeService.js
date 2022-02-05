@@ -19,7 +19,13 @@ class SchemeService {
       user_id: user_id,
       avail: 1,
     }).fetchAll({
-      withRelated: ["carMake", "layers", "user"],
+      withRelated: [
+        "carMake",
+        "layers",
+        "user",
+        "sharedUsers",
+        "sharedUsers.user",
+      ],
     });
     return schemes;
   }

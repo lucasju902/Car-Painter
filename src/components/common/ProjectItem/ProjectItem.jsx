@@ -8,6 +8,7 @@ import {
   Typography,
   MenuItem,
   CircularProgress,
+  Avatar,
 } from "@material-ui/core";
 import { ImageWithLoad, LightTooltip } from "components/common";
 import { ConfirmDialog } from "components/dialogs";
@@ -22,6 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ShowroomNoCar from "assets/showroom_no_car.svg";
 
 import { getDifferenceFromToday, reduceString } from "helper";
+import { AvatarGroup } from "@material-ui/lab";
 
 export const ProjectItem = React.memo((props) => {
   const {
@@ -121,6 +123,7 @@ export const ProjectItem = React.memo((props) => {
       flexDirection="column"
       border="1px solid grey"
       position="relative"
+      height="100%"
     >
       <ImageWithLoad
         src={schemeThumbnailURL(scheme.id) + "?date=" + scheme.date_modified}
@@ -176,6 +179,28 @@ export const ProjectItem = React.memo((props) => {
           <Typography variant="body2">
             Edited {getDifferenceFromToday(scheme.date_modified)}
           </Typography>
+          {scheme.sharedUsers.length ? (
+            <Box pt={2}>
+              <AvatarGroup max={5}>
+                {scheme.sharedUsers.map((sharedUser, index) => (
+                  <LightTooltip
+                    title={"Shared with " + sharedUser.user.drivername}
+                    arrow
+                    key={index}
+                  >
+                    <Avatar
+                      alt={sharedUser.user.drivername}
+                      src={`https://www.tradingpaints.com/scripts/image_driver.php?driver=${sharedUser.user_id}`}
+                    >
+                      {sharedUser.user.drivername[0].toUpperCase()}
+                    </Avatar>
+                  </LightTooltip>
+                ))}
+              </AvatarGroup>
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
         <Box display="flex" alignItems="center">
           {favoriteInPrgoress ? (

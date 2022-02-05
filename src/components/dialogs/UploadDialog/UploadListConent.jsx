@@ -156,6 +156,7 @@ export const UploadListContent = React.memo((props) => {
                 <ImageWithLoad
                   src={uploadAssetURL(uploadItem)}
                   alt={getNameFromUploadFileName(uploadItem.file_name, user)}
+                  alignItems="center"
                 />
                 <ImageListItemBar
                   title={getNameFromUploadFileName(uploadItem.file_name, user)}

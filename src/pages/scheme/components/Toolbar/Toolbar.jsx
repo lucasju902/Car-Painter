@@ -132,6 +132,7 @@ export const Toolbar = React.memo((props) => {
                 currentScheme.id,
                 () => {
                   setApplyingRace(false);
+                  handleCloseDialog();
                 },
                 () => {
                   setApplyingRace(false);
@@ -145,7 +146,14 @@ export const Toolbar = React.memo((props) => {
         )
       );
     },
-    [primaryRaceNumber, retrieveTGADataURL, currentScheme.id, dispatch, cars]
+    [
+      primaryRaceNumber,
+      retrieveTGADataURL,
+      currentScheme.id,
+      dispatch,
+      cars,
+      handleCloseDialog,
+    ]
   );
 
   const handleOpenTGAOptions = (event) => {
