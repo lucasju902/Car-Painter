@@ -78,6 +78,9 @@ export const RaceDialog = React.memo((props) => {
       if (!expanded) {
         payload.primary = true;
       }
+      if (payload.primary) {
+        payload.night = false;
+      }
       onApply(payload);
     },
     [number, expanded, onApply]
@@ -231,12 +234,15 @@ const RaceForm = React.memo(
                         control={
                           <Switch
                             checked={formProps.values.primary}
-                            onChange={(event) =>
+                            onChange={(event) => {
                               formProps.setFieldValue(
                                 "primary",
                                 event.target.checked
-                              )
-                            }
+                              );
+                              if (event.target.checked) {
+                                formProps.setFieldValue("night", true);
+                              }
+                            }}
                           />
                         }
                       />

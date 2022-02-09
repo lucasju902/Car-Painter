@@ -22,6 +22,7 @@ import {
 } from "./Toolbar.style";
 import { LightTooltip } from "components/common";
 import { ZoomPopover } from "components/dialogs";
+import RaceIcon from "assets/race.svg";
 
 import {
   setZoom,
@@ -35,6 +36,7 @@ import RaceDialog from "components/dialogs/RaceDialog/RaceDialog";
 import { getCarRaces, setCarRace } from "redux/reducers/carReducer";
 import { dataURItoBlob } from "helper";
 import { CircularProgress } from "components/MaterialUI";
+import { setMessage } from "redux/reducers/messageReducer";
 
 export const Toolbar = React.memo((props) => {
   const {
@@ -133,6 +135,12 @@ export const Toolbar = React.memo((props) => {
                 () => {
                   setApplyingRace(false);
                   handleCloseDialog();
+                  dispatch(
+                    setMessage({
+                      type: "success",
+                      message: "Raced car successfully!",
+                    })
+                  );
                 },
                 () => {
                   setApplyingRace(false);
@@ -308,6 +316,7 @@ export const Toolbar = React.memo((props) => {
                 variant="outlined"
                 color="primary"
                 disabled={currentScheme.race_updated || applyingRace}
+                startIcon={<img src={RaceIcon} width={25} height={25} />}
                 onClick={() => handleApplyRace()}
               >
                 {applyingRace ? (
@@ -331,6 +340,7 @@ export const Toolbar = React.memo((props) => {
             <Button
               variant="outlined"
               mx={1}
+              startIcon={<img src={RaceIcon} width={25} height={25} />}
               onClick={() => setDialog(DialogTypes.RACE)}
             >
               <Typography variant="subtitle2">Race</Typography>
@@ -395,7 +405,10 @@ export const Toolbar = React.memo((props) => {
             }}
           >
             <Box py={1}>
-              <Button onClick={handleOpenRaceDialog}>
+              <Button
+                startIcon={<img src={RaceIcon} width={25} height={25} />}
+                onClick={handleOpenRaceDialog}
+              >
                 <Typography variant="subtitle2">Open Race Settings</Typography>
               </Button>
             </Box>

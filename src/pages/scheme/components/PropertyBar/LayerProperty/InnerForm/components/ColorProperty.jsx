@@ -41,6 +41,23 @@ export const ColorProperty = React.memo((props) => {
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
   );
+  const showColor = useMemo(
+    () =>
+      AllowedLayerTypes.includes("layer_data.color") &&
+      values.layer_type !== LayerTypes.TEXT,
+    [AllowedLayerTypes, values.layer_type]
+  );
+  const showBlendType = useMemo(
+    () => AllowedLayerTypes.includes("layer_data.blendType"),
+    [AllowedLayerTypes]
+  );
+  const showFinish = useMemo(
+    () =>
+      !currentScheme.hide_spec &&
+      AllowedLayerTypes.includes("layer_data.finish") &&
+      currentCarMake.car_type !== "Misc",
+    [AllowedLayerTypes, currentScheme.hide_spec, currentCarMake.car_type]
+  );
 
   const handleColorInstantChange = useCallback(
     (color) => onLayerDataUpdate("color", color),
@@ -52,15 +69,8 @@ export const ColorProperty = React.memo((props) => {
     [setFieldValue]
   );
 
-  if (
-    !(
-      AllowedLayerTypes.includes("layer_data.color") ||
-      AllowedLayerTypes.includes("layer_data.blendType") ||
-      (AllowedLayerTypes.includes("layer_data.finish") &&
-        currentCarMake.car_type !== "Misc")
-    )
-  )
-    return <></>;
+  if (!showColor && !showBlendType && !showFinish) return <></>;
+
   return (
     <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -68,8 +78,7 @@ export const ColorProperty = React.memo((props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerTypes.includes("layer_data.color") &&
-          values.layer_type !== LayerTypes.TEXT ? (
+          {showColor ? (
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Box height="100%" display="flex" alignItems="center">
@@ -92,7 +101,7 @@ export const ColorProperty = React.memo((props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerTypes.includes("layer_data.blendType") ? (
+          {showBlendType ? (
             <Grid container spacing={2} component={Box} mb={1}>
               <Grid item xs={6}>
                 <Box height="100%" display="flex" alignItems="center">
@@ -131,9 +140,7 @@ export const ColorProperty = React.memo((props) => {
           ) : (
             <></>
           )}
-          {!currentScheme.hide_spec &&
-          AllowedLayerTypes.includes("layer_data.finish") &&
-          currentCarMake.car_type !== "Misc" ? (
+          {showFinish ? (
             <Grid container spacing={2} component={Box} mb={1}>
               <Grid item xs={6}>
                 <Box height="100%" display="flex" alignItems="center">

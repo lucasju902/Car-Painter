@@ -39,9 +39,6 @@ export const getCarRaces = (schemeID, onSuccess, onError) => async (
     const customCarResult = await CarService.getCarRace(schemeID, 1);
     carRaces.push(customCarResult.output);
     dispatch(setCars(carRaces));
-    dispatch(
-      setMessage({ type: "success", message: "Raced car successfully!" })
-    );
     if (onSuccess) {
       onSuccess();
     }
