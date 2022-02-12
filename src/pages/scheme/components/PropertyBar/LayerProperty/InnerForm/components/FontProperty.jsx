@@ -43,7 +43,7 @@ export const FontProperty = React.memo((props) => {
   );
 
   const handleChangeFont = useCallback(
-    (e) => onLayerDataUpdate("font", e.target.value),
+    (fontID) => onLayerDataUpdate("font", fontID),
     [onLayerDataUpdate]
   );
 

@@ -12,6 +12,7 @@ import {
   DialogActions,
 } from "components/MaterialUI";
 import { InnerForm } from "./InnerForm";
+import { useSelector } from "react-redux";
 
 export const TextDialog = React.memo((props) => {
   const {
@@ -23,6 +24,7 @@ export const TextDialog = React.memo((props) => {
     defaultStrokeColor,
     onCreate,
   } = props;
+  const currentScheme = useSelector((state) => state.schemeReducer.current);
 
   return (
     <Dialog aria-labelledby="insert-text-title" open={open} onClose={onCancel}>
@@ -30,7 +32,7 @@ export const TextDialog = React.memo((props) => {
       <Formik
         initialValues={{
           text: "",
-          font: 1,
+          font: currentScheme.last_font || (fontList && fontList[0].id) || 1,
           size: 36,
           color: defaultColor || "#000000",
           stroke: 0,
@@ -46,9 +48,7 @@ export const TextDialog = React.memo((props) => {
             .nullable()
             .test("color-validation", "Incorrect Color Format", colorValidator),
         })}
-        validate={(values) => {
-          return {};
-        }}
+        enableReinitialize
         onSubmit={onCreate}
       >
         {(formProps) => (

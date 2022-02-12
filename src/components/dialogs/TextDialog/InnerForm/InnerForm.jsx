@@ -53,8 +53,8 @@ export const InnerForm = React.memo((props) => {
   );
 
   const handleChangeFont = useCallback(
-    (e) => {
-      setFieldValue("font", e.target.value);
+    (fontID) => {
+      setFieldValue("font", fontID);
     },
     [setFieldValue]
   );

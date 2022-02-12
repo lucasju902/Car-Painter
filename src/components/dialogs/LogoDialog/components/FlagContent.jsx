@@ -31,7 +31,7 @@ export const FlagContent = React.memo((props) => {
   }, [flagLimit, step, setFlagLimit]);
 
   return (
-    <Box id="flag-dialog-content" overflow="auto" height="70vh">
+    <Box id="flag-dialog-content" overflow="auto" height="calc(100vh - 300px)">
       <CustomInfiniteScroll
         dataLength={flagLimit} //This is important field to render the next data
         next={increaseFlagData}

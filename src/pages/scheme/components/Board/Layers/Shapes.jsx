@@ -150,12 +150,8 @@ export const Shapes = React.memo((props) => {
             rotation={layer.layer_data.rotation}
             angle={layer.layer_data.angle}
             opacity={layer.layer_data.opacity}
-            scaleX={
-              (layer.layer_data.flop === 1 ? -1 : 1) * (newWidth >= 0 ? 1 : -1)
-            }
-            scaleY={
-              (layer.layer_data.flip === 1 ? -1 : 1) * (newHeight >= 0 ? 1 : -1)
-            }
+            scaleX={layer.layer_data.flop === 1 ? -1 : 1}
+            scaleY={layer.layer_data.flip === 1 ? -1 : 1}
             shadowColor={
               specMode
                 ? layer.layer_data.finish || FinishOptions[0].value

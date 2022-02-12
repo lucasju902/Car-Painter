@@ -37,6 +37,8 @@ import { getCarRaces, setCarRace } from "redux/reducers/carReducer";
 import { dataURItoBlob } from "helper";
 import { CircularProgress } from "components/MaterialUI";
 import { setMessage } from "redux/reducers/messageReducer";
+import RaceConfirmDialog from "components/dialogs/RaceConfirmDialog";
+import { updateScheme } from "redux/reducers/schemeReducer";
 
 export const Toolbar = React.memo((props) => {
   const {
@@ -107,8 +109,14 @@ export const Toolbar = React.memo((props) => {
         formData.append("series", values.series);
         formData.append("team", values.team);
       } else {
-        formData.append("night", cars[primaryRaceNumber].night);
         formData.append("primary", cars[primaryRaceNumber].primary);
+        formData.append(
+          "night",
+          cars[primaryRaceNumber].primary
+            ? false
+            : cars[primaryRaceNumber].night
+        );
+
         formData.append("num", cars[primaryRaceNumber].num);
         formData.append("number", primaryRaceNumber);
         formData.append(
@@ -164,6 +172,26 @@ export const Toolbar = React.memo((props) => {
     ]
   );
 
+  const handleConfirmRace = useCallback(
+    (dismiss) => {
+      if (dismiss) {
+        dispatch(
+          updateScheme(
+            {
+              ...currentScheme,
+              dismiss_race_confirm: dismiss,
+            },
+            false,
+            false
+          )
+        );
+      }
+      handleCloseDialog();
+      handleApplyRace();
+    },
+    [handleApplyRace, handleCloseDialog, dispatch, currentScheme]
+  );
+
   const handleOpenTGAOptions = (event) => {
     setTGAAnchorEl(event.currentTarget);
   };
@@ -189,6 +217,14 @@ export const Toolbar = React.memo((props) => {
     setDialog(DialogTypes.RACE);
     handleRaceOptionsClose();
   };
+
+  const onRaceUpdate = useCallback(() => {
+    if (currentScheme.dismiss_race_confirm) {
+      handleApplyRace();
+    } else {
+      setDialog(DialogTypes.RACE_CONFIRM);
+    }
+  }, [currentScheme, handleApplyRace]);
 
   // const handleToggleViewMode = useCallback(() => {
   //   dispatch(
@@ -316,8 +352,10 @@ export const Toolbar = React.memo((props) => {
                 variant="outlined"
                 color="primary"
                 disabled={currentScheme.race_updated || applyingRace}
-                startIcon={<img src={RaceIcon} width={25} height={25} />}
-                onClick={() => handleApplyRace()}
+                startIcon={
+                  <img src={RaceIcon} width={25} height={25} alt="Race" />
+                }
+                onClick={onRaceUpdate}
               >
                 {applyingRace ? (
                   <CircularProgress size={20} />
@@ -340,7 +378,9 @@ export const Toolbar = React.memo((props) => {
             <Button
               variant="outlined"
               mx={1}
-              startIcon={<img src={RaceIcon} width={25} height={25} />}
+              startIcon={
+                <img src={RaceIcon} width={25} height={25} alt="Race" />
+              }
               onClick={() => setDialog(DialogTypes.RACE)}
             >
               <Typography variant="subtitle2">Race</Typography>
@@ -406,7 +446,9 @@ export const Toolbar = React.memo((props) => {
           >
             <Box py={1}>
               <Button
-                startIcon={<img src={RaceIcon} width={25} height={25} />}
+                startIcon={
+                  <img src={RaceIcon} width={25} height={25} alt="Race" />
+                }
                 onClick={handleOpenRaceDialog}
               >
                 <Typography variant="subtitle2">Open Race Settings</Typography>
@@ -441,6 +483,11 @@ export const Toolbar = React.memo((props) => {
         applying={applyingRace}
         onCancel={handleCloseDialog}
         onApply={handleApplyRace}
+      />
+      <RaceConfirmDialog
+        open={dialog === DialogTypes.RACE_CONFIRM}
+        onCancel={handleCloseDialog}
+        onConfirm={handleConfirmRace}
       />
     </Wrapper>
   );

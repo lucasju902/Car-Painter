@@ -143,6 +143,12 @@ const overrides = {
   MuiPaper: {
     root: {
       backgroundColor: "#444",
+      border: "1px solid gray",
+    },
+  },
+  MuiDialog: {
+    paperScrollPaper: {
+      overflowX: "hidden",
     },
   },
   MuiInput: {

@@ -135,7 +135,7 @@ export const UploadListContent = React.memo((props) => {
       <Box
         id="upload-dialog-content"
         overflow="auto"
-        height="40vh"
+        height="calc(100vh - 500px)"
         mt={1}
         position="relative"
       >

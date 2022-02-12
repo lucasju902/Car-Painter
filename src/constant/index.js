@@ -58,6 +58,7 @@ export const DialogTypes = {
   SHORTCUTS: "SHORTCUTS",
   SETTINGS: "SETTINGS",
   RACE: "RACE",
+  RACE_CONFIRM: "RACE_CONFIRM",
 };
 
 export const DrawingStatus = {
@@ -327,7 +328,6 @@ export const AllowedLayerProps = {
     "layer_data.shadowOffsetY",
     "layer_data.stroke",
     "layer_data.scolor",
-    "layer_data.strokeType",
     "layer_data.finish",
     "layer_data.legacy",
   ],
@@ -614,7 +614,6 @@ export const AllowedLayerProps = {
       "layer_data.stroke",
       "layer_data.scolor",
       "layer_data.blendType",
-      "layer_data.strokeType",
       "layer_data.shadowColor",
       "layer_data.shadowBlur",
       "layer_data.shadowOpacity",
@@ -646,7 +645,6 @@ export const AllowedLayerProps = {
       "layer_data.opacity",
       "layer_data.stroke",
       "layer_data.scolor",
-      "layer_data.strokeType",
       "layer_data.shadowColor",
       "layer_data.shadowBlur",
       "layer_data.shadowOpacity",
@@ -711,7 +709,6 @@ export const AllowedLayerProps = {
       "layer_data.stroke",
       "layer_data.scolor",
       "layer_data.blendType",
-      "layer_data.strokeType",
       "layer_data.shadowColor",
       "layer_data.shadowBlur",
       "layer_data.shadowOpacity",

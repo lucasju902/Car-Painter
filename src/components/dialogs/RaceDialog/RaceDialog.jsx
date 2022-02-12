@@ -138,6 +138,7 @@ const RaceForm = React.memo(
     ...formProps
   }) => {
     const currentCarMake = useSelector((state) => state.carMakeReducer.current);
+    const cars = useSelector((state) => state.carReducer.cars);
 
     const leagueSeriesMap = useMemo(() => {
       let map = {};
@@ -253,6 +254,11 @@ const RaceForm = React.memo(
                         control={
                           <Switch
                             checked={formProps.values.night}
+                            disabled={
+                              formProps.values.night &&
+                              formProps.values.primary &&
+                              cars.every((car) => !car.night)
+                            }
                             onChange={(event) =>
                               formProps.setFieldValue(
                                 "night",

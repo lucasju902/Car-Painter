@@ -57,7 +57,11 @@ export const OverlayDialog = React.memo((props) => {
         <Box mb={2}>
           <SearchBox value={search} onChange={handleSearchChange} />
         </Box>
-        <Box id="shape-dialog-content" overflow="auto" height="70vh">
+        <Box
+          id="shape-dialog-content"
+          overflow="auto"
+          height="calc(100vh - 300px)"
+        >
           <CustomInfiniteScroll
             dataLength={limit} //This is important field to render the next data
             next={increaseData}

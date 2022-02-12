@@ -30,7 +30,7 @@ export const LogoContent = React.memo((props) => {
   }, [logoLimit, step, setLogoLimit]);
 
   return (
-    <Box id="logo-dialog-content" overflow="auto" height="70vh">
+    <Box id="logo-dialog-content" overflow="auto" height="calc(100vh - 300px)">
       <CustomInfiniteScroll
         dataLength={logoLimit} //This is important field to render the next data
         next={increaseLogoData}
