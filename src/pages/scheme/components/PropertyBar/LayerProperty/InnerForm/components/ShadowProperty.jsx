@@ -152,19 +152,21 @@ export const ShadowProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.shadowOpacity") ? (
-            <SliderInput
-              label="Opacity"
-              min={0}
-              max={1}
-              step={0.01}
-              value={values.layer_data.shadowOpacity}
-              disabled={!editable}
-              setValue={handleChangeShadowOpacity}
-            />
+            <Box height="48px" display="flex" alignItems="center">
+              <SliderInput
+                label="Opacity"
+                min={0}
+                max={1}
+                step={0.01}
+                value={values.layer_data.shadowOpacity}
+                disabled={!editable}
+                setValue={handleChangeShadowOpacity}
+              />
+            </Box>
           ) : (
             <></>
           )}
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.shadowOffsetX") ? (
                 <CustomeTextField

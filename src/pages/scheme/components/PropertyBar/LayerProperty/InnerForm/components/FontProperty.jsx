@@ -89,35 +89,41 @@ export const FontProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.color") ? (
-            <Grid container spacing={2} component={Box} alignItems="center">
-              <Grid item xs={6}>
-                <Typography variant="body1" color="textSecondary" mr={2}>
-                  Font Color
-                </Typography>
+            <Box display="flex" alignItems="center" height="48px">
+              <Grid container component={Box} alignItems="center" spacing={2}>
+                <Grid item xs={6}>
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Font Color
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <ColorPickerInput
+                    value={values.layer_data.color}
+                    disabled={!editable}
+                    onChange={handleColorInstantChange}
+                    onInputChange={handleColorChange}
+                    error={Boolean(
+                      errors.layer_data && errors.layer_data.color
+                    )}
+                    helperText={errors.layer_data && errors.layer_data.color}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <ColorPickerInput
-                  value={values.layer_data.color}
-                  disabled={!editable}
-                  onChange={handleColorInstantChange}
-                  onInputChange={handleColorChange}
-                  error={Boolean(errors.layer_data && errors.layer_data.color)}
-                  helperText={errors.layer_data && errors.layer_data.color}
-                />
-              </Grid>
-            </Grid>
+            </Box>
           ) : (
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.size") ? (
-            <SliderInput
-              label="Font Size"
-              disabled={!editable}
-              min={6}
-              max={512}
-              value={values.layer_data.size}
-              setValue={handleChangeSize}
-            />
+            <Box display="flex" alignItems="center" height="48px">
+              <SliderInput
+                label="Font Size"
+                disabled={!editable}
+                min={6}
+                max={512}
+                value={values.layer_data.size}
+                setValue={handleChangeSize}
+              />
+            </Box>
           ) : (
             <></>
           )}

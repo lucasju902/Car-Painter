@@ -79,95 +79,103 @@ export const ColorProperty = React.memo((props) => {
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
           {showColor ? (
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Box height="100%" display="flex" alignItems="center">
-                  <Typography color="textSecondary" mr={2}>
-                    Color
-                  </Typography>
-                </Box>
+            <Box display="flex" alignItems="center" height="48px">
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Box height="100%" display="flex" alignItems="center">
+                    <Typography color="textSecondary" mr={2}>
+                      Color
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <ColorPickerInput
+                    value={values.layer_data.color}
+                    disabled={!editable}
+                    onChange={handleColorInstantChange}
+                    onInputChange={handleColorChange}
+                    error={Boolean(
+                      errors.layer_data && errors.layer_data.color
+                    )}
+                    helperText={errors.layer_data && errors.layer_data.color}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <ColorPickerInput
-                  value={values.layer_data.color}
-                  disabled={!editable}
-                  onChange={handleColorInstantChange}
-                  onInputChange={handleColorChange}
-                  error={Boolean(errors.layer_data && errors.layer_data.color)}
-                  helperText={errors.layer_data && errors.layer_data.color}
-                />
-              </Grid>
-            </Grid>
+            </Box>
           ) : (
             <></>
           )}
           {showBlendType ? (
-            <Grid container spacing={2} component={Box} mb={1}>
-              <Grid item xs={6}>
-                <Box height="100%" display="flex" alignItems="center">
-                  <Typography variant="body1" color="textSecondary" mr={2}>
-                    Blend Type
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Select
-                  name="layer_data.blendType"
-                  variant="outlined"
-                  value={values.layer_data.blendType}
-                  disabled={!editable}
-                  onChange={(event) =>
-                    onLayerDataUpdate("blendType", event.target.value)
-                  }
-                  fullWidth
-                >
-                  <MenuItem value="normal">Normal</MenuItem>
+            <Box display="flex" alignItems="center" height="48px">
+              <Grid container spacing={2} component={Box}>
+                <Grid item xs={6}>
+                  <Box height="100%" display="flex" alignItems="center">
+                    <Typography variant="body1" color="textSecondary" mr={2}>
+                      Blend Type
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <Select
+                    name="layer_data.blendType"
+                    variant="outlined"
+                    value={values.layer_data.blendType}
+                    disabled={!editable}
+                    onChange={(event) =>
+                      onLayerDataUpdate("blendType", event.target.value)
+                    }
+                    fullWidth
+                  >
+                    <MenuItem value="normal">Normal</MenuItem>
 
-                  <MenuItem value="multiply">Multiply</MenuItem>
-                  <MenuItem value="darken">Darken</MenuItem>
-                  <MenuItem value="lighten">Lighten</MenuItem>
-                  <MenuItem value="color-burn">Color Burn</MenuItem>
-                  <MenuItem value="color">Color</MenuItem>
-                  <MenuItem value="screen">Screen</MenuItem>
-                  <MenuItem value="overlay">Overlay</MenuItem>
-                  <MenuItem value="hue">Hue</MenuItem>
-                  <MenuItem value="saturation">Saturation</MenuItem>
-                  <MenuItem value="luminosity">Luminosity</MenuItem>
-                  <MenuItem value="xor">Xor</MenuItem>
-                </Select>
+                    <MenuItem value="multiply">Multiply</MenuItem>
+                    <MenuItem value="darken">Darken</MenuItem>
+                    <MenuItem value="lighten">Lighten</MenuItem>
+                    <MenuItem value="color-burn">Color Burn</MenuItem>
+                    <MenuItem value="color">Color</MenuItem>
+                    <MenuItem value="screen">Screen</MenuItem>
+                    <MenuItem value="overlay">Overlay</MenuItem>
+                    <MenuItem value="hue">Hue</MenuItem>
+                    <MenuItem value="saturation">Saturation</MenuItem>
+                    <MenuItem value="luminosity">Luminosity</MenuItem>
+                    <MenuItem value="xor">Xor</MenuItem>
+                  </Select>
+                </Grid>
               </Grid>
-            </Grid>
+            </Box>
           ) : (
             <></>
           )}
           {showFinish ? (
-            <Grid container spacing={2} component={Box} mb={1}>
-              <Grid item xs={6}>
-                <Box height="100%" display="flex" alignItems="center">
-                  <Typography variant="body1" color="textSecondary" mr={2}>
-                    Finish
-                  </Typography>
-                </Box>
+            <Box display="flex" alignItems="center" height="48px">
+              <Grid container spacing={2} component={Box}>
+                <Grid item xs={6}>
+                  <Box height="100%" display="flex" alignItems="center">
+                    <Typography variant="body1" color="textSecondary" mr={2}>
+                      Finish
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <Select
+                    name="layer_data.finish"
+                    variant="outlined"
+                    value={values.layer_data.finish}
+                    disabled={!editable}
+                    onChange={(event) =>
+                      onLayerDataUpdate("finish", event.target.value)
+                    }
+                    fullWidth
+                  >
+                    {FinishOptions.map((finishItem, index) => (
+                      <MenuItem value={finishItem.value} key={index}>
+                        {finishItem.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Select
-                  name="layer_data.finish"
-                  variant="outlined"
-                  value={values.layer_data.finish}
-                  disabled={!editable}
-                  onChange={(event) =>
-                    onLayerDataUpdate("finish", event.target.value)
-                  }
-                  fullWidth
-                >
-                  {FinishOptions.map((finishItem, index) => (
-                    <MenuItem value={finishItem.value} key={index}>
-                      {finishItem.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-            </Grid>
+            </Box>
           ) : (
             <></>
           )}

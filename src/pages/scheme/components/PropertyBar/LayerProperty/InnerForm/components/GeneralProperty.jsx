@@ -11,6 +11,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Grid,
 } from "@material-ui/core";
 import { SliderInput } from "components/common";
 import {
@@ -76,84 +77,90 @@ export const GeneralProperty = React.memo((props) => {
         <Typography variant="subtitle1">General</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Box display="flex" flexDirection="column" width="100%">
+        <Grid container spacing={2}>
           {AllowedLayerTypes.includes("layer_data.text") ? (
-            <CustomeTextField
-              name="layer_data.text"
-              label="Text"
-              variant="outlined"
-              value={values.layer_data.text}
-              disabled={!editable}
-              error={Boolean(
-                touched.layer_data &&
+            <Grid item xs={12} sm={12}>
+              <CustomeTextField
+                name="layer_data.text"
+                label="Text"
+                variant="outlined"
+                value={values.layer_data.text}
+                disabled={!editable}
+                error={Boolean(
+                  touched.layer_data &&
+                    touched.layer_data.text &&
+                    errors.layer_data &&
+                    errors.layer_data.text
+                )}
+                helperText={
+                  touched.layer_data &&
                   touched.layer_data.text &&
                   errors.layer_data &&
                   errors.layer_data.text
-              )}
-              helperText={
-                touched.layer_data &&
-                touched.layer_data.text &&
-                errors.layer_data &&
-                errors.layer_data.text
-              }
-              onBlur={handleBlur}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              mb={4}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+                }
+                onBlur={handleBlur}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                mb={4}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
           ) : (
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.numPoints") ? (
-            <CustomeTextField
-              name="layer_data.numPoints"
-              label="Number of Points"
-              variant="outlined"
-              type="number"
-              value={Math.round(values.layer_data.numPoints)}
-              disabled={!editable}
-              error={Boolean(
-                touched.layer_data &&
+            <Grid item xs={12} sm={12}>
+              <CustomeTextField
+                name="layer_data.numPoints"
+                label="Number of Points"
+                variant="outlined"
+                type="number"
+                value={Math.round(values.layer_data.numPoints)}
+                disabled={!editable}
+                error={Boolean(
+                  touched.layer_data &&
+                    touched.layer_data.numPoints &&
+                    errors.layer_data &&
+                    errors.layer_data.numPoints
+                )}
+                helperText={
+                  touched.layer_data &&
                   touched.layer_data.numPoints &&
                   errors.layer_data &&
                   errors.layer_data.numPoints
-              )}
-              helperText={
-                touched.layer_data &&
-                touched.layer_data.numPoints &&
-                errors.layer_data &&
-                errors.layer_data.numPoints
-              }
-              onBlur={handleBlur}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              mb={4}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+                }
+                onBlur={handleBlur}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                mb={4}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
           ) : (
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.angle") ? (
-            <SliderInput
-              label="Angle"
-              disabled={!editable}
-              min={0}
-              max={360}
-              value={Math.round(values.layer_data.angle)}
-              setValue={handleChangeAngle}
-            />
+            <Grid item xs={12} sm={12} component={Box} height="48px">
+              <SliderInput
+                label="Angle"
+                disabled={!editable}
+                min={0}
+                max={360}
+                value={Math.round(values.layer_data.angle)}
+                setValue={handleChangeAngle}
+              />
+            </Grid>
           ) : (
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.opacity") ? (
-            <Box mb={2}>
+            <Grid item xs={12} sm={12} component={Box} height="48px">
               <SliderInput
                 label="Opacity"
                 disabled={!editable}
@@ -163,53 +170,66 @@ export const GeneralProperty = React.memo((props) => {
                 value={values.layer_data.opacity}
                 setValue={handleChangeOpacity}
               />
-            </Box>
+            </Grid>
           ) : (
             <></>
           )}
           {AllowedLayerTypes.includes("layer_visible") ? (
-            <Box
-              display="flex"
-              alignItems="center"
-              flexDirection="row"
-              justifyContent="space-between"
-            >
-              <Typography variant="body1" color="textSecondary" mr={2}>
-                Visibility
-              </Typography>
-              <IconButton
-                disabled={!editable}
-                onClick={() => toggleField("layer_visible")}
-                size="small"
+            <Grid item xs={12} sm={12} component={Box} height="48px">
+              <Box
+                display="flex"
+                alignItems="center"
+                flexDirection="row"
+                justifyContent="space-between"
+                height="40px"
               >
-                {values.layer_visible ? (
-                  <VisibilityIcon />
-                ) : (
-                  <VisibilityOffIcon />
-                )}
-              </IconButton>
-            </Box>
+                <Typography variant="body1" color="textSecondary" mr={2}>
+                  Visibility
+                </Typography>
+                <IconButton
+                  disabled={!editable}
+                  onClick={() => toggleField("layer_visible")}
+                  size="small"
+                >
+                  {values.layer_visible ? (
+                    <VisibilityIcon />
+                  ) : (
+                    <VisibilityOffIcon />
+                  )}
+                </IconButton>
+              </Box>
+            </Grid>
           ) : (
             <></>
           )}
           {AllowedLayerTypes.includes("layer_locked") ? (
-            <Box
-              display="flex"
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              component={Box}
+              height="48px"
               alignItems="center"
-              flexDirection="row"
-              justifyContent="space-between"
             >
-              <Typography variant="body1" color="textSecondary" mr={2}>
-                Locking
-              </Typography>
-              <IconButton
-                disabled={!editable}
-                onClick={() => toggleField("layer_locked")}
-                size="small"
+              <Box
+                display="flex"
+                alignItems="center"
+                flexDirection="row"
+                justifyContent="space-between"
+                height="40px"
               >
-                {values.layer_locked ? <LockIcon /> : <LockOpenIcon />}
-              </IconButton>
-            </Box>
+                <Typography variant="body1" color="textSecondary" mr={2}>
+                  Locking
+                </Typography>
+                <IconButton
+                  disabled={!editable}
+                  onClick={() => toggleField("layer_locked")}
+                  size="small"
+                >
+                  {values.layer_locked ? <LockIcon /> : <LockOpenIcon />}
+                </IconButton>
+              </Box>
+            </Grid>
           ) : (
             <></>
           )}
@@ -227,7 +247,7 @@ export const GeneralProperty = React.memo((props) => {
           ) : (
             <></>
           )}
-        </Box>
+        </Grid>
       </AccordionDetails>
     </Accordion>
   );

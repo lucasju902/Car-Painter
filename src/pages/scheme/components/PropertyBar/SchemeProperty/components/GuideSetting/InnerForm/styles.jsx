@@ -7,6 +7,7 @@ export const CustomFormControlLabel = styled(FormControlLabel)`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  height: 40px;
 `;
 
 export const CustomDialogContent = styled(DialogContent)`

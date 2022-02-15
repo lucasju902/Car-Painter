@@ -165,19 +165,22 @@ export const RotationProperty = React.memo((props) => {
         <Box display="flex" flexDirection="column" width="100%">
           {AllowedLayerTypes.includes("layer_data.rotation") ? (
             <>
-              <SliderInput
-                label="Rotation"
-                min={-179}
-                max={179}
-                value={Math.round(values.layer_data.rotation)}
-                disabled={!editable}
-                setValue={handleChangeRotation}
-              />
+              <Box display="flex" height="48px" alignItems="center">
+                <SliderInput
+                  label="Rotation"
+                  min={-179}
+                  max={179}
+                  value={Math.round(values.layer_data.rotation)}
+                  disabled={!editable}
+                  setValue={handleChangeRotation}
+                />
+              </Box>
               <Box
                 display="flex"
                 alignItems="center"
                 flexDirection="row"
                 justifyContent="space-between"
+                height="48px"
               >
                 <Typography variant="body1" color="textSecondary" mr={2}>
                   Rotate Left
@@ -195,6 +198,7 @@ export const RotationProperty = React.memo((props) => {
                 alignItems="center"
                 flexDirection="row"
                 justifyContent="space-between"
+                height="48px"
               >
                 <Typography variant="body1" color="textSecondary" mr={2}>
                   Rotate Right
@@ -217,6 +221,7 @@ export const RotationProperty = React.memo((props) => {
               alignItems="center"
               flexDirection="row"
               justifyContent="space-between"
+              height="48px"
             >
               <Typography variant="body1" color="textSecondary" mr={2}>
                 Flop
@@ -247,6 +252,7 @@ export const RotationProperty = React.memo((props) => {
               alignItems="center"
               flexDirection="row"
               justifyContent="space-between"
+              height="48px"
             >
               <Typography variant="body1" color="textSecondary" mr={2}>
                 Flip

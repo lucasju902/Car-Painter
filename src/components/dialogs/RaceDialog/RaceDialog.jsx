@@ -43,16 +43,18 @@ export const RaceDialog = React.memo((props) => {
       night: true,
       primary: true,
       num: cars[number] ? cars[number].num || "" : "",
-      series: cars[number]
-        ? cars[number].leagues
-            .filter((item) => item.racing)
-            .map((item) => item.series_id)
-        : [],
-      team: cars[number]
-        ? cars[number].teams
-            .filter((item) => item.racing)
-            .map((item) => item.team_id)
-        : [],
+      series:
+        cars[number] && cars[number].leagues
+          ? cars[number].leagues
+              .filter((item) => item.racing)
+              .map((item) => item.series_id)
+          : [],
+      team:
+        cars[number] && cars[number].teams
+          ? cars[number].teams
+              .filter((item) => item.racing)
+              .map((item) => item.team_id)
+          : [],
     }),
     [cars, number]
   );

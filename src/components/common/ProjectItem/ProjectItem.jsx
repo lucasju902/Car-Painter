@@ -24,6 +24,8 @@ import ShowroomNoCar from "assets/showroom_no_car.svg";
 
 import { getDifferenceFromToday, reduceString } from "helper";
 import { AvatarGroup } from "@material-ui/lab";
+import { setPreviousPath } from "redux/reducers/boardReducer";
+import { useDispatch } from "react-redux";
 
 export const ProjectItem = React.memo((props) => {
   const {
@@ -41,6 +43,7 @@ export const ProjectItem = React.memo((props) => {
     sharedID,
     favoriteID,
   } = props;
+  const dispatch = useDispatch();
   const [actionMenuEl, setActionMenuEl] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [favoriteInPrgoress, setFavoriteInPrgoress] = useState(false);
@@ -106,8 +109,21 @@ export const ProjectItem = React.memo((props) => {
   }, [accepted, scheme.name, shared]);
 
   const handleOpenScheme = useCallback(() => {
+    const scrollPosition = document.getElementById("scheme-list-content")
+      .scrollTop;
+    const url = new URL(window.location.href);
+    const pathName = url.pathname.slice(1);
+
+    dispatch(setPreviousPath(pathName || "mine"));
+    localStorage.setItem(
+      "scrollPosition",
+      JSON.stringify({
+        path: pathName || "mine",
+        position: scrollPosition,
+      })
+    );
     onOpenScheme(scheme.id, sharedID);
-  }, [onOpenScheme, scheme.id, sharedID]);
+  }, [dispatch, onOpenScheme, scheme, sharedID]);
 
   const schemeThumbnailURL = useCallback((id) => {
     return `${config.assetsURL}/scheme_thumbnails/${id}.jpg`;
@@ -168,7 +184,7 @@ export const ProjectItem = React.memo((props) => {
               {reduceString(scheme.name, 50)}
             </BreakableTypography>
           </Box>
-          {scheme.user.id !== user.id ? (
+          {scheme.user && scheme.user.id !== user.id ? (
             <Typography variant="body2">
               Owner: {scheme.user.drivername}
             </Typography>
@@ -179,7 +195,7 @@ export const ProjectItem = React.memo((props) => {
           <Typography variant="body2">
             Edited {getDifferenceFromToday(scheme.date_modified)}
           </Typography>
-          {scheme.sharedUsers.length ? (
+          {scheme.sharedUsers && scheme.sharedUsers.length ? (
             <Box pt={2}>
               <AvatarGroup max={5}>
                 {scheme.sharedUsers.map((sharedUser, index) => (

@@ -58,7 +58,7 @@ export const PositionProperty = React.memo((props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.left") ? (
                 <CustomeTextField

@@ -64,10 +64,11 @@ export const withKeyEvent = (Component) =>
       (state) => state.boardReducer.paintingGuides
     );
 
-    const unsetDeleteLayerState = useCallback(
-      () => setDeleteLayerState({}),
-      []
-    );
+    const unsetDeleteLayerState = useCallback(() => {
+      dispatch(setPressedKey(null));
+      dispatch(setPressedEventKey(null));
+      setDeleteLayerState({});
+    }, [dispatch]);
 
     const togglePaintingGuides = useCallback(
       (guide) => {
@@ -97,25 +98,32 @@ export const withKeyEvent = (Component) =>
       },
       [dispatch, stageRef, frameSize, zoom, boardRotate]
     );
-    const handleDeleteLayer = useCallback(async (layer) => {
-      let nothingLeft = false;
-      if (layer.layer_type === LayerTypes.UPLOAD) {
-        let schemes = await SchemeService.getSchemeListByUploadID(
-          layer.layer_data.id
-        );
-        if (schemes.length <= 1) {
-          nothingLeft = true;
+    const handleDeleteLayer = useCallback(
+      async (layer) => {
+        let nothingLeft = false;
+        if (layer.layer_type === LayerTypes.UPLOAD) {
+          let schemes = await SchemeService.getSchemeListByUploadID(
+            layer.layer_data.id
+          );
+          if (schemes.length <= 1) {
+            nothingLeft = true;
+          }
         }
-      }
-      setDeleteLayerState({
-        show: true,
-        nothingLeft,
-        message: `Are you sure you want to delete "${layer.layer_data.name}"?`,
-      });
-    }, []);
+        dispatch(setPressedKey(null));
+        dispatch(setPressedEventKey(null));
+        setDeleteLayerState({
+          show: true,
+          nothingLeft,
+          message: `Are you sure you want to delete "${layer.layer_data.name}"?`,
+        });
+      },
+      [dispatch]
+    );
 
     const handleConfirm = useCallback(
       (gonnaDeleteAll) => {
+        dispatch(setPressedKey(null));
+        dispatch(setPressedEventKey(null));
         dispatch(deleteLayer(currentLayer));
         if (gonnaDeleteAll) {
           // This is Uploads Layer, and gonna Delete it from uploads

@@ -5,7 +5,7 @@ import { DialogTypes } from "constant";
 import { Box, IconButton, useMediaQuery } from "@material-ui/core";
 import { ShortCutsDialog, SchemeSettingsDialog } from "components/dialogs";
 import { LightTooltip } from "components/common";
-import { faQuestion, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import ShortcutIcon from "assets/keyboard-shortcuts.svg";
 import {
   Save as SaveIcon,

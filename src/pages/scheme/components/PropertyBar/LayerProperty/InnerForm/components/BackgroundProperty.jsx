@@ -71,30 +71,30 @@ export const BackgroundProperty = React.memo((props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          {AllowedLayerTypes.includes("layer_data.bgColor") ? (
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Box display="flex" alignItems="center" height="100%">
-                  <Typography color="textSecondary">Background</Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <ColorPickerInput
-                  value={values.layer_data.bgColor}
-                  disabled={!editable}
-                  onChange={handleBGColorInstantChange}
-                  onInputChange={handleBGColorChange}
-                  error={Boolean(
-                    errors.layer_data && errors.layer_data.bgColor
-                  )}
-                  helperText={errors.layer_data && errors.layer_data.bgColor}
-                />
-              </Grid>
-            </Grid>
-          ) : (
-            <></>
-          )}
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
+            {AllowedLayerTypes.includes("layer_data.bgColor") ? (
+              <>
+                <Grid item xs={6}>
+                  <Box display="flex" alignItems="center" height="100%">
+                    <Typography color="textSecondary">Background</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <ColorPickerInput
+                    value={values.layer_data.bgColor}
+                    disabled={!editable}
+                    onChange={handleBGColorInstantChange}
+                    onInputChange={handleBGColorChange}
+                    error={Boolean(
+                      errors.layer_data && errors.layer_data.bgColor
+                    )}
+                    helperText={errors.layer_data && errors.layer_data.bgColor}
+                  />
+                </Grid>
+              </>
+            ) : (
+              <></>
+            )}
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.paddingX") ? (
                 <CustomeTextField

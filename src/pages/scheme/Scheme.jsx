@@ -60,6 +60,7 @@ const Scheme = React.memo((props) => {
   ] = useCapture(stageRef, baseLayerRef, mainLayerRef, carMaskLayerRef);
 
   const user = useSelector((state) => state.authReducer.user);
+  const previousPath = useSelector((state) => state.boardReducer.previousPath);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const schemeLoaded = useSelector((state) => state.schemeReducer.loaded);
 
@@ -101,8 +102,8 @@ const Scheme = React.memo((props) => {
   const handleGoBack = useCallback(async () => {
     await onUploadThumbnail(false);
 
-    history.push("/");
-  }, [history, onUploadThumbnail]);
+    history.push(`/${previousPath}`);
+  }, [history, onUploadThumbnail, previousPath]);
 
   const hideLegacyBanner = useCallback(() => {
     setShowLegacyBanner(false);

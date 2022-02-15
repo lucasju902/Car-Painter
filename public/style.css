@@ -102,3 +102,7 @@ body {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.ColorPicker-MuiButton-contained {
+  margin-left: 0;
+}

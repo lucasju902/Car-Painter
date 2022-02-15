@@ -35,9 +35,13 @@ export const getCarRaces = (schemeID, onSuccess, onError) => async (
   try {
     let carRaces = [];
     const stampedCarResult = await CarService.getCarRace(schemeID, 0);
-    carRaces.push(stampedCarResult.output);
+    if (stampedCarResult.status) {
+      carRaces.push(stampedCarResult.output);
+    }
     const customCarResult = await CarService.getCarRace(schemeID, 1);
-    carRaces.push(customCarResult.output);
+    if (customCarResult.status) {
+      carRaces.push(customCarResult.output);
+    }
     dispatch(setCars(carRaces));
     if (onSuccess) {
       onSuccess();

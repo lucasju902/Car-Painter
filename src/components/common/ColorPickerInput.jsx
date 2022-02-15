@@ -3,6 +3,19 @@ import useInterval from "react-useinterval";
 import { ColorPicker } from "material-ui-color";
 import { Box, TextField, Typography } from "@material-ui/core";
 import { Palette } from "constant";
+import styled from "styled-components";
+
+const CustomColorPicker = styled(ColorPicker)`
+  &.ColorPicker-MuiButton-contained {
+    margin-left: 0;
+  }
+`;
+const CustomTextField = styled(TextField)`
+  .MuiInputBase-input {
+    padding: 0;
+    text-align: right;
+  }
+`;
 
 export const ColorPickerInput = React.memo((props) => {
   const {
@@ -14,6 +27,7 @@ export const ColorPickerInput = React.memo((props) => {
     onInputChange,
     error,
     helperText,
+    fullWidth = true,
   } = props;
 
   const handleInputKeyDown = useCallback(
@@ -42,8 +56,20 @@ export const ColorPickerInput = React.memo((props) => {
   }, [200]);
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
-      <Box display="flex" alignItems="center">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      height="40px"
+      justifyContent="space-between"
+      width={fullWidth ? "100%" : "auto"}
+    >
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        width={fullWidth ? "100%" : "auto"}
+      >
         {disabled ? (
           <Box
             width="24px"
@@ -53,7 +79,7 @@ export const ColorPickerInput = React.memo((props) => {
             m="4px"
           ></Box>
         ) : (
-          <ColorPicker
+          <CustomColorPicker
             value={separateValues ? valuePicker : value || "#"}
             onChange={(color) =>
               onChange(color.error ? "" : color.css.backgroundColor)
@@ -64,10 +90,10 @@ export const ColorPickerInput = React.memo((props) => {
           />
         )}
 
-        <TextField
+        <CustomTextField
           value={value || ""}
           disabled={disabled}
-          style={{ width: 85 }}
+          style={{ width: 85, borderBottom: "1px solid white", padding: 0 }}
           onChange={(event) => onInputChange(event.target.value)}
           onKeyDown={handleInputKeyDown}
         />

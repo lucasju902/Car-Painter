@@ -64,75 +64,83 @@ export const SubForm = React.memo((props) => {
       </CustomAccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%" my={1}>
-          {guideID ? (
-            <Box
-              display="flex"
-              alignItems="center"
-              flexDirection="row"
-              justifyContent="space-between"
-            >
-              <Typography variant="body1" color="textSecondary" mr={2}>
-                Visibility
-              </Typography>
-              <IconButton
-                disabled={!editable}
-                onClick={() => onToggleGuideVisible(guideID)}
-                size="small"
-              >
-                {guideVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-              </IconButton>
-            </Box>
-          ) : (
-            <></>
-          )}
-          {colorKey || opacityKey ? (
-            <Grid container>
-              {colorKey ? (
-                <Grid item xs={12} sm={12}>
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <Typography variant="body1" color="textSecondary" mr={2}>
-                      Color
-                    </Typography>
-                    <ColorPickerInput
-                      disabled={!editable}
-                      value={values[colorKey]}
-                      onChange={handleChangeColor}
-                      onInputChange={handleChangeColor}
-                      error={Boolean(errors[colorKey])}
-                      helperText={errors[colorKey]}
-                    />
-                  </Box>
-                </Grid>
-              ) : (
-                <></>
-              )}
-              {opacityKey ? (
-                <Grid item xs={12} sm={12}>
-                  <SliderInput
-                    label="Opacity"
+          <Grid container spacing={2}>
+            {guideID ? (
+              <Grid item xs={12} sm={12} component={Box} height="48px">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Visibility
+                  </Typography>
+                  <IconButton
                     disabled={!editable}
-                    min={0.0}
-                    max={1.0}
-                    step={0.1}
-                    marks
-                    value={values[opacityKey]}
-                    setValue={handleChangeOpacity}
-                  />
-                </Grid>
-              ) : (
-                <></>
-              )}
-            </Grid>
-          ) : (
-            <></>
-          )}
-
-          {extraChildren}
+                    onClick={() => onToggleGuideVisible(guideID)}
+                    size="small"
+                    style={{ padding: "9px" }}
+                  >
+                    {guideVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </IconButton>
+                </Box>
+              </Grid>
+            ) : (
+              <></>
+            )}
+            {colorKey || opacityKey ? (
+              <>
+                {colorKey ? (
+                  <Grid item xs={12} sm={12} component={Box} height="48px">
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Typography variant="body1" color="textSecondary" mr={2}>
+                        Color
+                      </Typography>
+                      <Box pr="9px">
+                        <ColorPickerInput
+                          disabled={!editable}
+                          value={values[colorKey]}
+                          onChange={handleChangeColor}
+                          onInputChange={handleChangeColor}
+                          error={Boolean(errors[colorKey])}
+                          helperText={errors[colorKey]}
+                        />
+                      </Box>
+                    </Box>
+                  </Grid>
+                ) : (
+                  <></>
+                )}
+                {opacityKey ? (
+                  <Grid item xs={12} sm={12} component={Box} height="48px">
+                    <Box pr="9px">
+                      <SliderInput
+                        label="Opacity"
+                        disabled={!editable}
+                        min={0.0}
+                        max={1.0}
+                        step={0.1}
+                        marks
+                        value={values[opacityKey]}
+                        setValue={handleChangeOpacity}
+                      />
+                    </Box>
+                  </Grid>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <></>
+            )}
+            {extraChildren}
+          </Grid>
           {isCustomDirty ? (
             <Button
               type="submit"

@@ -63,7 +63,7 @@ export const CornerProperty = React.memo((props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             <Grid item xs={6}>
               {AllowedLayerTypes.includes("layer_data.cornerTopLeft") ? (
                 <CustomeTextField

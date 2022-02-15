@@ -257,6 +257,7 @@ export const SideBar = React.memo((props) => {
                       valuePicker={pickerValue}
                       value={colorInput}
                       disabled={!editable}
+                      fullWidth={false}
                       onChange={handleChangeBasePaintColor}
                       onInputChange={handleChangeBasePaintColorInput}
                     />

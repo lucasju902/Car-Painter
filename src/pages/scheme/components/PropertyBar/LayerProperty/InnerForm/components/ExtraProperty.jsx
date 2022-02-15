@@ -32,7 +32,7 @@ export const ExtraProperty = React.memo((props) => {
   )
     return <></>;
   return (
-    <Box display="flex" flexDirection="column" width="100%">
+    <Box display="flex" flexDirection="column" width="100%" mt={2}>
       {editable && AllowedLayerTypes.includes("clone") ? (
         <Button variant="outlined" onClick={onClone}>
           Clone

@@ -29,6 +29,7 @@ const initialState = {
   actionHistory: [],
   actionHistoryIndex: -1,
   viewMode: ViewModes.NORMAL_VIEW,
+  previousPath: "",
 };
 
 export const slice = createSlice({
@@ -90,6 +91,9 @@ export const slice = createSlice({
     setViewMode: (state, action) => {
       state.viewMode = action.payload;
     },
+    setPreviousPath: (state, action) => {
+      state.previousPath = action.payload;
+    },
   },
 });
 
@@ -110,6 +114,7 @@ export const {
   setActionHistoryIndex,
   reset,
   setViewMode,
+  setPreviousPath,
 } = slice.actions;
 
 export default slice.reducer;

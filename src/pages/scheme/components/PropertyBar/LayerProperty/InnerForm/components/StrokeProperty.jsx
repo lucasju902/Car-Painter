@@ -68,28 +68,38 @@ export const StrokeProperty = React.memo((props) => {
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
           {AllowedLayerTypes.includes("layer_data.scolor") ? (
-            <Grid container spacing={2} component={Box} alignItems="center">
-              <Grid item xs={6}>
-                <Typography variant="body1" color="textSecondary" mr={2}>
-                  Stroke Color
-                </Typography>
+            <Box display="flex" alignItems="center" height="48px">
+              <Grid
+                container
+                component={Box}
+                alignItems="center"
+                justifyContent="space-between"
+                spacing={2}
+              >
+                <Grid item xs={6}>
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Stroke Color
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <ColorPickerInput
+                    value={values.layer_data.scolor}
+                    disabled={!editable}
+                    onChange={handleChangeScolorInstantly}
+                    onInputChange={handleChangeScolorOnly}
+                    error={Boolean(
+                      errors.layer_data && errors.layer_data.scolor
+                    )}
+                    helperText={errors.layer_data && errors.layer_data.scolor}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <ColorPickerInput
-                  value={values.layer_data.scolor}
-                  disabled={!editable}
-                  onChange={handleChangeScolorInstantly}
-                  onInputChange={handleChangeScolorOnly}
-                  error={Boolean(errors.layer_data && errors.layer_data.scolor)}
-                  helperText={errors.layer_data && errors.layer_data.scolor}
-                />
-              </Grid>
-            </Grid>
+            </Box>
           ) : (
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.stroke") ? (
-            <Box mb={2}>
+            <Box display="flex" alignItems="center" height="48px">
               <SliderInput
                 label="Stroke Width"
                 min={0}
@@ -103,29 +113,31 @@ export const StrokeProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.strokeType") ? (
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography variant="body1" color="textSecondary" mr={2}>
-                  Stroke Type
-                </Typography>
+            <Box display="flex" alignItems="center" height="48px">
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Typography variant="body1" color="textSecondary" mr={2}>
+                    Stroke Type
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Select
+                    name="layer_data.strokeType"
+                    variant="outlined"
+                    value={values.layer_data.strokeType}
+                    disabled={!editable}
+                    onChange={(event) =>
+                      onLayerDataUpdate("strokeType", event.target.value)
+                    }
+                    fullWidth
+                  >
+                    <MenuItem value="inside">Inside</MenuItem>
+                    <MenuItem value="middle">Middle</MenuItem>
+                    <MenuItem value="outside">Outside</MenuItem>
+                  </Select>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Select
-                  name="layer_data.strokeType"
-                  variant="outlined"
-                  value={values.layer_data.strokeType}
-                  disabled={!editable}
-                  onChange={(event) =>
-                    onLayerDataUpdate("strokeType", event.target.value)
-                  }
-                  fullWidth
-                >
-                  <MenuItem value="inside">Inside</MenuItem>
-                  <MenuItem value="middle">Middle</MenuItem>
-                  <MenuItem value="outside">Outside</MenuItem>
-                </Select>
-              </Grid>
-            </Grid>
+            </Box>
           ) : (
             <></>
           )}

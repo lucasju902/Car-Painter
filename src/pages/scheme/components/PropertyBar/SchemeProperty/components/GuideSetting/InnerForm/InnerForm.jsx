@@ -65,32 +65,30 @@ export const InnerForm = React.memo(
             onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
             extraChildren={
-              <Grid container>
-                <Grid item xs={12} sm={12}>
-                  <LightTooltip
-                    title="Automatically display the wireframe guide when actively moving, resizing, or rotating a layer"
-                    arrow
-                  >
-                    <CustomFormControlLabel
-                      control={
-                        <Checkbox
-                          color="primary"
-                          name="show_wireframe"
-                          checked={formProps.values.show_wireframe}
-                          disabled={!editable}
-                          onChange={(event) =>
-                            formProps.setFieldValue(
-                              "show_wireframe",
-                              event.target.checked
-                            )
-                          }
-                        />
-                      }
-                      label="Show when editing"
-                      labelPlacement="start"
-                    />
-                  </LightTooltip>
-                </Grid>
+              <Grid item xs={12} sm={12}>
+                <LightTooltip
+                  title="Automatically display the wireframe guide when actively moving, resizing, or rotating a layer"
+                  arrow
+                >
+                  <CustomFormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="show_wireframe"
+                        checked={formProps.values.show_wireframe}
+                        disabled={!editable}
+                        onChange={(event) =>
+                          formProps.setFieldValue(
+                            "show_wireframe",
+                            event.target.checked
+                          )
+                        }
+                      />
+                    }
+                    label="Show when editing"
+                    labelPlacement="start"
+                  />
+                </LightTooltip>
               </Grid>
             }
           />
@@ -111,7 +109,7 @@ export const InnerForm = React.memo(
             onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
             extraChildren={
-              <Grid container>
+              <>
                 <Grid item xs={12} sm={12}>
                   <LightTooltip
                     title="Automatically display the sponsor blocks guide when actively moving, resizing, or rotating a layer"
@@ -162,7 +160,7 @@ export const InnerForm = React.memo(
                     />
                   </LightTooltip>
                 </Grid>
-              </Grid>
+              </>
             }
           />
           <SubForm
@@ -182,7 +180,7 @@ export const InnerForm = React.memo(
             onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
             extraChildren={
-              <Grid container>
+              <>
                 <Grid item xs={12} sm={12}>
                   <LightTooltip
                     title="Automatically display the number blocks guide when actively moving, resizing, or rotating a layer"
@@ -233,7 +231,7 @@ export const InnerForm = React.memo(
                     />
                   </LightTooltip>
                 </Grid>
-              </Grid>
+              </>
             }
           />
           <SubForm
@@ -255,28 +253,32 @@ export const InnerForm = React.memo(
             onToggleGuideVisible={handleTogglePaintingGuide}
             {...formProps}
             extraChildren={
-              <Grid container>
-                <Grid item xs={12} sm={12}>
-                  <SliderInput
-                    label="Column Size"
-                    min={5}
-                    max={50}
-                    step={1}
-                    value={formProps.values.grid_padding}
-                    disabled={!editable}
-                    setValue={handleChangeGridPadding}
-                  />
+              <>
+                <Grid item xs={12} sm={12} component={Box} height="48px">
+                  <Box pr="9px">
+                    <SliderInput
+                      label="Column Size"
+                      min={5}
+                      max={50}
+                      step={1}
+                      value={formProps.values.grid_padding}
+                      disabled={!editable}
+                      setValue={handleChangeGridPadding}
+                    />
+                  </Box>
                 </Grid>
-                <Grid item xs={12} sm={12}>
-                  <SliderInput
-                    label="Stroke Width"
-                    min={0.01}
-                    max={3}
-                    step={0.01}
-                    value={formProps.values.grid_stroke}
-                    disabled={!editable}
-                    setValue={handleChangeGridStroke}
-                  />
+                <Grid item xs={12} sm={12} component={Box} height="48px">
+                  <Box pr="9px">
+                    <SliderInput
+                      label="Stroke Width"
+                      min={0.01}
+                      max={3}
+                      step={0.01}
+                      value={formProps.values.grid_stroke}
+                      disabled={!editable}
+                      setValue={handleChangeGridStroke}
+                    />
+                  </Box>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <LightTooltip
@@ -323,7 +325,7 @@ export const InnerForm = React.memo(
                     labelPlacement="start"
                   />
                 </Grid>
-              </Grid>
+              </>
             }
           />
           <SubForm
@@ -333,32 +335,30 @@ export const InnerForm = React.memo(
             initialValues={initialValues}
             {...formProps}
             extraChildren={
-              <Grid container>
-                <Grid item xs={12} sm={12}>
-                  <LightTooltip
-                    title="If checked, it will appear on top of all the layers"
-                    arrow
-                  >
-                    <CustomFormControlLabel
-                      control={
-                        <Checkbox
-                          color="primary"
-                          name="show_carparts_on_top"
-                          checked={formProps.values.show_carparts_on_top}
-                          disabled={!editable}
-                          onChange={(event) =>
-                            formProps.setFieldValue(
-                              "show_carparts_on_top",
-                              event.target.checked
-                            )
-                          }
-                        />
-                      }
-                      label="Display above layers"
-                      labelPlacement="start"
-                    />
-                  </LightTooltip>
-                </Grid>
+              <Grid item xs={12} sm={12}>
+                <LightTooltip
+                  title="If checked, it will appear on top of all the layers"
+                  arrow
+                >
+                  <CustomFormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        name="show_carparts_on_top"
+                        checked={formProps.values.show_carparts_on_top}
+                        disabled={!editable}
+                        onChange={(event) =>
+                          formProps.setFieldValue(
+                            "show_carparts_on_top",
+                            event.target.checked
+                          )
+                        }
+                      />
+                    }
+                    label="Display above layers"
+                    labelPlacement="start"
+                  />
+                </LightTooltip>
               </Grid>
             }
           />
