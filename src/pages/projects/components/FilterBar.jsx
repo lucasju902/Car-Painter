@@ -1,20 +1,17 @@
-import React, { useCallback, useMemo } from "react";
-import _ from "lodash";
-import { useSelector } from "react-redux";
+import React, { useCallback } from "react";
 import styled from "styled-components/macro";
 
 import {
   Box,
-  TextField,
   Select,
   InputLabel,
   MenuItem,
   FormControl,
-  Autocomplete,
   Checkbox,
   FormControlLabel,
 } from "components/MaterialUI";
 import { SearchBox } from "components/common";
+import CarMakeAutocomplete from "./CarMakeAutocomplete";
 
 export const FilterBar = React.memo(
   ({
@@ -27,18 +24,6 @@ export const FilterBar = React.memo(
     setSortBy,
     legacyFilter,
   }) => {
-    const carMakeList = useSelector((state) => state.carMakeReducer.list);
-
-    let sortedCarMakesList = useMemo(
-      () =>
-        _.orderBy(
-          [...carMakeList.filter((item) => !item.is_parent && !item.deleted)],
-          ["car_type", "name"],
-          ["asc", "asc"]
-        ),
-      [carMakeList]
-    );
-
     const handleSearchChange = useCallback((value) => setSearch(value), [
       setSearch,
     ]);
@@ -69,27 +54,12 @@ export const FilterBar = React.memo(
               <MenuItem value={3}>Last Modified</MenuItem>
             </Select>
           </CustomFormControl>
-          {carMakeList && carMakeList.length ? (
-            <CustomAutocomplete
-              id="car-make-filter"
-              options={sortedCarMakesList}
-              groupBy={(option) => option.car_type}
-              getOptionLabel={(option) => option.name}
-              style={{ maxWidth: 500, width: "100%", marginRight: "16px" }}
-              onChange={(event, newValue) => {
-                setSelectedVehicle(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Filter By Vehicle"
-                  variant="outlined"
-                />
-              )}
-            />
-          ) : (
-            <></>
-          )}
+          <StyledCarMakeAutocomplete
+            label="Filter By Vehicle"
+            onChange={(event, newValue) => {
+              setSelectedVehicle(newValue);
+            }}
+          />
           {legacyFilter ? (
             <FormControlLabel
               control={
@@ -109,14 +79,10 @@ export const FilterBar = React.memo(
   }
 );
 
-const CustomFormControl = styled(FormControl)`
-  .MuiInputBase-root {
-    height: 38px;
-    margin-right: 10px;
-  }
-`;
-
-const CustomAutocomplete = styled(Autocomplete)`
+const StyledCarMakeAutocomplete = styled(CarMakeAutocomplete)`
+  max-width: 500px;
+  width: 100%;
+  margin-right: 16px;
   .MuiInputLabel-outlined {
     transform: translate(14px, 12px) scale(1);
     &.MuiInputLabel-shrink {
@@ -126,6 +92,13 @@ const CustomAutocomplete = styled(Autocomplete)`
   .MuiInputBase-root {
     padding-top: 0;
     padding-bottom: 0;
+  }
+`;
+
+const CustomFormControl = styled(FormControl)`
+  .MuiInputBase-root {
+    height: 38px;
+    margin-right: 10px;
   }
 `;
 

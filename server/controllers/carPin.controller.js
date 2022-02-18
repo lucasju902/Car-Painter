@@ -1,10 +1,10 @@
-const TeamService = require("../services/teamService");
+const CarPinService = require("../services/carPinService");
 const logger = require("../config/winston");
 
 class TeamController {
   static async getList(req, res) {
     try {
-      let list = await TeamService.getList();
+      let list = await CarPinService.getList();
       res.json(list);
     } catch (err) {
       logger.log("error", err.stack);
@@ -16,7 +16,7 @@ class TeamController {
 
   static async getListByUserID(req, res) {
     try {
-      let list = await TeamService.getListByUserId(req.params.id);
+      let list = await CarPinService.getListByUserId(req.params.id);
       res.json(list);
     } catch (err) {
       logger.log("error", err.stack);
@@ -28,8 +28,8 @@ class TeamController {
 
   static async getByID(req, res) {
     try {
-      let team = await TeamService.getById(req.params.id);
-      res.json(team);
+      let carPin = await CarPinService.getById(req.params.id);
+      res.json(carPin);
     } catch (err) {
       logger.log("error", err.stack);
       res.status(500).json({
@@ -40,8 +40,8 @@ class TeamController {
 
   static async create(req, res) {
     try {
-      let team = await TeamService.create(req.body);
-      res.json(team);
+      let carPin = await CarPinService.create(req.body);
+      res.json(carPin);
     } catch (err) {
       logger.log("error", err.stack);
       res.status(500).json({
@@ -52,8 +52,8 @@ class TeamController {
 
   static async update(req, res) {
     try {
-      let team = await TeamService.updateById(req.params.id, req.body);
-      res.json(team);
+      let carPin = await CarPinService.updateById(req.params.id, req.body);
+      res.json(carPin);
     } catch (err) {
       logger.log("error", err.stack);
       res.status(500).json({
@@ -64,7 +64,7 @@ class TeamController {
 
   static async delete(req, res) {
     try {
-      await TeamService.deleteById(req.params.id);
+      await CarPinService.deleteById(req.params.id);
       res.json({});
     } catch (err) {
       logger.log("error", err.stack);

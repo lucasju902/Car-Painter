@@ -93,7 +93,7 @@ export const ColorPickerInput = React.memo((props) => {
         <CustomTextField
           value={value || ""}
           disabled={disabled}
-          style={{ width: 85, borderBottom: "1px solid white", padding: 0 }}
+          style={{ width: 85, borderBottom: "1px solid gray", padding: 0 }}
           onChange={(event) => onInputChange(event.target.value)}
           onKeyDown={handleInputKeyDown}
         />

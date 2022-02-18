@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import styled from "styled-components/macro";
 import { funWords } from "constant";
 import { getTwoRandomNumbers } from "helper";
 
@@ -8,13 +9,9 @@ import {
   DialogTitle,
   DialogContent,
   Box,
-  Autocomplete,
 } from "components/MaterialUI";
-import {
-  CustomDialogActions,
-  NameField,
-  CarMakeLabel,
-} from "./CreateProjectDialog.style";
+import { CustomDialogActions, NameField } from "./CreateProjectDialog.style";
+import CarMakeAutocomplete from "pages/projects/components/CarMakeAutocomplete";
 
 export const CreateProjectDialog = React.memo((props) => {
   const {
@@ -71,25 +68,13 @@ export const CreateProjectDialog = React.memo((props) => {
       <DialogTitle id="project-select-title">Create a new paint</DialogTitle>
       <DialogContent dividers>
         <Box display="flex" flexDirection="column">
-          <Autocomplete
-            id="car-make-select"
+          <StyledCarMakeAutocomplete
+            label="Select Vehicle"
             value={carMake}
-            options={carMakeList || []}
-            groupBy={(option) => option.car_type}
-            getOptionLabel={(option) => option.name}
-            style={{ width: 500 }}
-            mb={4}
             onChange={(event, newValue) => {
               setCarMake(newValue);
             }}
             onKeyDown={handleKeyDown}
-            renderInput={(params) => (
-              <CarMakeLabel
-                {...params}
-                label="Select Vehicle"
-                variant="outlined"
-              />
-            )}
           />
 
           <NameField
@@ -118,5 +103,16 @@ export const CreateProjectDialog = React.memo((props) => {
     </Dialog>
   );
 });
+
+const StyledCarMakeAutocomplete = styled(CarMakeAutocomplete)`
+  width: 500px;
+  margin-bottom: 16px;
+  .MuiInputLabel-outlined {
+    transform: translate(14px, 19px) scale(1);
+    &.MuiInputLabel-shrink {
+      transform: translate(14px, -6px) scale(0.75);
+    }
+  }
+`;
 
 export default CreateProjectDialog;

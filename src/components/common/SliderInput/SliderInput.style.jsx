@@ -7,7 +7,7 @@ export const CustomInput = styled(Input)`
     margin-left: 10px;
     width: 45px;
     text-align: right;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid gray;
   }
 `;
 export const SliderWrapper = styled(Box)`

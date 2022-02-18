@@ -15,6 +15,7 @@ import logoReducer from "./logoReducer";
 import uploadReducer from "./uploadReducer";
 import fontReducer from "./fontReducer";
 import teamReducer from "./teamReducer";
+import carPinReducer from "./carPinReducer";
 import leagueSeriesReducer from "./leagueSeriesReducer";
 
 const reducers = (history) =>
@@ -34,6 +35,7 @@ const reducers = (history) =>
     uploadReducer,
     fontReducer,
     teamReducer,
+    carPinReducer,
     leagueSeriesReducer,
   });
 

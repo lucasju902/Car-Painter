@@ -31,6 +31,7 @@ import { reset as resetBoardReducer } from "redux/reducers/boardReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
 import { setMessage } from "redux/reducers/messageReducer";
 import { useGeneralSocket } from "hooks";
+import { getCarPinListByUserID } from "redux/reducers/carPinReducer";
 
 export const Projects = React.memo(() => {
   const dispatch = useDispatch();
@@ -44,6 +45,8 @@ export const Projects = React.memo(() => {
   const favoriteSchemeList = useSelector(
     (state) => state.schemeReducer.favoriteList
   );
+  const carPinList = useSelector((state) => state.carPinReducer.list);
+
   const schemeLoading = useSelector((state) => state.schemeReducer.loading);
   const carMakeLoading = useSelector((state) => state.carMakeReducer.loading);
 
@@ -90,6 +93,9 @@ export const Projects = React.memo(() => {
       if (!favoriteSchemeList.length) {
         setLoadingFavoriteList(true);
         dispatch(getFavoriteList(user.id, () => setLoadingFavoriteList(false)));
+      }
+      if (!carPinList.length) {
+        dispatch(getCarPinListByUserID(user.id));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
