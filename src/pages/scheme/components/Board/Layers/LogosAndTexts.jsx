@@ -99,7 +99,7 @@ export const LogosAndTexts = React.memo((props) => {
               filterColor={
                 specMode
                   ? layer.layer_data.finish || FinishOptions[0].value
-                  : null
+                  : layer.layer_data.color
               }
               shadowColor={
                 specMode

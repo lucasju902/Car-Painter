@@ -32,6 +32,7 @@ export const ColorProperty = React.memo((props) => {
   const layerDataProperties = ["color", "blendType", "finish"];
   const [expanded, setExpanded] = useState(true);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const logoList = useSelector((state) => state.logoReducer.list);
   const AllowedLayerTypes = useMemo(
     () =>
       !values.layer_type
@@ -41,11 +42,22 @@ export const ColorProperty = React.memo((props) => {
         : AllowedLayerProps[values.layer_type][values.layer_data.type],
     [values]
   );
+  const foundLogo = useMemo(
+    () =>
+      values.layer_type === LayerTypes.LOGO
+        ? logoList.find(
+            (item) => item.source_file === values.layer_data.source_file
+          )
+        : null,
+    [logoList, values.layer_data.source_file, values.layer_type]
+  );
   const showColor = useMemo(
     () =>
       AllowedLayerTypes.includes("layer_data.color") &&
-      values.layer_type !== LayerTypes.TEXT,
-    [AllowedLayerTypes, values.layer_type]
+      values.layer_type !== LayerTypes.TEXT &&
+      (values.layer_type !== LayerTypes.LOGO ||
+        (foundLogo && foundLogo.enable_color)),
+    [AllowedLayerTypes, foundLogo, values.layer_type]
   );
   const showBlendType = useMemo(
     () => AllowedLayerTypes.includes("layer_data.blendType"),

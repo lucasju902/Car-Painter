@@ -13,7 +13,6 @@ import {
   useMediaQuery,
 } from "@material-ui/core";
 import {
-  faImage,
   faFont,
   faFolderOpen,
   faShapes,
@@ -139,7 +138,13 @@ export const SideBar = React.memo((props) => {
   ]);
 
   return (
-    <Box display="flex" flexDirection="column" bgcolor="#666666">
+    <Box
+      display="flex"
+      flexDirection="column"
+      bgcolor="#666666"
+      width={showLayers ? "20%" : "auto"}
+      minWidth="300px"
+    >
       <TitleWrapper px={3} height="55px">
         {showLayers ? <TitleBar editable={editable} onBack={onBack} /> : <></>}
       </TitleWrapper>
@@ -151,7 +156,7 @@ export const SideBar = React.memo((props) => {
           editable={editable}
         />
         {showLayers ? (
-          <LayerWrapper width={overTablet ? "300px" : "250px"} pr={3}>
+          <LayerWrapper pr={3}>
             <PartGroup
               title={currentCarMake ? currentCarMake.name : ""}
               layerList={layerList.filter(

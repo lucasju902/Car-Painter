@@ -22,7 +22,11 @@ export const SliderInput = React.memo((props) => {
           </Typography>
         </Grid>
         <Grid item xs={6}>
-          <Box display="flex" alignItems="center">
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <SliderWrapper>
               <Slider
                 min={min}
