@@ -4,14 +4,7 @@ import { colorValidator } from "helper";
 import { FinishOptions, LayerTypes, DialogTypes } from "constant";
 import { EnglishLang } from "constant/language";
 
-import {
-  Box,
-  Typography,
-  Grid,
-  Select,
-  MenuItem,
-  useMediaQuery,
-} from "@material-ui/core";
+import { Box, Typography, Grid, Select, MenuItem } from "@material-ui/core";
 import {
   faFont,
   faFolderOpen,
@@ -44,7 +37,6 @@ export const SideBar = React.memo((props) => {
   } = props;
 
   const dispatch = useDispatch();
-  const overTablet = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const layerList = useSelector((state) => state.layerReducer.list);

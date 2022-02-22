@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { LayerProperty } from "./LayerProperty";
 import { SchemeProperty } from "./SchemeProperty";
 import { LightTooltip } from "components/common";
-import { IconButton, Box, useMediaQuery } from "components/MaterialUI";
+import { IconButton, Box } from "components/MaterialUI";
 import { ChevronsLeft, ChevronsRight } from "react-feather";
 
 import { setShowProperties } from "redux/reducers/boardReducer";
@@ -12,7 +12,6 @@ import { setShowProperties } from "redux/reducers/boardReducer";
 export const PropertyBar = React.memo((props) => {
   const { editable, stageRef, onCloneLayer, onDeleteLayer } = props;
   const dispatch = useDispatch();
-  const overTablet = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
