@@ -135,7 +135,8 @@ export const SideBar = React.memo((props) => {
       flexDirection="column"
       bgcolor="#666666"
       width={showLayers ? "20%" : "auto"}
-      minWidth="300px"
+      minWidth={showLayers ? "300px" : "0"}
+      maxWidth="400px"
     >
       <TitleWrapper px={3} height="55px">
         {showLayers ? <TitleBar editable={editable} onBack={onBack} /> : <></>}

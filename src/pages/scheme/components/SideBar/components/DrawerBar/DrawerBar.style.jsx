@@ -12,10 +12,20 @@ export const ToolWrapper = styled(Box)`
   border-radius: 5px;
   padding: 5px 1px;
 `;
+export const CustomDrawingItem = styled(MenuItem)`
+  display: flex;
+  justify-content: center;
+  padding: 7px 10px;
+  height: 30px;
+  min-height: 30px;
+  background-color: ${(props) =>
+    props.active === "true" ? "rgba(255, 255, 255, 0.08)" : "none"};
+`;
 export const CustomItem = styled(MenuItem)`
   display: flex;
   justify-content: center;
   padding: 7px 10px;
+  min-height: 30px;
   background-color: ${(props) =>
     props.active === "true" ? "rgba(255, 255, 255, 0.08)" : "none"};
 `;

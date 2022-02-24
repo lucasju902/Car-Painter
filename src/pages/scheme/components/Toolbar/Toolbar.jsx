@@ -330,7 +330,7 @@ export const Toolbar = React.memo((props) => {
               <Typography variant="subtitle2">Download Spec TGA</Typography>
             </Button>
           )}
-          <Box mx={1} height="100%">
+          <Box mx={1} height="100%" display="flex">
             <CustomButtonGroup variant="outlined">
               <Button onClick={() => onDownloadTGA()}>
                 <Typography variant="subtitle2">Download TGA</Typography>

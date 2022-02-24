@@ -25,25 +25,30 @@ export const SubForm = (props) => {
 
   return (
     <Box display="flex" flexDirection="column" width="100%" mb={1}>
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
         <Grid item xs={12} sm={6}>
-          <Box
+          <Grid
+            container
+            spacing={2}
+            component={Box}
             display="flex"
-            flexDirection="row"
             alignItems="center"
-            justifyContent="space-between"
           >
-            <Typography variant="body1" color="textSecondary" mr={2}>
-              Color
-            </Typography>
-            <ColorPickerInput
-              value={values[colorKey]}
-              onChange={handleColorChange}
-              onInputChange={handleColorChange}
-              error={Boolean(errors[colorKey])}
-              helperText={errors[colorKey]}
-            />
-          </Box>
+            <Grid item xs={6}>
+              <Typography variant="body1" color="textSecondary" mr={2}>
+                Color
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <ColorPickerInput
+                value={values[colorKey]}
+                onChange={handleColorChange}
+                onInputChange={handleColorChange}
+                error={Boolean(errors[colorKey])}
+                helperText={errors[colorKey]}
+              />
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12} sm={6}>
           <SliderInput
@@ -55,8 +60,8 @@ export const SubForm = (props) => {
             setValue={handleOpacityChange}
           />
         </Grid>
+        {extraChildren}
       </Grid>
-      {extraChildren}
     </Box>
   );
 };

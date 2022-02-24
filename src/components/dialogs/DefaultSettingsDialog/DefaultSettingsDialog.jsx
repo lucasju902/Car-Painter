@@ -90,25 +90,31 @@ const DefaultSettingsForm = React.memo(({ onCancel, ...formProps }) => {
           opacityKey="default_shape_opacity"
           {...formProps}
           extraChildren={
-            <Grid container spacing={2}>
+            <>
               <Grid item xs={12} sm={6}>
-                <Box
+                <Grid
+                  container
+                  spacing={2}
+                  component={Box}
                   display="flex"
-                  flexDirection="row"
                   alignItems="center"
-                  justifyContent="space-between"
                 >
-                  <Typography variant="body1" color="textSecondary" mr={2}>
-                    Stroke Color
-                  </Typography>
-                  <ColorPickerInput
-                    value={formProps.values["default_shape_scolor"]}
-                    onChange={handleDefaultShapeSColorChange}
-                    onInputChange={handleDefaultShapeSColorChange}
-                    error={Boolean(formProps.errors["default_shape_scolor"])}
-                    helperText={formProps.errors["default_shape_scolor"]}
-                  />
-                </Box>
+                  <Grid item xs={6}>
+                    <Typography variant="body1" color="textSecondary" mr={2}>
+                      Stroke Color
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <ColorPickerInput
+                      value={formProps.values["default_shape_scolor"]}
+                      onChange={handleDefaultShapeSColorChange}
+                      onInputChange={handleDefaultShapeSColorChange}
+                      error={Boolean(formProps.errors["default_shape_scolor"])}
+                      helperText={formProps.errors["default_shape_scolor"]}
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <SliderInput
@@ -120,7 +126,7 @@ const DefaultSettingsForm = React.memo(({ onCancel, ...formProps }) => {
                   setValue={handleDefaultShapeStrokeChange}
                 />
               </Grid>
-            </Grid>
+            </>
           }
         />
       </DialogContent>

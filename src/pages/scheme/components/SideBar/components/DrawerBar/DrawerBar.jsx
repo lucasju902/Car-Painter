@@ -56,6 +56,7 @@ import {
   CustomFontAwesomeIcon,
   DefaultSettingsButton,
 } from "./DrawerBar.style";
+import { CustomDrawingItem } from "./DrawerBar.style";
 
 const modes = [
   {
@@ -136,7 +137,7 @@ const dialog_modes = [
   {
     value: DialogTypes.LOGO,
     label: EnglishLang.INSERT_LOGO,
-    icon: <img src={LogoIcon} alt="Logos" />,
+    icon: <img src={LogoIcon} alt="Logos" height="30px" />,
   },
   {
     value: DialogTypes.TEXT,
@@ -146,12 +147,12 @@ const dialog_modes = [
   {
     value: DialogTypes.SHAPE,
     label: EnglishLang.INSERT_GRAPHICS,
-    icon: <img src={GraphicsIcon} alt="Graphics" />,
+    icon: <img src={GraphicsIcon} alt="Graphics" height="30px" />,
   },
   {
     value: DialogTypes.BASEPAINT,
     label: EnglishLang.INSERT_BASEPAINT,
-    icon: <img src={BasepaintIcon} alt="BasePaint" />,
+    icon: <img src={BasepaintIcon} alt="BasePaint" height="30px" />,
   },
 ];
 
@@ -309,14 +310,14 @@ export const DrawerBar = React.memo(
               arrow
               placement="right"
             >
-              <CustomItem
+              <CustomDrawingItem
                 value={mode.value}
                 disabled={!editable}
                 onClick={() => handleModeChange(mode.value)}
                 active={mode.value === mouseMode ? "true" : "false"}
               >
                 {mode.icon}
-              </CustomItem>
+              </CustomDrawingItem>
             </LightTooltip>
           ))}
           <Divider my={1} />

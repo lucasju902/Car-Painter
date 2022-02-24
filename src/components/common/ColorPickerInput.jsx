@@ -60,7 +60,6 @@ export const ColorPickerInput = React.memo((props) => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      height="40px"
       justifyContent="space-between"
       width={fullWidth ? "100%" : "auto"}
     >

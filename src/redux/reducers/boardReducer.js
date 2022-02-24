@@ -1,7 +1,12 @@
 import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
-import { MouseModes } from "constant";
-import { HistoryActions } from "constant";
+import SocketClient from "utils/socketClient";
+import {
+  MouseModes,
+  HistoryActions,
+  PaintingGuides,
+  ViewModes,
+} from "constant";
 import {
   updateLayer,
   deleteLayer,
@@ -11,7 +16,6 @@ import {
 import { updateScheme } from "./schemeReducer";
 import { setMessage } from "./messageReducer";
 import LayerService from "services/layerService";
-import { PaintingGuides, ViewModes } from "constant";
 
 const initialState = {
   frameSize: {
@@ -121,6 +125,7 @@ export default slice.reducer;
 
 export const backUpLayer = (layerToClone) => async (dispatch, getState) => {
   try {
+    const currentUser = getState().authReducer.user;
     let actionHistory = JSON.parse(
       JSON.stringify(getState().boardReducer.actionHistory)
     );
@@ -129,6 +134,11 @@ export const backUpLayer = (layerToClone) => async (dispatch, getState) => {
       layer_data: JSON.stringify({
         ...layerToClone.layer_data,
       }),
+    });
+    SocketClient.emit("client-create-layer", {
+      data: layer,
+      socketID: SocketClient.socket.id,
+      userID: currentUser.id,
     });
     for (let action of actionHistory) {
       if (

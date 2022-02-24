@@ -5,7 +5,6 @@ import config from "config";
 import fitty from "fitty";
 
 import {
-  Box,
   FormControl,
   InputLabel,
   Typography,
@@ -19,6 +18,7 @@ import {
 } from "./InnerForm.style";
 
 import { insertToLoadedList as insertToLoadedFontList } from "redux/reducers/fontReducer";
+import { Box } from "@material-ui/core";
 
 export const InnerForm = React.memo((props) => {
   const {
@@ -139,7 +139,7 @@ export const InnerForm = React.memo((props) => {
           fontList={fontList}
         />
       </FormControl>
-      <Grid container spacing={2}>
+      <Grid container spacing={4}>
         <Grid item xs={12} sm={6}>
           <SliderInput
             label="Stroke Width"
@@ -149,46 +149,56 @@ export const InnerForm = React.memo((props) => {
             setValue={handleChangeStroke}
           />
         </Grid>
-      </Grid>
+        <Grid item xs={12} sm={6}></Grid>
 
-      <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <Box
+          <Grid
+            container
+            spacing={2}
+            component={Box}
             display="flex"
-            flexDirection="row"
             alignItems="center"
-            justifyContent="space-between"
           >
-            <Typography variant="body1" color="textSecondary" mr={2}>
-              Font Color
-            </Typography>
-            <ColorPickerInput
-              value={values.color}
-              onChange={handleChangeColor}
-              onInputChange={handleChangeColor}
-              error={Boolean(errors.color)}
-              helperText={errors.color}
-            />
-          </Box>
+            <Grid item xs={6}>
+              <Typography variant="body1" color="textSecondary" mr={2}>
+                Font Color
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <ColorPickerInput
+                value={values.color}
+                onChange={handleChangeColor}
+                onInputChange={handleChangeColor}
+                error={Boolean(errors.color)}
+                helperText={errors.color}
+              />
+            </Grid>
+          </Grid>
         </Grid>
+
         <Grid item xs={12} sm={6}>
-          <Box
+          <Grid
+            container
+            spacing={2}
+            component={Box}
             display="flex"
-            flexDirection="row"
             alignItems="center"
-            justifyContent="space-between"
           >
-            <Typography variant="body1" color="textSecondary" mr={2}>
-              Stroke Color
-            </Typography>
-            <ColorPickerInput
-              value={values.scolor}
-              onChange={handleChangeSColor}
-              onInputChange={handleChangeSColor}
-              error={Boolean(errors.scolor)}
-              helperText={errors.scolor}
-            />
-          </Box>
+            <Grid item xs={6}>
+              <Typography variant="body1" color="textSecondary" mr={2}>
+                Stroke Color
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <ColorPickerInput
+                value={values.scolor}
+                onChange={handleChangeSColor}
+                onInputChange={handleChangeSColor}
+                error={Boolean(errors.scolor)}
+                helperText={errors.scolor}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
 

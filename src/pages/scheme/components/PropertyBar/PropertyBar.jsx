@@ -28,11 +28,19 @@ export const PropertyBar = React.memo((props) => {
       position="relative"
       display="flex"
       overflow="visible"
-      width="20%"
-      minWidth="250px"
+      width={showProperties ? "20%" : "0"}
+      minWidth={showProperties ? "250px" : "0"}
+      maxWidth="300px"
     >
       {showProperties ? (
-        <Box bgcolor="#666" overflow="auto" py={5} px={3} height="100%">
+        <Box
+          bgcolor="#666"
+          overflow="auto"
+          py={5}
+          px={3}
+          height="100%"
+          width="100%"
+        >
           {currentLayer ? (
             <LayerProperty
               editable={editable}
