@@ -122,14 +122,16 @@ export const withKeyEvent = (Component) =>
 
     const handleConfirm = useCallback(
       (gonnaDeleteAll) => {
-        dispatch(setPressedKey(null));
-        dispatch(setPressedEventKey(null));
-        dispatch(deleteLayer(currentLayer));
-        if (gonnaDeleteAll) {
-          // This is Uploads Layer, and gonna Delete it from uploads
-          dispatch(deleteUpload({ id: currentLayer.layer_data.id }, false));
+        if (currentLayer) {
+          dispatch(setPressedKey(null));
+          dispatch(setPressedEventKey(null));
+          dispatch(deleteLayer(currentLayer));
+          if (gonnaDeleteAll) {
+            // This is Uploads Layer, and gonna Delete it from uploads
+            dispatch(deleteUpload({ id: currentLayer.layer_data.id }, false));
+          }
+          setDeleteLayerState({});
         }
-        setDeleteLayerState({});
       },
       [dispatch, currentLayer, setDeleteLayerState]
     );

@@ -151,6 +151,7 @@ export const slice = createSlice({
         scheme &&
         (typeof scheme.guide_data === "string" || !scheme.guide_data)
       ) {
+        console.log("scheme.guide_data: ", scheme.guide_data);
         scheme.guide_data = JSON.parse(scheme.guide_data) || {};
       }
       state.current = scheme;

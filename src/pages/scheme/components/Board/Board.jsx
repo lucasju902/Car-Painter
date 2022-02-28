@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { Stage, Layer, Rect } from "react-konva";
+import { Stage, Layer, Rect, Shape } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { useResizeDetector } from "react-resize-detector";
 
@@ -307,13 +307,7 @@ export const Board = React.memo(
               <></>
             )}
 
-            <Layer
-              ref={mainLayerRef}
-              clipX={0}
-              clipY={0}
-              clipWidth={frameSize.width}
-              clipHeight={frameSize.height}
-            >
+            <Layer ref={mainLayerRef}>
               {!currentScheme.guide_data.show_carparts_on_top ? (
                 <CarParts
                   layers={layerList}
@@ -463,6 +457,32 @@ export const Board = React.memo(
                 handleImageSize={handleImageSize}
                 onLoadLayer={handleLoadLayer}
               />
+            </Layer>
+
+            {/* Clipping/Transforming Layer */}
+            <Layer listening={false}>
+              <Shape
+                x={-frameSize.width}
+                y={-frameSize.height}
+                width={frameSize.width * 3}
+                height={frameSize.height * 3}
+                sceneFunc={(ctx) => {
+                  // draw background
+                  ctx.fillStyle = "rgba(40, 40, 40, 0.7)";
+                  ctx.fillRect(0, 0, frameSize.width * 3, frameSize.height * 3);
+
+                  ctx.globalCompositeOperation = "destination-out";
+                  ctx.fillStyle = "black";
+                  ctx.fillRect(
+                    frameSize.width,
+                    frameSize.height,
+                    frameSize.width,
+                    frameSize.height
+                  );
+                }}
+                listening={false}
+              />
+
               {editable ? (
                 <TransformerComponent
                   trRef={activeTransformerRef}

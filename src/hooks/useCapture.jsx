@@ -157,6 +157,12 @@ export const useCapture = (
 
       stageRef.current.setAttrs(_.omit(stageAttrs, ["container"]));
       stageRef.current.draw();
+      setTimeout(() => {
+        stageRef.current.x(stageAttrs.x);
+        stageRef.current.y(stageAttrs.y);
+        stageRef.current.draw();
+      }, 100);
+
       baseLayerRef.current.absolutePosition(baseLayerAbPos);
       mainLayerRef.current.absolutePosition(mainLayerAbPos);
       carMaskLayerRef.current.absolutePosition(carMaskLayerAbPos);

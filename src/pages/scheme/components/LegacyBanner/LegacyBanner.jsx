@@ -12,10 +12,12 @@ export const LegacyBanner = React.memo(({ show, carMakeID, onDismiss }) => {
     <Box
       position="absolute"
       left={0}
+      right={0}
       top="10px"
-      width="100%"
+      width="500px"
       display="flex"
       justifyContent="center"
+      margin="auto"
     >
       {show ? (
         <Box
