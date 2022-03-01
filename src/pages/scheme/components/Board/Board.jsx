@@ -460,7 +460,7 @@ export const Board = React.memo(
             </Layer>
 
             {/* Clipping/Transforming Layer */}
-            <Layer listening={false}>
+            <Layer>
               <Shape
                 x={-frameSize.width}
                 y={-frameSize.height}
