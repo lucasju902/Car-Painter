@@ -133,7 +133,7 @@ export const ProjectItem = React.memo((props) => {
       </>
     );
     handleActionMenuClose();
-  }, [accepted, scheme.id, scheme.name, shared]);
+  }, [accepted, scheme, shared]);
 
   const handleOpenScheme = useCallback(() => {
     const scrollPosition = document.getElementById("scheme-list-content")
