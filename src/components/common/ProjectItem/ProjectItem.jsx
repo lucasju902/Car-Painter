@@ -9,6 +9,7 @@ import {
   MenuItem,
   CircularProgress,
   Avatar,
+  LinearProgress,
 } from "@material-ui/core";
 import { ImageWithLoad, LightTooltip } from "components/common";
 import { ConfirmDialog } from "components/dialogs";
@@ -97,6 +98,13 @@ export const ProjectItem = React.memo((props) => {
   }, [onAccept, sharedID]);
 
   const handleDelete = useCallback(async () => {
+    setDeleteMessage(
+      <>
+        Are you sure you want to{" "}
+        {!shared ? "delete" : !accepted ? "reject" : "remove"} "{scheme.name}"?
+        <LinearProgress color="secondary" style={{ margin: "10px 0" }} />
+      </>
+    );
     let hasPrimaryRace = false;
     if (!shared) {
       let carRaces = [];
@@ -117,7 +125,9 @@ export const ProjectItem = React.memo((props) => {
         {hasPrimaryRace && (
           <>
             <br />
-            This project has active car racing!
+            This project is associated with an active paint for your{" "}
+            {scheme.carMake.name}. <br />
+            If you delete this project, you won’t be able to make changes.
           </>
         )}
       </>

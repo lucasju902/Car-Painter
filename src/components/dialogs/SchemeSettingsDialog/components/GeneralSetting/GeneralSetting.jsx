@@ -215,7 +215,10 @@ export const GeneralSetting = React.memo((props) => {
                     {hasPrimaryRace && (
                       <>
                         <br />
-                        This project has active car racing!
+                        This project is associated with an active paint for your{" "}
+                        {currentCarMake.name}. <br />
+                        If you delete this project, you won’t be able to make
+                        changes.
                       </>
                     )}
                   </>
