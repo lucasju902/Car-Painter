@@ -149,7 +149,7 @@ export const SideBar = React.memo((props) => {
           editable={editable}
         />
         {showLayers ? (
-          <LayerWrapper pr={3}>
+          <LayerWrapper width="100%" pr={3}>
             <PartGroup
               title={currentCarMake ? currentCarMake.name : ""}
               layerList={layerList.filter(
@@ -249,6 +249,7 @@ export const SideBar = React.memo((props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="space-between"
+                    mt={2}
                   >
                     <ColorPickerInput
                       separateValues={true}
@@ -276,7 +277,7 @@ export const SideBar = React.memo((props) => {
                   </Box>
                   {!currentScheme.hide_spec &&
                     currentCarMake.car_type !== "Misc" && (
-                      <Grid container spacing={2}>
+                      <Grid container spacing={2} component={Box} mt={2}>
                         <Grid item xs={6}>
                           <Box display="flex" alignItems="center" height="100%">
                             <Typography

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useHistory } from "react-router";
 
 import {
@@ -52,6 +52,9 @@ export const GeneralSetting = React.memo((props) => {
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [name, setName] = useState(scheme.name);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const cars = useSelector((state) => state.carReducer.cars);
+
+  const hasPrimaryRace = useMemo(() => cars.some((car) => car.primary), [cars]);
 
   const handleUpdateHideSpec = useCallback(
     (flag) => {
@@ -185,7 +188,12 @@ export const GeneralSetting = React.memo((props) => {
           labelPlacement="start"
         />
 
-        <Box mt={2}>
+        <Box
+          mt={2}
+          display="flex"
+          flexDirection="column"
+          alignItems="flex-start"
+        >
           {editable ? (
             <CustomButton
               color="secondary"
@@ -202,7 +210,15 @@ export const GeneralSetting = React.memo((props) => {
             <CustomButton
               onClick={() =>
                 setDeleteMessage(
-                  `Are you sure you want to delete "${scheme.name}"?`
+                  <>
+                    Are you sure you want to delete "{scheme.name}"?
+                    {hasPrimaryRace && (
+                      <>
+                        <br />
+                        This project has active car racing!
+                      </>
+                    )}
+                  </>
                 )
               }
               color="secondary"

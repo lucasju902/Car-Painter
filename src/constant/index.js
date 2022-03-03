@@ -110,7 +110,7 @@ export const DefaultLayer = {
   upload_id: 0,
   layer_visible: 1,
   layer_locked: 0,
-  layer_order: 0,
+  layer_order: 1,
   time_modified: 0,
   confirm: "",
   layer_data: {

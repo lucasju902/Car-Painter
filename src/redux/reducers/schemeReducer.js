@@ -151,8 +151,7 @@ export const slice = createSlice({
         scheme &&
         (typeof scheme.guide_data === "string" || !scheme.guide_data)
       ) {
-        console.log("scheme.guide_data: ", scheme.guide_data);
-        scheme.guide_data = JSON.parse(scheme.guide_data) || {};
+        scheme.guide_data = JSON.parse(scheme.guide_data || null) || {};
       }
       state.current = scheme;
     },
@@ -280,9 +279,7 @@ export const getScheme = (schemeID, callback, fallback) => async (dispatch) => {
     dispatch(setLastModifier(result.scheme.lastModifier));
     dispatch(setCurrentCarMake(result.carMake));
     let loadedStatuses = {};
-    result.layers.map((item) => {
-      loadedStatuses[item.id] = false;
-    });
+    result.layers.map((item) => (loadedStatuses[item.id] = false));
     dispatch(setLoadedStatusAll(loadedStatuses));
     dispatch(setLayerList(result.layers));
     dispatch(setBasePaintList(result.basePaints));

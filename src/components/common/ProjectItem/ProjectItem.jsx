@@ -26,6 +26,7 @@ import { getDifferenceFromToday, reduceString } from "helper";
 import { AvatarGroup } from "@material-ui/lab";
 import { setPreviousPath } from "redux/reducers/boardReducer";
 import { useDispatch } from "react-redux";
+import CarService from "services/carService";
 
 export const ProjectItem = React.memo((props) => {
   const {
@@ -95,18 +96,34 @@ export const ProjectItem = React.memo((props) => {
     handleActionMenuClose();
   }, [onAccept, sharedID]);
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = useCallback(async () => {
+    let hasPrimaryRace = false;
+    if (!shared) {
+      let carRaces = [];
+      const stampedCarResult = await CarService.getCarRace(scheme.id, 0);
+      if (stampedCarResult.status) {
+        carRaces.push(stampedCarResult.output);
+      }
+      const customCarResult = await CarService.getCarRace(scheme.id, 1);
+      if (customCarResult.status) {
+        carRaces.push(customCarResult.output);
+      }
+      hasPrimaryRace = carRaces.some((car) => car.primary);
+    }
     setDeleteMessage(
-      `Are you sure you want to ${
-        shared && !accepted
-          ? "reject"
-          : shared && accepted
-          ? "remove"
-          : "delete"
-      } "${scheme.name}"?`
+      <>
+        Are you sure you want to{" "}
+        {!shared ? "delete" : !accepted ? "reject" : "remove"} "{scheme.name}"?
+        {hasPrimaryRace && (
+          <>
+            <br />
+            This project has active car racing!
+          </>
+        )}
+      </>
     );
     handleActionMenuClose();
-  }, [accepted, scheme.name, shared]);
+  }, [accepted, scheme.id, scheme.name, shared]);
 
   const handleOpenScheme = useCallback(() => {
     const scrollPosition = document.getElementById("scheme-list-content")

@@ -46,6 +46,15 @@ export const PartItem = React.memo((props) => {
     [item.id, toggleField]
   );
 
+  const handleClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onSelect(item);
+    },
+    [item, onSelect]
+  );
+
   return (
     <Wrapper
       ref={wrapperRef}
@@ -57,7 +66,7 @@ export const PartItem = React.memo((props) => {
       border={1}
       borderColor="grey.700"
       borderRadius={5}
-      onClick={() => onSelect(item)}
+      onClick={handleClick}
       onDoubleClick={onDoubleClick}
       onMouseEnter={() => onHover(item, true)}
       onMouseLeave={() => onHover(item, false)}

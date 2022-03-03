@@ -176,16 +176,74 @@ export const {
 
 export default slice.reducer;
 
+const afterCreateLayer = (layer, pushingToHistory = true) => async (
+  dispatch,
+  getState
+) => {
+  const currentUser = getState().authReducer.user;
+  const layerList = getState().layerReducer.list;
+  SocketClient.emit("client-create-layer", {
+    data: layer,
+    socketID: SocketClient.socket.id,
+    userID: currentUser.id,
+  });
+
+  let filter = [];
+  if ([LayerTypes.BASE].includes(layer.layer_type)) {
+    filter = [LayerTypes.BASE];
+  } else if ([LayerTypes.SHAPE].includes(layer.layer_type)) {
+    filter = [LayerTypes.SHAPE];
+  } else if ([LayerTypes.OVERLAY].includes(layer.layer_type)) {
+    filter = [LayerTypes.OVERLAY];
+  } else if (
+    [LayerTypes.LOGO, LayerTypes.TEXT, LayerTypes.UPLOAD].includes(
+      layer.layer_type
+    )
+  ) {
+    filter = [LayerTypes.LOGO, LayerTypes.TEXT, LayerTypes.UPLOAD];
+  }
+  const filteredLayers = layerList.filter((layerItem) =>
+    filter.includes(layerItem.layer_type)
+  );
+  for (let layerItem of filteredLayers) {
+    dispatch(
+      mergeListItem({
+        ...layerItem,
+        layer_order: layerItem.layer_order + 1,
+      })
+    );
+    SocketClient.emit("client-update-layer", {
+      data: {
+        ...layerItem,
+        layer_order: layerItem.layer_order + 1,
+      },
+      socketID: SocketClient.socket.id,
+      userID: currentUser.id,
+    });
+  }
+
+  dispatch(insertToList(layer));
+  if (layer.layer_type !== LayerTypes.BASE) {
+    dispatch(setCurrent(layer));
+  }
+  if (pushingToHistory) {
+    dispatch(
+      pushToActionHistory({
+        action: HistoryActions.LAYER_ADD_ACTION,
+        data: parseLayer(layer),
+      })
+    );
+  }
+};
+
 export const createLayersFromBasePaint = (
   schemeID,
   basePaintItemOrIndex,
   legacyMode
-) => async (dispatch, getState) => {
+) => async (dispatch) => {
   dispatch(setLoading(true));
 
   try {
-    const currentUser = getState().authReducer.user;
-    // let layer_order = order;
     let baseData = legacyMode
       ? basePaintItemOrIndex.base_data
       : Array.from({ length: 3 }, (_, i) => i + 1); // There are 3 basepaints for each carMake.
@@ -227,19 +285,7 @@ export const createLayersFromBasePaint = (
                   : "#0000ff",
             }),
       });
-      SocketClient.emit("client-create-layer", {
-        data: layer,
-        socketID: SocketClient.socket.id,
-        userID: currentUser.id,
-      });
-      dispatch(insertToList(layer));
-      dispatch(setCurrent(layer));
-      dispatch(
-        pushToActionHistory({
-          action: HistoryActions.LAYER_ADD_ACTION,
-          data: parseLayer(layer),
-        })
-      );
+      dispatch(afterCreateLayer(layer));
     }
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
@@ -255,7 +301,6 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
 
   try {
     const boardRotate = getState().boardReducer.boardRotate;
-    const currentUser = getState().authReducer.user;
     const guide_data = getState().schemeReducer.current.guide_data;
 
     const AllowedLayerTypes = AllowedLayerProps[LayerTypes.OVERLAY];
@@ -288,19 +333,7 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
         stroke_scale: shape.stroke_scale,
       }),
     });
-    SocketClient.emit("client-create-layer", {
-      data: layer,
-      socketID: SocketClient.socket.id,
-      userID: currentUser.id,
-    });
-    dispatch(insertToList(layer));
-    dispatch(setCurrent(layer));
-    dispatch(
-      pushToActionHistory({
-        action: HistoryActions.LAYER_ADD_ACTION,
-        data: parseLayer(layer),
-      })
-    );
+    dispatch(afterCreateLayer(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -315,7 +348,6 @@ export const createLayerFromLogo = (schemeID, logo, position) => async (
 
   try {
     const boardRotate = getState().boardReducer.boardRotate;
-    const currentUser = getState().authReducer.user;
     const AllowedLayerTypes = AllowedLayerProps[LayerTypes.LOGO];
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
@@ -337,19 +369,7 @@ export const createLayerFromLogo = (schemeID, logo, position) => async (
         preview_file: logo.preview_file,
       }),
     });
-    SocketClient.emit("client-create-layer", {
-      data: layer,
-      socketID: SocketClient.socket.id,
-      userID: currentUser.id,
-    });
-    dispatch(insertToList(layer));
-    dispatch(setCurrent(layer));
-    dispatch(
-      pushToActionHistory({
-        action: HistoryActions.LAYER_ADD_ACTION,
-        data: parseLayer(layer),
-      })
-    );
+    dispatch(afterCreateLayer(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -388,19 +408,7 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
         fromOldSource: upload.legacy_mode,
       }),
     });
-    SocketClient.emit("client-create-layer", {
-      data: layer,
-      socketID: SocketClient.socket.id,
-      userID: currentUser.id,
-    });
-    dispatch(insertToList(layer));
-    dispatch(setCurrent(layer));
-    dispatch(
-      pushToActionHistory({
-        action: HistoryActions.LAYER_ADD_ACTION,
-        data: parseLayer(layer),
-      })
-    );
+    dispatch(afterCreateLayer(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -415,7 +423,6 @@ export const createTextLayer = (schemeID, textObj, position) => async (
 
   try {
     const boardRotate = getState().boardReducer.boardRotate;
-    const currentUser = getState().authReducer.user;
     const AllowedLayerTypes = AllowedLayerProps[LayerTypes.TEXT];
     const layer = await LayerService.createLayer({
       ...DefaultLayer,
@@ -434,19 +441,7 @@ export const createTextLayer = (schemeID, textObj, position) => async (
         top: position.y,
       }),
     });
-    SocketClient.emit("client-create-layer", {
-      data: layer,
-      socketID: SocketClient.socket.id,
-      userID: currentUser.id,
-    });
-    dispatch(insertToList(layer));
-    dispatch(setCurrent(layer));
-    dispatch(
-      pushToActionHistory({
-        action: HistoryActions.LAYER_ADD_ACTION,
-        data: parseLayer(layer),
-      })
-    );
+    dispatch(afterCreateLayer(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -463,7 +458,6 @@ export const cloneLayer = (
   if (layerToClone) {
     dispatch(setLoading(true));
     try {
-      const currentUser = getState().authReducer.user;
       const boardRotate = getState().boardReducer.boardRotate;
       const offset = rotatePoint(
         layerToClone.layer_data.width ? -layerToClone.layer_data.width / 2 : 0,
@@ -486,20 +480,7 @@ export const cloneLayer = (
             : centerPosition.y + offset.y,
         }),
       });
-      SocketClient.emit("client-create-layer", {
-        data: layer,
-        socketID: SocketClient.socket.id,
-        userID: currentUser.id,
-      });
-      dispatch(insertToList(layer));
-      dispatch(setCurrent(layer));
-      if (pushingToHistory)
-        dispatch(
-          pushToActionHistory({
-            action: HistoryActions.LAYER_ADD_ACTION,
-            data: parseLayer(layer),
-          })
-        );
+      dispatch(afterCreateLayer(layer, pushingToHistory));
       if (callback) callback();
     } catch (err) {
       dispatch(setMessage({ message: err.message }));
@@ -508,13 +489,9 @@ export const cloneLayer = (
   }
 };
 
-export const createShape = (schemeID, newlayer) => async (
-  dispatch,
-  getState
-) => {
+export const createShape = (schemeID, newlayer) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const currentUser = getState().authReducer.user;
     const AllowedLayerTypes =
       AllowedLayerProps[LayerTypes.SHAPE][newlayer.layer_data.type];
     const layerData = _.pick(
@@ -546,20 +523,8 @@ export const createShape = (schemeID, newlayer) => async (
       scheme_id: schemeID,
       layer_data: JSON.stringify(layerData),
     });
-    SocketClient.emit("client-create-layer", {
-      data: layer,
-      socketID: SocketClient.socket.id,
-      userID: currentUser.id,
-    });
-    dispatch(insertToList(layer));
-    dispatch(setCurrent(layer));
+    dispatch(afterCreateLayer(layer));
     dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
-    dispatch(
-      pushToActionHistory({
-        action: HistoryActions.LAYER_ADD_ACTION,
-        data: parseLayer(layer),
-      })
-    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
