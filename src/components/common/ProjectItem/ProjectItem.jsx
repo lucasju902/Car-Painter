@@ -189,14 +189,14 @@ export const ProjectItem = React.memo((props) => {
               bgcolor="#FF0833"
               color="white"
               p="0px 5px"
-              mb={2}
-              width="72px"
+              mb={1}
+              width="52px"
             >
               <LightTooltip
                 title="This project was created with an old version of Paint Builder."
                 arrow
               >
-                <Typography variant="body1">LEGACY</Typography>
+                <Typography variant="caption">LEGACY</Typography>
               </LightTooltip>
             </Box>
           ) : (

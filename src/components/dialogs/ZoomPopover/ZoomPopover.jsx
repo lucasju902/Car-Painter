@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import {
   Popover,
@@ -20,6 +20,8 @@ export const ZoomPopover = React.memo(
       },
       [onClose]
     );
+    const [innerValue, setInnerValue] = useState((zoom * 100).toFixed(2));
+
     const handleZoomChange = useCallback(
       (event) => {
         setZoom(parseInt(event.target.value || 0) / 100.0);
@@ -32,6 +34,10 @@ export const ZoomPopover = React.memo(
     const handleZoom100 = useCallback(() => {
       setZoom(1);
     }, [setZoom]);
+
+    useEffect(() => {
+      setInnerValue((zoom * 100).toFixed(2));
+    }, [zoom]);
 
     return (
       <Popover
@@ -106,8 +112,9 @@ export const ZoomPopover = React.memo(
 
           <OutlinedInput
             id="zoom-value"
-            value={(zoom * 100).toFixed(2)}
-            onChange={handleZoomChange}
+            value={innerValue}
+            onChange={(e) => setInnerValue(e.target.value)}
+            onBlur={handleZoomChange}
             onFocus={handleFocus}
             onKeyDown={handleZoomKeyDown}
             endAdornment={<InputAdornment position="end">%</InputAdornment>}

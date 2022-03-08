@@ -11,7 +11,7 @@ import {
   Typography,
   CircularProgress,
 } from "components/MaterialUI";
-import { Bookmark, BookmarkBorder } from "@material-ui/icons";
+import { BsPinAngleFill, BsPinAngle } from "react-icons/bs";
 
 export const CarMakeAutocomplete = React.memo(({ label, ...props }) => {
   const dispatch = useDispatch();
@@ -68,8 +68,8 @@ export const CarMakeAutocomplete = React.memo(({ label, ...props }) => {
                 />
               ) : (
                 <Checkbox
-                  icon={<BookmarkBorder />}
-                  checkedIcon={<Bookmark />}
+                  icon={<BsPinAngle />}
+                  checkedIcon={<BsPinAngleFill />}
                   checked={carPinIDList.includes(option.id)}
                   onClick={(e) => {
                     e.stopPropagation();

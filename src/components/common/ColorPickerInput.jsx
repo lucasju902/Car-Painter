@@ -90,7 +90,8 @@ export const ColorPickerInput = React.memo((props) => {
         )}
 
         <CustomTextField
-          value={value || ""}
+          value={value}
+          placeholder="default"
           disabled={disabled}
           style={{ width: 85, borderBottom: "1px solid gray", padding: 0 }}
           onChange={(event) => onInputChange(event.target.value)}
