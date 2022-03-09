@@ -1,6 +1,4 @@
-import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
-import SocketClient from "utils/socketClient";
 import {
   MouseModes,
   HistoryActions,
@@ -10,12 +8,11 @@ import {
 import {
   updateLayer,
   deleteLayer,
-  insertToList as insertToLayerList,
-  setCurrent as setCurrentLayer,
+  createLayer,
+  createLayerList,
+  deleteLayerList,
 } from "./layerReducer";
 import { updateScheme } from "./schemeReducer";
-import { setMessage } from "./messageReducer";
-import LayerService from "services/layerService";
 
 const initialState = {
   frameSize: {
@@ -123,50 +120,6 @@ export const {
 
 export default slice.reducer;
 
-export const backUpLayer = (layerToClone) => async (dispatch, getState) => {
-  try {
-    const currentUser = getState().authReducer.user;
-    let actionHistory = JSON.parse(
-      JSON.stringify(getState().boardReducer.actionHistory)
-    );
-    const layer = await LayerService.createLayer({
-      ..._.omit(layerToClone, ["id"]),
-      layer_data: JSON.stringify({
-        ...layerToClone.layer_data,
-      }),
-    });
-    SocketClient.emit("client-create-layer", {
-      data: layer,
-      socketID: SocketClient.socket.id,
-      userID: currentUser.id,
-    });
-    for (let action of actionHistory) {
-      if (
-        [
-          HistoryActions.LAYER_ADD_ACTION,
-          HistoryActions.LAYER_CHANGE_ACTION,
-          HistoryActions.LAYER_DELETE_ACTION,
-        ].includes(action.action)
-      ) {
-        if (action.data && action.data.id === layerToClone.id) {
-          action.data.id = layer.id;
-        }
-        if (action.prev_data && action.prev_data.id === layerToClone.id) {
-          action.prev_data.id = layer.id;
-        }
-        if (action.next_data && action.next_data.id === layerToClone.id) {
-          action.next_data.id = layer.id;
-        }
-      }
-    }
-    dispatch(setActionHistory(actionHistory));
-    dispatch(insertToLayerList(layer));
-    dispatch(setCurrentLayer(layer));
-  } catch (err) {
-    dispatch(setMessage({ message: err.message }));
-  }
-};
-
 export const historyActionBack = () => async (dispatch, getState) => {
   const actionHistory = getState().boardReducer.actionHistory;
   const actionHistoryIndex = getState().boardReducer.actionHistoryIndex;
@@ -182,7 +135,17 @@ export const historyActionBack = () => async (dispatch, getState) => {
         dispatch(deleteLayer(actionHistory[actionHistoryIndex].data, false));
         break;
       case HistoryActions.LAYER_DELETE_ACTION:
-        dispatch(backUpLayer(actionHistory[actionHistoryIndex].data));
+        dispatch(createLayer(actionHistory[actionHistoryIndex].data, false));
+        break;
+      case HistoryActions.LAYER_LIST_ADD_ACTION:
+        dispatch(
+          deleteLayerList(actionHistory[actionHistoryIndex].data, false)
+        );
+        break;
+      case HistoryActions.LAYER_LIST_DELETE_ACTION:
+        dispatch(
+          createLayerList(actionHistory[actionHistoryIndex].data, false)
+        );
         break;
       case HistoryActions.SCHEME_CHANGE_ACTION:
         dispatch(
@@ -211,11 +174,23 @@ export const historyActionUp = () => async (dispatch, getState) => {
         );
         break;
       case HistoryActions.LAYER_ADD_ACTION:
-        dispatch(backUpLayer(actionHistory[actionHistoryIndex + 1].data));
+        dispatch(
+          createLayer(actionHistory[actionHistoryIndex + 1].data, false)
+        );
         break;
       case HistoryActions.LAYER_DELETE_ACTION:
         dispatch(
           deleteLayer(actionHistory[actionHistoryIndex + 1].data, false)
+        );
+        break;
+      case HistoryActions.LAYER_LIST_ADD_ACTION:
+        dispatch(
+          createLayerList(actionHistory[actionHistoryIndex + 1].data, false)
+        );
+        break;
+      case HistoryActions.LAYER_LIST_DELETE_ACTION:
+        dispatch(
+          deleteLayerList(actionHistory[actionHistoryIndex + 1].data, false)
         );
         break;
       case HistoryActions.SCHEME_CHANGE_ACTION:

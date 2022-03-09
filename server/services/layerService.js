@@ -45,7 +45,7 @@ class LayerService {
     const layer = await Layer.forge({
       ...payload,
       layer_data: JSON.stringify(layer_data),
-    }).save();
+    }).save(null, { method: "insert" });
     return layer;
   }
 

@@ -113,9 +113,19 @@ export const removeDuplicatedPointFromEnd = (points) => {
 };
 
 export const parseLayer = (layer) => {
+  if (!layer) return null;
   let newLayer = { ...layer };
   if (typeof newLayer.layer_data === "string") {
     newLayer.layer_data = JSON.parse(newLayer.layer_data);
+  }
+  return newLayer;
+};
+
+export const stringifyLayer = (layer) => {
+  if (!layer) return null;
+  let newLayer = { ...layer };
+  if (typeof newLayer.layer_data !== "string") {
+    newLayer.layer_data = JSON.stringify(newLayer.layer_data);
   }
   return newLayer;
 };

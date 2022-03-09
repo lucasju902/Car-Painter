@@ -26,11 +26,17 @@ class SocketServer {
     socket.on("client-create-layer", (data) =>
       this.onClientCreateLayer.bind(this)(socket, data)
     );
+    socket.on("client-create-layer-list", (data) =>
+      this.onClientCreateLayer.bind(this)(socket, data)
+    );
     socket.on("client-update-layer", (data) =>
       this.onClientUpdateLayer.bind(this)(socket, data)
     );
     socket.on("client-delete-layer", (data) =>
       this.onClientDeleteLayer.bind(this)(socket, data)
+    );
+    socket.on("client-delete-layer-list", (data) =>
+      this.onClientDeleteLayerList.bind(this)(socket, data)
     );
     socket.on("client-update-scheme", (data) =>
       this.onClientUpdateScheme.bind(this)(socket, data)
@@ -71,9 +77,46 @@ class SocketServer {
     });
   }
 
+  async onClientCreateLayerList(socket, requestData) {
+    socket.broadcast
+      .to(socket.room)
+      .emit("client-create-layer-list", requestData);
+    const schemeUpdatePayload = {
+      date_modified: Math.round(new Date().getTime() / 1000),
+      last_modified_by: requestData.userID,
+      thumbnail_updated: 0,
+      race_updated: 0,
+    };
+    await SchemeService.updateById(socket.room, schemeUpdatePayload);
+    this.io.sockets.in(socket.room).emit("client-update-scheme", {
+      ...requestData,
+      data: { id: socket.room, ...schemeUpdatePayload },
+    });
+  }
+
   async onClientDeleteLayer(socket, requestData) {
     socket.broadcast.to(socket.room).emit("client-delete-layer", requestData);
     await LayerService.deleteById(requestData.data.id);
+    const schemeUpdatePayload = {
+      date_modified: Math.round(new Date().getTime() / 1000),
+      last_modified_by: requestData.userID,
+      thumbnail_updated: 0,
+      race_updated: 0,
+    };
+    await SchemeService.updateById(socket.room, schemeUpdatePayload);
+    this.io.sockets.in(socket.room).emit("client-update-scheme", {
+      ...requestData,
+      data: { id: socket.room, ...schemeUpdatePayload },
+    });
+  }
+
+  async onClientDeleteLayerList(socket, requestData) {
+    socket.broadcast
+      .to(socket.room)
+      .emit("client-delete-layer-list", requestData);
+    for (let layer of requestData.data) {
+      LayerService.deleteById(layer.id);
+    }
     const schemeUpdatePayload = {
       date_modified: Math.round(new Date().getTime() / 1000),
       last_modified_by: requestData.userID,

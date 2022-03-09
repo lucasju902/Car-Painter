@@ -189,7 +189,6 @@ export const Shapes = React.memo((props) => {
                 ? null
                 : layer.layer_data.blendType
             }
-            name={layer.id.toString()}
             visible={layer.layer_visible ? true : false}
             perfectDrawEnabled={false}
             paintingGuides={paintingGuides}

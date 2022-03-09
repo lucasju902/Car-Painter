@@ -15,6 +15,7 @@ import {
   getNameFromUploadFileName,
   parseLayer,
   rotatePoint,
+  stringifyLayer,
 } from "helper";
 import LayerService from "services/layerService";
 import { setMessage } from "./messageReducer";
@@ -39,29 +40,15 @@ export const slice = createSlice({
       state.loading = action.payload;
     },
     setList: (state, action) => {
-      let list = action.payload;
-      for (let item of list) {
-        if (typeof item.layer_data === "string") {
-          item.layer_data = JSON.parse(item.layer_data);
-        }
-      }
-      state.list = list;
+      state.list = action.payload.map((item) => parseLayer(item));
     },
     insertToList: (state, action) => {
-      let layer = action.payload;
-      if (typeof layer.layer_data === "string") {
-        layer.layer_data = JSON.parse(layer.layer_data);
-      }
-      state.list.push(layer);
+      state.list.push(parseLayer(action.payload));
     },
     concatList: (state, action) => {
-      let list = action.payload;
-      for (let item of list) {
-        if (typeof item.layer_data === "string") {
-          item.layer_data = JSON.parse(item.layer_data);
-        }
-      }
-      state.list = state.list.concat(list);
+      state.list = state.list.concat(
+        action.payload.map((item) => parseLayer(item))
+      );
     },
     updateListItem: (state, action) => {
       let layerList = [...state.list];
@@ -69,11 +56,7 @@ export const slice = createSlice({
         (item) => item.id === action.payload.id
       );
       if (foundIndex !== -1) {
-        let item = action.payload;
-        if (typeof item.layer_data === "string") {
-          item.layer_data = JSON.parse(item.layer_data);
-        }
-        layerList[foundIndex] = item;
+        layerList[foundIndex] = parseLayer(action.payload);
         state.list = layerList;
       }
     },
@@ -83,11 +66,10 @@ export const slice = createSlice({
         (item) => item.id === action.payload.id
       );
       if (foundIndex !== -1) {
-        let item = { ...layerList[foundIndex], ...action.payload };
-        if (typeof item.layer_data === "string") {
-          item.layer_data = JSON.parse(item.layer_data);
-        }
-        layerList[foundIndex] = item;
+        layerList[foundIndex] = parseLayer({
+          ...layerList[foundIndex],
+          ...action.payload,
+        });
         state.list = layerList;
       }
     },
@@ -109,19 +91,17 @@ export const slice = createSlice({
         state.list = layerList;
       }
     },
+    deleteListItems: (state, action) => {
+      let layerList = [...state.list];
+      state.list = layerList.filter((layer) =>
+        action.payload.every((item) => item.id !== layer.id)
+      );
+    },
     setCurrent: (state, action) => {
-      let layer = action.payload;
-      if (layer && typeof layer.layer_data === "string") {
-        layer.layer_data = JSON.parse(layer.layer_data);
-      }
-      state.current = layer;
+      state.current = parseLayer(action.payload);
     },
     mergeCurrent: (state, action) => {
-      let layer = { ...state.current, ...action.payload };
-      if (layer && typeof layer.layer_data === "string") {
-        layer.layer_data = JSON.parse(layer.layer_data);
-      }
-      state.current = layer;
+      state.current = parseLayer({ ...state.current, ...action.payload });
     },
     clearCurrent: (state) => {
       state.current = null;
@@ -134,11 +114,7 @@ export const slice = createSlice({
       state.hoveredJSON[key] = value;
     },
     setClipboard: (state, action) => {
-      let layer = action.payload;
-      if (layer && typeof layer.layer_data === "string") {
-        layer.layer_data = JSON.parse(layer.layer_data);
-      }
-      state.clipboard = layer;
+      state.clipboard = parseLayer(action.payload);
     },
     setDrawingStatus: (state, action) => {
       state.drawingStatus = action.payload;
@@ -164,6 +140,7 @@ export const {
   updateListItem,
   mergeListItem,
   deleteListItem,
+  deleteListItems,
   setClipboard,
   setHoveredJSON,
   setHoveredJSONItem,
@@ -176,12 +153,14 @@ export const {
 
 export default slice.reducer;
 
-const afterCreateLayer = (layer, pushingToHistory = true) => async (
-  dispatch,
-  getState
-) => {
+export const createLayer = (
+  layerInfo,
+  pushingToHistory = true,
+  callback = null
+) => async (dispatch, getState) => {
   const currentUser = getState().authReducer.user;
   const layerList = getState().layerReducer.list;
+  const layer = await LayerService.createLayer(stringifyLayer(layerInfo));
   SocketClient.emit("client-create-layer", {
     data: layer,
     socketID: SocketClient.socket.id,
@@ -234,6 +213,71 @@ const afterCreateLayer = (layer, pushingToHistory = true) => async (
       })
     );
   }
+  if (callback) {
+    callback();
+  }
+};
+
+export const createLayerList = (layersInfo, pushingToHistory = true) => async (
+  dispatch,
+  getState
+) => {
+  const currentUser = getState().authReducer.user;
+  const layerList = getState().layerReducer.list;
+  const layers = [];
+  for (let layerInfoItem of layersInfo) {
+    layers.push(await LayerService.createLayer(stringifyLayer(layerInfoItem)));
+  }
+
+  SocketClient.emit("client-create-layer-list", {
+    data: layers,
+    socketID: SocketClient.socket.id,
+    userID: currentUser.id,
+  });
+
+  let filter = [];
+  if ([LayerTypes.BASE].includes(layers[0].layer_type)) {
+    filter = [LayerTypes.BASE];
+  } else if ([LayerTypes.SHAPE].includes(layers[0].layer_type)) {
+    filter = [LayerTypes.SHAPE];
+  } else if ([LayerTypes.OVERLAY].includes(layers[0].layer_type)) {
+    filter = [LayerTypes.OVERLAY];
+  } else if (
+    [LayerTypes.LOGO, LayerTypes.TEXT, LayerTypes.UPLOAD].includes(
+      layers[0].layer_type
+    )
+  ) {
+    filter = [LayerTypes.LOGO, LayerTypes.TEXT, LayerTypes.UPLOAD];
+  }
+  const filteredLayers = layerList.filter((layerItem) =>
+    filter.includes(layerItem.layer_type)
+  );
+  for (let layerItem of filteredLayers) {
+    dispatch(
+      mergeListItem({
+        ...layerItem,
+        layer_order: layerItem.layer_order + layers.length,
+      })
+    );
+    SocketClient.emit("client-update-layer", {
+      data: {
+        ...layerItem,
+        layer_order: layerItem.layer_order + layers.length,
+      },
+      socketID: SocketClient.socket.id,
+      userID: currentUser.id,
+    });
+  }
+
+  dispatch(concatList(layers));
+  if (pushingToHistory) {
+    dispatch(
+      pushToActionHistory({
+        action: HistoryActions.LAYER_LIST_ADD_ACTION,
+        data: layers.map((layer) => parseLayer(layer)),
+      })
+    );
+  }
 };
 
 export const createLayersFromBasePaint = (
@@ -248,12 +292,15 @@ export const createLayersFromBasePaint = (
       ? basePaintItemOrIndex.base_data
       : Array.from({ length: 3 }, (_, i) => i + 1); // There are 3 basepaints for each carMake.
 
+    const layers = [];
+    let index = 0;
     for (let base_item of baseData) {
       const AllowedLayerTypes = AllowedLayerProps[LayerTypes.BASE];
-      const layer = await LayerService.createLayer({
+      const layer = {
         ...DefaultLayer,
         layer_type: LayerTypes.BASE,
         scheme_id: schemeID,
+        layer_order: baseData.length - index,
         layer_data: legacyMode
           ? JSON.stringify({
               ..._.pick(
@@ -284,9 +331,11 @@ export const createLayersFromBasePaint = (
                   ? "#00ff00"
                   : "#0000ff",
             }),
-      });
-      dispatch(afterCreateLayer(layer));
+      };
+      layers.push(layer);
+      index++;
     }
+    dispatch(createLayerList(layers));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -304,7 +353,7 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
     const guide_data = getState().schemeReducer.current.guide_data;
 
     const AllowedLayerTypes = AllowedLayerProps[LayerTypes.OVERLAY];
-    const layer = await LayerService.createLayer({
+    const layer = {
       ...DefaultLayer,
       layer_type: LayerTypes.OVERLAY,
       scheme_id: schemeID,
@@ -332,8 +381,8 @@ export const createLayerFromOverlay = (schemeID, shape, position) => async (
             : 1,
         stroke_scale: shape.stroke_scale,
       }),
-    });
-    dispatch(afterCreateLayer(layer));
+    };
+    dispatch(createLayer(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -349,7 +398,7 @@ export const createLayerFromLogo = (schemeID, logo, position) => async (
   try {
     const boardRotate = getState().boardReducer.boardRotate;
     const AllowedLayerTypes = AllowedLayerProps[LayerTypes.LOGO];
-    const layer = await LayerService.createLayer({
+    const layer = {
       ...DefaultLayer,
       layer_type: LayerTypes.LOGO,
       scheme_id: schemeID,
@@ -368,8 +417,8 @@ export const createLayerFromLogo = (schemeID, logo, position) => async (
         source_file: logo.source_file,
         preview_file: logo.preview_file,
       }),
-    });
-    dispatch(afterCreateLayer(layer));
+    };
+    dispatch(createLayer(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -386,7 +435,7 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
     const boardRotate = getState().boardReducer.boardRotate;
     const currentUser = getState().authReducer.user;
     const AllowedLayerTypes = AllowedLayerProps[LayerTypes.UPLOAD];
-    const layer = await LayerService.createLayer({
+    const layer = {
       ...DefaultLayer,
       layer_type: LayerTypes.UPLOAD,
       scheme_id: schemeID,
@@ -407,8 +456,8 @@ export const createLayerFromUpload = (schemeID, upload, position) => async (
         preview_file: upload.file_name,
         fromOldSource: upload.legacy_mode,
       }),
-    });
-    dispatch(afterCreateLayer(layer));
+    };
+    dispatch(createLayer(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -424,7 +473,7 @@ export const createTextLayer = (schemeID, textObj, position) => async (
   try {
     const boardRotate = getState().boardReducer.boardRotate;
     const AllowedLayerTypes = AllowedLayerProps[LayerTypes.TEXT];
-    const layer = await LayerService.createLayer({
+    const layer = {
       ...DefaultLayer,
       layer_type: LayerTypes.TEXT,
       scheme_id: schemeID,
@@ -440,8 +489,8 @@ export const createTextLayer = (schemeID, textObj, position) => async (
         left: position.x,
         top: position.y,
       }),
-    });
-    dispatch(afterCreateLayer(layer));
+    };
+    dispatch(createLayer(layer));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -466,7 +515,7 @@ export const cloneLayer = (
           : 0,
         boardRotate
       );
-      const layer = await LayerService.createLayer({
+      const layer = {
         ..._.omit(layerToClone, ["id"]),
         layer_order: 0,
         layer_data: JSON.stringify({
@@ -479,8 +528,8 @@ export const cloneLayer = (
             ? layerToClone.layer_data.top
             : centerPosition.y + offset.y,
         }),
-      });
-      dispatch(afterCreateLayer(layer, pushingToHistory));
+      };
+      dispatch(createLayer(layer, pushingToHistory));
       if (callback) callback();
     } catch (err) {
       dispatch(setMessage({ message: err.message }));
@@ -516,15 +565,18 @@ export const createShape = (schemeID, newlayer) => async (dispatch) => {
       layerData.top += leftTopOffset.y;
       layerData.points = newPoints;
     }
-    const layer = await LayerService.createLayer({
+    const layer = {
       ...DefaultLayer,
       ...newlayer,
       layer_type: LayerTypes.SHAPE,
       scheme_id: schemeID,
       layer_data: JSON.stringify(layerData),
-    });
-    dispatch(afterCreateLayer(layer));
-    dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
+    };
+    dispatch(
+      createLayer(layer, true, () =>
+        dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND))
+      )
+    );
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
@@ -609,6 +661,38 @@ export const deleteLayer = (layer, pushingToHistory = true) => async (
         pushToActionHistory({
           action: HistoryActions.LAYER_DELETE_ACTION,
           data: layer,
+        })
+      );
+    dispatch(
+      setMessage({ message: "Deleted Layer successfully!", type: "success" })
+    );
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  // dispatch(setLoading(false));
+};
+
+export const deleteLayerList = (layerList, pushingToHistory = true) => async (
+  dispatch,
+  getState
+) => {
+  // dispatch(setLoading(true));
+
+  try {
+    const currentUser = getState().authReducer.user;
+
+    dispatch(deleteListItems(layerList));
+    dispatch(setCurrent(null));
+    SocketClient.emit("client-delete-layer-list", {
+      data: layerList,
+      socketID: SocketClient.socket.id,
+      userID: currentUser.id,
+    });
+    if (pushingToHistory)
+      dispatch(
+        pushToActionHistory({
+          action: HistoryActions.LAYER_LIST_DELETE_ACTION,
+          data: layerList,
         })
       );
     dispatch(

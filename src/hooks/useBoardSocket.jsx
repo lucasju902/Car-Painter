@@ -10,7 +10,9 @@ import { setMessage } from "redux/reducers/messageReducer";
 import {
   mergeListItem as mergeLayerListItem,
   deleteListItem as deleteLayerListItem,
+  deleteListItems as deleteLayerListItems,
   insertToList as insertToLayerList,
+  concatList as concatToLayerList,
 } from "redux/reducers/layerReducer";
 import SocketClient from "utils/socketClient";
 
@@ -31,12 +33,20 @@ export const useBoardSocket = () => {
       dispatch(insertToLayerList(response.data));
     });
 
+    SocketClient.on("client-create-layer-list", (response) => {
+      dispatch(concatToLayerList(response.data));
+    });
+
     SocketClient.on("client-update-layer", (response) => {
       dispatch(mergeLayerListItem(response.data));
     });
 
     SocketClient.on("client-delete-layer", (response) => {
       dispatch(deleteLayerListItem(response.data));
+    });
+
+    SocketClient.on("client-delete-layer-list", (response) => {
+      dispatch(deleteLayerListItems(response.data));
     });
 
     SocketClient.on("client-update-scheme", (response) => {
