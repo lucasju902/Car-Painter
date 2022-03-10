@@ -143,15 +143,18 @@ export const Board = React.memo(
       [dispatch, frameSize]
     );
     const handleLayerDataChange = useCallback(
-      (layer, values) => {
+      (layer, values, pushingToHistory = true) => {
         dispatch(
-          updateLayer({
-            id: layer.id,
-            layer_data: {
-              ...layer.layer_data,
-              ...values,
+          updateLayer(
+            {
+              id: layer.id,
+              layer_data: {
+                ...layer.layer_data,
+                ...values,
+              },
             },
-          })
+            pushingToHistory
+          )
         );
       },
       [dispatch]

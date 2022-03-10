@@ -116,7 +116,9 @@ export const Overlays = React.memo((props) => {
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             frameSize={frameSize}
-            onChange={(values) => onChange(layer, values)}
+            onChange={(values, pushingToHistory) =>
+              onChange(layer, values, pushingToHistory)
+            }
             onHover={(flag) => onHover(layer, flag)}
             visible={layer.layer_visible ? true : false}
             paintingGuides={paintingGuides}

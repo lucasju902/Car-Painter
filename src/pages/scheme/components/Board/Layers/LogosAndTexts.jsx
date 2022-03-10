@@ -137,7 +137,9 @@ export const LogosAndTexts = React.memo((props) => {
               listening={
                 !layer.layer_locked && mouseMode === MouseModes.DEFAULT
               }
-              onChange={(values) => onChange(layer, values)}
+              onChange={(values, pushingToHistory) =>
+                onChange(layer, values, pushingToHistory)
+              }
               onHover={(flag) => onHover(layer, flag)}
               visible={layer.layer_visible ? true : false}
               onLoadLayer={onLoadLayer}
@@ -220,7 +222,9 @@ export const LogosAndTexts = React.memo((props) => {
             onSelect={() => setCurrentLayer(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
-            onChange={(values) => onChange(layer, values)}
+            onChange={(value, pushingToHistory) =>
+              onChange(layer, value, pushingToHistory)
+            }
             onHover={(flag) => onHover(layer, flag)}
             onLoadLayer={onLoadLayer}
             onDragStart={onDragStart}

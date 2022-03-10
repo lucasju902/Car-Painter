@@ -181,8 +181,9 @@ export const createLayer = (
   ) {
     filter = [LayerTypes.LOGO, LayerTypes.TEXT, LayerTypes.UPLOAD];
   }
-  const filteredLayers = layerList.filter((layerItem) =>
-    filter.includes(layerItem.layer_type)
+  const filteredLayers = layerList.filter(
+    (layerItem) =>
+      filter.includes(layerItem.layer_type) && layerItem.id !== layer.id
   );
   for (let layerItem of filteredLayers) {
     dispatch(
@@ -249,8 +250,10 @@ export const createLayerList = (layersInfo, pushingToHistory = true) => async (
   ) {
     filter = [LayerTypes.LOGO, LayerTypes.TEXT, LayerTypes.UPLOAD];
   }
-  const filteredLayers = layerList.filter((layerItem) =>
-    filter.includes(layerItem.layer_type)
+  const filteredLayers = layerList.filter(
+    (layerItem) =>
+      filter.includes(layerItem.layer_type) &&
+      layers.every((item) => item.id !== layerItem.id)
   );
   for (let layerItem of filteredLayers) {
     dispatch(
