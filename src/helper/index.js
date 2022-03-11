@@ -325,7 +325,7 @@ export const downloadTGA = (ctx, width, height, fileName) => {
 };
 
 export const focusBoard = () => {
-  setTimeout(() => document.activeElement.blur(), 1000);
+  setTimeout(() => document.activeElement.blur(), 500);
 };
 
 export const isCenterBasedShape = (type) =>

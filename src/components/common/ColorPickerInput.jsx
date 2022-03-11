@@ -4,6 +4,7 @@ import { ColorPicker } from "material-ui-color";
 import { Box, TextField, Typography } from "@material-ui/core";
 import { Palette } from "constant";
 import styled from "styled-components";
+import { focusBoard } from "helper";
 
 const CustomColorPicker = styled(ColorPicker)`
   &.ColorPicker-MuiButton-contained {
@@ -46,8 +47,17 @@ export const ColorPickerInput = React.memo((props) => {
         .closest(".MuiPaper-root")
         .getElementsByClassName("muicc-colorbox-controls")[0]
         .children[0].click();
+      focusBoard();
     }
   }, []);
+
+  const handleColorChange = useCallback(
+    (color) => {
+      onChange(color.error ? "" : color.css.backgroundColor);
+      focusBoard();
+    },
+    [onChange]
+  );
 
   useInterval(() => {
     const hexInput = document.getElementById("hex");
@@ -80,9 +90,7 @@ export const ColorPickerInput = React.memo((props) => {
         ) : (
           <CustomColorPicker
             value={separateValues ? valuePicker : value || "#"}
-            onChange={(color) =>
-              onChange(color.error ? "" : color.css.backgroundColor)
-            }
+            onChange={handleColorChange}
             palette={Palette}
             deferred
             hideTextfield
