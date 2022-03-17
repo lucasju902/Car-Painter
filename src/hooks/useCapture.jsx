@@ -17,7 +17,12 @@ import {
   setLoadedStatus,
 } from "redux/reducers/layerReducer";
 import { setShowProperties, setViewMode } from "redux/reducers/boardReducer";
-import { dataURItoBlob, addImageProcess, downloadTGA } from "helper";
+import {
+  dataURItoBlob,
+  addImageProcess,
+  downloadTGA,
+  getTGABlob,
+} from "helper";
 import SchemeService from "services/schemeService";
 
 export const useCapture = (
@@ -66,6 +71,14 @@ export const useCapture = (
     return FinishOptions[0].base;
   }, [currentScheme]);
 
+  const carMakeSize = useMemo(
+    () =>
+      currentCarMakeRef.current && currentCarMakeRef.current.car_type === "Misc"
+        ? 1024
+        : 2048,
+    [currentCarMakeRef]
+  );
+
   const takeScreenshot = useCallback(
     async (isPNG = true) => {
       if (
@@ -79,9 +92,7 @@ export const useCapture = (
       }
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
-      const targetWidth =
-        currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
-      const pixelRatio = targetWidth / frameSizeRef.current.width;
+      const pixelRatio = carMakeSize / frameSizeRef.current.width;
 
       let width = frameSizeRef.current.width * pixelRatio;
       let height = frameSizeRef.current.height * pixelRatio;
@@ -189,15 +200,15 @@ export const useCapture = (
       };
     },
     [
-      dispatch,
-      showPropertiesRef,
+      currentLayerRef,
+      carMakeSize,
       frameSizeRef,
-      currentCarMakeRef,
       stageRef,
+      showPropertiesRef,
+      dispatch,
       baseLayerRef,
       mainLayerRef,
       carMaskLayerRef,
-      currentLayerRef,
     ]
   );
 
@@ -263,7 +274,7 @@ export const useCapture = (
     ]
   );
 
-  const retrieveTGADataURL = useCallback(async () => {
+  const retrieveTGAPNGDataUrl = useCallback(async () => {
     if (stageRef.current && currentSchemeRef.current) {
       try {
         dispatch(setSaving(true));
@@ -280,28 +291,50 @@ export const useCapture = (
     }
   }, [dispatch, currentSchemeRef, stageRef, takeScreenshot]);
 
+  const retrieveTGABlobURL = useCallback(
+    async (isCustomNumber) => {
+      if (stageRef.current && currentSchemeRef.current) {
+        try {
+          dispatch(setSaving(true));
+          const { ctx } = await takeScreenshot(false);
+
+          dispatch(setSaving(false));
+
+          const blobURL = getTGABlob(ctx, carMakeSize, carMakeSize);
+          var fileOfBlob = new File(
+            [blobURL],
+            isCustomNumber
+              ? `car_num_${userRef.current.id}.tga`
+              : `car_${userRef.current.id}.tga`
+          );
+          return fileOfBlob;
+        } catch (err) {
+          console.log(err);
+          dispatch(setMessage({ message: err.message }));
+        }
+      }
+    },
+    [stageRef, currentSchemeRef, dispatch, takeScreenshot, carMakeSize, userRef]
+  );
+
   const handleDownloadTGA = useCallback(
     async (isCustomNumberTGA = false) => {
       if (stageRef.current && currentSchemeRef.current) {
         try {
           dispatch(setSaving(true));
-          const width =
-            currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
-          const height =
-            currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
           const { canvas, ctx, carMaskLayerImg } = await takeScreenshot(false);
 
           dispatch(setSaving(false));
           downloadTGA(
             ctx,
-            width,
-            height,
+            carMakeSize,
+            carMakeSize,
             isCustomNumberTGA
               ? `car_num_${userRef.current.id}.tga`
               : `car_${userRef.current.id}.tga`
           );
 
-          ctx.drawImage(carMaskLayerImg, 0, 0, width, height);
+          ctx.drawImage(carMaskLayerImg, 0, 0, carMakeSize, carMakeSize);
           let dataURL = canvas.toDataURL("image/jpeg", 0.1);
           if (!currentSchemeRef.current.thumbnail_updated)
             await uploadThumbnail(dataURL);
@@ -312,12 +345,12 @@ export const useCapture = (
       }
     },
     [
-      dispatch,
-      currentSchemeRef,
-      userRef,
-      currentCarMakeRef,
       stageRef,
+      currentSchemeRef,
+      dispatch,
       takeScreenshot,
+      carMakeSize,
+      userRef,
       uploadThumbnail,
     ]
   );
@@ -337,10 +370,6 @@ export const useCapture = (
       loadedStatuses[`guide-mask-${schemeFinishBase}`]
     ) {
       try {
-        const width =
-          currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
-        const height =
-          currentCarMakeRef.current.car_type === "Misc" ? 1024 : 2048;
         const { ctx } = await takeScreenshot(false);
 
         dispatch(setViewMode(ViewModes.NORMAL_VIEW));
@@ -352,7 +381,12 @@ export const useCapture = (
         );
         setTimeout(() => dispatch(setSaving(false)), 500);
 
-        downloadTGA(ctx, width, height, `car_spec_${userRef.current.id}.tga`);
+        downloadTGA(
+          ctx,
+          carMakeSize,
+          carMakeSize,
+          `car_spec_${userRef.current.id}.tga`
+        );
       } catch (err) {
         console.log(err);
         dispatch(setMessage({ message: err.message }));
@@ -367,6 +401,7 @@ export const useCapture = (
     loadedStatuses,
     userRef,
     takeScreenshot,
+    carMakeSize,
   ]);
 
   useEffect(() => {
@@ -381,6 +416,7 @@ export const useCapture = (
     handleUploadThumbnail,
     handleDownloadTGA,
     handleDownloadSpecTGA,
-    retrieveTGADataURL,
+    retrieveTGAPNGDataUrl,
+    retrieveTGABlobURL,
   ];
 };

@@ -10,3 +10,4 @@ export { TextDialog } from "./TextDialog";
 export { UploadDialog } from "./UploadDialog";
 export { YesNoDialog } from "./YesNoDialog";
 export { ZoomPopover } from "./ZoomPopover";
+export { SimPreviewDialog } from "./SimPreviewDialog";

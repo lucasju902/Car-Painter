@@ -27,6 +27,7 @@ import { useBoardSocket, useCapture, useZoom, withKeyEvent } from "hooks";
 import { withWrapper } from "./withWrapper";
 import { LegacyBanner } from "./components/LegacyBanner";
 import { getCarRaces } from "redux/reducers/carReducer";
+import { getDownloaderStatus } from "redux/reducers/downloaderReducer";
 
 const Scheme = React.memo((props) => {
   const {
@@ -56,7 +57,8 @@ const Scheme = React.memo((props) => {
     onUploadThumbnail,
     onDownloadTGA,
     onDownloadSpecTGA,
-    retrieveTGADataURL,
+    retrieveTGAPNGDataUrl,
+    retrieveTGABlobURL,
   ] = useCapture(stageRef, baseLayerRef, mainLayerRef, carMaskLayerRef);
 
   const user = useSelector((state) => state.authReducer.user);
@@ -144,6 +146,7 @@ const Scheme = React.memo((props) => {
                 if (!favoriteSchemeList.length)
                   dispatch(getFavoriteList(user.id));
                 dispatch(getCarRaces(scheme.id));
+                dispatch(getDownloaderStatus());
               }
             },
             () => {
@@ -245,7 +248,8 @@ const Scheme = React.memo((props) => {
             stageRef={stageRef}
             onDownloadTGA={onDownloadTGA}
             onDownloadSpecTGA={onDownloadSpecTGA}
-            retrieveTGADataURL={retrieveTGADataURL}
+            retrieveTGAPNGDataUrl={retrieveTGAPNGDataUrl}
+            retrieveTGABlobURL={retrieveTGABlobURL}
           />
         </Box>
       )}

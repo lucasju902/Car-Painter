@@ -305,7 +305,7 @@ export const getTGA = (ctx, width, height) => {
   return tga.getDataURL("image/x-tga");
 };
 
-export const downloadTGA = (ctx, width, height, fileName) => {
+export const getTGABlob = (ctx, width, height) => {
   // get a blob url which can be used to download the file
   let imageData = ctx.getImageData(0, 0, width, height);
   var tga = new TGA({
@@ -315,6 +315,13 @@ export const downloadTGA = (ctx, width, height, fileName) => {
   });
   tga.setImageData(imageData);
   var url = tga.getBlobURL();
+
+  return url;
+};
+
+export const downloadTGA = (ctx, width, height, fileName) => {
+  // get a blob url which can be used to download the file
+  var url = getTGABlob(ctx, width, height);
 
   var a = document.createElement("a");
   a.style = "display: none";

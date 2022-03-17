@@ -21,7 +21,7 @@ import {
   CustomButtonGroup,
 } from "./Toolbar.style";
 import { LightTooltip } from "components/common";
-import { ZoomPopover } from "components/dialogs";
+import { SimPreviewDialog, ZoomPopover } from "components/dialogs";
 import RaceIcon from "assets/race.svg";
 
 import {
@@ -39,13 +39,15 @@ import { CircularProgress } from "components/MaterialUI";
 import { setMessage } from "redux/reducers/messageReducer";
 import RaceConfirmDialog from "components/dialogs/RaceConfirmDialog";
 import { updateScheme } from "redux/reducers/schemeReducer";
+import { submitSimPreview } from "redux/reducers/downloaderReducer";
 
 export const Toolbar = React.memo((props) => {
   const {
     stageRef,
     onDownloadTGA,
     onDownloadSpecTGA,
-    retrieveTGADataURL,
+    retrieveTGAPNGDataUrl,
+    retrieveTGABlobURL,
   } = props;
   const [zoom, onZoomIn, onZoomOut, onZoomFit] = useZoom(stageRef);
 
@@ -75,6 +77,16 @@ export const Toolbar = React.memo((props) => {
     return -1;
   }, [cars]);
   // const viewMode = useSelector((state) => state.boardReducer.viewMode);
+  const isWindows = useMemo(
+    () => window.navigator.userAgent.includes("Win"),
+    []
+  );
+  const downloaderRunning = useSelector(
+    (state) => state.downloaderReducer.iracing
+  );
+  const simPreviewing = useSelector(
+    (state) => state.downloaderReducer.simPreviewing
+  );
 
   const handleCloseDialog = useCallback(() => setDialog(null), []);
 
@@ -85,6 +97,19 @@ export const Toolbar = React.memo((props) => {
     [dispatch]
   );
 
+  const handleSubmitSimPreview = useCallback(
+    async (isCustomNumber = 0) => {
+      handleCloseDialog();
+      const fileOfBlob = await retrieveTGABlobURL(isCustomNumber);
+
+      let formData = new FormData();
+      formData.append("file1", fileOfBlob);
+
+      dispatch(submitSimPreview(currentScheme.id, isCustomNumber, formData));
+    },
+    [currentScheme.id, dispatch, handleCloseDialog, retrieveTGABlobURL]
+  );
+
   const handleApplyRace = useCallback(
     async (values = null) => {
       if (!values && primaryRaceNumber === -1) {
@@ -92,7 +117,7 @@ export const Toolbar = React.memo((props) => {
         return;
       }
       setApplyingRace(true);
-      const dataURL = await retrieveTGADataURL();
+      const dataURL = await retrieveTGAPNGDataUrl();
       let blob = dataURItoBlob(dataURL);
       var fileOfBlob = new File([blob], `${currentScheme.id}.png`, {
         type: "image/png",
@@ -164,7 +189,7 @@ export const Toolbar = React.memo((props) => {
     },
     [
       primaryRaceNumber,
-      retrieveTGADataURL,
+      retrieveTGAPNGDataUrl,
       currentScheme.id,
       dispatch,
       cars,
@@ -330,7 +355,7 @@ export const Toolbar = React.memo((props) => {
               <Typography variant="subtitle2">Download Spec TGA</Typography>
             </Button>
           )}
-          <Box mx={1} height="100%" display="flex">
+          <Box mr={1} height="100%" display="flex">
             <CustomButtonGroup variant="outlined">
               <Button onClick={() => onDownloadTGA()}>
                 <Typography variant="subtitle2">Download TGA</Typography>
@@ -344,6 +369,20 @@ export const Toolbar = React.memo((props) => {
                 <DropUpIcon />
               </Button>
             </CustomButtonGroup>
+          </Box>
+
+          <Box mr={1} height="100%" display="flex">
+            <Button
+              variant="outlined"
+              disabled={!isWindows || !downloaderRunning || simPreviewing}
+              onClick={() => setDialog(DialogTypes.SIM_PREVIEW)}
+            >
+              {simPreviewing ? (
+                <CircularProgress size={20} />
+              ) : (
+                <Typography variant="subtitle2">Sim Preview</Typography>
+              )}
+            </Button>
           </Box>
 
           {primaryRaceNumber > -1 ? (
@@ -488,6 +527,12 @@ export const Toolbar = React.memo((props) => {
         open={dialog === DialogTypes.RACE_CONFIRM}
         onCancel={handleCloseDialog}
         onConfirm={handleConfirmRace}
+      />
+      <SimPreviewDialog
+        open={dialog === DialogTypes.SIM_PREVIEW}
+        applying={simPreviewing}
+        onCancel={handleCloseDialog}
+        onApply={handleSubmitSimPreview}
       />
     </Wrapper>
   );

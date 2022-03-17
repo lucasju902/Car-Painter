@@ -59,6 +59,7 @@ export const DialogTypes = {
   SETTINGS: "SETTINGS",
   RACE: "RACE",
   RACE_CONFIRM: "RACE_CONFIRM",
+  SIM_PREVIEW: "SIM_PREVIEW",
 };
 
 export const DrawingStatus = {
