@@ -26,7 +26,7 @@ export const getDownloaderStatus = (onSuccess, onError) => async (dispatch) => {
   try {
     const result = await DownloaderService.getDownloaderStatus();
     if (result) {
-      dispatch(setIracing(result.iracing === "False"));
+      dispatch(setIracing(result.iracing === "True"));
     }
     if (onSuccess) {
       onSuccess();
