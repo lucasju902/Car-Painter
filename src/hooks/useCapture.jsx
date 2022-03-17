@@ -216,7 +216,6 @@ export const useCapture = (
     async (dataURL) => {
       try {
         let blob = dataURItoBlob(dataURL);
-        console.log("blob length: ", blob.size);
         var fileOfBlob = new File(
           [blob],
           `${currentSchemeRef.current.id}.jpg`,
@@ -300,9 +299,9 @@ export const useCapture = (
 
           dispatch(setSaving(false));
 
-          const blobURL = getTGABlob(ctx, carMakeSize, carMakeSize);
+          const blob = getTGABlob(ctx, carMakeSize, carMakeSize);
           var fileOfBlob = new File(
-            [blobURL],
+            [blob],
             isCustomNumber
               ? `car_num_${userRef.current.id}.tga`
               : `car_${userRef.current.id}.tga`

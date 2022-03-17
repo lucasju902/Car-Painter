@@ -138,15 +138,6 @@ export const parseScheme = (scheme) => {
   return newScheme;
 };
 
-export const dataURItoBlob = (dataURI) => {
-  var binary = atob(dataURI.split(",")[1]);
-  var array = [];
-  for (var i = 0; i < binary.length; i++) {
-    array.push(binary.charCodeAt(i));
-  }
-  return new Blob([new Uint8Array(array)], { type: "image/png" });
-};
-
 export const addImageProcess = (src) => {
   return new Promise((resolve, reject) => {
     let img = new Image();
@@ -294,6 +285,15 @@ export const getNameFromUploadFileName = (file_name, user) => {
   return temp;
 };
 
+export const dataURItoBlob = (dataURI, type = "image/png") => {
+  var binary = atob(dataURI.split(",")[1]);
+  var array = [];
+  for (var i = 0; i < binary.length; i++) {
+    array.push(binary.charCodeAt(i));
+  }
+  return new Blob([new Uint8Array(array)], { type });
+};
+
 export const getTGA = (ctx, width, height) => {
   let imageData = ctx.getImageData(0, 0, width, height);
   var tga = new TGA({
@@ -302,18 +302,22 @@ export const getTGA = (ctx, width, height) => {
     imageType: TGA.Type.RGB,
   });
   tga.setImageData(imageData);
+  return tga;
+};
+
+export const getTGADataURL = (ctx, width, height) => {
+  var tga = getTGA(ctx, width, height);
   return tga.getDataURL("image/x-tga");
 };
 
 export const getTGABlob = (ctx, width, height) => {
+  var tga = getTGA(ctx, width, height);
+  return new Blob([tga.arrayBuffer], { type: "image/x-tga" });
+};
+
+export const getTGABlobURL = (ctx, width, height) => {
   // get a blob url which can be used to download the file
-  let imageData = ctx.getImageData(0, 0, width, height);
-  var tga = new TGA({
-    width: width,
-    height: height,
-    imageType: TGA.Type.RGB,
-  });
-  tga.setImageData(imageData);
+  var tga = getTGA(ctx, width, height);
   var url = tga.getBlobURL();
 
   return url;
@@ -321,7 +325,7 @@ export const getTGABlob = (ctx, width, height) => {
 
 export const downloadTGA = (ctx, width, height, fileName) => {
   // get a blob url which can be used to download the file
-  var url = getTGABlob(ctx, width, height);
+  var url = getTGABlobURL(ctx, width, height);
 
   var a = document.createElement("a");
   a.style = "display: none";
