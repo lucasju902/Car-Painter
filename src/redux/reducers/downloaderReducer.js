@@ -3,7 +3,8 @@ import DownloaderService from "services/downloaderService";
 import { setMessage } from "./messageReducer";
 
 const initialState = {
-  iracing: false,
+  iracing: null,
+  loading: false,
   simPreviewing: false,
 };
 
@@ -14,15 +15,19 @@ export const slice = createSlice({
     setIracing: (state, action) => {
       state.iracing = action.payload;
     },
+    setDownloading: (state, action) => {
+      state.loading = action.payload;
+    },
     setSimPreviewing: (state, action) => {
       state.simPreviewing = action.payload;
     },
   },
 });
 
-export const { setIracing, setSimPreviewing } = slice.actions;
+export const { setIracing, setDownloading, setSimPreviewing } = slice.actions;
 
 export const getDownloaderStatus = (onSuccess, onError) => async (dispatch) => {
+  dispatch(setDownloading(true));
   try {
     const result = await DownloaderService.getDownloaderStatus();
     if (result) {
@@ -35,7 +40,9 @@ export const getDownloaderStatus = (onSuccess, onError) => async (dispatch) => {
     if (onError) {
       onError();
     }
+    dispatch(setIracing(null));
   }
+  dispatch(setDownloading(false));
 };
 
 export const submitSimPreview = (schemeID, isCustomNumber, payload) => async (

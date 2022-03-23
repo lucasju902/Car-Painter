@@ -21,7 +21,11 @@ import {
   CustomButtonGroup,
 } from "./Toolbar.style";
 import { LightTooltip } from "components/common";
-import { SimPreviewDialog, ZoomPopover } from "components/dialogs";
+import {
+  SimPreviewDialog,
+  SimPreviewGuideDialog,
+  ZoomPopover,
+} from "components/dialogs";
 import RaceIcon from "assets/race.svg";
 
 import {
@@ -290,6 +294,14 @@ export const Toolbar = React.memo((props) => {
     [dispatch]
   );
 
+  const handleClickSimPreview = useCallback(() => {
+    if (downloaderRunning) {
+      setDialog(DialogTypes.SIM_PREVIEW);
+    } else {
+      setDialog(DialogTypes.SIM_PREVIEW_GUIDE);
+    }
+  }, [downloaderRunning]);
+
   return (
     <Wrapper>
       <Box
@@ -372,17 +384,28 @@ export const Toolbar = React.memo((props) => {
           </Box>
 
           <Box mr={1} height="100%" display="flex">
-            <Button
-              variant="outlined"
-              disabled={!isWindows || !downloaderRunning || simPreviewing}
-              onClick={() => setDialog(DialogTypes.SIM_PREVIEW)}
+            <LightTooltip
+              title={
+                downloaderRunning
+                  ? ""
+                  : downloaderRunning === false
+                  ? "Trading Paints Downloader is running but you are not in a iRacing session"
+                  : "Trading Paints Downloader is not detected"
+              }
+              arrow
             >
-              {simPreviewing ? (
-                <CircularProgress size={20} />
-              ) : (
-                <Typography variant="subtitle2">Sim Preview</Typography>
-              )}
-            </Button>
+              <Button
+                variant="outlined"
+                disabled={!isWindows || simPreviewing}
+                onClick={handleClickSimPreview}
+              >
+                {simPreviewing ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  <Typography variant="subtitle2">Sim Preview</Typography>
+                )}
+              </Button>
+            </LightTooltip>
           </Box>
 
           {primaryRaceNumber > -1 ? (
@@ -533,6 +556,10 @@ export const Toolbar = React.memo((props) => {
         applying={simPreviewing}
         onCancel={handleCloseDialog}
         onApply={handleSubmitSimPreview}
+      />
+      <SimPreviewGuideDialog
+        open={dialog === DialogTypes.SIM_PREVIEW_GUIDE}
+        onCancel={handleCloseDialog}
       />
     </Wrapper>
   );

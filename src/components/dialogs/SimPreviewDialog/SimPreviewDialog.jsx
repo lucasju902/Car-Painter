@@ -26,7 +26,7 @@ export const SimPreviewDialog = React.memo((props) => {
   }, [isCustomNumber, onApply]);
 
   return (
-    <Dialog open={open} onClose={onCancel} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
       <DialogTitle>Sim Preview</DialogTitle>
       <DialogContent dividers id="seam-preview-dialog-content">
         <Typography mb={4}>This is Sim Preview Feature.</Typography>

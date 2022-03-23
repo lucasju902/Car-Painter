@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
+import useInterval from "react-useinterval";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import Helmet from "react-helmet";
 import { useHistory, useParams } from "react-router";
@@ -182,6 +183,10 @@ const Scheme = React.memo((props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editable]);
+
+  useInterval(() => {
+    dispatch(getDownloaderStatus());
+  }, user && user.id && currentScheme && 10000);
 
   return (
     <>
