@@ -36,6 +36,7 @@ import { getZoomedCenterPosition, focusBoard, isInSameSideBar } from "helper";
 import LayerDeleteDialog from "components/dialogs/LayerDeleteDialog";
 import SchemeService from "services/schemeService";
 import { deleteUpload } from "redux/reducers/uploadReducer";
+import { setAskingSimPreviewByLatest } from "redux/reducers/downloaderReducer";
 
 export const withKeyEvent = (Component) =>
   React.memo((props) => {
@@ -243,6 +244,8 @@ export const withKeyEvent = (Component) =>
             dispatch(setMouseMode(MouseModes.ARROW));
           } else if (key === "t" && editable) {
             setDialog(DialogTypes.TEXT);
+          } else if (key === "p" && editable) {
+            dispatch(setAskingSimPreviewByLatest(true));
           } else if (key === "s" && editable) {
             setDialog(DialogTypes.SHAPE);
           } else if (key === "l" && editable) {

@@ -6,6 +6,7 @@ const initialState = {
   iracing: null,
   loading: false,
   simPreviewing: false,
+  askingSimPreviewByLatest: false,
 };
 
 export const slice = createSlice({
@@ -21,10 +22,18 @@ export const slice = createSlice({
     setSimPreviewing: (state, action) => {
       state.simPreviewing = action.payload;
     },
+    setAskingSimPreviewByLatest: (state, action) => {
+      state.askingSimPreviewByLatest = action.payload;
+    },
   },
 });
 
-export const { setIracing, setDownloading, setSimPreviewing } = slice.actions;
+export const {
+  setIracing,
+  setDownloading,
+  setSimPreviewing,
+  setAskingSimPreviewByLatest,
+} = slice.actions;
 
 export const getDownloaderStatus = (onSuccess, onError) => async (dispatch) => {
   dispatch(setDownloading(true));

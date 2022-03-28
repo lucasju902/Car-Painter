@@ -18,7 +18,7 @@ export const ShortCutsDialog = React.memo((props) => {
       <DialogTitle id="short-cuts-title">Shortcuts</DialogTitle>
       <DialogContent dividers id="short-cuts-dialog-content">
         {Object.keys(ShortCuts).map((item, index) => (
-          <Grid container key={index} mb={2}>
+          <Grid container key={index} style={{ marginBottom: "4px" }}>
             <Grid item xs={6}>
               <KeyText>{item}</KeyText>
             </Grid>

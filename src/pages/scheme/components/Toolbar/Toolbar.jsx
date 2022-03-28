@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DialogTypes, PaintingGuides } from "constant";
 
@@ -21,11 +21,7 @@ import {
   CustomButtonGroup,
 } from "./Toolbar.style";
 import { LightTooltip } from "components/common";
-import {
-  SimPreviewDialog,
-  SimPreviewGuideDialog,
-  ZoomPopover,
-} from "components/dialogs";
+import { SimPreviewGuideDialog, ZoomPopover } from "components/dialogs";
 import RaceIcon from "assets/race.svg";
 
 import {
@@ -43,7 +39,10 @@ import { CircularProgress } from "components/MaterialUI";
 import { setMessage } from "redux/reducers/messageReducer";
 import RaceConfirmDialog from "components/dialogs/RaceConfirmDialog";
 import { updateScheme } from "redux/reducers/schemeReducer";
-import { submitSimPreview } from "redux/reducers/downloaderReducer";
+import {
+  setAskingSimPreviewByLatest,
+  submitSimPreview,
+} from "redux/reducers/downloaderReducer";
 
 export const Toolbar = React.memo((props) => {
   const {
@@ -91,6 +90,9 @@ export const Toolbar = React.memo((props) => {
   const simPreviewing = useSelector(
     (state) => state.downloaderReducer.simPreviewing
   );
+  const askingSimPreviewByLatest = useSelector(
+    (state) => state.downloaderReducer.askingSimPreviewByLatest
+  );
 
   const handleCloseDialog = useCallback(() => setDialog(null), []);
 
@@ -101,9 +103,8 @@ export const Toolbar = React.memo((props) => {
     [dispatch]
   );
 
-  const handleSubmitSimPreview = useCallback(
+  const applySubmitSimPreview = useCallback(
     async (isCustomNumber = 0) => {
-      handleCloseDialog();
       const fileOfBlob = await retrieveTGABlobURL(isCustomNumber);
 
       let formData = new FormData();
@@ -111,7 +112,25 @@ export const Toolbar = React.memo((props) => {
 
       dispatch(submitSimPreview(currentScheme.id, isCustomNumber, formData));
     },
-    [currentScheme.id, dispatch, handleCloseDialog, retrieveTGABlobURL]
+    [retrieveTGABlobURL, dispatch, currentScheme]
+  );
+
+  const handleSubmitSimPreview = useCallback(
+    async (isCustomNumber = 0) => {
+      handleCloseDialog();
+      await applySubmitSimPreview(isCustomNumber);
+      dispatch(
+        updateScheme(
+          {
+            ...currentScheme,
+            last_number: isCustomNumber,
+          },
+          false,
+          false
+        )
+      );
+    },
+    [handleCloseDialog, applySubmitSimPreview, dispatch, currentScheme]
   );
 
   const handleApplyRace = useCallback(
@@ -130,6 +149,8 @@ export const Toolbar = React.memo((props) => {
       let formData = new FormData();
       formData.append("car_tga", fileOfBlob);
       formData.append("builder_id", currentScheme.id);
+
+      let isCustomNumber = 0;
       if (values) {
         formData.append("night", values.night);
         formData.append("primary", values.primary);
@@ -137,6 +158,7 @@ export const Toolbar = React.memo((props) => {
         formData.append("number", values.number);
         formData.append("series", values.series);
         formData.append("team", values.team);
+        isCustomNumber = values.number;
       } else {
         formData.append("primary", cars[primaryRaceNumber].primary);
         formData.append(
@@ -160,7 +182,19 @@ export const Toolbar = React.memo((props) => {
             .filter((item) => item.racing)
             .map((item) => item.team_id)
         );
+        isCustomNumber = primaryRaceNumber;
       }
+
+      dispatch(
+        updateScheme(
+          {
+            ...currentScheme,
+            last_number: isCustomNumber,
+          },
+          false,
+          false
+        )
+      );
 
       dispatch(
         setCarRace(
@@ -194,7 +228,7 @@ export const Toolbar = React.memo((props) => {
     [
       primaryRaceNumber,
       retrieveTGAPNGDataUrl,
-      currentScheme.id,
+      currentScheme,
       dispatch,
       cars,
       handleCloseDialog,
@@ -295,12 +329,16 @@ export const Toolbar = React.memo((props) => {
   );
 
   const handleClickSimPreview = useCallback(() => {
-    if (downloaderRunning) {
-      setDialog(DialogTypes.SIM_PREVIEW);
-    } else {
-      setDialog(DialogTypes.SIM_PREVIEW_GUIDE);
+    setDialog(DialogTypes.SIM_PREVIEW_GUIDE);
+  }, []);
+
+  useEffect(() => {
+    if (askingSimPreviewByLatest) {
+      applySubmitSimPreview(currentScheme.last_number);
+      dispatch(setAskingSimPreviewByLatest(false));
     }
-  }, [downloaderRunning]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [askingSimPreviewByLatest]);
 
   return (
     <Wrapper>
@@ -387,7 +425,7 @@ export const Toolbar = React.memo((props) => {
             <LightTooltip
               title={
                 downloaderRunning
-                  ? ""
+                  ? "Open Sim Preview Dialog (Or just run quick Sim Preview Action by HotKey: P)"
                   : downloaderRunning === false
                   ? "Trading Paints Downloader is running but you are not in a iRacing session"
                   : "Trading Paints Downloader is not detected"
@@ -551,14 +589,10 @@ export const Toolbar = React.memo((props) => {
         onCancel={handleCloseDialog}
         onConfirm={handleConfirmRace}
       />
-      <SimPreviewDialog
-        open={dialog === DialogTypes.SIM_PREVIEW}
-        applying={simPreviewing}
-        onCancel={handleCloseDialog}
-        onApply={handleSubmitSimPreview}
-      />
       <SimPreviewGuideDialog
         open={dialog === DialogTypes.SIM_PREVIEW_GUIDE}
+        applying={simPreviewing}
+        onApply={handleSubmitSimPreview}
         onCancel={handleCloseDialog}
       />
     </Wrapper>

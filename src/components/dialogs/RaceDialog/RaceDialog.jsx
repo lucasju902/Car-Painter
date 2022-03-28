@@ -25,18 +25,21 @@ import {
   Grid,
   InputLabel,
 } from "components/MaterialUI";
+import { NumberModSwitch } from "components/common";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import styled from "styled-components";
 import { useState } from "react";
 import { useMemo } from "react";
 import { useCallback, useEffect } from "react";
-import { NumberModSwitch } from "./NumberModSwitch";
 
 export const RaceDialog = React.memo((props) => {
   const { open, applying, onApply, onCancel } = props;
-  const [number, setNumber] = useState(0);
-  const [expanded, setExpanded] = useState(false);
+
   const cars = useSelector((state) => state.carReducer.cars);
+  const currentScheme = useSelector((state) => state.schemeReducer.current);
+
+  const [number, setNumber] = useState(currentScheme.last_number);
+  const [expanded, setExpanded] = useState(false);
 
   const initialValues = useMemo(
     () => ({
@@ -90,13 +93,18 @@ export const RaceDialog = React.memo((props) => {
 
   useEffect(() => {
     if (cars && cars.length) {
-      if (cars[1].primary === true) {
-        setNumber(1);
+      if (cars[1].primary === true || cars[0].primary === true) {
+        if (cars[1].primary === true) {
+          setNumber(1);
+        } else {
+          setNumber(0);
+        }
       } else {
-        setNumber(0);
+        setNumber(currentScheme.last_number);
       }
     }
     // Should Initialize when open status changes too.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, cars]);
 
   return (
