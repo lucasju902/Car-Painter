@@ -17,6 +17,7 @@ export const FilterBar = React.memo(
   ({
     search,
     setSearch,
+    selectedVehicle,
     setSelectedVehicle,
     hideLegacy,
     setHideLegacy,
@@ -56,6 +57,7 @@ export const FilterBar = React.memo(
           </CustomFormControl>
           <StyledCarMakeAutocomplete
             label="Filter By Vehicle"
+            value={selectedVehicle}
             onChange={(event, newValue) => {
               setSelectedVehicle(newValue);
             }}

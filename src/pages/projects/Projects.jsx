@@ -101,6 +101,20 @@ export const Projects = React.memo(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  useEffect(() => {
+    // Set Vehicle Filter based on query string
+    const url = new URL(window.location.href);
+    const vehiclefilter = url.searchParams.get("vehiclefilter");
+    if (vehiclefilter) {
+      const foundVehicle = carMakeList.find(
+        (item) => item.id.toString() === vehiclefilter
+      );
+      if (foundVehicle) {
+        setSelectedVehicle(foundVehicle);
+      }
+    }
+  }, [carMakeList, setSelectedVehicle]);
+
   const handleDeleteProject = (schemeID) => {
     dispatch(deleteScheme(schemeID));
   };
@@ -156,6 +170,7 @@ export const Projects = React.memo(() => {
         <FilterBar
           search={search}
           setSearch={setSearch}
+          selectedVehicle={selectedVehicle}
           setSelectedVehicle={setSelectedVehicle}
           hideLegacy={hideLegacy}
           setHideLegacy={setHideLegacy}
