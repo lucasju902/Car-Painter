@@ -78,7 +78,7 @@ export const ZoomPopover = React.memo(
               width="100%"
             >
               <Typography variant="subtitle2">Zoom out</Typography>
-              <Typography variant="subtitle2">Shift -&nbsp;</Typography>
+              <Typography variant="subtitle2">Shift -</Typography>
             </Box>
           </Button>
 

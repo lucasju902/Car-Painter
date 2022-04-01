@@ -32,12 +32,11 @@ class LayerService {
 
     for (let layerItem of scheme_layers) {
       let item_layer_data = JSON.parse(layerItem.layer_data);
-      if (item_layer_data.name === layerName) {
-        const extraIndex = parseInt(
-          item_layer_data.name.substr(layerName.length)
-        );
-        if (!extraIndex) number = 1;
-        else if (extraIndex >= number) number = extraIndex + 1;
+      if (item_layer_data.name.indexOf(layerName) === 0) {
+        const extraSpace = item_layer_data.name.substr(layerName.length);
+        if (!isNaN(extraSpace)) {
+          number = extraSpace === "" ? 1 : parseInt(extraSpace) + 1;
+        }
       }
     }
     if (number) layerName = `${layerName} ${number}`;

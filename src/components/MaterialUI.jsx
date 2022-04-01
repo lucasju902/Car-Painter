@@ -8,6 +8,7 @@ import {
   Grid as MuiGrid,
   CircularProgress as MuiCircularProgress,
   Select as MuiSelect,
+  Divider as MuiDivider,
 } from "@material-ui/core";
 import {
   Alert as MuiAlert,
@@ -31,3 +32,7 @@ export const CircularProgress = styled(MuiCircularProgress)(spacing);
 export const Select = styled(MuiSelect)(spacing);
 export const ToggleButton = styled(MuiToggleButton)(spacing);
 export const ToggleButtonGroup = styled(MuiToggleButtonGroup)(spacing);
+
+export const HorizontalDivider = styled(MuiDivider)`
+  width: 100%;
+`;

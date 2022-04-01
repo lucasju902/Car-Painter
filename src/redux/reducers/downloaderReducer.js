@@ -35,12 +35,16 @@ export const {
   setAskingSimPreviewByLatest,
 } = slice.actions;
 
-export const getDownloaderStatus = (onSuccess, onError) => async (dispatch) => {
+export const getDownloaderStatus = (onSuccess, onError) => async (
+  dispatch,
+  getState
+) => {
   dispatch(setDownloading(true));
+  let downloaderStatus = null;
   try {
     const result = await DownloaderService.getDownloaderStatus();
     if (result) {
-      dispatch(setIracing(result.iracing === "True"));
+      downloaderStatus = result.iracing === "True";
     }
     if (onSuccess) {
       onSuccess();
@@ -49,7 +53,10 @@ export const getDownloaderStatus = (onSuccess, onError) => async (dispatch) => {
     if (onError) {
       onError();
     }
-    dispatch(setIracing(null));
+  }
+  const iracing = getState().downloaderReducer.iracing;
+  if (downloaderStatus !== iracing) {
+    dispatch(setIracing(downloaderStatus));
   }
   dispatch(setDownloading(false));
 };

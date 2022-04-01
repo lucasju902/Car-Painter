@@ -181,6 +181,10 @@ const overrides = {
   MuiInputLabel: {
     outlined: {
       transform: "translate(14px, 14px) scale(1)",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      width: "100%",
     },
   },
   MuiAutocomplete: {

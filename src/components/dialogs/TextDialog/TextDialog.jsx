@@ -48,7 +48,6 @@ export const TextDialog = React.memo((props) => {
             .nullable()
             .test("color-validation", "Incorrect Color Format", colorValidator),
         })}
-        enableReinitialize
         onSubmit={onCreate}
       >
         {(formProps) => (
