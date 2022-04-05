@@ -11,6 +11,9 @@ export const ToolWrapper = styled(Box)`
   background: #444;
   border-radius: 5px;
   padding: 5px 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 export const CustomDrawingItem = styled(MenuItem)`
   display: flex;
@@ -18,6 +21,7 @@ export const CustomDrawingItem = styled(MenuItem)`
   padding: 7px 10px;
   height: 30px;
   min-height: 30px;
+  width: 100%;
   background-color: ${(props) =>
     props.active === "true" ? "rgba(255, 255, 255, 0.08)" : "none"};
 `;
@@ -26,6 +30,7 @@ export const CustomItem = styled(MenuItem)`
   justify-content: center;
   padding: 7px 10px;
   min-height: 30px;
+  width: 100%;
   background-color: ${(props) =>
     props.active === "true" ? "rgba(255, 255, 255, 0.08)" : "none"};
 `;
@@ -33,9 +38,4 @@ export const CustomItem = styled(MenuItem)`
 export const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`
   transform: ${(props) =>
     props.isstretch === "true" ? "scaleX(1.2) scaleY(0.8)" : "none"};
-`;
-
-export const DefaultSettingsButton = styled(Box)`
-  outline: ${(props) => props.outline};
-  cursor: pointer;
 `;

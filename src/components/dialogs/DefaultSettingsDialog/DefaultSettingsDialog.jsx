@@ -24,6 +24,7 @@ export const DefaultSettingsDialog = React.memo((props) => {
   const guide_data = useSelector(
     (state) => state.schemeReducer.current.guide_data
   );
+  const currentLayer = useSelector((state) => state.layerReducer.current);
 
   return (
     <Dialog
@@ -33,16 +34,30 @@ export const DefaultSettingsDialog = React.memo((props) => {
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle id="insert-text-title">Default Shape Settings</DialogTitle>
+      <DialogTitle id="insert-text-title">
+        {!currentLayer ? "Default " : ""}Shape Settings
+      </DialogTitle>
       <Formik
         initialValues={{
-          default_shape_color: guide_data.default_shape_color || "#000000",
-          default_shape_opacity: guide_data.default_shape_opacity || 1,
-          default_shape_scolor: guide_data.default_shape_scolor || "#000000",
-          default_shape_stroke:
-            guide_data.default_shape_stroke != null
-              ? guide_data.default_shape_stroke
-              : 1,
+          default_shape_color:
+            (currentLayer
+              ? currentLayer.layer_data.color
+              : guide_data.default_shape_color) || "#000000",
+          default_shape_opacity:
+            (currentLayer
+              ? currentLayer.layer_data.opacity
+              : guide_data.default_shape_opacity) || 1,
+          default_shape_scolor:
+            (currentLayer
+              ? currentLayer.layer_data.scolor
+              : guide_data.default_shape_scolor) || "#000000",
+          default_shape_stroke: currentLayer
+            ? currentLayer.layer_data.stroke !== null
+              ? currentLayer.layer_data.stroke
+              : 1
+            : guide_data.default_shape_stroke != null
+            ? guide_data.default_shape_stroke
+            : 1,
         }}
         validationSchema={Yup.object().shape({
           default_shape_color: Yup.string()

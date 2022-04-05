@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Box, Divider, IconButton } from "components/MaterialUI";
+import { HorizontalDivider, IconButton } from "components/MaterialUI";
 import { Octagon as OctagonIcon } from "react-feather";
 import {
   SignalWifi4Bar as WedgeIcon,
@@ -33,10 +33,11 @@ import {
   createLayerFromLogo,
   createLayerFromUpload,
   createTextLayer,
+  updateLayer,
 } from "redux/reducers/layerReducer";
 import { updateScheme } from "redux/reducers/schemeReducer";
 
-import { alphaToHex, getZoomedCenterPosition, focusBoard } from "helper";
+import { getZoomedCenterPosition, focusBoard } from "helper";
 import { DialogTypes, MouseModes } from "constant";
 import { EnglishLang } from "constant/language";
 
@@ -54,8 +55,8 @@ import {
   ToolWrapper,
   CustomItem,
   CustomFontAwesomeIcon,
-  DefaultSettingsButton,
 } from "./DrawerBar.style";
+import { DefaultSettingsButton } from "./DefaultSettingsButton";
 import { CustomDrawingItem } from "./DrawerBar.style";
 
 const modes = [
@@ -163,6 +164,7 @@ export const DrawerBar = React.memo(
     const showLayers = useSelector((state) => state.boardReducer.showLayers);
     const currentScheme = useSelector((state) => state.schemeReducer.current);
     const currentCarMake = useSelector((state) => state.carMakeReducer.current);
+    const currentLayer = useSelector((state) => state.layerReducer.current);
     const overlayList = useSelector((state) => state.overlayReducer.list);
     const logoList = useSelector((state) => state.logoReducer.list);
     const uploadList = useSelector((state) => state.uploadReducer.list);
@@ -280,15 +282,30 @@ export const DrawerBar = React.memo(
 
     const handleApplySettings = useCallback(
       (guide_data) => {
-        dispatch(
-          updateScheme({
-            ...currentScheme,
-            guide_data: guide_data,
-          })
-        );
+        if (currentLayer) {
+          dispatch(
+            updateLayer({
+              id: currentLayer.id,
+              layer_data: {
+                ...currentLayer.layer_data,
+                color: guide_data.default_shape_color,
+                opacity: guide_data.default_shape_opacity,
+                scolor: guide_data.default_shape_scolor,
+                stroke: guide_data.default_shape_stroke,
+              },
+            })
+          );
+        } else {
+          dispatch(
+            updateScheme({
+              ...currentScheme,
+              guide_data: guide_data,
+            })
+          );
+        }
         setDialog(null);
       },
-      [dispatch, currentScheme, setDialog]
+      [dispatch, currentScheme, currentLayer, setDialog]
     );
 
     const handleToggleLayers = useCallback(() => {
@@ -301,6 +318,7 @@ export const DrawerBar = React.memo(
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
+        alignItems="center"
       >
         <ToolWrapper>
           {modes.map((mode) => (
@@ -320,7 +338,7 @@ export const DrawerBar = React.memo(
               </CustomDrawingItem>
             </LightTooltip>
           ))}
-          <Divider my={1} />
+          <HorizontalDivider my={1} />
           {dialog_modes.map((item) => (
             <LightTooltip
               key={item.value}
@@ -337,44 +355,12 @@ export const DrawerBar = React.memo(
               </CustomItem>
             </LightTooltip>
           ))}
-          <Divider my={1} />
-          <Box
-            display="flex"
-            justifyContent="center"
-            width="45px"
-            height="45px"
-            alignItems="center"
-          >
-            <LightTooltip
-              title="Default Shape Settings"
-              arrow
-              placement="right"
-            >
-              <Box bgcolor="#FFFFFF" height="25px">
-                <DefaultSettingsButton
-                  width="25px"
-                  height="25px"
-                  bgcolor={
-                    (currentScheme.guide_data.default_shape_color ||
-                      "#000000") +
-                    alphaToHex(
-                      currentScheme.guide_data.default_shape_opacity || 1
-                    )
-                  }
-                  outline={`${
-                    currentScheme.guide_data.default_shape_stroke || 0
-                  }px solid ${
-                    currentScheme.guide_data.default_shape_scolor || "#000000"
-                  }`}
-                  onClick={() =>
-                    editable
-                      ? setDialog(DialogTypes.DEFAULT_SHAPE_SETTINGS)
-                      : null
-                  }
-                />
-              </Box>
-            </LightTooltip>
-          </Box>
+          <HorizontalDivider my={1} />
+          <DefaultSettingsButton
+            onClick={() =>
+              editable ? setDialog(DialogTypes.DEFAULT_SHAPE_SETTINGS) : null
+            }
+          />
         </ToolWrapper>
         <LightTooltip title="Toggle Layers" arrow>
           <IconButton onClick={handleToggleLayers}>
