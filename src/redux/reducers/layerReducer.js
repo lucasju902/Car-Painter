@@ -520,7 +520,7 @@ export const cloneLayer = (
       );
       const layer = {
         ..._.omit(layerToClone, ["id"]),
-        layer_order: 0,
+        layer_order: 1,
         layer_data: JSON.stringify({
           ...layerToClone.layer_data,
           name: layerToClone.layer_data.name + " copy",

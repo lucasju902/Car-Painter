@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Box } from "components/MaterialUI";
-import { ScreenLoader } from "components/common";
+import { AppHeader, ScreenLoader } from "components/common";
 import {
   MyProjects,
   SharedProjects,
@@ -154,90 +154,93 @@ export const Projects = React.memo(() => {
   };
 
   return (
-    <Box width="100%" height="100%" display="flex" bgcolor="#333">
-      <LeftBar tabValue={tabValue} setTabValue={setTabValue} />
-      <Wrapper
-        display="flex"
-        flexDirection="column"
-        justifyContent="flex-start"
-        my={2}
-        mr={2}
-        py={5}
-        pl={5}
-        width="100%"
-        height="calc(100% - 16px)"
-      >
-        <FilterBar
-          search={search}
-          setSearch={setSearch}
-          selectedVehicle={selectedVehicle}
-          setSelectedVehicle={setSelectedVehicle}
-          hideLegacy={hideLegacy}
-          setHideLegacy={setHideLegacy}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          legacyFilter={legacyFilter}
-        />
-        <Box
-          id="scheme-list-content"
-          overflow="auto"
-          position="relative"
-          height="100%"
-          pr={5}
+    <Box width="100%" height="100%" display="flex" flexDirection="column">
+      <AppHeader></AppHeader>
+      <Box width="100%" height="100%" display="flex" bgcolor="#333">
+        <LeftBar tabValue={tabValue} setTabValue={setTabValue} />
+        <Wrapper
+          display="flex"
+          flexDirection="column"
+          justifyContent="flex-start"
+          my={2}
+          mr={2}
+          py={5}
+          pl={5}
+          width="100%"
+          height="calc(100% - 16px)"
         >
-          {schemeLoading ||
-          carMakeLoading ||
-          loadingSharedList ||
-          loadingFavoriteList ? (
-            <ScreenLoader />
-          ) : (
-            <>
-              <TabPanel value={tabValue} index={0}>
-                <MyProjects
-                  user={user}
-                  favoriteSchemeList={favoriteSchemeList}
-                  schemeList={schemeList}
-                  sortBy={sortBy}
-                  search={search}
-                  hideLegacy={hideLegacy}
-                  selectedVehicle={selectedVehicle}
-                  onDeleteProject={handleDeleteProject}
-                  onCloneProject={handleCloneProject}
-                  onRemoveFavorite={handleRemoveFavorite}
-                  onAddFavorite={handleCreateFavorite}
-                />
-              </TabPanel>
-              <TabPanel value={tabValue} index={1}>
-                <SharedProjects
-                  user={user}
-                  favoriteSchemeList={favoriteSchemeList}
-                  sharedSchemeList={sharedSchemeList}
-                  sortBy={sortBy}
-                  search={search}
-                  selectedVehicle={selectedVehicle}
-                  hideLegacy={hideLegacy}
-                  onAccept={handleAcceptInvitation}
-                  onRemove={handleRemoveSharedProject}
-                  onRemoveFavorite={handleRemoveFavorite}
-                  onAddFavorite={handleCreateFavorite}
-                />
-              </TabPanel>
-              <TabPanel value={tabValue} index={2}>
-                <FavoriteProjects
-                  user={user}
-                  favoriteSchemeList={favoriteSchemeList}
-                  sortBy={sortBy}
-                  search={search}
-                  selectedVehicle={selectedVehicle}
-                  hideLegacy={hideLegacy}
-                  onRemoveFavorite={handleRemoveFavorite}
-                  onAddFavorite={handleCreateFavorite}
-                />
-              </TabPanel>
-            </>
-          )}
-        </Box>
-      </Wrapper>
+          <FilterBar
+            search={search}
+            setSearch={setSearch}
+            selectedVehicle={selectedVehicle}
+            setSelectedVehicle={setSelectedVehicle}
+            hideLegacy={hideLegacy}
+            setHideLegacy={setHideLegacy}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            legacyFilter={legacyFilter}
+          />
+          <Box
+            id="scheme-list-content"
+            overflow="auto"
+            position="relative"
+            height="100%"
+            pr={5}
+          >
+            {schemeLoading ||
+            carMakeLoading ||
+            loadingSharedList ||
+            loadingFavoriteList ? (
+              <ScreenLoader />
+            ) : (
+              <>
+                <TabPanel value={tabValue} index={0}>
+                  <MyProjects
+                    user={user}
+                    favoriteSchemeList={favoriteSchemeList}
+                    schemeList={schemeList}
+                    sortBy={sortBy}
+                    search={search}
+                    hideLegacy={hideLegacy}
+                    selectedVehicle={selectedVehicle}
+                    onDeleteProject={handleDeleteProject}
+                    onCloneProject={handleCloneProject}
+                    onRemoveFavorite={handleRemoveFavorite}
+                    onAddFavorite={handleCreateFavorite}
+                  />
+                </TabPanel>
+                <TabPanel value={tabValue} index={1}>
+                  <SharedProjects
+                    user={user}
+                    favoriteSchemeList={favoriteSchemeList}
+                    sharedSchemeList={sharedSchemeList}
+                    sortBy={sortBy}
+                    search={search}
+                    selectedVehicle={selectedVehicle}
+                    hideLegacy={hideLegacy}
+                    onAccept={handleAcceptInvitation}
+                    onRemove={handleRemoveSharedProject}
+                    onRemoveFavorite={handleRemoveFavorite}
+                    onAddFavorite={handleCreateFavorite}
+                  />
+                </TabPanel>
+                <TabPanel value={tabValue} index={2}>
+                  <FavoriteProjects
+                    user={user}
+                    favoriteSchemeList={favoriteSchemeList}
+                    sortBy={sortBy}
+                    search={search}
+                    selectedVehicle={selectedVehicle}
+                    hideLegacy={hideLegacy}
+                    onRemoveFavorite={handleRemoveFavorite}
+                    onAddFavorite={handleCreateFavorite}
+                  />
+                </TabPanel>
+              </>
+            )}
+          </Box>
+        </Wrapper>
+      </Box>
     </Box>
   );
 });

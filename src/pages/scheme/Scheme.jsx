@@ -9,7 +9,14 @@ import { useHistory, useParams } from "react-router";
 import { Box } from "@material-ui/core";
 
 import { ScreenLoader } from "components/common";
-import { Toolbar, Board, SideBar, PropertyBar, BoardGuide } from "./components";
+import {
+  Toolbar,
+  Board,
+  SideBar,
+  PropertyBar,
+  BoardGuide,
+  Header,
+} from "./components";
 
 import {
   getScheme,
@@ -201,9 +208,14 @@ const Scheme = React.memo((props) => {
             handleEventType="keyup"
             onKeyEvent={onKeyEvent}
           />
+          <Header
+            onDownloadTGA={onDownloadTGA}
+            onDownloadSpecTGA={onDownloadSpecTGA}
+            retrieveTGAPNGDataUrl={retrieveTGAPNGDataUrl}
+          />
           <Box
             width="100%"
-            height="calc(100% - 50px)"
+            height="calc(100% - 110px)"
             display="flex"
             justifyContent="space-between"
           >
@@ -249,11 +261,7 @@ const Scheme = React.memo((props) => {
             />
           </Box>
           <Toolbar
-            editable={editable}
             stageRef={stageRef}
-            onDownloadTGA={onDownloadTGA}
-            onDownloadSpecTGA={onDownloadSpecTGA}
-            retrieveTGAPNGDataUrl={retrieveTGAPNGDataUrl}
             retrieveTGABlobURL={retrieveTGABlobURL}
           />
         </Box>

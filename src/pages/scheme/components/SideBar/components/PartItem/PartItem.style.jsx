@@ -17,6 +17,7 @@ export const Wrapper = styled(Box)`
 
 export const CustomTypography = styled(Typography)`
   color: ${(props) => (props.active === "true" ? "white" : "darkgray")};
+  font-size: 11px;
 `;
 
 export const SmallIconButton = styled(IconButton)`

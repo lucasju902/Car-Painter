@@ -59,13 +59,10 @@ export const PartItem = React.memo((props) => {
     <Wrapper
       ref={wrapperRef}
       px={2}
-      py={1}
-      mb={1}
+      py={0.5}
       display="flex"
       width="100%"
-      border={1}
-      borderColor="grey.700"
-      borderRadius={5}
+      borderBottom="1px solid gray"
       onClick={handleClick}
       onDoubleClick={onDoubleClick}
       onMouseEnter={() => onHover(item, true)}

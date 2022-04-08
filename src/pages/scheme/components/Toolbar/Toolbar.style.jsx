@@ -1,6 +1,6 @@
 import styled from "styled-components/macro";
 
-import { Button, ButtonGroup } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import {
   Undo as UndoIcon,
   Redo as RedoIcon,
@@ -24,8 +24,4 @@ export const ZoomButton = styled(Button)`
     color: #fff;
     background-color: rgba(255, 255, 255, 0.12);
   }
-`;
-
-export const CustomButtonGroup = styled(ButtonGroup)`
-  height: 100%;
 `;
