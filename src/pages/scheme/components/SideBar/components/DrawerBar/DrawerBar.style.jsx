@@ -34,6 +34,7 @@ export const MainItem = styled(MenuItem)`
   width: 100%;
   border-radius: 8px;
   border: 1px solid transparent;
+  margin-bottom: 10px;
   &:hover {
     background: #444;
     border: 1px solid gray;
@@ -61,7 +62,9 @@ export const ShapeItem = styled(MenuItem)`
     border-bottom: 1px solid transparent !important;
     border-radius: 8px 8px 0 0;
   `
-      : ""}
+      : `
+    margin-bottom: 10px;
+  `}
 `;
 
 export const ShapeWrapper = styled(Box)`
@@ -71,6 +74,7 @@ export const ShapeWrapper = styled(Box)`
   border-radius: 0 0 8px 8px;
   width: 100%;
   padding-bottom: 10px;
+  margin-bottom: 10px;
 `;
 
 export const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`

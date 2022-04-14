@@ -74,6 +74,7 @@ export const PartItem = React.memo((props) => {
         justifyContent="space-between"
         alignItems="center"
         width="100%"
+        height="24px"
       >
         <CustomTypography
           variant="body2"
@@ -82,26 +83,32 @@ export const PartItem = React.memo((props) => {
         >
           {text}
         </CustomTypography>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          {!disableLock &&
-          !disabled &&
-          (selected || hovered || layer_locked) ? (
-            <Box mr={1}>
-              <SmallIconButton onClick={handleToggleLock} size="small">
-                {layer_locked ? <LockIcon /> : <LockOpenIcon />}
+        {selected || hovered || layer_locked ? (
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            {!disableLock && !disabled ? (
+              <Box mr={1}>
+                <SmallIconButton onClick={handleToggleLock} size="small">
+                  {layer_locked ? <LockIcon /> : <LockOpenIcon />}
+                </SmallIconButton>
+              </Box>
+            ) : (
+              <Box width="24px" height="24px" mr={1}></Box>
+            )}
+            {!disabled ? (
+              <SmallIconButton onClick={handleToggleVisible} size="small">
+                {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </SmallIconButton>
-            </Box>
-          ) : (
-            <Box width="24px" height="24px" mr={1}></Box>
-          )}
-          {!disabled && (selected || hovered || !layer_visible) ? (
-            <SmallIconButton onClick={handleToggleVisible} size="small">
-              {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-            </SmallIconButton>
-          ) : (
-            <Box width="24px" height="24px"></Box>
-          )}
-        </Box>
+            ) : (
+              <Box width="24px" height="24px"></Box>
+            )}
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
     </Wrapper>
   );
