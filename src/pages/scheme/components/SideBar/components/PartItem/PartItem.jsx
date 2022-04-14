@@ -83,22 +83,20 @@ export const PartItem = React.memo((props) => {
         >
           {text}
         </CustomTypography>
-        {selected || hovered || layer_locked ? (
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            {!disableLock && !disabled ? (
+        {selected || hovered || layer_locked || !layer_visible ? (
+          <Box display="flex" justifyContent="flex-end" alignItems="center">
+            {!disableLock &&
+            !disabled &&
+            (selected || hovered || layer_locked) ? (
               <Box mr={1}>
                 <SmallIconButton onClick={handleToggleLock} size="small">
                   {layer_locked ? <LockIcon /> : <LockOpenIcon />}
                 </SmallIconButton>
               </Box>
             ) : (
-              <Box width="24px" height="24px" mr={1}></Box>
+              <></>
             )}
-            {!disabled ? (
+            {!disabled && (selected || hovered || !layer_visible) ? (
               <SmallIconButton onClick={handleToggleVisible} size="small">
                 {layer_visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </SmallIconButton>
