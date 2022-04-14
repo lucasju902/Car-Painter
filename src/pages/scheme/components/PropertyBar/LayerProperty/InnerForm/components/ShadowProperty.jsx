@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useCallback } from "react";
-import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 import { mathRound2 } from "helper";
 
@@ -11,17 +10,11 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  TextField,
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { ColorPickerInput, SliderInput } from "components/common";
-
-const CustomeTextField = styled(TextField)`
-  .MuiInputBase-input {
-    height: 2rem;
-  }
-`;
+import { LabelTypography, SmallTextField } from "../../../PropertyBar.style";
 
 export const ShadowProperty = React.memo((props) => {
   const DefaultBlurToSet = 10;
@@ -96,9 +89,9 @@ export const ShadowProperty = React.memo((props) => {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Box display="flex" alignItems="center" height="100%">
-                  <Typography variant="body1" color="textSecondary" mr={2}>
+                  <LabelTypography variant="body1" color="textSecondary" mr={2}>
                     Shadow Color
-                  </Typography>
+                  </LabelTypography>
                 </Box>
               </Grid>
               <Grid item xs={6}>
@@ -119,8 +112,24 @@ export const ShadowProperty = React.memo((props) => {
           ) : (
             <></>
           )}
+          {AllowedLayerTypes.includes("layer_data.shadowOpacity") ? (
+            <Box height="40px" display="flex" alignItems="center">
+              <SliderInput
+                label="Opacity"
+                min={0}
+                max={1}
+                step={0.01}
+                small
+                value={values.layer_data.shadowOpacity}
+                disabled={!editable}
+                setValue={handleChangeShadowOpacity}
+              />
+            </Box>
+          ) : (
+            <></>
+          )}
           {AllowedLayerTypes.includes("layer_data.shadowBlur") ? (
-            <CustomeTextField
+            <SmallTextField
               name="layer_data.shadowBlur"
               label="Shadow Blur"
               variant="outlined"
@@ -151,25 +160,10 @@ export const ShadowProperty = React.memo((props) => {
           ) : (
             <></>
           )}
-          {AllowedLayerTypes.includes("layer_data.shadowOpacity") ? (
-            <Box height="48px" display="flex" alignItems="center">
-              <SliderInput
-                label="Opacity"
-                min={0}
-                max={1}
-                step={0.01}
-                value={values.layer_data.shadowOpacity}
-                disabled={!editable}
-                setValue={handleChangeShadowOpacity}
-              />
-            </Box>
-          ) : (
-            <></>
-          )}
           <Grid container spacing={2}>
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.shadowOffsetX") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.shadowOffsetX"
                   label="Offset (X)"
                   variant="outlined"
@@ -203,7 +197,7 @@ export const ShadowProperty = React.memo((props) => {
             </Grid>
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.shadowOffsetY") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.shadowOffsetY"
                   label="Offset (Y)"
                   variant="outlined"

@@ -12,6 +12,7 @@ export const CustomSelect = styled(Select)`
   }
 `;
 export const FontImage = styled.img`
+  height: 100%;
   width: 100%;
   filter: invert(1);
 `;

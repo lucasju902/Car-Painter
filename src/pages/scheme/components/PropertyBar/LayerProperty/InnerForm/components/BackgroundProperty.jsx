@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useCallback } from "react";
-import styled from "styled-components/macro";
 
 import { AllowedLayerProps, LayerTypes } from "constant";
 import { mathRound2 } from "helper";
@@ -8,7 +7,6 @@ import {
   Box,
   Button,
   Typography,
-  TextField,
   Grid,
   Accordion,
   AccordionSummary,
@@ -17,11 +15,7 @@ import {
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { ColorPickerInput } from "components/common";
-const CustomeTextField = styled(TextField)`
-  .MuiInputBase-input {
-    height: 2rem;
-  }
-`;
+import { LabelTypography, SmallTextField } from "../../../PropertyBar.style";
 
 export const BackgroundProperty = React.memo((props) => {
   const {
@@ -76,7 +70,9 @@ export const BackgroundProperty = React.memo((props) => {
               <>
                 <Grid item xs={6}>
                   <Box display="flex" alignItems="center" height="100%">
-                    <Typography color="textSecondary">Background</Typography>
+                    <LabelTypography color="textSecondary">
+                      Background
+                    </LabelTypography>
                   </Box>
                 </Grid>
                 <Grid item xs={6}>
@@ -97,7 +93,7 @@ export const BackgroundProperty = React.memo((props) => {
             )}
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.paddingX") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.paddingX"
                   label="Padding (X)"
                   variant="outlined"
@@ -131,7 +127,7 @@ export const BackgroundProperty = React.memo((props) => {
             </Grid>
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.paddingY") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.paddingY"
                   label="Padding (Y)"
                   variant="outlined"

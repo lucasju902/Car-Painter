@@ -1,12 +1,10 @@
 import React, { useState, useMemo } from "react";
-import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 import { mathRound2 } from "helper";
 
 import {
   Box,
   Button,
-  TextField,
   Typography,
   Accordion,
   AccordionSummary,
@@ -14,12 +12,7 @@ import {
   Grid,
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
-
-const CustomeTextField = styled(TextField)`
-  .MuiInputBase-input {
-    height: 2rem;
-  }
-`;
+import { SmallTextField } from "../../../PropertyBar.style";
 
 export const SkewProperty = React.memo((props) => {
   const {
@@ -61,7 +54,7 @@ export const SkewProperty = React.memo((props) => {
           <Grid container spacing={2}>
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.skewX") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.skewX"
                   label="Skew (X)"
                   variant="outlined"
@@ -98,7 +91,7 @@ export const SkewProperty = React.memo((props) => {
             </Grid>
             <Grid item sm={6}>
               {AllowedLayerTypes.includes("layer_data.skewY") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.skewY"
                   label="Skew (Y)"
                   variant="outlined"

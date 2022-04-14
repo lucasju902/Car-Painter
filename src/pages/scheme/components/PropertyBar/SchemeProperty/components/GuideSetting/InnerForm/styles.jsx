@@ -8,6 +8,9 @@ export const CustomFormControlLabel = styled(FormControlLabel)`
   display: flex;
   justify-content: space-between;
   height: 40px;
+  & .MuiFormControlLabel-label {
+    font-size: 14px;
+  }
 `;
 
 export const CustomDialogContent = styled(DialogContent)`

@@ -7,7 +7,7 @@ import { Box, Button, TextField } from "@material-ui/core";
 const CustomeTextField = styled(TextField)`
   margin: 0;
   .MuiInputBase-input {
-    height: 2rem;
+    height: 1.5rem;
   }
   [disabled] {
     color: white;

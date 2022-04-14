@@ -28,8 +28,8 @@ export const PropertyBar = React.memo((props) => {
       position="relative"
       display="flex"
       overflow="visible"
-      width={showProperties ? "20%" : "0"}
-      minWidth={showProperties ? "250px" : "0"}
+      width={showProperties ? "14%" : "0"}
+      minWidth={showProperties ? "260px" : "0"}
       maxWidth="300px"
     >
       {showProperties ? (
@@ -37,7 +37,7 @@ export const PropertyBar = React.memo((props) => {
           bgcolor="#666"
           overflow="auto"
           py={5}
-          px={3}
+          px={2}
           height="100%"
           width="100%"
         >

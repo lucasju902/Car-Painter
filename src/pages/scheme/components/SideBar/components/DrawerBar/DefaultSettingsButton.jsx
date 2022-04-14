@@ -50,12 +50,13 @@ export const DefaultSettingsButton = React.memo(({ onClick }) => {
       alignItems="center"
     >
       <LightTooltip title="Default Shape Settings" arrow placement="right">
-        <Box bgcolor="#FFFFFF" height="25px">
+        <Box bgcolor="#FFFFFF" height="30px" borderRadius="3px">
           <CustomButton
-            width="25px"
-            height="25px"
+            width="30px"
+            height="30px"
             bgcolor={bgColor}
             outline={`${outlineWidth}px solid ${outlineColor}`}
+            borderRadius="3px"
             onClick={onClick}
           />
         </Box>

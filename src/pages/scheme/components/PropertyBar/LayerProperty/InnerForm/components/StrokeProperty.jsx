@@ -16,6 +16,7 @@ import {
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { ColorPickerInput, SliderInput } from "components/common";
+import { LabelTypography } from "../../../PropertyBar.style";
 
 export const StrokeProperty = React.memo((props) => {
   const {
@@ -68,7 +69,7 @@ export const StrokeProperty = React.memo((props) => {
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
           {AllowedLayerTypes.includes("layer_data.scolor") ? (
-            <Box display="flex" alignItems="center" height="48px">
+            <Box display="flex" alignItems="center" height="40px">
               <Grid
                 container
                 component={Box}
@@ -77,9 +78,9 @@ export const StrokeProperty = React.memo((props) => {
                 spacing={2}
               >
                 <Grid item xs={6}>
-                  <Typography variant="body1" color="textSecondary" mr={2}>
+                  <LabelTypography variant="body1" color="textSecondary" mr={2}>
                     Stroke Color
-                  </Typography>
+                  </LabelTypography>
                 </Grid>
                 <Grid item xs={6}>
                   <ColorPickerInput
@@ -99,11 +100,12 @@ export const StrokeProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.stroke") ? (
-            <Box display="flex" alignItems="center" height="48px">
+            <Box display="flex" alignItems="center" height="40px">
               <SliderInput
                 label="Stroke Width"
                 min={0}
                 max={10}
+                small
                 value={values.layer_data.stroke}
                 disabled={!editable}
                 setValue={handleChangeStrokeWidth}
@@ -113,12 +115,12 @@ export const StrokeProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.strokeType") ? (
-            <Box display="flex" alignItems="center" height="48px">
+            <Box display="flex" alignItems="center" height="40px">
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Typography variant="body1" color="textSecondary" mr={2}>
+                  <LabelTypography variant="body1" color="textSecondary" mr={2}>
                     Stroke Type
-                  </Typography>
+                  </LabelTypography>
                 </Grid>
                 <Grid item xs={6}>
                   <Select

@@ -254,7 +254,7 @@ export const InnerForm = React.memo(
             {...formProps}
             extraChildren={
               <>
-                <Grid item xs={12} sm={12} component={Box} height="48px">
+                <Grid item xs={12} sm={12} component={Box} height="40px">
                   <Box pr="9px">
                     <SliderInput
                       label="Column Size"
@@ -264,10 +264,11 @@ export const InnerForm = React.memo(
                       value={formProps.values.grid_padding}
                       disabled={!editable}
                       setValue={handleChangeGridPadding}
+                      small
                     />
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={12} component={Box} height="48px">
+                <Grid item xs={12} sm={12} component={Box} height="40px">
                   <Box pr="9px">
                     <SliderInput
                       label="Stroke Width"
@@ -277,6 +278,7 @@ export const InnerForm = React.memo(
                       value={formProps.values.grid_stroke}
                       disabled={!editable}
                       setValue={handleChangeGridStroke}
+                      small
                     />
                   </Box>
                 </Grid>

@@ -3,7 +3,7 @@ import { Slider, Tooltip, Box, Grid, Typography } from "components/MaterialUI";
 import { CustomInput, SliderWrapper, Wrapper } from "./SliderInput.style";
 
 export const SliderInput = React.memo((props) => {
-  const { label, disabled, min, max, value, setValue, step } = props;
+  const { label, disabled, min, max, value, setValue, step, small } = props;
 
   const handleBlur = useCallback(() => {
     if (value < min) {
@@ -17,7 +17,11 @@ export const SliderInput = React.memo((props) => {
     <Box height="40px" width="100%">
       <Wrapper container spacing={2}>
         <Grid item xs={6}>
-          <Typography variant="body1" color="textSecondary" mr={2}>
+          <Typography
+            color="textSecondary"
+            mr={2}
+            style={{ fontSize: small ? "14px" : "16px" }}
+          >
             {label}
           </Typography>
         </Grid>

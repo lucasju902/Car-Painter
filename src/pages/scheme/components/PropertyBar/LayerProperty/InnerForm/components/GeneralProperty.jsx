@@ -1,11 +1,9 @@
 import React, { useState, useMemo, useCallback } from "react";
-import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 
 import {
   Box,
   Button,
-  TextField,
   Typography,
   IconButton,
   Accordion,
@@ -21,12 +19,7 @@ import {
   LockOpen as LockOpenIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@material-ui/icons";
-
-const CustomeTextField = styled(TextField)`
-  .MuiInputBase-input {
-    height: 2rem;
-  }
-`;
+import { LabelTypography, SmallTextField } from "../../../PropertyBar.style";
 
 export const GeneralProperty = React.memo((props) => {
   const {
@@ -80,7 +73,7 @@ export const GeneralProperty = React.memo((props) => {
         <Grid container spacing={2}>
           {AllowedLayerTypes.includes("layer_data.text") ? (
             <Grid item xs={12} sm={12}>
-              <CustomeTextField
+              <SmallTextField
                 name="layer_data.text"
                 label="Text"
                 variant="outlined"
@@ -113,7 +106,7 @@ export const GeneralProperty = React.memo((props) => {
           )}
           {AllowedLayerTypes.includes("layer_data.numPoints") ? (
             <Grid item xs={12} sm={12}>
-              <CustomeTextField
+              <SmallTextField
                 name="layer_data.numPoints"
                 label="Number of Points"
                 variant="outlined"
@@ -146,12 +139,13 @@ export const GeneralProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.angle") ? (
-            <Grid item xs={12} sm={12} component={Box} height="48px">
+            <Grid item xs={12} sm={12} component={Box} height="40px">
               <SliderInput
                 label="Angle"
                 disabled={!editable}
                 min={0}
                 max={360}
+                small
                 value={Math.round(values.layer_data.angle)}
                 setValue={handleChangeAngle}
               />
@@ -160,13 +154,14 @@ export const GeneralProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.opacity") ? (
-            <Grid item xs={12} sm={12} component={Box} height="48px">
+            <Grid item xs={12} sm={12} component={Box} height="40px">
               <SliderInput
                 label="Opacity"
                 disabled={!editable}
                 min={0}
                 max={1}
                 step={0.01}
+                small
                 value={values.layer_data.opacity}
                 setValue={handleChangeOpacity}
               />
@@ -175,7 +170,7 @@ export const GeneralProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_visible") ? (
-            <Grid item xs={12} sm={12} component={Box} height="48px">
+            <Grid item xs={12} sm={12} component={Box} height="40px">
               <Box
                 display="flex"
                 alignItems="center"
@@ -183,9 +178,9 @@ export const GeneralProperty = React.memo((props) => {
                 justifyContent="space-between"
                 height="40px"
               >
-                <Typography variant="body1" color="textSecondary" mr={2}>
+                <LabelTypography variant="body1" color="textSecondary" mr={2}>
                   Visibility
-                </Typography>
+                </LabelTypography>
                 <IconButton
                   disabled={!editable}
                   onClick={() => toggleField("layer_visible")}
@@ -208,7 +203,7 @@ export const GeneralProperty = React.memo((props) => {
               xs={12}
               sm={12}
               component={Box}
-              height="48px"
+              height="40px"
               alignItems="center"
             >
               <Box
@@ -218,9 +213,9 @@ export const GeneralProperty = React.memo((props) => {
                 justifyContent="space-between"
                 height="40px"
               >
-                <Typography variant="body1" color="textSecondary" mr={2}>
+                <LabelTypography variant="body1" color="textSecondary" mr={2}>
                   Locking
-                </Typography>
+                </LabelTypography>
                 <IconButton
                   disabled={!editable}
                   onClick={() => toggleField("layer_locked")}

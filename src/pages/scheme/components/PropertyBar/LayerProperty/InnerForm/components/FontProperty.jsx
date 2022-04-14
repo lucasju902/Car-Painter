@@ -16,6 +16,7 @@ import {
 import { spacing } from "@material-ui/system";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import { FontSelect, ColorPickerInput, SliderInput } from "components/common";
+import { LabelTypography } from "../../../PropertyBar.style";
 
 const FormControl = styled(MuiFormControl)(spacing);
 
@@ -89,12 +90,12 @@ export const FontProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.color") ? (
-            <Box display="flex" alignItems="center" height="48px">
+            <Box display="flex" alignItems="center" height="40px">
               <Grid container component={Box} alignItems="center" spacing={2}>
                 <Grid item xs={6}>
-                  <Typography variant="body1" color="textSecondary" mr={2}>
+                  <LabelTypography variant="body1" color="textSecondary" mr={2}>
                     Font Color
-                  </Typography>
+                  </LabelTypography>
                 </Grid>
                 <Grid item xs={6}>
                   <ColorPickerInput
@@ -114,7 +115,7 @@ export const FontProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.size") ? (
-            <Box display="flex" alignItems="center" height="48px">
+            <Box display="flex" alignItems="center" height="40px">
               <SliderInput
                 label="Font Size"
                 disabled={!editable}

@@ -17,6 +17,7 @@ import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { ColorPickerInput } from "components/common";
 import { useSelector } from "react-redux";
+import { LabelTypography } from "../../../PropertyBar.style";
 
 export const ColorProperty = React.memo((props) => {
   const {
@@ -91,13 +92,13 @@ export const ColorProperty = React.memo((props) => {
       <AccordionDetails>
         <Box display="flex" flexDirection="column" width="100%">
           {showColor ? (
-            <Box display="flex" alignItems="center" height="48px">
+            <Box display="flex" alignItems="center" height="40px">
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Box height="100%" display="flex" alignItems="center">
-                    <Typography color="textSecondary" mr={2}>
+                    <LabelTypography color="textSecondary" mr={2}>
                       Color
-                    </Typography>
+                    </LabelTypography>
                   </Box>
                 </Grid>
                 <Grid item xs={6}>
@@ -118,13 +119,17 @@ export const ColorProperty = React.memo((props) => {
             <></>
           )}
           {showBlendType ? (
-            <Box display="flex" alignItems="center" height="48px">
+            <Box display="flex" alignItems="center" height="40px">
               <Grid container spacing={2} component={Box}>
                 <Grid item xs={6}>
                   <Box height="100%" display="flex" alignItems="center">
-                    <Typography variant="body1" color="textSecondary" mr={2}>
+                    <LabelTypography
+                      variant="body1"
+                      color="textSecondary"
+                      mr={2}
+                    >
                       Blend Type
-                    </Typography>
+                    </LabelTypography>
                   </Box>
                 </Grid>
                 <Grid item xs={6}>
@@ -159,13 +164,17 @@ export const ColorProperty = React.memo((props) => {
             <></>
           )}
           {showFinish ? (
-            <Box display="flex" alignItems="center" height="48px">
+            <Box display="flex" alignItems="center" height="40px">
               <Grid container spacing={2} component={Box}>
                 <Grid item xs={6}>
                   <Box height="100%" display="flex" alignItems="center">
-                    <Typography variant="body1" color="textSecondary" mr={2}>
+                    <LabelTypography
+                      variant="body1"
+                      color="textSecondary"
+                      mr={2}
+                    >
                       Finish
-                    </Typography>
+                    </LabelTypography>
                   </Box>
                 </Grid>
                 <Grid item xs={6}>

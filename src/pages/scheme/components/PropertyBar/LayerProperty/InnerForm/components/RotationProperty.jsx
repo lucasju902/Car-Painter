@@ -22,6 +22,7 @@ import {
 import { faSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SliderInput } from "components/common";
+import { LabelTypography } from "../../../PropertyBar.style";
 
 export const RotationProperty = React.memo((props) => {
   const {
@@ -165,7 +166,7 @@ export const RotationProperty = React.memo((props) => {
         <Box display="flex" flexDirection="column" width="100%">
           {AllowedLayerTypes.includes("layer_data.rotation") ? (
             <>
-              <Box display="flex" height="48px" alignItems="center">
+              <Box display="flex" height="40px" alignItems="center">
                 <SliderInput
                   label="Rotation"
                   min={-179}
@@ -173,6 +174,7 @@ export const RotationProperty = React.memo((props) => {
                   value={Math.round(values.layer_data.rotation)}
                   disabled={!editable}
                   setValue={handleChangeRotation}
+                  small
                 />
               </Box>
               <Box
@@ -180,11 +182,11 @@ export const RotationProperty = React.memo((props) => {
                 alignItems="center"
                 flexDirection="row"
                 justifyContent="space-between"
-                height="48px"
+                height="40px"
               >
-                <Typography variant="body1" color="textSecondary" mr={2}>
+                <LabelTypography variant="body1" color="textSecondary" mr={2}>
                   Rotate Left
-                </Typography>
+                </LabelTypography>
                 <IconButton
                   disabled={!editable}
                   onClick={() => handleRotate90()}
@@ -198,11 +200,11 @@ export const RotationProperty = React.memo((props) => {
                 alignItems="center"
                 flexDirection="row"
                 justifyContent="space-between"
-                height="48px"
+                height="40px"
               >
-                <Typography variant="body1" color="textSecondary" mr={2}>
+                <LabelTypography variant="body1" color="textSecondary" mr={2}>
                   Rotate Right
-                </Typography>
+                </LabelTypography>
                 <IconButton
                   disabled={!editable}
                   onClick={() => handleRotate90(false)}
@@ -221,11 +223,11 @@ export const RotationProperty = React.memo((props) => {
               alignItems="center"
               flexDirection="row"
               justifyContent="space-between"
-              height="48px"
+              height="40px"
             >
-              <Typography variant="body1" color="textSecondary" mr={2}>
+              <LabelTypography variant="body1" color="textSecondary" mr={2}>
                 Flop
-              </Typography>
+              </LabelTypography>
               <IconButton
                 disabled={!editable}
                 onClick={handleToggleFlop}
@@ -252,11 +254,11 @@ export const RotationProperty = React.memo((props) => {
               alignItems="center"
               flexDirection="row"
               justifyContent="space-between"
-              height="48px"
+              height="40px"
             >
-              <Typography variant="body1" color="textSecondary" mr={2}>
+              <LabelTypography variant="body1" color="textSecondary" mr={2}>
                 Flip
-              </Typography>
+              </LabelTypography>
               <IconButton
                 disabled={!editable}
                 onClick={handleToggleFlip}

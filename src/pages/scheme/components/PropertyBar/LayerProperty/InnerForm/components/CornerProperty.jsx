@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from "react";
-import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes } from "constant";
 import { mathRound2 } from "helper";
 
@@ -7,19 +6,13 @@ import {
   Grid,
   Box,
   Button,
-  TextField,
   Typography,
   Accordion,
   AccordionSummary,
   AccordionDetails,
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
-
-const CustomeTextField = styled(TextField)`
-  .MuiInputBase-input {
-    height: 2rem;
-  }
-`;
+import { SmallTextField } from "../../../PropertyBar.style";
 
 export const CornerProperty = React.memo((props) => {
   const {
@@ -66,7 +59,7 @@ export const CornerProperty = React.memo((props) => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               {AllowedLayerTypes.includes("layer_data.cornerTopLeft") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.cornerTopLeft"
                   label="Top Left"
                   variant="outlined"
@@ -100,7 +93,7 @@ export const CornerProperty = React.memo((props) => {
             </Grid>
             <Grid item xs={6}>
               {AllowedLayerTypes.includes("layer_data.cornerTopRight") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.cornerTopRight"
                   label="Top Right"
                   variant="outlined"
@@ -134,7 +127,7 @@ export const CornerProperty = React.memo((props) => {
             </Grid>
             <Grid item xs={6}>
               {AllowedLayerTypes.includes("layer_data.cornerBottomLeft") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.cornerBottomLeft"
                   label="Bottom Left"
                   variant="outlined"
@@ -168,7 +161,7 @@ export const CornerProperty = React.memo((props) => {
             </Grid>
             <Grid item xs={6}>
               {AllowedLayerTypes.includes("layer_data.cornerBottomRight") ? (
-                <CustomeTextField
+                <SmallTextField
                   name="layer_data.cornerBottomRight"
                   label="Bottom Right"
                   variant="outlined"

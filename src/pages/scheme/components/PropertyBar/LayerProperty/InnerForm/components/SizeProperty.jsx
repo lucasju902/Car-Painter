@@ -1,12 +1,10 @@
 import React, { useState, useMemo, useCallback } from "react";
-import styled from "styled-components/macro";
 import { AllowedLayerProps, LayerTypes, MouseModes } from "constant";
 import { mathRound2 } from "helper";
 
 import {
   Box,
   Button,
-  TextField,
   Typography,
   Accordion,
   AccordionSummary,
@@ -14,12 +12,7 @@ import {
 } from "@material-ui/core";
 import { LockButton } from "components/common";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
-
-const CustomeTextField = styled(TextField)`
-  .MuiInputBase-input {
-    height: 2rem;
-  }
-`;
+import { SmallTextField } from "../../../PropertyBar.style";
 
 export const SizeProperty = React.memo((props) => {
   const {
@@ -206,7 +199,7 @@ export const SizeProperty = React.memo((props) => {
             alignItems="center"
           >
             {AllowedLayerTypes.includes("layer_data.width") ? (
-              <CustomeTextField
+              <SmallTextField
                 name="layer_data.width"
                 label={
                   values.layer_data.type !== MouseModes.ELLIPSE
@@ -256,7 +249,7 @@ export const SizeProperty = React.memo((props) => {
               <></>
             )}
             {AllowedLayerTypes.includes("layer_data.height") ? (
-              <CustomeTextField
+              <SmallTextField
                 name="layer_data.height"
                 label={
                   values.layer_data.type !== MouseModes.ELLIPSE
@@ -299,7 +292,7 @@ export const SizeProperty = React.memo((props) => {
             alignItems="center"
           >
             {AllowedLayerTypes.includes("layer_data.scaleX") ? (
-              <CustomeTextField
+              <SmallTextField
                 name="layer_data.scaleX"
                 label="ScaleX"
                 variant="outlined"
@@ -345,7 +338,7 @@ export const SizeProperty = React.memo((props) => {
               <></>
             )}
             {AllowedLayerTypes.includes("layer_data.scaleY") ? (
-              <CustomeTextField
+              <SmallTextField
                 name="layer_data.scaleY"
                 label="ScaleY"
                 variant="outlined"
@@ -384,7 +377,7 @@ export const SizeProperty = React.memo((props) => {
             alignItems="center"
           >
             {AllowedLayerTypes.includes("layer_data.innerRadius") ? (
-              <CustomeTextField
+              <SmallTextField
                 name="layer_data.innerRadius"
                 label="Inner Radius"
                 variant="outlined"
@@ -430,7 +423,7 @@ export const SizeProperty = React.memo((props) => {
               <></>
             )}
             {AllowedLayerTypes.includes("layer_data.outerRadius") ? (
-              <CustomeTextField
+              <SmallTextField
                 name="layer_data.outerRadius"
                 label="Outer Radius"
                 variant="outlined"
@@ -463,7 +456,7 @@ export const SizeProperty = React.memo((props) => {
             )}
           </Box>
           {AllowedLayerTypes.includes("layer_data.radius") ? (
-            <CustomeTextField
+            <SmallTextField
               name="layer_data.radius"
               label="Radius"
               variant="outlined"
@@ -495,7 +488,7 @@ export const SizeProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.pointerWidth") ? (
-            <CustomeTextField
+            <SmallTextField
               name="layer_data.pointerWidth"
               label="Pointer Width"
               variant="outlined"
@@ -527,7 +520,7 @@ export const SizeProperty = React.memo((props) => {
             <></>
           )}
           {AllowedLayerTypes.includes("layer_data.pointerLength") ? (
-            <CustomeTextField
+            <SmallTextField
               name="layer_data.pointerLength"
               label="Pointer Length"
               variant="outlined"

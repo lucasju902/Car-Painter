@@ -1,20 +1,22 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { HorizontalDivider, IconButton } from "components/MaterialUI";
-import { Octagon as OctagonIcon } from "react-feather";
+import { IconButton } from "components/MaterialUI";
+import {
+  Octagon as OctagonIcon,
+  ChevronsLeft,
+  ChevronsRight,
+} from "react-feather";
 import {
   SignalWifi4Bar as WedgeIcon,
   ShowChart as LineIcon,
   TrendingUp as ArrowIcon,
 } from "@material-ui/icons";
-import { ChevronsLeft, ChevronsRight } from "react-feather";
 import {
   faSquare,
   faCircle,
   faStar,
   faDotCircle,
-  faMousePointer,
   faDrawPolygon,
   faPaintBrush,
   faFont,
@@ -39,7 +41,6 @@ import { updateScheme } from "redux/reducers/schemeReducer";
 
 import { getZoomedCenterPosition, focusBoard } from "helper";
 import { DialogTypes, MouseModes } from "constant";
-import { EnglishLang } from "constant/language";
 
 import {
   BasePaintDialog,
@@ -53,18 +54,16 @@ import { LightTooltip } from "components/common";
 import {
   Wrapper,
   ToolWrapper,
-  CustomItem,
+  MainItem,
+  ShapeItem,
   CustomFontAwesomeIcon,
+  ShapeWrapper,
 } from "./DrawerBar.style";
 import { DefaultSettingsButton } from "./DefaultSettingsButton";
 import { CustomDrawingItem } from "./DrawerBar.style";
+import { Typography } from "@material-ui/core";
 
 const modes = [
-  {
-    value: MouseModes.DEFAULT,
-    label: "Default Mode",
-    icon: <CustomFontAwesomeIcon icon={faMousePointer} />,
-  },
   {
     value: MouseModes.POLYGON,
     label: "Polygon Mode",
@@ -129,31 +128,53 @@ const modes = [
 
 const dialog_modes = [
   {
-    value: DialogTypes.UPLOAD,
-    label: EnglishLang.INSERT_MY_LOGO,
+    value: DialogTypes.BASEPAINT,
+    label: "Base Paints",
     icon: (
-      <CustomFontAwesomeIcon style={{ height: "30px" }} icon={faFolderOpen} />
+      <img
+        src={BasepaintIcon}
+        alt="BasePaint"
+        height="50px"
+        style={{ margin: "-5px" }}
+      />
+    ),
+  },
+  {
+    value: DialogTypes.SHAPE,
+    label: "Add Graphics",
+    icon: (
+      <img
+        src={GraphicsIcon}
+        alt="Graphics"
+        height="45px"
+        style={{ margin: "-4px" }}
+      />
     ),
   },
   {
     value: DialogTypes.LOGO,
-    label: EnglishLang.INSERT_LOGO,
-    icon: <img src={LogoIcon} alt="Logos" height="30px" />,
+    label: "Insert Logo",
+    icon: <img src={LogoIcon} alt="Logos" height="40px" />,
+  },
+  {
+    value: DialogTypes.UPLOAD,
+    label: "My Uploads",
+    icon: (
+      <CustomFontAwesomeIcon
+        style={{ height: "30px", width: "30px" }}
+        icon={faFolderOpen}
+      />
+    ),
   },
   {
     value: DialogTypes.TEXT,
-    label: EnglishLang.INSERT_TEXT,
-    icon: <CustomFontAwesomeIcon style={{ height: "30px" }} icon={faFont} />,
-  },
-  {
-    value: DialogTypes.SHAPE,
-    label: EnglishLang.INSERT_GRAPHICS,
-    icon: <img src={GraphicsIcon} alt="Graphics" height="30px" />,
-  },
-  {
-    value: DialogTypes.BASEPAINT,
-    label: EnglishLang.INSERT_BASEPAINT,
-    icon: <img src={BasepaintIcon} alt="BasePaint" height="30px" />,
+    label: "Add Text",
+    icon: (
+      <CustomFontAwesomeIcon
+        style={{ height: "30px", width: "30px" }}
+        icon={faFont}
+      />
+    ),
   },
 ];
 
@@ -174,6 +195,7 @@ export const DrawerBar = React.memo(
     const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
     const basePaints = useSelector((state) => state.basePaintReducer.list);
     const user = useSelector((state) => state.authReducer.user);
+    const [showShapes, setShowShapes] = useState(false);
 
     const hideDialog = useCallback(() => setDialog(null), [setDialog]);
 
@@ -321,41 +343,52 @@ export const DrawerBar = React.memo(
         alignItems="center"
       >
         <ToolWrapper>
-          {modes.map((mode) => (
-            <LightTooltip
-              key={mode.value}
-              title={mode.label}
-              arrow
-              placement="right"
-            >
-              <CustomDrawingItem
-                value={mode.value}
-                disabled={!editable}
-                onClick={() => handleModeChange(mode.value)}
-                active={mode.value === mouseMode ? "true" : "false"}
-              >
-                {mode.icon}
-              </CustomDrawingItem>
-            </LightTooltip>
-          ))}
-          <HorizontalDivider my={1} />
           {dialog_modes.map((item) => (
-            <LightTooltip
-              key={item.value}
-              title={item.label}
-              arrow
-              placement="right"
+            <MainItem
+              value={item.value}
+              disabled={!editable}
+              onClick={() => setDialog(item.value)}
             >
-              <CustomItem
-                value={item.value}
-                disabled={!editable}
-                onClick={() => setDialog(item.value)}
-              >
-                {item.icon}
-              </CustomItem>
-            </LightTooltip>
+              {item.icon}
+              <Typography style={{ fontSize: "10px" }}>{item.label}</Typography>
+            </MainItem>
           ))}
-          <HorizontalDivider my={1} />
+          <ShapeItem
+            value={"Draw Shapes"}
+            disabled={!editable}
+            active={showShapes}
+            onClick={() => setShowShapes((flag) => !flag)}
+          >
+            <CustomFontAwesomeIcon
+              icon={faDrawPolygon}
+              style={{ fontSize: "30px" }}
+            />
+            <Typography style={{ fontSize: "10px" }}>Draw Shapes</Typography>
+          </ShapeItem>
+          {showShapes ? (
+            <ShapeWrapper>
+              {modes.map((mode) => (
+                <LightTooltip
+                  key={mode.value}
+                  title={mode.label}
+                  arrow
+                  placement="right"
+                >
+                  <CustomDrawingItem
+                    value={mode.value}
+                    disabled={!editable}
+                    onClick={() => handleModeChange(mode.value)}
+                    active={mode.value === mouseMode ? "true" : "false"}
+                  >
+                    {mode.icon}
+                  </CustomDrawingItem>
+                </LightTooltip>
+              ))}
+            </ShapeWrapper>
+          ) : (
+            <></>
+          )}
+
           <DefaultSettingsButton
             onClick={() =>
               editable ? setDialog(DialogTypes.DEFAULT_SHAPE_SETTINGS) : null

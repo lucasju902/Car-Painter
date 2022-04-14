@@ -8,7 +8,6 @@ export const Wrapper = styled(Box)`
   padding: 0px 10px 10px 10px;
 `;
 export const ToolWrapper = styled(Box)`
-  background: #444;
   border-radius: 5px;
   padding: 5px 1px;
   display: flex;
@@ -25,14 +24,53 @@ export const CustomDrawingItem = styled(MenuItem)`
   background-color: ${(props) =>
     props.active === "true" ? "rgba(255, 255, 255, 0.08)" : "none"};
 `;
-export const CustomItem = styled(MenuItem)`
+
+export const MainItem = styled(MenuItem)`
   display: flex;
   justify-content: center;
-  padding: 7px 10px;
-  min-height: 30px;
+  flex-direction: column;
+  padding: 5px;
+  height: 65px;
   width: 100%;
-  background-color: ${(props) =>
-    props.active === "true" ? "rgba(255, 255, 255, 0.08)" : "none"};
+  border-radius: 8px;
+  border: 1px solid transparent;
+  &:hover {
+    background: #444;
+    border: 1px solid gray;
+  }
+`;
+
+export const ShapeItem = styled(MenuItem)`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 5px;
+  height: 65px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  &:hover {
+    background: #444;
+    border: 1px solid gray;
+  }
+  ${(props) =>
+    props.active
+      ? `
+    background: #444;
+    border: 1px solid gray;
+    border-bottom: 1px solid transparent !important;
+    border-radius: 8px 8px 0 0;
+  `
+      : ""}
+`;
+
+export const ShapeWrapper = styled(Box)`
+  background: #444;
+  border: 1px solid gray;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  width: 100%;
+  padding-bottom: 10px;
 `;
 
 export const CustomFontAwesomeIcon = styled(FontAwesomeIcon)`

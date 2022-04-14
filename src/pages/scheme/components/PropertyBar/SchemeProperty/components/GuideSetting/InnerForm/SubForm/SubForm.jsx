@@ -16,6 +16,7 @@ import {
 } from "@material-ui/icons";
 import { ColorPickerInput, SliderInput } from "components/common";
 import { CustomAccordionSummary } from "./styles";
+import { LabelTypography } from "pages/scheme/components/PropertyBar/PropertyBar.style";
 
 export const SubForm = React.memo((props) => {
   const {
@@ -66,25 +67,29 @@ export const SubForm = React.memo((props) => {
         <Box display="flex" flexDirection="column" width="100%" my={1}>
           <Grid container spacing={2}>
             {guideID ? (
-              <Grid item xs={12} sm={12} component={Box} height="48px">
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  flexDirection="row"
-                  justifyContent="space-between"
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                component={Box}
+                height="40px"
+                width="100%"
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <LabelTypography variant="body1" color="textSecondary" mr={2}>
+                  Visibility
+                </LabelTypography>
+                <IconButton
+                  disabled={!editable}
+                  onClick={() => onToggleGuideVisible(guideID)}
+                  size="small"
+                  style={{ padding: "9px" }}
                 >
-                  <Typography variant="body1" color="textSecondary" mr={2}>
-                    Visibility
-                  </Typography>
-                  <IconButton
-                    disabled={!editable}
-                    onClick={() => onToggleGuideVisible(guideID)}
-                    size="small"
-                    style={{ padding: "9px" }}
-                  >
-                    {guideVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                  </IconButton>
-                </Box>
+                  {guideVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </IconButton>
               </Grid>
             ) : (
               <></>
@@ -92,33 +97,41 @@ export const SubForm = React.memo((props) => {
             {colorKey || opacityKey ? (
               <>
                 {colorKey ? (
-                  <Grid item xs={12} sm={12} component={Box} height="48px">
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      alignItems="center"
-                      justifyContent="space-between"
+                  <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    component={Box}
+                    height="40px"
+                    width="100%"
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <LabelTypography
+                      variant="body1"
+                      color="textSecondary"
+                      mr={2}
                     >
-                      <Typography variant="body1" color="textSecondary" mr={2}>
-                        Color
-                      </Typography>
-                      <Box pr="9px">
-                        <ColorPickerInput
-                          disabled={!editable}
-                          value={values[colorKey]}
-                          onChange={handleChangeColor}
-                          onInputChange={handleChangeColor}
-                          error={Boolean(errors[colorKey])}
-                          helperText={errors[colorKey]}
-                        />
-                      </Box>
+                      Color
+                    </LabelTypography>
+                    <Box pr="9px">
+                      <ColorPickerInput
+                        disabled={!editable}
+                        value={values[colorKey]}
+                        onChange={handleChangeColor}
+                        onInputChange={handleChangeColor}
+                        error={Boolean(errors[colorKey])}
+                        helperText={errors[colorKey]}
+                      />
                     </Box>
                   </Grid>
                 ) : (
                   <></>
                 )}
                 {opacityKey ? (
-                  <Grid item xs={12} sm={12} component={Box} height="48px">
+                  <Grid item xs={12} sm={12} component={Box} height="40px">
                     <Box pr="9px">
                       <SliderInput
                         label="Opacity"
@@ -129,6 +142,7 @@ export const SubForm = React.memo((props) => {
                         marks
                         value={values[opacityKey]}
                         setValue={handleChangeOpacity}
+                        small
                       />
                     </Box>
                   </Grid>
