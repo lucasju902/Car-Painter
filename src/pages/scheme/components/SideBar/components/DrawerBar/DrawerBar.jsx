@@ -1,12 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { IconButton } from "components/MaterialUI";
-import {
-  Octagon as OctagonIcon,
-  ChevronsLeft,
-  ChevronsRight,
-} from "react-feather";
+import { Octagon as OctagonIcon } from "react-feather";
 import {
   SignalWifi4Bar as WedgeIcon,
   ShowChart as LineIcon,
@@ -27,7 +22,7 @@ import BasepaintIcon from "assets/base-paint.svg";
 import GraphicsIcon from "assets/insert-graphics.svg";
 import LogoIcon from "assets/insert-logo.svg";
 
-import { setMouseMode, setShowLayers } from "redux/reducers/boardReducer";
+import { setMouseMode } from "redux/reducers/boardReducer";
 import {
   setCurrent as setCurrentLayer,
   createLayersFromBasePaint,
@@ -182,7 +177,6 @@ export const DrawerBar = React.memo(
   ({ dialog, setDialog, stageRef, editable }) => {
     const dispatch = useDispatch();
     const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
-    const showLayers = useSelector((state) => state.boardReducer.showLayers);
     const currentScheme = useSelector((state) => state.schemeReducer.current);
     const currentCarMake = useSelector((state) => state.carMakeReducer.current);
     const currentLayer = useSelector((state) => state.layerReducer.current);
@@ -330,10 +324,6 @@ export const DrawerBar = React.memo(
       [dispatch, currentScheme, currentLayer, setDialog]
     );
 
-    const handleToggleLayers = useCallback(() => {
-      dispatch(setShowLayers(!showLayers));
-    }, [dispatch, showLayers]);
-
     return (
       <Wrapper
         height="100%"
@@ -395,11 +385,6 @@ export const DrawerBar = React.memo(
             }
           />
         </ToolWrapper>
-        <LightTooltip title="Toggle Layers" arrow>
-          <IconButton onClick={handleToggleLayers}>
-            {showLayers ? <ChevronsLeft /> : <ChevronsRight />}
-          </IconButton>
-        </LightTooltip>
 
         <BasePaintDialog
           open={dialog === DialogTypes.BASEPAINT}

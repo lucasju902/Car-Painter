@@ -6,8 +6,7 @@ import { useResizeDetector } from "react-resize-detector";
 import { MouseModes, ViewModes, FinishOptions } from "constant";
 
 import { Box } from "@material-ui/core";
-import { LightTooltip, ScreenLoader } from "components/common";
-import { RotationButton, RotateLeftIcon, RotateRightIcon } from "./Board.style";
+import { ScreenLoader } from "components/common";
 import {
   PaintingGuideTop,
   PaintingGuideCarMask,
@@ -42,7 +41,6 @@ export const Board = React.memo(
     hoveredLayerJSON,
     editable,
     onChangeHoverJSONItem,
-    onChangeBoardRotation,
     stageRef,
     baseLayerRef,
     mainLayerRef,
@@ -178,20 +176,6 @@ export const Board = React.memo(
       [dispatch]
     );
 
-    const handleChangeBoardRotation = useCallback(
-      (isRight = true) => {
-        let newBoardRotate;
-        if (isRight) {
-          newBoardRotate = boardRotate + 90;
-          if (newBoardRotate >= 360) newBoardRotate = 0;
-        } else {
-          newBoardRotate = boardRotate - 90;
-          if (newBoardRotate < 0) newBoardRotate = 270;
-        }
-        onChangeBoardRotation(newBoardRotate);
-      },
-      [boardRotate, onChangeBoardRotation]
-    );
     const handleLoadLayer = useCallback(
       (layerID, flag) => {
         dispatch(setLoadedStatus({ key: layerID, value: flag }));
@@ -512,18 +496,6 @@ export const Board = React.memo(
               )}
             </Layer>
           </Stage>
-          <Box position="absolute" right={0} top={0}>
-            <LightTooltip title="Rotate Left" position="bottom" arrow>
-              <RotationButton onClick={() => handleChangeBoardRotation(false)}>
-                <RotateLeftIcon />
-              </RotationButton>
-            </LightTooltip>
-            <LightTooltip title="Rotate Right" position="bottom" arrow>
-              <RotationButton onClick={() => handleChangeBoardRotation(true)}>
-                <RotateRightIcon />
-              </RotationButton>
-            </LightTooltip>
-          </Box>
         </Box>
         {schemeSaving || !schemeLoaded ? (
           <Box

@@ -3,10 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { DialogTypes } from "constant";
 
 import { Box, IconButton, useMediaQuery } from "@material-ui/core";
-import { ShortCutsDialog, SchemeSettingsDialog } from "components/dialogs";
+import { SchemeSettingsDialog } from "components/dialogs";
 import { LightTooltip } from "components/common";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import ShortcutIcon from "assets/keyboard-shortcuts.svg";
 import {
   Save as SaveIcon,
   SettingsBackupRestore as BackUpIcon,
@@ -101,11 +100,7 @@ export const TitleBar = React.memo((props) => {
         ) : (
           <></>
         )}
-        <LightTooltip title="Shortcuts" arrow>
-          <IconButton onClick={() => setDialog(DialogTypes.SHORTCUTS)}>
-            <img src={ShortcutIcon} width="20px" alt="shortcuts" />
-          </IconButton>
-        </LightTooltip>
+
         {overTablet && (
           <LightTooltip title="Settings" arrow>
             <IconButton ml={2} onClick={() => setDialog(DialogTypes.SETTINGS)}>
@@ -115,10 +110,6 @@ export const TitleBar = React.memo((props) => {
         )}
       </Box>
 
-      <ShortCutsDialog
-        open={dialog === DialogTypes.SHORTCUTS}
-        onCancel={hideDialog}
-      />
       <SchemeSettingsDialog
         editable={editable}
         open={dialog === DialogTypes.SETTINGS}

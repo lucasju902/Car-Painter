@@ -1,51 +1,51 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DialogTypes, PaintingGuides } from "constant";
+import { DialogTypes } from "constant";
 
 import {
   IconButton,
   Typography,
   Box,
   Button,
-  ToggleButton,
-  ToggleButtonGroup,
+  CircularProgress,
+  Slider,
 } from "components/MaterialUI";
-import {
-  Wrapper,
-  ZoomButton,
-  UndoIcon,
-  RedoIcon,
-  ArrowUpIcon,
-} from "./Toolbar.style";
+import { Wrapper, ZoomButton } from "./Toolbar.style";
+import { ChevronsLeft, ChevronsRight } from "react-feather";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUndo, faRedo } from "@fortawesome/free-solid-svg-icons";
 import { LightTooltip } from "components/common";
-import { SimPreviewGuideDialog, ZoomPopover } from "components/dialogs";
+import {
+  ShortCutsDialog,
+  SimPreviewGuideDialog,
+  ZoomPopover,
+} from "components/dialogs";
+import ShortcutIcon from "assets/keyboard-shortcuts.svg";
 
 import {
   setZoom,
   historyActionBack,
   historyActionUp,
-  setPaintingGuides,
+  setShowLayers,
+  setShowProperties,
   // setViewMode,
 } from "redux/reducers/boardReducer";
 import { useZoom } from "hooks";
-import { CircularProgress } from "components/MaterialUI";
 import { updateScheme } from "redux/reducers/schemeReducer";
 import {
   setAskingSimPreviewByLatest,
   submitSimPreview,
 } from "redux/reducers/downloaderReducer";
+import { Rotate90DegreesCcw, Search as SearchIcon } from "@material-ui/icons";
 
 export const Toolbar = React.memo((props) => {
-  const { stageRef, retrieveTGABlobURL } = props;
+  const { stageRef, retrieveTGABlobURL, onChangeBoardRotation } = props;
   const [zoom, onZoomIn, onZoomOut, onZoomFit] = useZoom(stageRef);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [dialog, setDialog] = useState(null);
 
   const dispatch = useDispatch();
-  const paintingGuides = useSelector(
-    (state) => state.boardReducer.paintingGuides
-  );
   const actionHistoryIndex = useSelector(
     (state) => state.boardReducer.actionHistoryIndex
   );
@@ -53,6 +53,11 @@ export const Toolbar = React.memo((props) => {
     (state) => state.boardReducer.actionHistory
   );
   const currentScheme = useSelector((state) => state.schemeReducer.current);
+  const showLayers = useSelector((state) => state.boardReducer.showLayers);
+  const boardRotate = useSelector((state) => state.boardReducer.boardRotate);
+  const showProperties = useSelector(
+    (state) => state.boardReducer.showProperties
+  );
   // const viewMode = useSelector((state) => state.boardReducer.viewMode);
   const isWindows = useMemo(
     () => window.navigator.userAgent.includes("Win"),
@@ -69,13 +74,6 @@ export const Toolbar = React.memo((props) => {
   );
 
   const handleCloseDialog = useCallback(() => setDialog(null), []);
-
-  const handleChangePaintingGuides = useCallback(
-    (event, newFormats) => {
-      dispatch(setPaintingGuides(newFormats));
-    },
-    [dispatch]
-  );
 
   const applySubmitSimPreview = useCallback(
     async (isCustomNumber = 0) => {
@@ -128,6 +126,21 @@ export const Toolbar = React.memo((props) => {
     [dispatch]
   );
 
+  const handleChangeBoardRotation = useCallback(
+    (isRight = true) => {
+      let newBoardRotate;
+      if (isRight) {
+        newBoardRotate = boardRotate + 90;
+        if (newBoardRotate >= 360) newBoardRotate = 0;
+      } else {
+        newBoardRotate = boardRotate - 90;
+        if (newBoardRotate < 0) newBoardRotate = 270;
+      }
+      onChangeBoardRotation(newBoardRotate);
+    },
+    [boardRotate, onChangeBoardRotation]
+  );
+
   const handleZoomPoperOpen = useCallback(
     (event) => {
       setAnchorEl(event.currentTarget);
@@ -145,6 +158,14 @@ export const Toolbar = React.memo((props) => {
     },
     [dispatch]
   );
+
+  const handleToggleLayers = useCallback(() => {
+    dispatch(setShowLayers(!showLayers));
+  }, [dispatch, showLayers]);
+
+  const handleToggleProperties = useCallback(() => {
+    dispatch(setShowProperties(!showProperties));
+  }, [dispatch, showProperties]);
 
   const handleClickSimPreview = useCallback(() => {
     setDialog(DialogTypes.SIM_PREVIEW_GUIDE);
@@ -166,60 +187,50 @@ export const Toolbar = React.memo((props) => {
         alignContent="center"
         width="100%"
       >
-        <Box display="flex" justifyContent="start" alignContent="center">
-          <ToggleButtonGroup
-            value={paintingGuides}
-            onChange={handleChangePaintingGuides}
-            aria-label="Painting Guides"
-          >
-            <ToggleButton value={PaintingGuides.CARMASK} aria-label="car-mask">
-              <LightTooltip title="Toggle Car Mask Guide (HotKey: 1)" arrow>
-                <Typography variant="caption">car mask</Typography>
-              </LightTooltip>
-            </ToggleButton>
-            <ToggleButton
-              value={PaintingGuides.WIREFRAME}
-              aria-label="wireframe"
-            >
-              <LightTooltip title="Toggle Wireframe Guide (HotKey: 2)" arrow>
-                <Typography variant="caption">wireframe</Typography>
-              </LightTooltip>
-            </ToggleButton>
-            <ToggleButton
-              value={PaintingGuides.SPONSORBLOCKS}
-              aria-label="sponsor-blocks"
-            >
-              <LightTooltip
-                title="Toggle Sponsor Blocks Guide (HotKey: 3)"
-                arrow
-              >
-                <Typography variant="caption">sponsor blocks</Typography>
-              </LightTooltip>
-            </ToggleButton>
-            <ToggleButton
-              value={PaintingGuides.NUMBERBLOCKS}
-              aria-label="number-blocks"
-            >
-              <LightTooltip
-                title="Toggle Number Blocks Guide (HotKey: 4)"
-                arrow
-              >
-                <Typography variant="caption">number blocks</Typography>
-              </LightTooltip>
-            </ToggleButton>
-            <ToggleButton value={PaintingGuides.GRID} aria-label="grid">
-              <LightTooltip title="Toggle Grid Guide (HotKey: 5)" arrow>
-                <Typography variant="caption">grid</Typography>
-              </LightTooltip>
-            </ToggleButton>
-          </ToggleButtonGroup>
+        <Box display="flex" alignContent="center">
+          <LightTooltip title="Toggle Layers" arrow>
+            <IconButton onClick={handleToggleLayers}>
+              {showLayers ? <ChevronsLeft /> : <ChevronsRight />}
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Shortcuts" arrow>
+            <IconButton onClick={() => setDialog(DialogTypes.SHORTCUTS)}>
+              <img src={ShortcutIcon} width="20px" alt="shortcuts" />
+            </IconButton>
+          </LightTooltip>
         </Box>
         <Box display="flex" justifyContent="flex-end" alignContent="center">
           {/* <Button variant="outlined" onClick={handleToggleViewMode} mx={1}>
             Toggle View Mode
           </Button> */}
 
-          <Box mr={1} height="100%" display="flex">
+          <LightTooltip title="Undo" arrow>
+            <Box display="flex">
+              <IconButton
+                disabled={actionHistoryIndex === -1}
+                size="small"
+                mx={1}
+                onClick={() => handleUndoRedo(true)}
+              >
+                <FontAwesomeIcon icon={faUndo} size="sm" />
+              </IconButton>
+            </Box>
+          </LightTooltip>
+
+          <LightTooltip title="Redo" arrow>
+            <Box display="flex">
+              <IconButton
+                disabled={actionHistoryIndex === actionHistory.length - 1}
+                size="small"
+                mx={1}
+                onClick={() => handleUndoRedo(false)}
+              >
+                <FontAwesomeIcon icon={faRedo} size="sm" />
+              </IconButton>
+            </Box>
+          </LightTooltip>
+
+          <Box mx={4} height="100%" display="flex">
             <LightTooltip
               title={
                 downloaderRunning
@@ -231,7 +242,7 @@ export const Toolbar = React.memo((props) => {
               arrow
             >
               <Button
-                variant="outlined"
+                variant="default"
                 disabled={!isWindows || simPreviewing}
                 onClick={handleClickSimPreview}
               >
@@ -244,51 +255,51 @@ export const Toolbar = React.memo((props) => {
             </LightTooltip>
           </Box>
 
-          <LightTooltip title="Undo" arrow>
-            <Box display="flex">
-              <IconButton
-                disabled={actionHistoryIndex === -1}
-                mx={1}
-                onClick={() => handleUndoRedo(true)}
-              >
-                <UndoIcon />
-              </IconButton>
+          <Box display="flex" alignItems="center">
+            <SearchIcon />
+            <Box width="80px" ml={2}>
+              <Slider
+                min={0.1}
+                max={5}
+                step={0.1}
+                value={zoom}
+                onChange={(event, value) => handleZoom(value)}
+                aria-labelledby="zoom"
+              />
             </Box>
+            <ZoomButton variant="default" onClick={handleZoomPoperOpen}>
+              <Typography variant="subtitle2">
+                {(zoom * 100).toFixed(2)} %
+              </Typography>
+            </ZoomButton>
+          </Box>
+        </Box>
+        <Box display="flex" alignContent="center" justifyContent="flex-end">
+          <LightTooltip title="Rotate Left" position="bottom" arrow>
+            <IconButton onClick={() => handleChangeBoardRotation(false)}>
+              <Rotate90DegreesCcw />
+            </IconButton>
           </LightTooltip>
-
-          <LightTooltip title="Redo" arrow>
-            <Box display="flex">
-              <IconButton
-                disabled={actionHistoryIndex === actionHistory.length - 1}
-                mx={1}
-                onClick={() => handleUndoRedo(false)}
-              >
-                <RedoIcon />
-              </IconButton>
-            </Box>
+          <LightTooltip title="Toggle Properties" arrow>
+            <IconButton onClick={handleToggleProperties}>
+              {showProperties ? <ChevronsRight /> : <ChevronsLeft />}
+            </IconButton>
           </LightTooltip>
-
-          <ZoomButton
-            variant="contained"
-            endIcon={<ArrowUpIcon />}
-            onClick={handleZoomPoperOpen}
-          >
-            <Typography variant="subtitle2">
-              {(zoom * 100).toFixed(2)} %
-            </Typography>
-          </ZoomButton>
-
-          <ZoomPopover
-            anchorEl={anchorEl}
-            zoom={zoom}
-            setZoom={handleZoom}
-            onZoomIn={onZoomIn}
-            onZoomOut={onZoomOut}
-            onZoomFit={onZoomFit}
-            onClose={handleCloseZoomPoper}
-          />
         </Box>
       </Box>
+      <ZoomPopover
+        anchorEl={anchorEl}
+        zoom={zoom}
+        setZoom={handleZoom}
+        onZoomIn={onZoomIn}
+        onZoomOut={onZoomOut}
+        onZoomFit={onZoomFit}
+        onClose={handleCloseZoomPoper}
+      />
+      <ShortCutsDialog
+        open={dialog === DialogTypes.SHORTCUTS}
+        onCancel={handleCloseDialog}
+      />
       <SimPreviewGuideDialog
         open={dialog === DialogTypes.SIM_PREVIEW_GUIDE}
         applying={simPreviewing}

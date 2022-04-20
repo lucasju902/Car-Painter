@@ -215,7 +215,7 @@ const Scheme = React.memo((props) => {
           />
           <Box
             width="100%"
-            height="calc(100% - 110px)"
+            height="calc(100% - 60px)"
             display="flex"
             justifyContent="space-between"
           >
@@ -238,7 +238,6 @@ const Scheme = React.memo((props) => {
                 hoveredLayerJSON={hoveredJSON}
                 editable={editable}
                 onChangeHoverJSONItem={setHoveredJSONItem}
-                onChangeBoardRotation={handleChangeBoardRotation}
                 stageRef={stageRef}
                 baseLayerRef={baseLayerRef}
                 mainLayerRef={mainLayerRef}
@@ -252,6 +251,11 @@ const Scheme = React.memo((props) => {
                 carMakeID={currentScheme.car_make}
                 onDismiss={hideLegacyBanner}
               />
+              <Toolbar
+                stageRef={stageRef}
+                retrieveTGABlobURL={retrieveTGABlobURL}
+                onChangeBoardRotation={handleChangeBoardRotation}
+              />
             </Box>
             <PropertyBar
               stageRef={stageRef}
@@ -260,10 +264,6 @@ const Scheme = React.memo((props) => {
               onDeleteLayer={onDeleteLayer}
             />
           </Box>
-          <Toolbar
-            stageRef={stageRef}
-            retrieveTGABlobURL={retrieveTGABlobURL}
-          />
         </Box>
       )}
     </>
