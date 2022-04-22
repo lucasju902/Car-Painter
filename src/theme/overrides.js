@@ -5,8 +5,7 @@ const overrides = {
         WebkitFontSmoothing: "auto",
       },
       "::-webkit-scrollbar-track": {
-        boxShadow: "inset 0 0 5px #0f0f0f",
-        backgroundColor: "#202121",
+        backgroundColor: "#666666",
       },
       "::-webkit-scrollbar": {
         backgroundColor: "#202121",

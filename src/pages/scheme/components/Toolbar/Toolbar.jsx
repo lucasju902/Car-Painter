@@ -256,8 +256,12 @@ export const Toolbar = React.memo((props) => {
           </Box>
 
           <Box display="flex" alignItems="center">
-            <SearchIcon />
-            <Box width="80px" ml={2}>
+            <LightTooltip title="Zoom to fit" position="bottom" arrow>
+              <IconButton onClick={onZoomFit}>
+                <SearchIcon />
+              </IconButton>
+            </LightTooltip>
+            <Box width="80px">
               <Slider
                 min={0.1}
                 max={5}
@@ -275,7 +279,7 @@ export const Toolbar = React.memo((props) => {
           </Box>
         </Box>
         <Box display="flex" alignContent="center" justifyContent="flex-end">
-          <LightTooltip title="Rotate Left" position="bottom" arrow>
+          <LightTooltip title="Rotate View" position="bottom" arrow>
             <IconButton onClick={() => handleChangeBoardRotation(false)}>
               <Rotate90DegreesCcw />
             </IconButton>

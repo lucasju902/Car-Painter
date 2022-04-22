@@ -52,7 +52,7 @@ export const useZoom = (stageRef) => {
 
   const handleZoomFit = useCallback(() => {
     let width = stageRef.current.attrs.width || 1024;
-    let height = stageRef.current.attrs.height || 1024;
+    let height = (stageRef.current.attrs.height || 1024) - 50;
     const newZoom = mathRound4(
       Math.min(
         width / (frameSize.width || 1024),
