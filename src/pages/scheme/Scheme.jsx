@@ -196,20 +196,22 @@ const Scheme = React.memo((props) => {
   }, user && user.id && currentScheme && 10000);
 
   useEffect(() => {
-    const container = stageRef.current.attrs.container;
-    let flag = false;
-    for (const item of Object.keys(hoveredJSON)) {
-      if (hoveredJSON[item]) {
-        flag = true;
+    if (stageRef.current) {
+      const container = stageRef.current.attrs.container;
+      let flag = false;
+      for (const item of Object.keys(hoveredJSON)) {
+        if (hoveredJSON[item]) {
+          flag = true;
+        }
+      }
+      if (flag) {
+        container.style.cursor = "move";
+      } else {
+        container.style.cursor = "default";
       }
     }
-    if (flag) {
-      container.style.cursor = "move";
-    } else {
-      container.style.cursor = "default";
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hoveredJSON]);
+  }, [hoveredJSON, stageRef]);
 
   return (
     <>
