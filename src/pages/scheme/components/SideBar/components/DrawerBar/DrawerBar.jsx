@@ -324,6 +324,13 @@ export const DrawerBar = React.memo(
       [dispatch, currentScheme, currentLayer, setDialog]
     );
 
+    const handleToggleDrawShapes = useCallback(() => {
+      if (showShapes) {
+        dispatch(setMouseMode(MouseModes.DEFAULT));
+      }
+      setShowShapes((flag) => !flag);
+    }, [showShapes, dispatch]);
+
     return (
       <Wrapper
         height="100%"
@@ -347,7 +354,7 @@ export const DrawerBar = React.memo(
             value={"Draw Shapes"}
             disabled={!editable}
             active={showShapes}
-            onClick={() => setShowShapes((flag) => !flag)}
+            onClick={handleToggleDrawShapes}
           >
             <CustomFontAwesomeIcon
               icon={faDrawPolygon}

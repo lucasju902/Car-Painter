@@ -66,6 +66,19 @@ export const BasePaintDialog = React.memo((props) => {
     <Dialog aria-labelledby="base-paints-title" open={open} onClose={onCancel}>
       <DialogTitle id="base-paints-title">Select Base Paint</DialogTitle>
       <DialogContent dividers id="base-paint-dialog-content">
+        <Box
+          bgcolor="#666"
+          p="10px 16px"
+          borderRadius={10}
+          border="2px solid navajowhite"
+          position="relative"
+          mb="10px"
+        >
+          <Typography>
+            Select a base paint pattern to add. You can change the colors after
+            selecting a pattern.
+          </Typography>
+        </Box>
         {legacyMode ? (
           <Box
             bgcolor="#666"

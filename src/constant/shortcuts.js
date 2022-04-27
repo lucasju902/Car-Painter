@@ -11,6 +11,7 @@ export const ShortCuts = {
   L: "Insert Logo",
   B: "Insert Basepaint",
   H: "Hide Transformer",
+  P: "Sim Preview",
   "↑": "Move Layer Up",
   "↓": "Move Layer Down",
   "←": "Move Layer Left",

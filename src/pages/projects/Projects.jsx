@@ -80,6 +80,8 @@ export const Projects = React.memo(() => {
     dispatch(setSchemeLoaded(false));
     dispatch(resetLayerReducer());
     dispatch(resetBoardReducer());
+    dispatch(getSchemeList(user.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useEffect(() => {
