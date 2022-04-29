@@ -39,6 +39,7 @@ export const ShortCuts = {
   "Shift P": "Polygon Drawing Mode",
   "Shift L": "Line Drawing Mode",
   "Shift >": "Arrow Drawing Mode",
+  Insert: "Clone Layer",
   "Ctrl/Meta C": "Copy Layer To Clipboard",
   "Ctrl/Meta V": "Paste Layer From Clipboard",
   "Ctrl/Meta Z": "Undo Action",

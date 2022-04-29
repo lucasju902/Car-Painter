@@ -1,9 +1,12 @@
 import styled from "styled-components/macro";
 
 import { Button, ButtonGroup } from "@material-ui/core";
-import { ArrowDropDown as DropDownIcon } from "@material-ui/icons";
+import {
+  ArrowDropDown as DropDownIcon,
+  Share as ShareIcon,
+} from "@material-ui/icons";
 
-export { DropDownIcon };
+export { DropDownIcon, ShareIcon };
 
 export const CustomButtonGroup = styled(ButtonGroup)`
   height: 30px;

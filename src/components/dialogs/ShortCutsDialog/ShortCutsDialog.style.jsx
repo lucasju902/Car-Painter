@@ -8,6 +8,7 @@ export const KeyText = styled(Typography)`
   width: fit-content;
   padding: 0px 10px;
   border-radius: 3px;
+  font-family: AkkuratMonoLLWeb-Regular;
 `;
 export const DescriptionText = styled(Typography)`
   width: fit-content;

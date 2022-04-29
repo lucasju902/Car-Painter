@@ -23,9 +23,9 @@ import {
 } from "redux/reducers/schemeReducer";
 
 export const SchemeSettingsDialog = React.memo((props) => {
-  const { editable, onCancel, open } = props;
+  const { editable, onCancel, open, tab } = props;
   const dispatch = useDispatch();
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(tab || 0);
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const sharedUsers = useSelector((state) => state.schemeReducer.sharedUsers);

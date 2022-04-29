@@ -5,6 +5,7 @@ import { DialogTypes } from "constant";
 import { Typography, Box, Button, Popover } from "components/MaterialUI";
 import {
   DropDownIcon,
+  ShareIcon,
   DownloadButton,
   CustomButtonGroup,
 } from "./Header.style";
@@ -19,9 +20,15 @@ import { CircularProgress } from "components/MaterialUI";
 import { setMessage } from "redux/reducers/messageReducer";
 import RaceConfirmDialog from "components/dialogs/RaceConfirmDialog";
 import { updateScheme } from "redux/reducers/schemeReducer";
+import { SchemeSettingsDialog } from "components/dialogs";
 
 export const Header = React.memo((props) => {
-  const { onDownloadTGA, onDownloadSpecTGA, retrieveTGAPNGDataUrl } = props;
+  const {
+    editable,
+    onDownloadTGA,
+    onDownloadSpecTGA,
+    retrieveTGAPNGDataUrl,
+  } = props;
   const [tgaAnchorEl, setTGAAnchorEl] = useState(null);
   const [raceAnchorEl, setRaceAnchorEl] = useState(null);
   const [dialog, setDialog] = useState(null);
@@ -199,6 +206,10 @@ export const Header = React.memo((props) => {
     handleRaceOptionsClose();
   };
 
+  const handleOpenShareDialog = () => {
+    setDialog(DialogTypes.SETTINGS);
+  };
+
   const onRaceUpdate = useCallback(() => {
     if (currentScheme.dismiss_race_confirm) {
       handleApplyRace();
@@ -210,6 +221,12 @@ export const Header = React.memo((props) => {
   return (
     <>
       <AppHeader>
+        <Box mr={1} height="100%" display="flex">
+          <Button onClick={handleOpenShareDialog} startIcon={<ShareIcon />}>
+            <Typography variant="subtitle2">Share</Typography>
+          </Button>
+        </Box>
+
         <Box mr={1} height="100%" display="flex">
           <DownloadButton
             aria-controls="tga-options-menu"
@@ -331,6 +348,12 @@ export const Header = React.memo((props) => {
         open={dialog === DialogTypes.RACE_CONFIRM}
         onCancel={handleCloseDialog}
         onConfirm={handleConfirmRace}
+      />
+      <SchemeSettingsDialog
+        editable={editable}
+        open={dialog === DialogTypes.SETTINGS}
+        tab={1}
+        onCancel={handleCloseDialog}
       />
     </>
   );

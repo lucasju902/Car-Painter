@@ -175,7 +175,7 @@ export const withKeyEvent = (Component) =>
       (key, event) => {
         event.preventDefault();
         // Delete Selected Layer
-        // console.log("KeyEvent: ", key, event);
+        console.log("KeyEvent: ", key, event);
         if (event.target.tagName !== "INPUT" && event.type === "keydown") {
           if (pressedKey === key && pressedEventKey === event.key) {
             return;
@@ -196,13 +196,13 @@ export const withKeyEvent = (Component) =>
           } else if (key === "esc") {
             if (currentLayer) {
               dispatch(setCurrentLayer(null));
-            } else if (
-              [MouseModes.LINE, MouseModes.ARROW, MouseModes.POLYGON].includes(
-                mouseMode
-              )
-            ) {
-              dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
+            } else if (mouseMode !== MouseModes.DEFAULT) {
               dispatch(setMouseMode(MouseModes.DEFAULT));
+              dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
+            }
+          } else if (key === "ins") {
+            if (currentLayer) {
+              handleCloneLayer(currentLayer);
             }
           } else if (event.key === "+" && event.shiftKey) {
             onZoomIn();

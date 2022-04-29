@@ -230,6 +230,7 @@ const Scheme = React.memo((props) => {
             onKeyEvent={onKeyEvent}
           />
           <Header
+            editable={editable}
             onDownloadTGA={onDownloadTGA}
             onDownloadSpecTGA={onDownloadSpecTGA}
             retrieveTGAPNGDataUrl={retrieveTGAPNGDataUrl}

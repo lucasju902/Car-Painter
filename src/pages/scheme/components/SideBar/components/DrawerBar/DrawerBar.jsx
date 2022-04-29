@@ -31,11 +31,12 @@ import {
   createLayerFromUpload,
   createTextLayer,
   updateLayer,
+  setDrawingStatus,
 } from "redux/reducers/layerReducer";
 import { updateScheme } from "redux/reducers/schemeReducer";
 
 import { getZoomedCenterPosition, focusBoard } from "helper";
-import { DialogTypes, MouseModes } from "constant";
+import { DialogTypes, DrawingStatus, MouseModes } from "constant";
 
 import {
   BasePaintDialog,
@@ -331,6 +332,16 @@ export const DrawerBar = React.memo(
       setShowShapes((flag) => !flag);
     }, [showShapes, dispatch]);
 
+    const handleKeyEventDrawingItem = useCallback(
+      (e) => {
+        if (e.key === "Escape") {
+          dispatch(setMouseMode(MouseModes.DEFAULT));
+          dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
+        }
+      },
+      [dispatch]
+    );
+
     return (
       <Wrapper
         height="100%"
@@ -375,6 +386,7 @@ export const DrawerBar = React.memo(
                     value={mode.value}
                     disabled={!editable}
                     onClick={() => handleModeChange(mode.value)}
+                    onKeyDown={handleKeyEventDrawingItem}
                     active={mode.value === mouseMode ? "true" : "false"}
                   >
                     {mode.icon}

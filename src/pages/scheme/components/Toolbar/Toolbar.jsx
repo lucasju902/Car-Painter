@@ -257,11 +257,11 @@ export const Toolbar = React.memo((props) => {
 
           <Box display="flex" alignItems="center">
             <LightTooltip title="Zoom to fit" position="bottom" arrow>
-              <IconButton onClick={onZoomFit}>
+              <IconButton onClick={onZoomFit} size="small">
                 <SearchIcon />
               </IconButton>
             </LightTooltip>
-            <Box width="80px">
+            <Box width="80px" ml={2}>
               <Slider
                 min={0.1}
                 max={5}
