@@ -19,6 +19,7 @@ import {
   setCurrent as setCurrentLayer,
   createShape,
   setDrawingStatus,
+  setCloningLayer,
 } from "redux/reducers/layerReducer";
 
 export const useDrawHelper = (stageRef) => {
@@ -33,6 +34,7 @@ export const useDrawHelper = (stageRef) => {
   const dispatch = useDispatch();
 
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
+  const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const paintingGuides = useSelector(
@@ -301,16 +303,23 @@ export const useDrawHelper = (stageRef) => {
     },
     [dispatch, paintingGuides, previousGuide, setPreviousGuide, currentScheme]
   );
-  const handleLayerDragStart = useCallback(() => {
-    if (
-      currentScheme.guide_data.show_wireframe ||
-      currentScheme.guide_data.show_numberBlocks ||
-      currentScheme.guide_data.show_sponsor ||
-      currentScheme.guide_data.show_grid
-    )
-      showGuideForRepositioning(true);
-    dispatch(setDrawingStatus(DrawingStatus.TRANSFORMING_SHAPE));
-  }, [dispatch, showGuideForRepositioning, currentScheme]);
+  const handleLayerDragStart = useCallback(
+    (layer) => {
+      if (
+        currentScheme.guide_data.show_wireframe ||
+        currentScheme.guide_data.show_numberBlocks ||
+        currentScheme.guide_data.show_sponsor ||
+        currentScheme.guide_data.show_grid
+      ) {
+        showGuideForRepositioning(true);
+      }
+      dispatch(setDrawingStatus(DrawingStatus.TRANSFORMING_SHAPE));
+      if (layer && (pressedKey === "ctrl" || pressedKey === "meta")) {
+        dispatch(setCloningLayer({ ...layer, id: "cloning-layer" }));
+      }
+    },
+    [dispatch, showGuideForRepositioning, currentScheme, pressedKey]
+  );
   const handleLayerDragEnd = useCallback(() => {
     if (
       currentScheme.guide_data.show_wireframe ||

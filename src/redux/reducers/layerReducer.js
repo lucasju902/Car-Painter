@@ -26,6 +26,7 @@ const initialState = {
   current: null,
   hoveredJSON: {},
   clipboard: null,
+  cloningLayer: null,
   drawingStatus: null,
   loadedStatuses: {},
   loading: false,
@@ -116,6 +117,9 @@ export const slice = createSlice({
     setClipboard: (state, action) => {
       state.clipboard = parseLayer(action.payload);
     },
+    setCloningLayer: (state, action) => {
+      state.cloningLayer = parseLayer(action.payload);
+    },
     setDrawingStatus: (state, action) => {
       state.drawingStatus = action.payload;
     },
@@ -142,6 +146,7 @@ export const {
   deleteListItem,
   deleteListItems,
   setClipboard,
+  setCloningLayer,
   setHoveredJSON,
   setHoveredJSONItem,
   deleteItemsByUploadID,
@@ -153,20 +158,9 @@ export const {
 
 export default slice.reducer;
 
-export const createLayer = (
-  layerInfo,
-  pushingToHistory = true,
-  callback = null
-) => async (dispatch, getState) => {
+const shiftSimilarLayerOrders = (layer) => async (dispatch, getState) => {
   const currentUser = getState().authReducer.user;
   const layerList = getState().layerReducer.list;
-  const layer = await LayerService.createLayer(stringifyLayer(layerInfo));
-  SocketClient.emit("client-create-layer", {
-    data: layer,
-    socketID: SocketClient.socket.id,
-    userID: currentUser.id,
-  });
-
   let filter = [];
   if ([LayerTypes.BASE].includes(layer.layer_type)) {
     filter = [LayerTypes.BASE];
@@ -201,6 +195,22 @@ export const createLayer = (
       userID: currentUser.id,
     });
   }
+};
+
+export const createLayer = (
+  layerInfo,
+  pushingToHistory = true,
+  callback = null
+) => async (dispatch, getState) => {
+  const currentUser = getState().authReducer.user;
+  const layer = await LayerService.createLayer(stringifyLayer(layerInfo));
+  SocketClient.emit("client-create-layer", {
+    data: layer,
+    socketID: SocketClient.socket.id,
+    userID: currentUser.id,
+  });
+
+  dispatch(shiftSimilarLayerOrders(layer));
 
   dispatch(insertToList(layer));
   if (layer.layer_type !== LayerTypes.BASE) {
@@ -504,8 +514,8 @@ export const cloneLayer = (
   layerToClone,
   samePosition = false,
   pushingToHistory = true,
-  centerPosition,
-  callback
+  centerPosition = {},
+  callback = null
 ) => async (dispatch, getState) => {
   if (layerToClone) {
     dispatch(setLoading(true));
@@ -532,8 +542,7 @@ export const cloneLayer = (
             : centerPosition.y + offset.y,
         }),
       };
-      dispatch(createLayer(layer, pushingToHistory));
-      if (callback) callback();
+      dispatch(createLayer(layer, pushingToHistory, callback));
     } catch (err) {
       dispatch(setMessage({ message: err.message }));
     }

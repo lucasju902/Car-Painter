@@ -18,17 +18,19 @@ export const LogosAndTexts = React.memo((props) => {
     frameSize,
     mouseMode,
     specMode,
-    setCurrentLayer,
     boardRotate,
     paintingGuides,
     guideData,
+    cloningLayer,
     onChange,
     onFontLoad,
     onHover,
     onDblClick,
     onLoadLayer,
+    onSelect,
     onDragStart,
     onDragEnd,
+    onCloneMove,
   } = props;
   const filteredLayers = useMemo(
     () =>
@@ -44,6 +46,12 @@ export const LogosAndTexts = React.memo((props) => {
       ),
     [layers]
   );
+  const resultLayers = useMemo(() => {
+    if (cloningLayer) {
+      return [...filteredLayers, cloningLayer];
+    }
+    return filteredLayers;
+  }, [cloningLayer, filteredLayers]);
   const layerFont = useCallback(
     (layer) => {
       return fonts.length
@@ -72,7 +80,7 @@ export const LogosAndTexts = React.memo((props) => {
 
   return (
     <>
-      {filteredLayers.map((layer) => {
+      {resultLayers.map((layer) => {
         let shadowOffset = getShadowOffset(layer);
 
         if (layer.layer_type !== LayerTypes.TEXT) {
@@ -81,6 +89,7 @@ export const LogosAndTexts = React.memo((props) => {
               key={layer.id}
               id={layer.id}
               layer={layer}
+              cloningLayer={cloningLayer}
               stageRef={stageRef}
               name={layer.id.toString()}
               editable={editable}
@@ -132,7 +141,7 @@ export const LogosAndTexts = React.memo((props) => {
               opacity={layer.layer_data.opacity}
               paintingGuides={paintingGuides}
               guideData={guideData}
-              onSelect={() => setCurrentLayer(layer)}
+              onSelect={() => onSelect(layer)}
               onDblClick={onDblClick}
               listening={
                 !layer.layer_locked && mouseMode === MouseModes.DEFAULT
@@ -145,6 +154,7 @@ export const LogosAndTexts = React.memo((props) => {
               onLoadLayer={onLoadLayer}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
+              onCloneMove={onCloneMove}
             />
           );
         }
@@ -154,6 +164,7 @@ export const LogosAndTexts = React.memo((props) => {
             key={layer.id}
             id={layer.id}
             layer={layer}
+            cloningLayer={cloningLayer}
             editable={editable}
             stageRef={stageRef}
             frameSize={frameSize}
@@ -219,7 +230,7 @@ export const LogosAndTexts = React.memo((props) => {
             visible={layer.layer_visible ? true : false}
             paintingGuides={paintingGuides}
             guideData={guideData}
-            onSelect={() => setCurrentLayer(layer)}
+            onSelect={() => onSelect(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(value, pushingToHistory) =>
@@ -229,6 +240,7 @@ export const LogosAndTexts = React.memo((props) => {
             onLoadLayer={onLoadLayer}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
+            onCloneMove={onCloneMove}
           />
         );
       })}

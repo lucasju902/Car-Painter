@@ -18,6 +18,7 @@ export const GroupedURLImage = React.memo(
     frameSize,
     allowFit,
     layer,
+    cloningLayer,
     loadedStatus,
     onLoadLayer,
     tellSize,
@@ -36,6 +37,7 @@ export const GroupedURLImage = React.memo(
     onHover,
     onDragStart,
     onDragEnd,
+    onCloneMove,
     ...props
   }) => {
     const shapeRef = useRef();
@@ -81,11 +83,14 @@ export const GroupedURLImage = React.memo(
       paintingGuides,
       guideData,
       frameSize,
+      layer,
+      cloningLayer,
       opacity: layer.layer_data.opacity,
       onSelect,
       onChange,
       onDragStart,
       onDragEnd,
+      onCloneMove,
     });
     const [
       ,

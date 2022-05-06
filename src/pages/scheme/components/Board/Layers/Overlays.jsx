@@ -12,7 +12,6 @@ export const Overlays = React.memo((props) => {
     stageRef,
     layers,
     editable,
-    setCurrentLayer,
     frameSize,
     mouseMode,
     specMode,
@@ -20,12 +19,15 @@ export const Overlays = React.memo((props) => {
     loadedStatuses,
     paintingGuides,
     guideData,
+    cloningLayer,
+    onSelect,
     onChange,
     onHover,
     onLoadLayer,
     onDragStart,
     onDragEnd,
     onDblClick,
+    onCloneMove,
   } = props;
 
   const filteredLayers = useMemo(
@@ -37,6 +39,12 @@ export const Overlays = React.memo((props) => {
       ),
     [layers]
   );
+  const resultLayers = useMemo(() => {
+    if (cloningLayer) {
+      return [...filteredLayers, cloningLayer];
+    }
+    return filteredLayers;
+  }, [cloningLayer, filteredLayers]);
   const getShadowOffset = useCallback(
     (layer) => {
       return getRelativeShadowOffset(boardRotate, {
@@ -55,7 +63,7 @@ export const Overlays = React.memo((props) => {
 
   return (
     <>
-      {filteredLayers.map((layer) => {
+      {resultLayers.map((layer) => {
         let shadowOffset = getShadowOffset(layer);
 
         return (
@@ -63,6 +71,7 @@ export const Overlays = React.memo((props) => {
             key={layer.id}
             id={layer.id}
             layer={layer}
+            cloningLayer={cloningLayer}
             stageRef={stageRef}
             editable={editable}
             name={layer.id.toString()}
@@ -112,7 +121,7 @@ export const Overlays = React.memo((props) => {
                 : layer.layer_data.scolor
             }
             strokeScale={layer.layer_data.stroke_scale}
-            onSelect={() => setCurrentLayer(layer)}
+            onSelect={() => onSelect(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             frameSize={frameSize}
@@ -126,6 +135,7 @@ export const Overlays = React.memo((props) => {
             onLoadLayer={onLoadLayer}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
+            onCloneMove={onCloneMove}
           />
         );
       })}

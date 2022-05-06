@@ -43,6 +43,7 @@ export const Shape = React.memo(
     shadowOffsetX,
     shadowOffsetY,
     layer,
+    cloningLayer,
     paintingGuides,
     guideData,
     onSelect,
@@ -52,6 +53,7 @@ export const Shape = React.memo(
     onDragStart,
     onDragEnd,
     onLoadLayer,
+    onCloneMove,
     ...props
   }) => {
     const shapeRef = useRef();
@@ -62,12 +64,15 @@ export const Shape = React.memo(
       paintingGuides,
       guideData,
       frameSize,
+      layer,
+      cloningLayer,
       offsetsFromStroke,
       opacity: layer.layer_data.opacity,
       onSelect,
       onChange,
       onDragStart,
       onDragEnd,
+      onCloneMove,
     });
 
     const [

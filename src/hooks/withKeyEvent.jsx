@@ -200,10 +200,6 @@ export const withKeyEvent = (Component) =>
               dispatch(setMouseMode(MouseModes.DEFAULT));
               dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
             }
-          } else if (key === "ins") {
-            if (currentLayer) {
-              handleCloneLayer(currentLayer);
-            }
           } else if (event.key === "+" && event.shiftKey) {
             onZoomIn();
           } else if (event.key === "_" && event.shiftKey) {
@@ -278,6 +274,14 @@ export const withKeyEvent = (Component) =>
             editable
           ) {
             dispatch(historyActionUp());
+          } else if (
+            event.key === "j" &&
+            (event.ctrlKey || event.metaKey) &&
+            editable
+          ) {
+            if (currentLayer) {
+              handleCloneLayer(currentLayer);
+            }
           } else if (key === "1") {
             togglePaintingGuides(PaintingGuides.CARMASK);
           } else if (key === "2") {

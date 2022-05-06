@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import Konva from "konva";
 import { PaintingGuides } from "constant";
 import { mathRound2 } from "helper";
+import { useReducerRef } from "./useReducerRef";
 
 export const useDrag = ({
   stageRef,
@@ -9,15 +10,20 @@ export const useDrag = ({
   paintingGuides,
   guideData,
   frameSize,
+  layer,
+  cloningLayer,
   offsetsFromStroke,
   // opacity,
   onSelect,
   onChange,
   onDragStart,
   onDragEnd,
+  onCloneMove,
 }) => {
   const GUIDELINE_ID = "snapping-guide-line";
   const [dragging, setDragging] = useState(false);
+  const [, layerRef] = useReducerRef(layer);
+  const [, cloningLayerRef] = useReducerRef(cloningLayer);
 
   const GUIDELINE_OFFSET = useMemo(
     () => (guideData ? Math.max(guideData.grid_padding / 10, 2) : 10),
@@ -286,34 +292,50 @@ export const useDrag = ({
     ]
   );
 
-  const handleDragStart = useCallback(
-    (e) => {
-      setDragging(true);
-      onSelect();
-      if (onDragStart) onDragStart();
-    },
-    [onSelect, onDragStart]
-  );
+  const handleDragStart = (e) => {
+    setDragging(true);
+    if (onDragStart) onDragStart(layerRef.current);
+  };
 
-  const handleDragEnd = useCallback(
-    (e) => {
-      setDragging(false);
-      // e.target.opacity(opacity);
-      stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
-      if (onChange) {
-        onChange({
-          left: mathRound2(
-            e.target.x() - (offsetsFromStroke ? offsetsFromStroke.x : 0)
-          ),
-          top: mathRound2(
-            e.target.y() - (offsetsFromStroke ? offsetsFromStroke.y : 0)
-          ),
-        });
-      }
-      if (onDragEnd) onDragEnd();
-    },
-    [stageRef, offsetsFromStroke, onChange, onDragEnd]
-  );
+  const handleDragEnd = (e) => {
+    setDragging(false);
+    // e.target.opacity(opacity);
+    stageRef.current.find("." + GUIDELINE_ID).forEach((l) => l.destroy());
+    const left = mathRound2(
+      e.target.x() - (offsetsFromStroke ? offsetsFromStroke.x : 0)
+    );
+    const top = mathRound2(
+      e.target.y() - (offsetsFromStroke ? offsetsFromStroke.y : 0)
+    );
+    onSelect();
+
+    if (cloningLayerRef.current && onCloneMove) {
+      onCloneMove(
+        {
+          ...cloningLayerRef.current,
+          layer_data: {
+            ...cloningLayerRef.current.layer_data,
+            left,
+            top,
+          },
+        },
+        () => {
+          // Getting Origin Layer to Back
+          e.target.x(
+            layerRef.current.layer_data.left +
+              (offsetsFromStroke ? offsetsFromStroke.x : 0)
+          );
+          e.target.y(
+            layerRef.current.layer_data.top +
+              (offsetsFromStroke ? offsetsFromStroke.y : 0)
+          );
+        }
+      );
+    } else if (onChange) {
+      onChange({ left, top });
+    }
+    if (onDragEnd) onDragEnd();
+  };
 
   return [dragging, handleDragStart, handleDragMove, handleDragEnd];
 };

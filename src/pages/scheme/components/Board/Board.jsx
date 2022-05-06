@@ -33,6 +33,8 @@ import {
   setCurrent as setCurrentLayer,
   updateLayer,
   setLoadedStatus,
+  setCloningLayer,
+  cloneLayer,
 } from "redux/reducers/layerReducer";
 import { useDrawHelper } from "hooks";
 
@@ -80,6 +82,9 @@ export const Board = React.memo(
     const loadedFontList = useSelector((state) => state.fontReducer.loadedList);
     const layerList = useSelector((state) => state.layerReducer.list);
     const currentLayer = useSelector((state) => state.layerReducer.current);
+    const cloningLayer = useSelector(
+      (state) => state.layerReducer.cloningLayer
+    );
     const loadedStatuses = useSelector(
       (state) => state.layerReducer.loadedStatuses
     );
@@ -186,6 +191,20 @@ export const Board = React.memo(
     const handleDblClickLayer = useCallback(() => {
       dispatch(setShowProperties(true));
     }, [dispatch]);
+
+    const handleCloneMoveLayer = useCallback(
+      (movedLayer, callback) => {
+        dispatch(
+          cloneLayer(movedLayer, true, true, {}, () => {
+            dispatch(setCloningLayer(null));
+            if (callback) {
+              callback();
+            }
+          })
+        );
+      },
+      [dispatch]
+    );
 
     return (
       <Box width="100%" height="100%" position="relative">
@@ -317,17 +336,19 @@ export const Board = React.memo(
                 frameSize={frameSize}
                 boardRotate={boardRotate}
                 currentLayer={currentLayer}
+                cloningLayer={cloningLayer}
                 mouseMode={mouseMode}
                 loadedStatuses={loadedStatuses}
                 paintingGuides={paintingGuides}
                 guideData={currentScheme.guide_data}
                 handleImageSize={handleImageSize}
-                setCurrentLayer={handleLayerSelect}
+                onSelect={handleLayerSelect}
                 onChange={handleLayerDataChange}
                 onHover={handleHoverLayer}
                 onLoadLayer={handleLoadLayer}
                 onDragStart={onLayerDragStart}
                 onDragEnd={onLayerDragEnd}
+                onCloneMove={handleCloneMoveLayer}
                 onDblClick={handleDblClickLayer}
               />
               <Shapes
@@ -340,16 +361,18 @@ export const Board = React.memo(
                 boardRotate={boardRotate}
                 mouseMode={mouseMode}
                 currentLayer={currentLayer}
+                cloningLayer={cloningLayer}
                 loadedStatuses={loadedStatuses}
                 paintingGuides={paintingGuides}
                 guideData={currentScheme.guide_data}
-                setCurrentLayer={handleLayerSelect}
+                onSelect={handleLayerSelect}
                 onChange={handleLayerDataChange}
                 onHover={handleHoverLayer}
                 onLoadLayer={handleLoadLayer}
                 onDragStart={onLayerDragStart}
                 onDragEnd={onLayerDragEnd}
                 onDblClick={handleDblClickLayer}
+                onCloneMove={handleCloneMoveLayer}
               />
               <LogosAndTexts
                 stageRef={stageRef}
@@ -363,9 +386,10 @@ export const Board = React.memo(
                 boardRotate={boardRotate}
                 loadedStatuses={loadedStatuses}
                 currentLayer={currentLayer}
+                cloningLayer={cloningLayer}
                 paintingGuides={paintingGuides}
                 guideData={currentScheme.guide_data}
-                setCurrentLayer={handleLayerSelect}
+                onSelect={handleLayerSelect}
                 onChange={handleLayerDataChange}
                 onFontLoad={handleAddFont}
                 onHover={handleHoverLayer}
@@ -373,6 +397,7 @@ export const Board = React.memo(
                 onDragStart={onLayerDragStart}
                 onDragEnd={onLayerDragEnd}
                 onDblClick={handleDblClickLayer}
+                onCloneMove={handleCloneMoveLayer}
               />
               {currentScheme.guide_data.show_carparts_on_top ? (
                 <CarParts

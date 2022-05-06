@@ -11,6 +11,7 @@ export const TextNode = React.memo(
     fontFamily,
     fontFile,
     layer,
+    cloningLayer,
     loadedFontList,
     loadedList,
     shadowColor,
@@ -28,6 +29,7 @@ export const TextNode = React.memo(
     onHover,
     onDragStart,
     onDragEnd,
+    onCloneMove,
     ...props
   }) => {
     const [loadedFontFamily, setLoadedFontFamily] = useState(null);
@@ -38,11 +40,14 @@ export const TextNode = React.memo(
       paintingGuides,
       guideData,
       frameSize,
+      layer,
+      cloningLayer,
       opacity: layer.layer_data.opacity,
       onSelect,
       onChange,
       onDragStart,
       onDragEnd,
+      onCloneMove,
     });
 
     const [

@@ -13,19 +13,21 @@ export const Shapes = React.memo((props) => {
     layers,
     frameSize,
     drawingLayer,
-    setCurrentLayer,
     boardRotate,
     mouseMode,
     specMode,
     loadedStatuses,
     paintingGuides,
     guideData,
+    cloningLayer,
+    onSelect,
     onChange,
     onHover,
     onLoadLayer,
     onDragStart,
     onDragEnd,
     onDblClick,
+    onCloneMove,
   } = props;
 
   const filteredLayers = useMemo(
@@ -37,6 +39,12 @@ export const Shapes = React.memo((props) => {
       ),
     [layers]
   );
+  const resultLayers = useMemo(() => {
+    if (cloningLayer) {
+      return [...filteredLayers, cloningLayer];
+    }
+    return filteredLayers;
+  }, [cloningLayer, filteredLayers]);
   const getShadowOffset = useCallback(
     (layer) => {
       return getRelativeShadowOffset(boardRotate, {
@@ -94,7 +102,7 @@ export const Shapes = React.memo((props) => {
 
   return (
     <>
-      {filteredLayers.map((layer) => {
+      {resultLayers.map((layer) => {
         let shadowOffset = getShadowOffset(layer);
         let offsetsFromStroke = getOffsetsFromStroke(layer);
         const newWidth =
@@ -108,6 +116,7 @@ export const Shapes = React.memo((props) => {
             id={layer.id}
             name={layer.id ? layer.id.toString() : null}
             layer={layer}
+            cloningLayer={cloningLayer}
             stageRef={stageRef}
             editable={editable}
             frameSize={frameSize}
@@ -193,7 +202,7 @@ export const Shapes = React.memo((props) => {
             perfectDrawEnabled={false}
             paintingGuides={paintingGuides}
             guideData={guideData}
-            onSelect={() => setCurrentLayer(layer)}
+            onSelect={() => onSelect(layer)}
             onDblClick={onDblClick}
             listening={!layer.layer_locked && mouseMode === MouseModes.DEFAULT}
             onChange={(values) => onChange(layer, values)}
@@ -201,12 +210,14 @@ export const Shapes = React.memo((props) => {
             onLoadLayer={onLoadLayer}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
+            onCloneMove={onCloneMove}
           />
         );
       })}
       {drawingLayer ? (
         <Shape
           layer={drawingLayer}
+          cloningLayer={cloningLayer}
           type={drawingLayer.layer_data.type}
           x={parseFloat(drawingLayer.layer_data.left || 0)}
           y={parseFloat(drawingLayer.layer_data.top || 0)}

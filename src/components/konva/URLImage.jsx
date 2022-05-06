@@ -13,6 +13,7 @@ export const URLImage = React.memo(
     frameSize,
     allowFit,
     layer,
+    cloningLayer,
     loadedStatus,
     boardRotate = 0,
     onLoadLayer,
@@ -32,6 +33,7 @@ export const URLImage = React.memo(
     onHover,
     onDragStart,
     onDragEnd,
+    onCloneMove,
     ...props
   }) => {
     const shapeRef = useRef();
@@ -76,11 +78,14 @@ export const URLImage = React.memo(
       paintingGuides,
       guideData,
       frameSize,
+      layer,
+      cloningLayer,
       opacity: layer ? layer.layer_data.opacity : 1,
       onSelect,
       onChange,
       onDragStart,
       onDragEnd,
+      onCloneMove,
     });
     const [
       ,
