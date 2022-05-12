@@ -17,6 +17,7 @@ import { spacing } from "@material-ui/system";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import { FontSelect, ColorPickerInput, SliderInput } from "components/common";
 import { LabelTypography } from "../../../PropertyBar.style";
+import { focusBoardQuickly } from "helper";
 
 const FormControl = styled(MuiFormControl)(spacing);
 
@@ -70,7 +71,13 @@ export const FontProperty = React.memo((props) => {
   )
     return <></>;
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">Font</Typography>
       </AccordionSummary>

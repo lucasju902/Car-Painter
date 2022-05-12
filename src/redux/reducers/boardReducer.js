@@ -29,6 +29,7 @@ const initialState = {
   mouseMode: MouseModes.DEFAULT,
   actionHistory: [],
   actionHistoryIndex: -1,
+  actionHistoryMoving: false,
   viewMode: ViewModes.NORMAL_VIEW,
   previousPath: "",
 };
@@ -89,6 +90,9 @@ export const slice = createSlice({
     setActionHistoryIndex: (state, action) => {
       state.actionHistoryIndex = action.payload;
     },
+    setActionHistoryMoving: (state, action) => {
+      state.actionHistoryMoving = action.payload;
+    },
     setViewMode: (state, action) => {
       state.viewMode = action.payload;
     },
@@ -113,6 +117,7 @@ export const {
   pushToActionHistory,
   setActionHistory,
   setActionHistoryIndex,
+  setActionHistoryMoving,
   reset,
   setViewMode,
   setPreviousPath,
@@ -123,7 +128,10 @@ export default slice.reducer;
 export const historyActionBack = () => async (dispatch, getState) => {
   const actionHistory = getState().boardReducer.actionHistory;
   const actionHistoryIndex = getState().boardReducer.actionHistoryIndex;
-
+  const actionHistoryMoving = getState().boardReducer.actionHistoryMoving;
+  if (actionHistoryMoving) {
+    return;
+  }
   if (actionHistoryIndex > -1) {
     switch (actionHistory[actionHistoryIndex].action) {
       case HistoryActions.LAYER_CHANGE_ACTION:
@@ -135,7 +143,12 @@ export const historyActionBack = () => async (dispatch, getState) => {
         dispatch(deleteLayer(actionHistory[actionHistoryIndex].data, false));
         break;
       case HistoryActions.LAYER_DELETE_ACTION:
-        dispatch(createLayer(actionHistory[actionHistoryIndex].data, false));
+        dispatch(setActionHistoryMoving(true));
+        dispatch(
+          createLayer(actionHistory[actionHistoryIndex].data, false, () => {
+            dispatch(setActionHistoryMoving(false));
+          })
+        );
         break;
       case HistoryActions.LAYER_LIST_ADD_ACTION:
         dispatch(
@@ -143,8 +156,11 @@ export const historyActionBack = () => async (dispatch, getState) => {
         );
         break;
       case HistoryActions.LAYER_LIST_DELETE_ACTION:
+        dispatch(setActionHistoryMoving(true));
         dispatch(
-          createLayerList(actionHistory[actionHistoryIndex].data, false)
+          createLayerList(actionHistory[actionHistoryIndex].data, false, () => {
+            dispatch(setActionHistoryMoving(false));
+          })
         );
         break;
       case HistoryActions.SCHEME_CHANGE_ACTION:
@@ -162,6 +178,10 @@ export const historyActionBack = () => async (dispatch, getState) => {
 export const historyActionUp = () => async (dispatch, getState) => {
   const actionHistory = getState().boardReducer.actionHistory;
   const actionHistoryIndex = getState().boardReducer.actionHistoryIndex;
+  const actionHistoryMoving = getState().boardReducer.actionHistoryMoving;
+  if (actionHistoryMoving) {
+    return;
+  }
 
   if (
     actionHistory.length > 0 &&
@@ -174,8 +194,11 @@ export const historyActionUp = () => async (dispatch, getState) => {
         );
         break;
       case HistoryActions.LAYER_ADD_ACTION:
+        dispatch(setActionHistoryMoving(true));
         dispatch(
-          createLayer(actionHistory[actionHistoryIndex + 1].data, false)
+          createLayer(actionHistory[actionHistoryIndex + 1].data, false, () => {
+            dispatch(setActionHistoryMoving(false));
+          })
         );
         break;
       case HistoryActions.LAYER_DELETE_ACTION:
@@ -184,8 +207,15 @@ export const historyActionUp = () => async (dispatch, getState) => {
         );
         break;
       case HistoryActions.LAYER_LIST_ADD_ACTION:
+        dispatch(setActionHistoryMoving(true));
         dispatch(
-          createLayerList(actionHistory[actionHistoryIndex + 1].data, false)
+          createLayerList(
+            actionHistory[actionHistoryIndex + 1].data,
+            false,
+            () => {
+              dispatch(setActionHistoryMoving(false));
+            }
+          )
         );
         break;
       case HistoryActions.LAYER_LIST_DELETE_ACTION:

@@ -4,7 +4,7 @@ import { ColorPicker } from "material-ui-color";
 import { Box, TextField, Typography } from "@material-ui/core";
 import { Palette } from "constant";
 import styled from "styled-components";
-import { focusBoard } from "helper";
+import { focusBoard, focusBoardQuickly } from "helper";
 
 const CustomColorPicker = styled(ColorPicker)`
   &.ColorPicker-MuiButton-contained {
@@ -91,6 +91,7 @@ export const ColorPickerInput = React.memo((props) => {
           <CustomColorPicker
             value={separateValues ? valuePicker : value || "#"}
             onChange={handleColorChange}
+            onOpen={focusBoardQuickly}
             palette={Palette}
             deferred
             hideTextfield

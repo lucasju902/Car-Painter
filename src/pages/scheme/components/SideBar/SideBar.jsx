@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { colorValidator } from "helper";
+import { colorValidator, focusBoardQuickly } from "helper";
 import { FinishOptions, LayerTypes, DialogTypes } from "constant";
 import { EnglishLang } from "constant/language";
 
@@ -76,6 +76,7 @@ export const SideBar = React.memo((props) => {
       dispatch(updateScheme({ id: currentScheme.id, base_color }));
       setColorInput(correctedColor);
       setColorDirty(false);
+      focusBoardQuickly();
     },
     [dispatch, currentScheme]
   );
@@ -96,17 +97,20 @@ export const SideBar = React.memo((props) => {
     }
     dispatch(updateScheme({ id: currentScheme.id, base_color }));
     setColorDirty(false);
+    focusBoardQuickly();
   }, [colorInput, dispatch, currentScheme]);
 
   const handleChangeFinishColor = useCallback(
     (color) => {
       dispatch(updateScheme({ id: currentScheme.id, finish: color }));
+      focusBoardQuickly();
     },
     [currentScheme, dispatch]
   );
 
   const handleDoubleClickItem = useCallback(() => {
     dispatch(setShowProperties(true));
+    focusBoardQuickly();
   }, [dispatch]);
 
   const showUploadDialog = useCallback(() => setDialog(DialogTypes.UPLOAD), [
@@ -300,6 +304,7 @@ export const SideBar = React.memo((props) => {
                             onChange={(event) =>
                               handleChangeFinishColor(event.target.value)
                             }
+                            onClose={focusBoardQuickly}
                             fullWidth
                           >
                             {FinishOptions.map((finishItem, index) => (

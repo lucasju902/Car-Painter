@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { AllowedLayerProps, LayerTypes } from "constant";
-import { mathRound2 } from "helper";
+import { focusBoardQuickly, mathRound2 } from "helper";
 
 import {
   Box,
@@ -45,7 +45,13 @@ export const SkewProperty = React.memo((props) => {
   )
     return <></>;
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">Skew</Typography>
       </AccordionSummary>

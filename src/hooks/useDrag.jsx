@@ -307,31 +307,26 @@ export const useDrag = ({
     const top = mathRound2(
       e.target.y() - (offsetsFromStroke ? offsetsFromStroke.y : 0)
     );
-    onSelect();
 
     if (cloningLayerRef.current && onCloneMove) {
-      onCloneMove(
-        {
-          ...cloningLayerRef.current,
-          layer_data: {
-            ...cloningLayerRef.current.layer_data,
-            left,
-            top,
-          },
+      onCloneMove({
+        ...cloningLayerRef.current,
+        layer_data: {
+          ...cloningLayerRef.current.layer_data,
+          left,
+          top,
         },
-        () => {
-          // Getting Origin Layer to Back
-          e.target.x(
-            layerRef.current.layer_data.left +
-              (offsetsFromStroke ? offsetsFromStroke.x : 0)
-          );
-          e.target.y(
-            layerRef.current.layer_data.top +
-              (offsetsFromStroke ? offsetsFromStroke.y : 0)
-          );
-        }
+      });
+      e.target.x(
+        layerRef.current.layer_data.left +
+          (offsetsFromStroke ? offsetsFromStroke.x : 0)
+      );
+      e.target.y(
+        layerRef.current.layer_data.top +
+          (offsetsFromStroke ? offsetsFromStroke.y : 0)
       );
     } else if (onChange) {
+      onSelect();
       onChange({ left, top });
     }
     if (onDragEnd) onDragEnd();

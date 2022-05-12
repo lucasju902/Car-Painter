@@ -17,6 +17,7 @@ import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { ColorPickerInput, SliderInput } from "components/common";
 import { LabelTypography } from "../../../PropertyBar.style";
+import { focusBoardQuickly } from "helper";
 
 export const StrokeProperty = React.memo((props) => {
   const {
@@ -62,7 +63,13 @@ export const StrokeProperty = React.memo((props) => {
   )
     return <></>;
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">Stroke</Typography>
       </AccordionSummary>

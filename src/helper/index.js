@@ -339,6 +339,10 @@ export const focusBoard = () => {
   setTimeout(() => document.activeElement.blur(), 500);
 };
 
+export const focusBoardQuickly = () => {
+  setTimeout(() => document.activeElement.blur(), 10);
+};
+
 export const isCenterBasedShape = (type) =>
   [
     MouseModes.CIRCLE,

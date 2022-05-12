@@ -35,7 +35,7 @@ import {
 } from "redux/reducers/layerReducer";
 import { updateScheme } from "redux/reducers/schemeReducer";
 
-import { getZoomedCenterPosition, focusBoard } from "helper";
+import { getZoomedCenterPosition, focusBoard, focusBoardQuickly } from "helper";
 import { DialogTypes, DrawingStatus, MouseModes } from "constant";
 
 import {
@@ -192,7 +192,10 @@ export const DrawerBar = React.memo(
     const user = useSelector((state) => state.authReducer.user);
     const [showShapes, setShowShapes] = useState(false);
 
-    const hideDialog = useCallback(() => setDialog(null), [setDialog]);
+    const hideDialog = useCallback(() => {
+      setDialog(null);
+      focusBoardQuickly();
+    }, [setDialog]);
 
     const handleModeChange = useCallback(
       (value) => {
@@ -200,6 +203,7 @@ export const DrawerBar = React.memo(
         if (value !== MouseModes.DEFAULT) {
           dispatch(setCurrentLayer(null));
         }
+        focusBoardQuickly();
       },
       [dispatch]
     );
@@ -321,6 +325,7 @@ export const DrawerBar = React.memo(
           );
         }
         setDialog(null);
+        focusBoardQuickly();
       },
       [dispatch, currentScheme, currentLayer, setDialog]
     );
@@ -330,6 +335,7 @@ export const DrawerBar = React.memo(
         dispatch(setMouseMode(MouseModes.DEFAULT));
       }
       setShowShapes((flag) => !flag);
+      focusBoardQuickly();
     }, [showShapes, dispatch]);
 
     const handleKeyEventDrawingItem = useCallback(
@@ -338,8 +344,17 @@ export const DrawerBar = React.memo(
           dispatch(setMouseMode(MouseModes.DEFAULT));
           dispatch(setDrawingStatus(DrawingStatus.CLEAR_COMMAND));
         }
+        focusBoardQuickly();
       },
       [dispatch]
+    );
+
+    const handleOpenDialog = useCallback(
+      (dialogName) => {
+        setDialog(dialogName);
+        focusBoard();
+      },
+      [setDialog]
     );
 
     return (
@@ -355,7 +370,7 @@ export const DrawerBar = React.memo(
             <MainItem
               value={item.value}
               disabled={!editable}
-              onClick={() => setDialog(item.value)}
+              onClick={() => handleOpenDialog(item.value)}
             >
               {item.icon}
               <Typography style={{ fontSize: "10px" }}>{item.label}</Typography>

@@ -10,6 +10,7 @@ import { LightTooltip } from "components/common";
 
 import { EnglishLang } from "constant/language";
 import { useStyles, CustomIconButton } from "./PartAction.style";
+import { focusBoardQuickly } from "helper";
 
 export const PartAction = React.memo((props) => {
   const classes = useStyles();
@@ -19,12 +20,14 @@ export const PartAction = React.memo((props) => {
   const handlePoperOpen = useCallback(
     (event) => {
       setAnchorEl(event.currentTarget);
+      focusBoardQuickly();
     },
     [setAnchorEl]
   );
 
   const handleClosePoper = useCallback(() => {
     setAnchorEl(null);
+    focusBoardQuickly();
   }, [setAnchorEl]);
 
   return (

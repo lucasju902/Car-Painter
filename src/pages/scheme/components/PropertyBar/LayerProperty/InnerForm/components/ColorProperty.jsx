@@ -18,6 +18,7 @@ import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import { ColorPickerInput } from "components/common";
 import { useSelector } from "react-redux";
 import { LabelTypography } from "../../../PropertyBar.style";
+import { focusBoardQuickly } from "helper";
 
 export const ColorProperty = React.memo((props) => {
   const {
@@ -85,7 +86,13 @@ export const ColorProperty = React.memo((props) => {
   if (!showColor && !showBlendType && !showFinish) return <></>;
 
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">Colors</Typography>
       </AccordionSummary>

@@ -5,6 +5,7 @@ import { GuidesSetting } from "./components";
 
 import { updateScheme } from "redux/reducers/schemeReducer";
 import { setPaintingGuides } from "redux/reducers/boardReducer";
+import { focusBoardQuickly } from "helper";
 
 export const SchemeProperty = React.memo((props) => {
   const { editable } = props;
@@ -24,12 +25,14 @@ export const SchemeProperty = React.memo((props) => {
           guide_data: guide_data,
         })
       );
+      focusBoardQuickly();
     },
     [dispatch, currentScheme]
   );
   const handleChangePaintingGuides = useCallback(
     (newFormats) => {
       dispatch(setPaintingGuides(newFormats));
+      focusBoardQuickly();
     },
     [dispatch]
   );

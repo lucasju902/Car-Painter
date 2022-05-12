@@ -6,7 +6,7 @@ import _ from "lodash";
 
 import { updateLayer } from "redux/reducers/layerReducer";
 import { AllowedLayerProps, LayerTypes, DefaultLayer } from "constant";
-import { colorValidator } from "helper";
+import { colorValidator, focusBoardQuickly } from "helper";
 
 import { InnerForm } from "./InnerForm";
 
@@ -63,13 +63,16 @@ export const LayerProperty = React.memo((props) => {
   );
   const handleClone = useCallback(() => {
     if (currentLayer) onClone(currentLayer);
+    focusBoardQuickly();
   }, [onClone, currentLayer]);
   const handleDelete = useCallback(() => {
     if (currentLayer) onDelete(currentLayer);
+    focusBoardQuickly();
   }, [onDelete, currentLayer]);
   const handleApply = useCallback(
     (values) => {
       dispatch(updateLayer(values));
+      focusBoardQuickly();
     },
     [dispatch]
   );
@@ -81,6 +84,7 @@ export const LayerProperty = React.memo((props) => {
           [field]: currentLayer[field] ? 0 : 1,
         })
       );
+      focusBoardQuickly();
     },
     [dispatch, currentLayer]
   );
@@ -95,6 +99,7 @@ export const LayerProperty = React.memo((props) => {
           },
         })
       );
+      focusBoardQuickly();
     },
     [dispatch, currentLayer]
   );
@@ -109,6 +114,7 @@ export const LayerProperty = React.memo((props) => {
           },
         })
       );
+      focusBoardQuickly();
     },
     [dispatch, currentLayer]
   );
@@ -123,6 +129,7 @@ export const LayerProperty = React.memo((props) => {
           },
         })
       );
+      focusBoardQuickly();
     },
     [dispatch, currentLayer]
   );

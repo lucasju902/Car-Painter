@@ -35,8 +35,11 @@ import {
   setLoadedStatus,
   setCloningLayer,
   cloneLayer,
+  insertToCloningQueue,
+  deleteCloningQueueByID,
 } from "redux/reducers/layerReducer";
 import { useDrawHelper } from "hooks";
+import { v4 as uuidv4 } from "uuid";
 
 export const Board = React.memo(
   ({
@@ -84,6 +87,9 @@ export const Board = React.memo(
     const currentLayer = useSelector((state) => state.layerReducer.current);
     const cloningLayer = useSelector(
       (state) => state.layerReducer.cloningLayer
+    );
+    const cloningQueue = useSelector(
+      (state) => state.layerReducer.cloningQueue
     );
     const loadedStatuses = useSelector(
       (state) => state.layerReducer.loadedStatuses
@@ -193,13 +199,13 @@ export const Board = React.memo(
     }, [dispatch]);
 
     const handleCloneMoveLayer = useCallback(
-      (movedLayer, callback) => {
+      (movedLayer) => {
+        const newQueueID = `cloning-layer-${uuidv4()}`;
+        dispatch(setCloningLayer(null));
+        dispatch(insertToCloningQueue({ ...movedLayer, id: newQueueID }));
         dispatch(
           cloneLayer(movedLayer, true, true, {}, () => {
-            dispatch(setCloningLayer(null));
-            if (callback) {
-              callback();
-            }
+            dispatch(deleteCloningQueueByID(newQueueID));
           })
         );
       },
@@ -207,7 +213,7 @@ export const Board = React.memo(
     );
 
     return (
-      <Box width="100%" height="100%" position="relative">
+      <Box width="100%" height="calc(100% - 50px)" position="relative">
         <Box
           width="100%"
           height="100%"
@@ -337,6 +343,7 @@ export const Board = React.memo(
                 boardRotate={boardRotate}
                 currentLayer={currentLayer}
                 cloningLayer={cloningLayer}
+                cloningQueue={cloningQueue}
                 mouseMode={mouseMode}
                 loadedStatuses={loadedStatuses}
                 paintingGuides={paintingGuides}
@@ -362,6 +369,7 @@ export const Board = React.memo(
                 mouseMode={mouseMode}
                 currentLayer={currentLayer}
                 cloningLayer={cloningLayer}
+                cloningQueue={cloningQueue}
                 loadedStatuses={loadedStatuses}
                 paintingGuides={paintingGuides}
                 guideData={currentScheme.guide_data}
@@ -387,6 +395,7 @@ export const Board = React.memo(
                 loadedStatuses={loadedStatuses}
                 currentLayer={currentLayer}
                 cloningLayer={cloningLayer}
+                cloningQueue={cloningQueue}
                 paintingGuides={paintingGuides}
                 guideData={currentScheme.guide_data}
                 onSelect={handleLayerSelect}

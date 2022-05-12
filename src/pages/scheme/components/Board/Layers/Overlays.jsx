@@ -20,6 +20,7 @@ export const Overlays = React.memo((props) => {
     paintingGuides,
     guideData,
     cloningLayer,
+    cloningQueue,
     onSelect,
     onChange,
     onHover,
@@ -40,11 +41,16 @@ export const Overlays = React.memo((props) => {
     [layers]
   );
   const resultLayers = useMemo(() => {
+    let newLayers = [...filteredLayers];
     if (cloningLayer) {
-      return [...filteredLayers, cloningLayer];
+      newLayers = [...newLayers, cloningLayer];
     }
-    return filteredLayers;
-  }, [cloningLayer, filteredLayers]);
+    if (cloningQueue.length) {
+      newLayers = [...newLayers, ...cloningQueue];
+    }
+    return newLayers;
+  }, [cloningLayer, cloningQueue, filteredLayers]);
+
   const getShadowOffset = useCallback(
     (layer) => {
       return getRelativeShadowOffset(boardRotate, {

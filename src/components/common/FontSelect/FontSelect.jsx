@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { updateScheme } from "redux/reducers/schemeReducer";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { focusBoardQuickly } from "helper";
 
 export const FontSelect = React.memo((props) => {
   const { fontList, value, disabled, onChange } = props;
@@ -38,6 +39,7 @@ export const FontSelect = React.memo((props) => {
         updateScheme({ ...currentScheme, last_font: fontID }, false, false)
       );
       onChange(fontID);
+      focusBoardQuickly();
     },
     [currentScheme, dispatch, onChange]
   );
@@ -50,6 +52,7 @@ export const FontSelect = React.memo((props) => {
       disabled={disabled}
       label="Font"
       mb={4}
+      onClose={focusBoardQuickly}
       renderValue={(id) => {
         const font = fontList.find((item) => item.id === id);
         if (!font) {

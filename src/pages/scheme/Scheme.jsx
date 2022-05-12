@@ -37,6 +37,7 @@ import { LegacyBanner } from "./components/LegacyBanner";
 import { getCarRaces } from "redux/reducers/carReducer";
 import { getDownloaderStatus } from "redux/reducers/downloaderReducer";
 import { MouseModes } from "constant";
+import { focusBoardQuickly } from "helper";
 
 const Scheme = React.memo((props) => {
   const {
@@ -73,6 +74,7 @@ const Scheme = React.memo((props) => {
   const user = useSelector((state) => state.authReducer.user);
   const previousPath = useSelector((state) => state.boardReducer.previousPath);
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
+  const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const schemeLoaded = useSelector((state) => state.schemeReducer.loaded);
 
@@ -107,6 +109,7 @@ const Scheme = React.memo((props) => {
   const handleChangeBoardRotation = useCallback(
     (newRotation) => {
       dispatch(setBoardRotate(newRotation));
+      focusBoardQuickly();
     },
     [dispatch]
   );
@@ -119,6 +122,7 @@ const Scheme = React.memo((props) => {
 
   const hideLegacyBanner = useCallback(() => {
     setShowLegacyBanner(false);
+    focusBoardQuickly();
   }, []);
 
   useEffect(() => {
@@ -207,14 +211,18 @@ const Scheme = React.memo((props) => {
         }
       }
       if (flag) {
-        container.style.cursor = "move";
+        if (pressedKey === "ctrl" || pressedKey === "meta") {
+          container.style.cursor = "copy";
+        } else {
+          container.style.cursor = "move";
+        }
       } else {
         container.style.cursor =
           mouseMode === MouseModes.DEFAULT ? "default" : "crosshair";
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hoveredJSON, stageRef]);
+  }, [hoveredJSON, stageRef, pressedKey]);
 
   return (
     <>

@@ -16,6 +16,7 @@ import { CustomCardHeader, CustomCardContent } from "./PartGroup.style";
 
 import { PartItem } from "../PartItem";
 import { PartAction } from "../PartAction";
+import { focusBoardQuickly } from "helper";
 
 export const PartGroup = (props) => {
   const dispatch = useDispatch();
@@ -59,6 +60,7 @@ export const PartGroup = (props) => {
 
   const handleExpandClick = useCallback(() => {
     setExpanded((preValue) => !preValue);
+    focusBoardQuickly();
   }, [setExpanded]);
   const handleChangeLayer = useCallback(
     (list) => {

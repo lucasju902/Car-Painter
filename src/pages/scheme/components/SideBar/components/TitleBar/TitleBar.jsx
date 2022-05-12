@@ -14,6 +14,7 @@ import {
 import { CustomIcon, NameInput } from "./TitleBar.style";
 
 import { updateScheme } from "redux/reducers/schemeReducer";
+import { focusBoardQuickly } from "helper";
 
 export const TitleBar = React.memo((props) => {
   const { editable, onBack } = props;
@@ -26,7 +27,10 @@ export const TitleBar = React.memo((props) => {
 
   const currentScheme = useSelector((state) => state.schemeReducer.current);
 
-  const hideDialog = useCallback(() => setDialog(null), []);
+  const hideDialog = useCallback(() => {
+    setDialog(null);
+    focusBoardQuickly();
+  }, []);
 
   const handleNameChange = useCallback(
     (event) => {
@@ -36,6 +40,7 @@ export const TitleBar = React.memo((props) => {
   );
   const handleSaveName = useCallback(() => {
     dispatch(updateScheme({ id: currentScheme.id, name }, true, false));
+    focusBoardQuickly();
   }, [dispatch, currentScheme, name]);
   const handleNameKeyDown = useCallback(
     (event) => {
@@ -49,6 +54,7 @@ export const TitleBar = React.memo((props) => {
 
   const handleDiscardName = useCallback(() => {
     setName(currentScheme.name);
+    focusBoardQuickly();
   }, [setName, currentScheme]);
 
   useEffect(() => {

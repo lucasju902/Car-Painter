@@ -15,7 +15,7 @@ import { FaDownload } from "react-icons/fa";
 
 import RaceDialog from "components/dialogs/RaceDialog/RaceDialog";
 import { getCarRaces, setCarRace } from "redux/reducers/carReducer";
-import { dataURItoBlob } from "helper";
+import { dataURItoBlob, focusBoardQuickly } from "helper";
 import { CircularProgress } from "components/MaterialUI";
 import { setMessage } from "redux/reducers/messageReducer";
 import RaceConfirmDialog from "components/dialogs/RaceConfirmDialog";
@@ -46,7 +46,10 @@ export const Header = React.memo((props) => {
     return -1;
   }, [cars]);
 
-  const handleCloseDialog = useCallback(() => setDialog(null), []);
+  const handleCloseDialog = useCallback(() => {
+    setDialog(null);
+    focusBoardQuickly();
+  }, []);
 
   const handleApplyRace = useCallback(
     async (values = null) => {
@@ -139,6 +142,7 @@ export const Header = React.memo((props) => {
           }
         )
       );
+      focusBoardQuickly();
     },
     [
       primaryRaceNumber,
@@ -166,6 +170,7 @@ export const Header = React.memo((props) => {
       }
       handleCloseDialog();
       handleApplyRace();
+      focusBoardQuickly();
     },
     [handleApplyRace, handleCloseDialog, dispatch, currentScheme]
   );
@@ -176,6 +181,7 @@ export const Header = React.memo((props) => {
 
   const handleTGAOptionsClose = () => {
     setTGAAnchorEl(null);
+    focusBoardQuickly();
   };
 
   const handleDownloadCustomNumberTGA = () => {
@@ -199,6 +205,7 @@ export const Header = React.memo((props) => {
 
   const handleRaceOptionsClose = () => {
     setRaceAnchorEl(null);
+    focusBoardQuickly();
   };
 
   const handleOpenRaceDialog = () => {
@@ -216,6 +223,7 @@ export const Header = React.memo((props) => {
     } else {
       setDialog(DialogTypes.RACE_CONFIRM);
     }
+    focusBoardQuickly();
   }, [currentScheme, handleApplyRace]);
 
   return (

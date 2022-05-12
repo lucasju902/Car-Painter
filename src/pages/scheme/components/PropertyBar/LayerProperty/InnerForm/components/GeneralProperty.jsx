@@ -20,6 +20,7 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from "@material-ui/icons";
 import { LabelTypography, SmallTextField } from "../../../PropertyBar.style";
+import { focusBoardQuickly } from "helper";
 
 export const GeneralProperty = React.memo((props) => {
   const {
@@ -65,7 +66,13 @@ export const GeneralProperty = React.memo((props) => {
   )
     return <></>;
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">General</Typography>
       </AccordionSummary>

@@ -1,7 +1,11 @@
 import React, { useState, useMemo, useCallback } from "react";
 
 import { AllowedLayerProps, LayerTypes } from "constant";
-import { rotateAroundCenter, isCenterBasedShape } from "helper";
+import {
+  rotateAroundCenter,
+  isCenterBasedShape,
+  focusBoardQuickly,
+} from "helper";
 
 import {
   Box,
@@ -158,7 +162,13 @@ export const RotationProperty = React.memo((props) => {
   )
     return <></>;
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">Rotation</Typography>
       </AccordionSummary>

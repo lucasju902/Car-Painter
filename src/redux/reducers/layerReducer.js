@@ -27,6 +27,7 @@ const initialState = {
   hoveredJSON: {},
   clipboard: null,
   cloningLayer: null,
+  cloningQueue: [],
   drawingStatus: null,
   loadedStatuses: {},
   loading: false,
@@ -91,12 +92,21 @@ export const slice = createSlice({
         layerList.splice(foundIndex, 1);
         state.list = layerList;
       }
+      if (state.current && state.current.id === action.payload.id) {
+        state.current = null;
+      }
     },
     deleteListItems: (state, action) => {
       let layerList = [...state.list];
       state.list = layerList.filter((layer) =>
         action.payload.every((item) => item.id !== layer.id)
       );
+      if (
+        state.current &&
+        action.payload.some((item) => item.id === state.current.id)
+      ) {
+        state.current = null;
+      }
     },
     setCurrent: (state, action) => {
       state.current = parseLayer(action.payload);
@@ -130,6 +140,15 @@ export const slice = createSlice({
       let { key, value } = action.payload;
       state.loadedStatuses[key] = value;
     },
+    insertToCloningQueue: (state, action) => {
+      state.cloningQueue.push(parseLayer(action.payload));
+    },
+    deleteCloningQueueByID: (state, action) => {
+      let cloningQueue = [...state.cloningQueue];
+      state.cloningQueue = cloningQueue.filter(
+        (item) => item.id !== action.payload
+      );
+    },
   },
 });
 
@@ -154,6 +173,8 @@ export const {
   setLoadedStatus,
   clearCurrent,
   reset,
+  insertToCloningQueue,
+  deleteCloningQueueByID,
 } = slice.actions;
 
 export default slice.reducer;

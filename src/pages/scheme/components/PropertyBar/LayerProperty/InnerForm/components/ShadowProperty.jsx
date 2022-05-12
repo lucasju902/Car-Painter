@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { AllowedLayerProps, LayerTypes } from "constant";
-import { mathRound2 } from "helper";
+import { focusBoardQuickly, mathRound2 } from "helper";
 
 import {
   Box,
@@ -79,7 +79,13 @@ export const ShadowProperty = React.memo((props) => {
   )
     return <></>;
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">Shadow</Typography>
       </AccordionSummary>

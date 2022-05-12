@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { AllowedLayerProps, LayerTypes } from "constant";
-import { mathRound2 } from "helper";
+import { focusBoardQuickly, mathRound2 } from "helper";
 
 import {
   Grid,
@@ -50,7 +50,13 @@ export const CornerProperty = React.memo((props) => {
   )
     return <></>;
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">Corner Radius</Typography>
       </AccordionSummary>

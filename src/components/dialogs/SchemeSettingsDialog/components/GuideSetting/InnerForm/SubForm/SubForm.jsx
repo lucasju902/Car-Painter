@@ -10,6 +10,7 @@ import {
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import { ColorPickerInput, SliderInput } from "components/common";
 import { CustomAccordionSummary } from "./styles";
+import { focusBoardQuickly } from "helper";
 
 export const SubForm = React.memo((props) => {
   const {
@@ -35,7 +36,13 @@ export const SubForm = React.memo((props) => {
   );
 
   return (
-    <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+    <Accordion
+      expanded={expanded}
+      onChange={() => {
+        setExpanded(!expanded);
+        focusBoardQuickly();
+      }}
+    >
       <CustomAccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1">{label}</Typography>
       </CustomAccordionSummary>

@@ -37,6 +37,7 @@ import {
   submitSimPreview,
 } from "redux/reducers/downloaderReducer";
 import { Rotate90DegreesCcw, Search as SearchIcon } from "@material-ui/icons";
+import { focusBoardQuickly } from "helper";
 
 export const Toolbar = React.memo((props) => {
   const { stageRef, retrieveTGABlobURL, onChangeBoardRotation } = props;
@@ -48,6 +49,9 @@ export const Toolbar = React.memo((props) => {
   const dispatch = useDispatch();
   const actionHistoryIndex = useSelector(
     (state) => state.boardReducer.actionHistoryIndex
+  );
+  const actionHistoryMoving = useSelector(
+    (state) => state.boardReducer.actionHistoryMoving
   );
   const actionHistory = useSelector(
     (state) => state.boardReducer.actionHistory
@@ -73,7 +77,10 @@ export const Toolbar = React.memo((props) => {
     (state) => state.downloaderReducer.askingSimPreviewByLatest
   );
 
-  const handleCloseDialog = useCallback(() => setDialog(null), []);
+  const handleCloseDialog = useCallback(() => {
+    setDialog(null);
+    focusBoardQuickly();
+  }, []);
 
   const applySubmitSimPreview = useCallback(
     async (isCustomNumber = 0) => {
@@ -101,6 +108,7 @@ export const Toolbar = React.memo((props) => {
           false
         )
       );
+      focusBoardQuickly();
     },
     [handleCloseDialog, applySubmitSimPreview, dispatch, currentScheme]
   );
@@ -122,6 +130,7 @@ export const Toolbar = React.memo((props) => {
       } else {
         dispatch(historyActionUp());
       }
+      focusBoardQuickly();
     },
     [dispatch]
   );
@@ -137,6 +146,7 @@ export const Toolbar = React.memo((props) => {
         if (newBoardRotate < 0) newBoardRotate = 270;
       }
       onChangeBoardRotation(newBoardRotate);
+      focusBoardQuickly();
     },
     [boardRotate, onChangeBoardRotation]
   );
@@ -150,21 +160,30 @@ export const Toolbar = React.memo((props) => {
 
   const handleCloseZoomPoper = useCallback(() => {
     setAnchorEl(null);
+    focusBoardQuickly();
   }, [setAnchorEl]);
 
   const handleZoom = useCallback(
     (value) => {
       dispatch(setZoom(value));
+      focusBoardQuickly();
     },
     [dispatch]
   );
 
+  const handleZoomToFit = () => {
+    onZoomFit();
+    focusBoardQuickly();
+  };
+
   const handleToggleLayers = useCallback(() => {
     dispatch(setShowLayers(!showLayers));
+    focusBoardQuickly();
   }, [dispatch, showLayers]);
 
   const handleToggleProperties = useCallback(() => {
     dispatch(setShowProperties(!showProperties));
+    focusBoardQuickly();
   }, [dispatch, showProperties]);
 
   const handleClickSimPreview = useCallback(() => {
@@ -207,7 +226,7 @@ export const Toolbar = React.memo((props) => {
           <LightTooltip title="Undo" arrow>
             <Box display="flex">
               <IconButton
-                disabled={actionHistoryIndex === -1}
+                disabled={actionHistoryIndex === -1 || actionHistoryMoving}
                 size="small"
                 mx={1}
                 onClick={() => handleUndoRedo(true)}
@@ -220,7 +239,10 @@ export const Toolbar = React.memo((props) => {
           <LightTooltip title="Redo" arrow>
             <Box display="flex">
               <IconButton
-                disabled={actionHistoryIndex === actionHistory.length - 1}
+                disabled={
+                  actionHistoryIndex === actionHistory.length - 1 ||
+                  actionHistoryMoving
+                }
                 size="small"
                 mx={1}
                 onClick={() => handleUndoRedo(false)}
@@ -257,7 +279,7 @@ export const Toolbar = React.memo((props) => {
 
           <Box display="flex" alignItems="center">
             <LightTooltip title="Zoom to fit" position="bottom" arrow>
-              <IconButton onClick={onZoomFit} size="small">
+              <IconButton onClick={handleZoomToFit} size="small">
                 <SearchIcon />
               </IconButton>
             </LightTooltip>

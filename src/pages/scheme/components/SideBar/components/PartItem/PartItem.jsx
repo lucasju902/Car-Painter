@@ -9,6 +9,7 @@ import {
   Lock as LockIcon,
   LockOpen as LockOpenIcon,
 } from "@material-ui/icons";
+import { focusBoardQuickly } from "helper";
 
 export const PartItem = React.memo((props) => {
   const {
@@ -33,6 +34,7 @@ export const PartItem = React.memo((props) => {
       e.stopPropagation();
       e.nativeEvent.stopImmediatePropagation();
       toggleField(item.id, "layer_visible");
+      focusBoardQuickly();
     },
     [item.id, toggleField]
   );
@@ -42,6 +44,7 @@ export const PartItem = React.memo((props) => {
       e.stopPropagation();
       e.nativeEvent.stopImmediatePropagation();
       toggleField(item.id, "layer_locked");
+      focusBoardQuickly();
     },
     [item.id, toggleField]
   );
@@ -51,6 +54,7 @@ export const PartItem = React.memo((props) => {
       e.preventDefault();
       e.stopPropagation();
       onSelect(item);
+      focusBoardQuickly();
     },
     [item, onSelect]
   );
