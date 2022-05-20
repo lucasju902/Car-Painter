@@ -1,5 +1,7 @@
+import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
 import AuthService from "services/authService";
+import BlockedUserService from "services/blockedUserService";
 import CookieService from "services/cookieService";
 import { setMessage } from "./messageReducer";
 import {
@@ -14,6 +16,8 @@ const initialState = {
   user: undefined,
   loading: false,
   previousPath: null,
+  blockedUsers: [],
+  blockedBy: [],
 };
 
 export const slice = createSlice({
@@ -29,10 +33,16 @@ export const slice = createSlice({
     setPreviousPath: (state, action) => {
       state.previousPath = action.payload;
     },
+    setBlockedUsers: (state, action) => {
+      state.blockedUsers = action.payload;
+    },
+    setBlockedBy: (state, action) => {
+      state.blockedBy = action.payload;
+    },
   },
 });
 
-const { setUser, setLoading } = slice.actions;
+const { setUser, setLoading, setBlockedUsers, setBlockedBy } = slice.actions;
 export const { setPreviousPath } = slice.actions;
 
 export const signInWithCookie = (callback, fallback) => async (dispatch) => {
@@ -42,7 +52,11 @@ export const signInWithCookie = (callback, fallback) => async (dispatch) => {
 
     try {
       const user = await AuthService.getMe();
-      dispatch(setUser(user));
+      dispatch(setBlockedUsers(user.blockedUsers.map((item) => item.userid)));
+      dispatch(
+        setBlockedBy(user.blockedByUsers.map((item) => item.blocker_id))
+      );
+      dispatch(setUser(_.omit(user, ["blockedUsers", "blockedByUsers"])));
       if (callback) callback();
     } catch (error) {
       dispatch(setMessage({ message: error.response.data.message }));
@@ -76,6 +90,32 @@ export const signOut = () => async (dispatch) => {
   dispatch(clearFavoriteList());
   dispatch(setUser(null));
   dispatch(setIntialized(false));
+};
+
+export const getBlockedUsers = (userID) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const blockedUserList = await BlockedUserService.getBlockedUserListByBlocker(
+      userID
+    );
+    dispatch(setBlockedUsers(blockedUserList.map((item) => item.userid)));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
+};
+
+export const getBlockedBy = (userID) => async (dispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const blockedUserList = await BlockedUserService.getBlockedUserListByBlockedUser(
+      userID
+    );
+    dispatch(setBlockedBy(blockedUserList.map((item) => item.blocker_id)));
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+  dispatch(setLoading(false));
 };
 
 export default slice.reducer;

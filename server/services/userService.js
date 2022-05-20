@@ -7,7 +7,9 @@ class UserService {
   }
 
   static async getById(id) {
-    const user = await User.where({ id }).fetch();
+    const user = await User.where({ id }).fetch({
+      withRelated: ["blockedUsers", "blockedByUsers"],
+    });
     return user;
   }
 
@@ -17,7 +19,9 @@ class UserService {
   }
 
   static async getByEmail(email) {
-    const user = await User.where({ email }).fetch();
+    const user = await User.where({ email }).fetch({
+      withRelated: ["blockedUsers", "blockedByUsers"],
+    });
     return user;
   }
 

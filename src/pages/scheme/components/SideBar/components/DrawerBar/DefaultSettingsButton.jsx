@@ -26,7 +26,7 @@ export const DefaultSettingsButton = React.memo(({ onClick }) => {
     () =>
       Math.min(
         (currentLayer
-          ? currentLayer.layer_data.stroke
+          ? currentLayer.layer_data.stroke / 2.0
           : currentScheme.guide_data.default_shape_stroke) || 0,
         5
       ),

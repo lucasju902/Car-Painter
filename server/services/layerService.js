@@ -31,8 +31,10 @@ class LayerService {
     let number = 0;
 
     for (let layerItem of scheme_layers) {
-      let item_layer_data = JSON.parse(layerItem.layer_data);
-      if (item_layer_data.name.indexOf(layerName) === 0) {
+      let item_layer_data = layerItem.layer_data
+        ? JSON.parse(layerItem.layer_data)
+        : null;
+      if (item_layer_data && item_layer_data.name.indexOf(layerName) === 0) {
         const extraSpace = item_layer_data.name.substr(layerName.length);
         if (!isNaN(extraSpace)) {
           number = extraSpace === "" ? 1 : parseInt(extraSpace) + 1;

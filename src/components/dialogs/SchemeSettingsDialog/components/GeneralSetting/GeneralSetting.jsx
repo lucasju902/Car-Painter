@@ -28,6 +28,7 @@ import { faStar as faStarOff } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { updateScheme } from "redux/reducers/schemeReducer";
+import { getUserName } from "helper";
 
 export const GeneralSetting = React.memo((props) => {
   const {
@@ -164,14 +165,14 @@ export const GeneralSetting = React.memo((props) => {
         </Box>
 
         <Box pl={2}>
-          <Typography>Owner: {owner.drivername}</Typography>
+          <Typography>Owner: {getUserName(owner)}</Typography>
           <Typography>
             Created: {new Date(scheme.date_created * 1000).toDateString()}
           </Typography>
           <Typography>
             Last Modified:{" "}
             {new Date(scheme.date_modified * 1000).toDateString()} By{" "}
-            {modifier.drivername}
+            {getUserName(modifier)}
           </Typography>
         </Box>
 

@@ -22,7 +22,10 @@ export const SchemeProperty = React.memo((props) => {
       dispatch(
         updateScheme({
           ...currentScheme,
-          guide_data: guide_data,
+          guide_data: {
+            ...currentScheme.guide_data,
+            ...guide_data,
+          },
         })
       );
       focusBoardQuickly();

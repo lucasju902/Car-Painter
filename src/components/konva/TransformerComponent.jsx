@@ -7,6 +7,7 @@ import {
   isCenterBasedShape,
 } from "helper";
 import { LayerTypes } from "constant";
+import { rgb } from "color";
 
 export const TransformerComponent = React.memo(
   ({ trRef, selectedLayer, pressedKey, hoveredTransform }) => {
@@ -89,8 +90,14 @@ export const TransformerComponent = React.memo(
           borderEnabled={pressedKey !== "h"}
           rotateEnabled={!hoveredTransform && pressedKey !== "h"}
           boundBoxFunc={boundBoxFunc}
-          borderStroke={hoveredTransform ? "red" : null}
+          borderStroke={hoveredTransform ? "red" : rgb(77, 158, 224)}
+          borderStrokeWidth={3}
           centeredScaling={centeredScaling}
+          anchorStroke="gray"
+          anchorStrokeWidth={2}
+          anchorFill="white"
+          anchorSize={15}
+          anchorCornerRadius={15}
         />
       );
     return <></>;

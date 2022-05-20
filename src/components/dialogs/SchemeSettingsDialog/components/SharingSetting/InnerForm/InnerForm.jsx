@@ -13,6 +13,8 @@ import {
 
 import { CustomDialogContent } from "./styles";
 import UserService from "services/userService";
+import { getUserName } from "helper";
+import { useSelector } from "react-redux";
 
 export const InnerForm = React.memo(
   ({ owner, editable, currentUserID, schemeID, onCancel, ...formProps }) => {
@@ -23,6 +25,9 @@ export const InnerForm = React.memo(
       setFieldValue,
       values,
     } = formProps;
+
+    const blockedUsers = useSelector((state) => state.authReducer.blockedUsers);
+    const blockedBy = useSelector((state) => state.authReducer.blockedBy);
 
     const isOwner = useMemo(
       () => (!owner ? false : owner.id === currentUserID),
@@ -36,7 +41,11 @@ export const InnerForm = React.memo(
             let foundUser = await UserService.getPremiumUserByID(userID);
             if (
               foundUser &&
-              !values.sharedUsers.find((item) => item.user_id === foundUser.id)
+              !values.sharedUsers.find(
+                (item) => item.user_id === foundUser.id
+              ) &&
+              !blockedUsers.includes(foundUser.id) &&
+              !blockedBy.includes(foundUser.id)
             ) {
               setFieldValue(`newUser`, {
                 user_id: foundUser.id,
@@ -49,7 +58,7 @@ export const InnerForm = React.memo(
           } catch (error) {}
         }
       },
-      [schemeID, setFieldValue, values.sharedUsers]
+      [schemeID, setFieldValue, values.sharedUsers, blockedUsers, blockedBy]
     );
 
     const handleNewUserPermissionChange = useCallback(
@@ -87,7 +96,7 @@ export const InnerForm = React.memo(
                   ml={5}
                 >
                   <Box mt="-7px">
-                    <Typography>{values.newUser.user.drivername}</Typography>
+                    <Typography>{getUserName(values.newUser.user)}</Typography>
                     <Typography variant="body2" color="textSecondary">
                       ID #{values.newUser.user.id}
                     </Typography>
@@ -116,44 +125,52 @@ export const InnerForm = React.memo(
           <Box maxHeight="50vh" pr={5} overflow="auto">
             <Box display="flex" justifyContent="space-between" mb={4}>
               <Typography color="textSecondary">
-                {owner.drivername + (isOwner ? " (you)" : "")}
+                {getUserName(owner) + (isOwner ? " (you)" : "")}
               </Typography>
               <Typography color="textSecondary">Owner</Typography>
             </Box>
-            {values.sharedUsers.map((sharedUser, index) => (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                key={index}
-                mb={4}
-              >
-                <Box mt="-7px">
-                  <Typography color="textSecondary">
-                    {sharedUser.user.drivername +
-                      (currentUserID === sharedUser.user.id ? " (you)" : "")}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    ID #{sharedUser.user.id}
-                  </Typography>
+            {values.sharedUsers
+              .filter(
+                (sharedUser) =>
+                  !blockedUsers.includes(sharedUser.user.id) &&
+                  !blockedBy.includes(sharedUser.user.id)
+              )
+              .map((sharedUser, index) => (
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  key={index}
+                  mb={4}
+                >
+                  <Box mt="-7px">
+                    <Typography color="textSecondary">
+                      {getUserName(sharedUser.user) +
+                        (currentUserID === sharedUser.user.id ? " (you)" : "")}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      ID #{sharedUser.user.id}
+                    </Typography>
+                  </Box>
+                  <Box height="31px">
+                    <Select
+                      variant="outlined"
+                      value={sharedUser.editable}
+                      disabled={
+                        !isOwner && currentUserID !== sharedUser.user.id
+                      }
+                      onChange={(event) =>
+                        handleSharedUserChange(event.target.value, index)
+                      }
+                    >
+                      <MenuItem value={0}>Can view</MenuItem>
+                      <MenuItem value={1} disabled={!editable}>
+                        {"Can view & edit"}
+                      </MenuItem>
+                      <MenuItem value={-1}>Remove</MenuItem>
+                    </Select>
+                  </Box>
                 </Box>
-                <Box height="31px">
-                  <Select
-                    variant="outlined"
-                    value={sharedUser.editable}
-                    disabled={!isOwner && currentUserID !== sharedUser.user.id}
-                    onChange={(event) =>
-                      handleSharedUserChange(event.target.value, index)
-                    }
-                  >
-                    <MenuItem value={0}>Can view</MenuItem>
-                    <MenuItem value={1} disabled={!editable}>
-                      {"Can view & edit"}
-                    </MenuItem>
-                    <MenuItem value={-1}>Remove</MenuItem>
-                  </Select>
-                </Box>
-              </Box>
-            ))}
+              ))}
           </Box>
         </CustomDialogContent>
         <DialogActions>

@@ -29,6 +29,7 @@ export const GroupedURLImage = React.memo(
     shadowColor,
     shadowOffsetX,
     shadowOffsetY,
+    shadowOpacity,
     paintingGuides,
     guideData,
     onSelect,
@@ -63,6 +64,7 @@ export const GroupedURLImage = React.memo(
       shadowColor,
       shadowOffsetX,
       shadowOffsetY,
+      shadowOpacity,
       strokeScale,
       allowFit,
       frameSize,
@@ -144,6 +146,7 @@ export const GroupedURLImage = React.memo(
           height={props.height}
           shadowBlur={shadowBlur}
           shadowColor={shadowColor}
+          shadowOpacity={shadowOpacity}
           shadowOffsetX={shadowOffsetX || 0}
           shadowOffsetY={shadowOffsetY || 0}
           red={allowFilter ? hexToRgba(filterColor).r : null}

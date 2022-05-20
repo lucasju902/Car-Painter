@@ -285,6 +285,7 @@ export const getScheme = (schemeID, callback, fallback) => async (dispatch) => {
     dispatch(setBasePaintList(result.basePaints));
     if (callback) callback(result.scheme, result.sharedUsers);
   } catch (err) {
+    console.log("error: ", err);
     dispatch(setMessage({ message: "No Project with that ID!" }));
     if (fallback) fallback();
   }

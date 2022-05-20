@@ -9,7 +9,7 @@ export const ShortCuts = {
   T: "Insert Text",
   S: "Insert Graphics",
   L: "Insert Logo",
-  B: "Insert Basepaint",
+  B: "Insert Base Paint",
   H: "Hide Transformer",
   P: "Sim Preview",
   "↑": "Move Layer Up",

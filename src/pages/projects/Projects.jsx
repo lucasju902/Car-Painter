@@ -37,6 +37,8 @@ export const Projects = React.memo(() => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.authReducer.user);
+  const blockedBy = useSelector((state) => state.authReducer.blockedBy);
+  const blockedUsers = useSelector((state) => state.authReducer.blockedUsers);
   const carMakeList = useSelector((state) => state.carMakeReducer.list);
   const schemeList = useSelector((state) => state.schemeReducer.list);
   const sharedSchemeList = useSelector(
@@ -74,7 +76,7 @@ export const Projects = React.memo(() => {
   useGeneralSocket();
 
   useEffect(() => {
-    dispatch(setMessage({ message: null }));
+    // dispatch(setMessage({ message: null }));
     dispatch(clearCurrentScheme());
     dispatch(clearSharedUsers());
     dispatch(setSchemeLoaded(false));
@@ -214,6 +216,8 @@ export const Projects = React.memo(() => {
                 <TabPanel value={tabValue} index={1}>
                   <SharedProjects
                     user={user}
+                    blockedBy={blockedBy}
+                    blockedUsers={blockedUsers}
                     favoriteSchemeList={favoriteSchemeList}
                     sharedSchemeList={sharedSchemeList}
                     sortBy={sortBy}

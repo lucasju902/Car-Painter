@@ -14,6 +14,7 @@ export const useKonvaImageInit = ({
   shadowColor,
   shadowOffsetX,
   shadowOffsetY,
+  shadowOpacity,
   strokeScale,
   allowFit,
   frameSize,
@@ -76,7 +77,15 @@ export const useKonvaImageInit = ({
       applyCaching();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY, width, height]);
+  }, [
+    shadowBlur,
+    shadowColor,
+    shadowOffsetX,
+    shadowOffsetY,
+    shadowOpacity,
+    width,
+    height,
+  ]);
 
   const handleLoad = useCallback(async () => {
     let originWidth =

@@ -3,6 +3,7 @@ import React, { useRef, useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 
 import { useSelector, useDispatch } from "react-redux";
+import { usePageVisibility } from "react-page-visibility";
 
 import {
   MouseModes,
@@ -41,6 +42,7 @@ import { setAskingSimPreviewByLatest } from "redux/reducers/downloaderReducer";
 export const withKeyEvent = (Component) =>
   React.memo((props) => {
     const dispatch = useDispatch();
+    const isVisible = usePageVisibility();
     const { editable, stageRef } = props;
     const [, onZoomIn, onZoomOut, onZoomFit] = useZoom(stageRef);
     const [deleteLayerState, setDeleteLayerState] = useState({});
@@ -404,6 +406,22 @@ export const withKeyEvent = (Component) =>
       }
     }, [editable]);
 
+    useEffect(() => {
+      if (!isVisible) {
+        dispatch(setPressedKey(null));
+        dispatch(setPressedEventKey(null));
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isVisible]);
+
+    useEffect(() => {
+      window.addEventListener("blur", function () {
+        dispatch(setPressedKey(null));
+        dispatch(setPressedEventKey(null));
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
       <>
         <Component
@@ -417,7 +435,7 @@ export const withKeyEvent = (Component) =>
         />
         <LayerDeleteDialog
           text={deleteLayerState && deleteLayerState.message}
-          open={deleteLayerState && deleteLayerState.show}
+          open={currentLayer && deleteLayerState && deleteLayerState.show}
           nothingLeft={deleteLayerState && deleteLayerState.nothingLeft}
           onCancel={unsetDeleteLayerState}
           onConfirm={handleConfirm}

@@ -132,13 +132,6 @@ const overrides = {
       backgroundColor: "#8A8A8A",
     },
   },
-  // MuiInputBase: {
-  //   input: {
-  //     color: "white",
-  //     borderBottom: "1px solid #8A8A8A",
-  //     width: "40px",
-  //   },
-  // },
   MuiPaper: {
     root: {
       backgroundColor: "#444",
@@ -171,6 +164,8 @@ const overrides = {
   },
   MuiInputBase: {
     input: {
+      fontFamily: "AkkuratMonoLLWeb-Regular",
+      fontSize: "12px",
       height: "2rem",
       "&:-webkit-autofill": {
         "-webkit-box-shadow": "0 0 0 100px #444 inset !important",

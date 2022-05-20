@@ -11,6 +11,7 @@ import {
 } from "components/MaterialUI";
 import UserService from "services/userService";
 import { CircularProgress } from "@material-ui/core";
+import { getUserName } from "helper";
 
 export const InnerForm = React.memo(
   ({ owner, editable, currentUserID, schemeID, onCancel, ...formProps }) => {
@@ -99,7 +100,7 @@ export const InnerForm = React.memo(
                   mt={5}
                 >
                   <Box mt="-7px">
-                    <Typography>{values.newUser.user.drivername}</Typography>
+                    <Typography>{getUserName(values.newUser.user)}</Typography>
                     <Typography variant="body2" color="textSecondary">
                       ID #{values.newUser.user.id}
                     </Typography>
@@ -128,7 +129,7 @@ export const InnerForm = React.memo(
 
           <Box display="flex" justifyContent="space-between" mb={4}>
             <Typography color="textSecondary">
-              {owner.drivername + (isOwner ? " (you)" : "")}
+              {getUserName(owner) + (isOwner ? " (you)" : "")}
             </Typography>
             <Typography color="textSecondary">Owner</Typography>
           </Box>
@@ -141,7 +142,7 @@ export const InnerForm = React.memo(
             >
               <Box mt="-7px">
                 <Typography color="textSecondary">
-                  {sharedUser.user.drivername +
+                  {getUserName(sharedUser.user) +
                     (currentUserID === sharedUser.user.id ? " (you)" : "")}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">

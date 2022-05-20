@@ -72,6 +72,8 @@ const Scheme = React.memo((props) => {
   ] = useCapture(stageRef, baseLayerRef, mainLayerRef, carMaskLayerRef);
 
   const user = useSelector((state) => state.authReducer.user);
+  const blockedBy = useSelector((state) => state.authReducer.blockedBy);
+  const blockedUsers = useSelector((state) => state.authReducer.blockedUsers);
   const previousPath = useSelector((state) => state.boardReducer.previousPath);
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
@@ -140,8 +142,11 @@ const Scheme = React.memo((props) => {
             params.id,
             (scheme, tempsharedUsers) => {
               if (
-                user.id !== scheme.user_id &&
-                !tempsharedUsers.find((shared) => shared.user_id === user.id)
+                (user.id !== scheme.user_id &&
+                  !tempsharedUsers.find(
+                    (shared) => shared.user_id === user.id
+                  )) ||
+                blockedBy.includes(scheme.user_id)
               ) {
                 dispatch(
                   setMessage({

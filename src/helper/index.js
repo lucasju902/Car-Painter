@@ -115,7 +115,9 @@ export const removeDuplicatedPointFromEnd = (points) => {
 export const parseLayer = (layer) => {
   if (!layer) return null;
   let newLayer = { ...layer };
-  if (typeof newLayer.layer_data === "string") {
+  if (!newLayer.layer_data) {
+    newLayer.layer_data = {};
+  } else if (typeof newLayer.layer_data === "string") {
     newLayer.layer_data = JSON.parse(newLayer.layer_data);
   }
   return newLayer;
@@ -409,4 +411,21 @@ export const isInSameSideBar = (type1, type2) => {
     return true;
   if (type1 === type2) return true;
   return false;
+};
+
+export const getUserName = (user) => {
+  if (user.shorten_name) {
+    return shortenName(user.drivername);
+  }
+  return user.drivername;
+};
+
+export const shortenName = (fullName) => {
+  const fullNameSplitted = fullName.split(" ");
+  const shorten =
+    fullNameSplitted.shift() +
+    " " +
+    fullNameSplitted.pop().charAt(0).toUpperCase() +
+    ".";
+  return shorten;
 };

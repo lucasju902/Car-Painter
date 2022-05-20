@@ -18,6 +18,8 @@ const CustomInfiniteScroll = styled(InfiniteScroll)`
 export const SharedProjects = React.memo((props) => {
   const {
     user,
+    blockedBy,
+    blockedUsers,
     sharedSchemeList,
     favoriteSchemeList,
     sortBy,
@@ -46,7 +48,8 @@ export const SharedProjects = React.memo((props) => {
             (!selectedVehicle ||
               selectedVehicle.id === item.scheme.carMake.id) &&
             (!hideLegacy || !item.scheme.legacy_mode) &&
-            !item.scheme.carMake.deleted
+            !item.scheme.carMake.deleted &&
+            !blockedBy.includes(item.scheme.user_id)
         ),
         sortBy === 1
           ? ["scheme.name"]
@@ -55,7 +58,7 @@ export const SharedProjects = React.memo((props) => {
           : ["scheme.date_modified"],
         sortBy === 1 ? ["asc"] : sortBy === 2 ? ["asc"] : ["desc"]
       ),
-    [sharedSchemeList, search, selectedVehicle, sortBy, hideLegacy]
+    [sharedSchemeList, sortBy, search, selectedVehicle, hideLegacy, blockedBy]
   );
 
   const pendingSharedSchemeList = useMemo(
@@ -71,7 +74,14 @@ export const SharedProjects = React.memo((props) => {
   const openScheme = useCallback(
     (schemeID, sharedID) => {
       if (sharedID) {
-        onAccept(sharedID, () => history.push(`/project/${schemeID}`));
+        const sharedScheme = filteredSharedSchemeList.find(
+          (item) => item.id === sharedID
+        );
+        if (sharedScheme.accepted) {
+          history.push(`/project/${schemeID}`);
+        } else {
+          onAccept(sharedID, () => history.push(`/project/${schemeID}`));
+        }
       } else {
         history.push(`/project/${schemeID}`);
       }

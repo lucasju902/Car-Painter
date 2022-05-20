@@ -129,7 +129,7 @@ const dialog_modes = [
     icon: (
       <img
         src={BasepaintIcon}
-        alt="BasePaint"
+        alt="Base Paint"
         height="50px"
         style={{ margin: "-5px" }}
       />
@@ -320,7 +320,10 @@ export const DrawerBar = React.memo(
           dispatch(
             updateScheme({
               ...currentScheme,
-              guide_data: guide_data,
+              guide_data: {
+                ...currentScheme.guide_data,
+                ...guide_data,
+              },
             })
           );
         }

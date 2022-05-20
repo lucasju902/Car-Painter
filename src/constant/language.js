@@ -4,5 +4,5 @@ export const EnglishLang = {
   INSERT_TEXT: "Insert Text",
   INSERT_LOGO_OR_TEXT: "Insert Logo or Text",
   INSERT_GRAPHICS: "Insert Graphics",
-  INSERT_BASEPAINT: "Insert BasePaint",
+  INSERT_BASEPAINT: "Insert Base Paint",
 };

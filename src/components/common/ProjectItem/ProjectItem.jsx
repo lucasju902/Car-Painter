@@ -23,7 +23,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ShowroomNoCar from "assets/showroom_no_car.svg";
 
-import { getDifferenceFromToday, reduceString } from "helper";
+import { getDifferenceFromToday, getUserName, reduceString } from "helper";
 import { AvatarGroup } from "@material-ui/lab";
 import { setPreviousPath } from "redux/reducers/boardReducer";
 import { useDispatch } from "react-redux";
@@ -213,7 +213,7 @@ export const ProjectItem = React.memo((props) => {
           </Box>
           {scheme.user && scheme.user.id !== user.id ? (
             <Typography variant="body2">
-              Owner: {scheme.user.drivername}
+              Owner: {getUserName(scheme.user)}
             </Typography>
           ) : (
             <></>
@@ -227,12 +227,12 @@ export const ProjectItem = React.memo((props) => {
               <AvatarGroup max={5}>
                 {scheme.sharedUsers.map((sharedUser, index) => (
                   <LightTooltip
-                    title={"Shared with " + sharedUser.user.drivername}
+                    title={"Shared with " + getUserName(sharedUser.user)}
                     arrow
                     key={index}
                   >
                     <Avatar
-                      alt={sharedUser.user.drivername}
+                      alt={getUserName(sharedUser.user)}
                       src={`https://www.tradingpaints.com/scripts/image_driver.php?driver=${sharedUser.user_id}`}
                     >
                       {sharedUser.user.drivername[0].toUpperCase()}

@@ -4,6 +4,7 @@ require("./sharedScheme.model");
 require("./base.model");
 require("./overlay.model");
 require("./upload.model");
+require("./blockedUser.model");
 
 /**
  * User model.
@@ -25,6 +26,12 @@ const User = bookshelf.model("User", {
   },
   uploads() {
     return this.hasMany("Upload", "user_id");
+  },
+  blockedByUsers() {
+    return this.hasMany("BlockedUser", "userid");
+  },
+  blockedUsers() {
+    return this.hasMany("BlockedUser", "blocker_id");
   },
 });
 
