@@ -165,7 +165,7 @@ const overrides = {
   MuiInputBase: {
     input: {
       fontFamily: "AkkuratMonoLLWeb-Regular",
-      fontSize: "12px",
+      fontSize: "14px",
       height: "2rem",
       "&:-webkit-autofill": {
         "-webkit-box-shadow": "0 0 0 100px #444 inset !important",

@@ -12,6 +12,7 @@ const config = {
     process.env.NODE_ENV !== "development"
       ? "/api"
       : "http://localhost:3000/api",
+  gaTrackingID: process.env.REACT_APP_GA_TRACKING_ID,
 };
 console.log("ENV: ", config.env, config.backendURL);
 export default config;

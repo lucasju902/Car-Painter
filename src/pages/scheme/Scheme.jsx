@@ -51,6 +51,7 @@ const Scheme = React.memo((props) => {
     onKeyEvent,
     onDeleteLayer,
     onCloneLayer,
+    unsetDeleteLayerState,
   } = props;
   useBoardSocket();
   const dispatch = useDispatch();
@@ -69,7 +70,13 @@ const Scheme = React.memo((props) => {
     onDownloadSpecTGA,
     retrieveTGAPNGDataUrl,
     retrieveTGABlobURL,
-  ] = useCapture(stageRef, baseLayerRef, mainLayerRef, carMaskLayerRef);
+  ] = useCapture(
+    stageRef,
+    baseLayerRef,
+    mainLayerRef,
+    carMaskLayerRef,
+    unsetDeleteLayerState
+  );
 
   const user = useSelector((state) => state.authReducer.user);
   const blockedBy = useSelector((state) => state.authReducer.blockedBy);

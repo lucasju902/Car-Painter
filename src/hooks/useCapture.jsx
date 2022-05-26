@@ -29,7 +29,8 @@ export const useCapture = (
   stageRef,
   baseLayerRef,
   mainLayerRef,
-  carMaskLayerRef
+  carMaskLayerRef,
+  unsetDeleteLayerState
 ) => {
   const dispatch = useDispatch();
   const [pauseCapturing, setPauseCapturing] = useState(false);
@@ -89,6 +90,7 @@ export const useCapture = (
       ) {
         dispatch(updateLayer(currentLayerRef.current));
         dispatch(setCurrentLayer(null));
+        unsetDeleteLayerState();
       }
       let canvas = document.createElement("canvas");
       let ctx = canvas.getContext("2d");
@@ -209,6 +211,7 @@ export const useCapture = (
       baseLayerRef,
       mainLayerRef,
       carMaskLayerRef,
+      unsetDeleteLayerState,
     ]
   );
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
+import ReactGA from "react-ga";
 import DateFnsUtils from "@date-io/date-fns";
-
 import { ThemeProvider } from "styled-components/macro";
 
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -13,6 +13,9 @@ import {
 
 import createTheme from "./theme";
 import Routes from "./routes/Routes";
+import config from "config";
+
+ReactGA.initialize(config.gaTrackingID);
 
 function App() {
   const theme = useSelector((state) => state.themeReducer);

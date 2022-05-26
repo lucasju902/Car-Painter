@@ -7,10 +7,14 @@ import {
   isCenterBasedShape,
 } from "helper";
 import { LayerTypes } from "constant";
+import useImage from "use-image";
 import { rgb } from "color";
+import RotateIcon from "assets/rotate-left.svg";
 
 export const TransformerComponent = React.memo(
   ({ trRef, selectedLayer, pressedKey, hoveredTransform }) => {
+    const anchorSize = 15;
+    const [icon] = useImage(RotateIcon);
     const keepRatio = useMemo(
       () =>
         selectedLayer &&
@@ -19,26 +23,51 @@ export const TransformerComponent = React.memo(
           pressedKey === "shift"),
       [selectedLayer, pressedKey]
     );
+    const rotatorCanvas = useMemo(() => {
+      if (!icon) {
+        return null;
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = anchorSize;
+      canvas.height = anchorSize;
+
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(icon, 0, 0, canvas.width, canvas.height);
+
+      return canvas;
+    }, [icon]);
 
     const centeredScaling = useMemo(() => pressedKey === "alt", [pressedKey]);
 
     const checkNode = useCallback(() => {
+      if (!rotatorCanvas) {
+        return;
+      }
+
       if (selectedLayer && trRef.current) {
-        const stage = trRef.current.getStage();
+        const tr = trRef.current;
+        const stage = tr.getStage();
 
         const selectedNode = stage.findOne("." + selectedLayer.id);
-        if (selectedNode === trRef.current.node()) {
+        if (selectedNode === tr.node()) {
           return;
         }
 
         if (selectedNode) {
-          trRef.current.nodes([selectedNode]);
+          tr.nodes([selectedNode]);
         } else {
-          trRef.current.detach();
+          tr.detach();
         }
-        trRef.current.getLayer().batchDraw();
+
+        var rotater = tr.findOne(".rotater");
+        rotater.fillPriority("pattern");
+        rotater.fillPatternImage(rotatorCanvas);
+
+        tr.getLayer().batchDraw();
       }
-    }, [selectedLayer, trRef]);
+    }, [selectedLayer, trRef, rotatorCanvas]);
 
     useEffect(() => {
       checkNode();
@@ -96,8 +125,8 @@ export const TransformerComponent = React.memo(
           anchorStroke="gray"
           anchorStrokeWidth={2}
           anchorFill="white"
-          anchorSize={15}
-          anchorCornerRadius={15}
+          anchorSize={anchorSize}
+          anchorCornerRadius={anchorSize}
         />
       );
     return <></>;

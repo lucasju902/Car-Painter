@@ -428,6 +428,7 @@ export const withKeyEvent = (Component) =>
           {...props}
           dialog={dialog}
           setDialog={setDialog}
+          unsetDeleteLayerState={unsetDeleteLayerState}
           onKeyEvent={handleKeyEvent}
           onDeleteLayer={handleDeleteLayer}
           onCloneLayer={handleCloneLayer}

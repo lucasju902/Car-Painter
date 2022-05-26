@@ -12,6 +12,7 @@ import AuthLayout from "layouts/Auth";
 import Page404 from "../pages/auth/Page404";
 
 import { withAuthGuard } from "hooks";
+import { withGAPageTracking } from "hooks/withGAPageTracking";
 
 const renderChildRoutes = (Layout, routes) =>
   routes.map(
@@ -19,9 +20,9 @@ const renderChildRoutes = (Layout, routes) =>
       { path, component: Component, children, guarded, redirectToSignIn },
       index
     ) => {
-      const ComponentLayout = guarded
-        ? withAuthGuard(Layout, redirectToSignIn)
-        : Layout;
+      const ComponentLayout = withGAPageTracking(
+        guarded ? withAuthGuard(Layout, redirectToSignIn) : Layout
+      );
 
       return children ? (
         renderChildRoutes(Layout, children)
