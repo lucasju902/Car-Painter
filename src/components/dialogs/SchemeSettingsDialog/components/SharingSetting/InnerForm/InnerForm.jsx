@@ -36,9 +36,10 @@ export const InnerForm = React.memo(
 
     const handleNewUserChange = useCallback(
       async (userID) => {
+        setFieldValue(`newUser`, null);
         if (userID && userID.length) {
           try {
-            let foundUser = await UserService.getPremiumUserByID(userID);
+            let foundUser = await UserService.getUserByID(userID);
             if (
               foundUser &&
               !values.sharedUsers.find(
@@ -50,6 +51,7 @@ export const InnerForm = React.memo(
               setFieldValue(`newUser`, {
                 user_id: foundUser.id,
                 user: foundUser,
+                pro_user: foundUser.pro_user,
                 scheme_id: schemeID,
                 accepted: 0,
                 editable: 0,
@@ -102,17 +104,21 @@ export const InnerForm = React.memo(
                     </Typography>
                   </Box>
                   <Box height="31px">
-                    <Select
-                      variant="outlined"
-                      value={values.newUser.editable}
-                      onChange={(event) =>
-                        handleNewUserPermissionChange(event.target.value)
-                      }
-                    >
-                      <MenuItem value={0}>Can view</MenuItem>
-                      <MenuItem value={1}>{"Can view & edit"}</MenuItem>
-                      <MenuItem value={-1}>Cancel</MenuItem>
-                    </Select>
+                    {values.newUser.pro_user ? (
+                      <Select
+                        variant="outlined"
+                        value={values.newUser.editable}
+                        onChange={(event) =>
+                          handleNewUserPermissionChange(event.target.value)
+                        }
+                      >
+                        <MenuItem value={0}>Can view</MenuItem>
+                        <MenuItem value={1}>{"Can view & edit"}</MenuItem>
+                        <MenuItem value={-1}>Cancel</MenuItem>
+                      </Select>
+                    ) : (
+                      <Typography>not a Pro member </Typography>
+                    )}
                   </Box>
                 </Box>
               ) : (

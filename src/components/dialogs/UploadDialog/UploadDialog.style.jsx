@@ -19,6 +19,10 @@ export const CustomImageList = styled(ImageList)`
 `;
 export const CustomImageListItem = styled(ImageListItem)`
   cursor: pointer;
+  border: 1px solid transparent;
+  &:hover {
+    border: 1px solid gray;
+  }
 `;
 export const CustomDialogContent = styled(DialogContent)`
   width: 600px;

@@ -9,7 +9,6 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
-  ImageListItemBar,
 } from "components/MaterialUI";
 import {
   ImageWithLoad,
@@ -69,7 +68,7 @@ export const OverlayDialog = React.memo((props) => {
             loader={<Loader />}
             scrollableTarget="shape-dialog-content"
           >
-            <CustomImageList rowHeight={178} cols={3}>
+            <CustomImageList rowHeight="auto" cols={3} gap={10}>
               {filteredOverlays.slice(0, limit).map((shape) => (
                 <CustomImageListItem
                   key={shape.id}
@@ -96,10 +95,6 @@ export const OverlayDialog = React.memo((props) => {
                       alt={shape.name}
                     />
                   )}
-                  <ImageListItemBar
-                    title={shape.name}
-                    subtitle={shape.description}
-                  />
                 </CustomImageListItem>
               ))}
             </CustomImageList>

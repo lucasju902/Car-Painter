@@ -314,7 +314,7 @@ export const useDrawHelper = (stageRef) => {
         showGuideForRepositioning(true);
       }
       dispatch(setDrawingStatus(DrawingStatus.TRANSFORMING_SHAPE));
-      if (layer && (pressedKey === "ctrl" || pressedKey === "meta")) {
+      if (layer && pressedKey === "alt") {
         dispatch(setCloningLayer({ ...layer, id: "cloning-layer" }));
       }
     },

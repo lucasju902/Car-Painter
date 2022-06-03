@@ -524,6 +524,7 @@ export const Board = React.memo(
                     (item) => hoveredLayerJSON[item.id]
                   )}
                   hoveredTransform={true}
+                  pressedKey={pressedKey}
                 />
               ) : (
                 <></>

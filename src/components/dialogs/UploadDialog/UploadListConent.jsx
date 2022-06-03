@@ -129,6 +129,7 @@ export const UploadListContent = React.memo((props) => {
         showPreviewsInDropzone={false}
         showFileNamesInPreview={false}
         showFileNames={false}
+        acceptedFiles={["image/*"]}
         maxFiles={10}
         key={dropZoneKey}
       />

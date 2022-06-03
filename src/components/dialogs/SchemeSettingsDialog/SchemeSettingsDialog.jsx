@@ -65,7 +65,7 @@ export const SchemeSettingsDialog = React.memo((props) => {
     (data) => {
       console.log(data);
       let count = 0;
-      if (data.newUser && data.newUser.editable >= 0) {
+      if (data.newUser && data.newUser.editable >= 0 && data.newUser.pro_user) {
         count += 1;
         dispatch(
           createSharedUser(

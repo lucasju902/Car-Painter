@@ -38,7 +38,7 @@ export const LogoContent = React.memo((props) => {
         loader={<Loader />}
         scrollableTarget="logo-dialog-content"
       >
-        <CustomImageList rowHeight={178} cols={3}>
+        <CustomImageList rowHeight="auto" cols={3} gap={10}>
           {filteredLogos.slice(0, logoLimit).map((logo) => (
             <CustomImageListItem
               key={logo.id}

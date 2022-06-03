@@ -355,7 +355,6 @@ export const DrawerBar = React.memo(
     const handleOpenDialog = useCallback(
       (dialogName) => {
         setDialog(dialogName);
-        focusBoard();
       },
       [setDialog]
     );

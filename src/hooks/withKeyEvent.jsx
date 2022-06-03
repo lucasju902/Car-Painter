@@ -30,6 +30,7 @@ import {
   historyActionUp,
   historyActionBack,
   setPaintingGuides,
+  setBoardRotate,
 } from "redux/reducers/boardReducer";
 import { useZoom } from "hooks";
 import { getZoomedCenterPosition, focusBoard, isInSameSideBar } from "helper";
@@ -173,6 +174,21 @@ export const withKeyEvent = (Component) =>
       [currentLayer, dispatch, layerList]
     );
 
+    const handleChangeBoardRotation = useCallback(
+      (isRight = true) => {
+        let newBoardRotate;
+        if (isRight) {
+          newBoardRotate = boardRotate + 90;
+          if (newBoardRotate >= 360) newBoardRotate = 0;
+        } else {
+          newBoardRotate = boardRotate - 90;
+          if (newBoardRotate < 0) newBoardRotate = 270;
+        }
+        dispatch(setBoardRotate(newBoardRotate));
+      },
+      [boardRotate, dispatch]
+    );
+
     const handleKeyEvent = useCallback(
       (key, event) => {
         event.preventDefault();
@@ -210,9 +226,17 @@ export const withKeyEvent = (Component) =>
             dispatch(setZoom(1));
           } else if (event.key === "(" && event.shiftKey) {
             onZoomFit();
-          } else if (event.key === "{" && event.shiftKey && editable) {
+          } else if (
+            event.key === "[" &&
+            (event.ctrlKey || event.metaKey) &&
+            editable
+          ) {
             handleChangeSelectedLayerOrder(false);
-          } else if (event.key === "}" && event.shiftKey && editable) {
+          } else if (
+            event.key === "]" &&
+            (event.ctrlKey || event.metaKey) &&
+            editable
+          ) {
             handleChangeSelectedLayerOrder(true);
           } else if (event.key === "D" && event.shiftKey && editable) {
             dispatch(setMouseMode(MouseModes.DEFAULT));
@@ -284,6 +308,10 @@ export const withKeyEvent = (Component) =>
             if (currentLayer) {
               handleCloneLayer(currentLayer);
             }
+          } else if (event.key === "ArrowLeft" && event.altKey) {
+            handleChangeBoardRotation(false);
+          } else if (event.key === "ArrowRight" && event.altKey) {
+            handleChangeBoardRotation(true);
           } else if (key === "1") {
             togglePaintingGuides(PaintingGuides.CARMASK);
           } else if (key === "2") {
@@ -389,6 +417,7 @@ export const withKeyEvent = (Component) =>
         onZoomFit,
         handleChangeSelectedLayerOrder,
         handleCloneLayer,
+        handleChangeBoardRotation,
         togglePaintingGuides,
         boardRotate,
       ]

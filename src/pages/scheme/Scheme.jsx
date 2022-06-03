@@ -80,7 +80,6 @@ const Scheme = React.memo((props) => {
 
   const user = useSelector((state) => state.authReducer.user);
   const blockedBy = useSelector((state) => state.authReducer.blockedBy);
-  const blockedUsers = useSelector((state) => state.authReducer.blockedUsers);
   const previousPath = useSelector((state) => state.boardReducer.previousPath);
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
@@ -223,7 +222,7 @@ const Scheme = React.memo((props) => {
         }
       }
       if (flag) {
-        if (pressedKey === "ctrl" || pressedKey === "meta") {
+        if (pressedKey === "alt") {
           container.style.cursor = "copy";
         } else {
           container.style.cursor = "move";

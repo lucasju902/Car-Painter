@@ -300,7 +300,7 @@ export const SizeProperty = React.memo((props) => {
             {AllowedLayerTypes.includes("layer_data.scaleX") ? (
               <SmallTextField
                 name="layer_data.scaleX"
-                label="ScaleX"
+                label="Scale (X)"
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.scaleX)}
@@ -325,6 +325,9 @@ export const SizeProperty = React.memo((props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                inputProps={{
+                  step: 0.1,
+                }}
               />
             ) : (
               <></>
@@ -346,7 +349,7 @@ export const SizeProperty = React.memo((props) => {
             {AllowedLayerTypes.includes("layer_data.scaleY") ? (
               <SmallTextField
                 name="layer_data.scaleY"
-                label="ScaleY"
+                label="Scale (Y)"
                 variant="outlined"
                 type="number"
                 value={mathRound2(values.layer_data.scaleY)}
@@ -370,6 +373,9 @@ export const SizeProperty = React.memo((props) => {
                 mb={4}
                 InputLabelProps={{
                   shrink: true,
+                }}
+                inputProps={{
+                  step: 0.1,
                 }}
               />
             ) : (

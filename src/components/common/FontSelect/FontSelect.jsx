@@ -14,6 +14,7 @@ export const FontSelect = React.memo((props) => {
   const { fontList, value, disabled, onChange } = props;
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const filteredFontList = useMemo(
     () =>
@@ -38,10 +39,28 @@ export const FontSelect = React.memo((props) => {
       dispatch(
         updateScheme({ ...currentScheme, last_font: fontID }, false, false)
       );
+      setOpen(false);
       onChange(fontID);
       focusBoardQuickly();
     },
     [currentScheme, dispatch, onChange]
+  );
+
+  const handleOpen = () => setOpen(true);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+    focusBoardQuickly();
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+      stopPropagation(e);
+    },
+    [handleClose]
   );
 
   return (
@@ -49,10 +68,12 @@ export const FontSelect = React.memo((props) => {
       labelId="font-select-label"
       id="font-select-outlined"
       value={value}
+      open={open}
       disabled={disabled}
       label="Font"
       mb={4}
-      onClose={focusBoardQuickly}
+      onOpen={handleOpen}
+      onClose={handleClose}
       renderValue={(id) => {
         const font = fontList.find((item) => item.id === id);
         if (!font) {
@@ -77,8 +98,9 @@ export const FontSelect = React.memo((props) => {
             variant="outlined"
             onChange={hanldeSearchTextChange}
             onClick={stopPropagation}
-            onKeyDown={stopPropagation}
+            onKeyDown={handleKeyDown}
             style={{ width: "100%" }}
+            autoFocus={true}
           />
         </Box>
 
