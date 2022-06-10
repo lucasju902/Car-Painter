@@ -35,6 +35,7 @@ export const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     height: "26px",
+    fontFamily: "CircularXXWeb-Regular",
   },
 }));
 

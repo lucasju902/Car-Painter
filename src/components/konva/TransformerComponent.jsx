@@ -12,8 +12,24 @@ import { rgb } from "color";
 import RotateIcon from "assets/rotate-left.svg";
 
 export const TransformerComponent = React.memo(
-  ({ trRef, selectedLayer, pressedKey, hoveredTransform }) => {
-    const anchorSize = 15;
+  ({ trRef, selectedLayer, pressedKey, hoveredTransform, zoom }) => {
+    const minScaledSize = useMemo(
+      () =>
+        selectedLayer
+          ? Math.max(
+              Math.min(
+                selectedLayer.layer_data.width / 3,
+                selectedLayer.layer_data.height / 3
+              ) * zoom,
+              5
+            )
+          : 0,
+      [zoom, selectedLayer]
+    );
+
+    const anchorSize = useMemo(() => Math.min(15, minScaledSize || 15), [
+      minScaledSize,
+    ]);
     const [icon] = useImage(RotateIcon);
     const keepRatio = useMemo(
       () =>

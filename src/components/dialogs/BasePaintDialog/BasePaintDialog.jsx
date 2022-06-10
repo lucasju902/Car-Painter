@@ -20,7 +20,7 @@ import {
 import { NavLink } from "react-router-dom";
 
 export const BasePaintDialog = React.memo((props) => {
-  const step = 30;
+  const step = 40;
   const classes = useStyles();
   const [limit, setLimit] = useState(step);
   const { legacyMode, basePaints, carMake, onCancel, open, onOpenBase } = props;

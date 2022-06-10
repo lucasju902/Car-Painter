@@ -509,6 +509,7 @@ export const Board = React.memo(
                   trRef={activeTransformerRef}
                   selectedLayer={currentLayer}
                   pressedKey={pressedKey}
+                  zoom={zoom}
                 />
               ) : (
                 <></>
@@ -525,6 +526,7 @@ export const Board = React.memo(
                   )}
                   hoveredTransform={true}
                   pressedKey={pressedKey}
+                  zoom={zoom}
                 />
               ) : (
                 <></>

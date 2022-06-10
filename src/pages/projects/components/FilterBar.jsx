@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components/macro";
 
 import {
@@ -10,8 +10,10 @@ import {
   Checkbox,
   FormControlLabel,
 } from "components/MaterialUI";
+import { MoreVert as ActionIcon } from "@material-ui/icons";
 import { SearchBox } from "components/common";
 import CarMakeAutocomplete from "./CarMakeAutocomplete";
+import { IconButton, Menu } from "@material-ui/core";
 
 export const FilterBar = React.memo(
   ({
@@ -25,9 +27,17 @@ export const FilterBar = React.memo(
     setSortBy,
     legacyFilter,
   }) => {
+    const [actionMenuEl, setActionMenuEl] = useState(null);
     const handleSearchChange = useCallback((value) => setSearch(value), [
       setSearch,
     ]);
+
+    const handleActionMenuClick = (event) => {
+      setActionMenuEl(event.currentTarget);
+    };
+    const handleActionMenuClose = () => {
+      setActionMenuEl(null);
+    };
 
     return (
       <>
@@ -62,19 +72,46 @@ export const FilterBar = React.memo(
               setSelectedVehicle(newValue);
             }}
           />
-          {legacyFilter ? (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={hideLegacy}
-                  onChange={(e) => setHideLegacy(e.target.checked)}
+          <IconButton
+            aria-haspopup="true"
+            aria-controls={`projects-control`}
+            onClick={handleActionMenuClick}
+          >
+            <ActionIcon />
+          </IconButton>
+          <Menu
+            id={`projects-control`}
+            elevation={0}
+            getContentAnchorEl={null}
+            anchorEl={actionMenuEl}
+            keepMounted
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(actionMenuEl)}
+            onClose={handleActionMenuClose}
+          >
+            {legacyFilter ? (
+              <MenuItem>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={hideLegacy}
+                      onChange={(e) => setHideLegacy(e.target.checked)}
+                    />
+                  }
+                  label="Hide Legacy"
                 />
-              }
-              label="Hide Legacy"
-            />
-          ) : (
-            <></>
-          )}
+              </MenuItem>
+            ) : (
+              <></>
+            )}
+          </Menu>
         </Box>
       </>
     );

@@ -10,11 +10,11 @@ import {
   CircularProgress,
   Avatar,
   LinearProgress,
+  Menu,
 } from "@material-ui/core";
 import { ImageWithLoad, LightTooltip } from "components/common";
 import { ConfirmDialog } from "components/dialogs";
 import {
-  StyledMenu,
   ActionIcon,
   BreakableTypography,
   faStarOn,
@@ -25,7 +25,7 @@ import ShowroomNoCar from "assets/showroom_no_car.svg";
 
 import { getDifferenceFromToday, getUserName, reduceString } from "helper";
 import { AvatarGroup } from "@material-ui/lab";
-import { setPreviousPath } from "redux/reducers/boardReducer";
+import { setPreviousPath } from "redux/reducers/authReducer";
 import { useDispatch } from "react-redux";
 import CarService from "services/carService";
 
@@ -46,6 +46,7 @@ export const ProjectItem = React.memo((props) => {
     favoriteID,
   } = props;
   const dispatch = useDispatch();
+  const [hovered, setHovered] = useState(false);
   const [actionMenuEl, setActionMenuEl] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [favoriteInPrgoress, setFavoriteInPrgoress] = useState(false);
@@ -138,14 +139,12 @@ export const ProjectItem = React.memo((props) => {
   const handleOpenScheme = useCallback(() => {
     const scrollPosition = document.getElementById("scheme-list-content")
       .scrollTop;
-    const url = new URL(window.location.href);
-    const pathName = url.pathname.slice(1);
 
-    dispatch(setPreviousPath(pathName || "mine"));
+    dispatch(setPreviousPath(window.location.pathname));
     localStorage.setItem(
       "scrollPosition",
       JSON.stringify({
-        path: pathName || "mine",
+        path: window.location.pathname,
         position: scrollPosition,
       })
     );
@@ -167,6 +166,8 @@ export const ProjectItem = React.memo((props) => {
       border="1px solid grey"
       position="relative"
       height="100%"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <ImageWithLoad
         src={schemeThumbnailURL(scheme.id) + "?date=" + scheme.date_modified}
@@ -245,63 +246,69 @@ export const ProjectItem = React.memo((props) => {
             <></>
           )}
         </Box>
-        <Box display="flex" alignItems="center">
-          {favoriteInPrgoress ? (
-            <CircularProgress size={30} />
-          ) : (
-            <IconButton onClick={handleToggleFavorite}>
-              {isFavorite ? (
-                <FontAwesomeIcon icon={faStarOn} size="sm" />
-              ) : (
-                <FontAwesomeIcon icon={faStarOff} size="sm" />
-              )}
-            </IconButton>
-          )}
-          {showActionMenu && (
-            <>
-              <IconButton
-                aria-haspopup="true"
-                aria-controls={`action-menu-${scheme.id}`}
-                onClick={handleActionMenuClick}
-              >
-                <ActionIcon />
+        {hovered ? (
+          <Box display="flex" alignItems="center">
+            {favoriteInPrgoress ? (
+              <CircularProgress size={30} />
+            ) : (
+              <IconButton onClick={handleToggleFavorite}>
+                {isFavorite ? (
+                  <FontAwesomeIcon icon={faStarOn} size="sm" />
+                ) : (
+                  <FontAwesomeIcon icon={faStarOff} size="sm" />
+                )}
               </IconButton>
-              <StyledMenu
-                id={`action-menu-${scheme.id}`}
-                elevation={0}
-                getContentAnchorEl={null}
-                anchorEl={actionMenuEl}
-                keepMounted
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                open={Boolean(actionMenuEl)}
-                onClose={handleActionMenuClose}
-              >
-                {onCloneProject && (
-                  <MenuItem onClick={handleCloneProject}>Clone</MenuItem>
-                )}
+            )}
+            {showActionMenu && (
+              <>
+                <IconButton
+                  aria-haspopup="true"
+                  aria-controls={`action-menu-${scheme.id}`}
+                  onClick={handleActionMenuClick}
+                >
+                  <ActionIcon />
+                </IconButton>
+                <Menu
+                  id={`action-menu-${scheme.id}`}
+                  elevation={0}
+                  getContentAnchorEl={null}
+                  anchorEl={actionMenuEl}
+                  keepMounted
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(actionMenuEl)}
+                  onClose={handleActionMenuClose}
+                >
+                  {onCloneProject && (
+                    <MenuItem onClick={handleCloneProject}>Clone</MenuItem>
+                  )}
 
-                {onAccept && <MenuItem onClick={handleAccept}>Accept</MenuItem>}
+                  {onAccept && (
+                    <MenuItem onClick={handleAccept}>Accept</MenuItem>
+                  )}
 
-                {onDelete && (
-                  <MenuItem onClick={handleDelete}>
-                    {shared && !accepted
-                      ? "Reject"
-                      : shared && accepted
-                      ? "Remove"
-                      : "Delete"}
-                  </MenuItem>
-                )}
-              </StyledMenu>
-            </>
-          )}
-        </Box>
+                  {onDelete && (
+                    <MenuItem onClick={handleDelete}>
+                      {shared && !accepted
+                        ? "Reject"
+                        : shared && accepted
+                        ? "Remove"
+                        : "Delete"}
+                    </MenuItem>
+                  )}
+                </Menu>
+              </>
+            )}
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
       <ConfirmDialog
         text={deleteMessage}

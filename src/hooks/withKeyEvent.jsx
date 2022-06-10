@@ -48,6 +48,7 @@ export const withKeyEvent = (Component) =>
     const [, onZoomIn, onZoomOut, onZoomFit] = useZoom(stageRef);
     const [deleteLayerState, setDeleteLayerState] = useState({});
     const [dialog, setDialog] = useState(null);
+    const [browserZoom, setBrowserZoom] = useState(1);
 
     const tick = useRef(0);
     const prevTick = useRef(0);
@@ -204,7 +205,9 @@ export const withKeyEvent = (Component) =>
           if (pressedEventKey !== event.key) {
             dispatch(setPressedEventKey(event.key));
           }
-          if (
+          if (key === "f5") {
+            document.location.reload(true);
+          } else if (
             (key === "del" || key === "backspace") &&
             currentLayer &&
             currentLayer.layer_type !== LayerTypes.CAR &&
@@ -308,6 +311,20 @@ export const withKeyEvent = (Component) =>
             if (currentLayer) {
               handleCloneLayer(currentLayer);
             }
+          } else if (event.key === "=" && (event.ctrlKey || event.metaKey)) {
+            const newBrowserZoom = browserZoom * 1.25;
+            document.body.style.zoom = newBrowserZoom;
+            if (navigator.userAgent.indexOf("Firefox") !== -1) {
+              document.body.style.MozTransform = `scale(${newBrowserZoom})`;
+            }
+            setBrowserZoom(newBrowserZoom);
+          } else if (event.key === "-" && (event.ctrlKey || event.metaKey)) {
+            const newBrowserZoom = browserZoom / 1.25;
+            document.body.style.zoom = newBrowserZoom;
+            if (navigator.userAgent.indexOf("Firefox") !== -1) {
+              document.body.style.MozTransform = `scale(${newBrowserZoom})`;
+            }
+            setBrowserZoom(newBrowserZoom);
           } else if (event.key === "ArrowLeft" && event.altKey) {
             handleChangeBoardRotation(false);
           } else if (event.key === "ArrowRight" && event.altKey) {
@@ -417,6 +434,7 @@ export const withKeyEvent = (Component) =>
         onZoomFit,
         handleChangeSelectedLayerOrder,
         handleCloneLayer,
+        browserZoom,
         handleChangeBoardRotation,
         togglePaintingGuides,
         boardRotate,

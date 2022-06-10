@@ -28,7 +28,11 @@ export const SignIn = React.memo(() => {
               window.location.href =
                 "https://www.tradingpaints.com/page/Builder";
             } else if (returnedUser) {
-              history.push(previousPath ? previousPath : "/");
+              history.push(
+                previousPath && previousPath !== "/auth/sign-in"
+                  ? previousPath
+                  : "/"
+              );
             }
           }
         )

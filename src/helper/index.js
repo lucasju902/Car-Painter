@@ -414,6 +414,10 @@ export const isInSameSideBar = (type1, type2) => {
 };
 
 export const getUserName = (user) => {
+  if (!user) {
+    return "";
+  }
+
   if (user.shorten_name) {
     return shortenName(user.drivername);
   }
@@ -422,10 +426,31 @@ export const getUserName = (user) => {
 
 export const shortenName = (fullName) => {
   const fullNameSplitted = fullName.split(" ");
+  const firstPart = fullNameSplitted.shift();
+  const secondPart = fullNameSplitted.pop();
   const shorten =
-    fullNameSplitted.shift() +
-    " " +
-    fullNameSplitted.pop().charAt(0).toUpperCase() +
-    ".";
+    firstPart +
+    (secondPart ? " " + secondPart.charAt(0).toUpperCase() + "." : "");
   return shorten;
+};
+
+export const scrollBackOnProjectList = () => {
+  const scrollPositionObjText = localStorage.getItem("scrollPosition");
+  if (scrollPositionObjText) {
+    const scrollPositionObj = JSON.parse(scrollPositionObjText);
+    if (
+      scrollPositionObj &&
+      scrollPositionObj.path === window.location.pathname
+    ) {
+      const schemeListContent = document.getElementById("scheme-list-content");
+      schemeListContent.scrollTop = scrollPositionObj.position;
+
+      if (schemeListContent.scrollTop !== scrollPositionObj.position) {
+        setTimeout(
+          () => (schemeListContent.scrollTop = scrollPositionObj.position),
+          500
+        );
+      }
+    }
+  }
 };

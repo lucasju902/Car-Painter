@@ -29,7 +29,6 @@ import {
 import { reset as resetLayerReducer } from "redux/reducers/layerReducer";
 import { reset as resetBoardReducer } from "redux/reducers/boardReducer";
 import { getCarMakeList } from "redux/reducers/carMakeReducer";
-import { setMessage } from "redux/reducers/messageReducer";
 import { useGeneralSocket } from "hooks";
 import { getCarPinListByUserID } from "redux/reducers/carPinReducer";
 

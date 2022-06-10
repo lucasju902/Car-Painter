@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import _ from "lodash";
 import { useHistory } from "react-router";
 
@@ -8,6 +8,7 @@ import { Grid, Typography, Box } from "components/MaterialUI";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ScreenLoader, ProjectItem } from "components/common";
+import { scrollBackOnProjectList } from "helper";
 
 const CustomInfiniteScroll = styled(InfiniteScroll)`
   &.infinite-scroll-component {
@@ -92,6 +93,10 @@ export const SharedProjects = React.memo((props) => {
   const increaseData = () => {
     setLimit(limit + step);
   };
+
+  useEffect(() => {
+    scrollBackOnProjectList();
+  }, []);
 
   return (
     <Box minHeight="calc(100vh - 160px)" display="flex" flexDirection="column">

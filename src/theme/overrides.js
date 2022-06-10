@@ -170,6 +170,14 @@ const overrides = {
       "&:-webkit-autofill": {
         "-webkit-box-shadow": "0 0 0 100px #444 inset !important",
       },
+      "&[type='number']": {
+        padding: "6px",
+      },
+    },
+  },
+  MuiSelect: {
+    select: {
+      fontFamily: "CircularXXWeb-Regular",
     },
   },
   MuiInputLabel: {
@@ -184,6 +192,7 @@ const overrides = {
   MuiAutocomplete: {
     input: {
       height: "1.1876rem",
+      fontFamily: "CircularXXWeb-Regular",
     },
   },
   MuiAccordion: {

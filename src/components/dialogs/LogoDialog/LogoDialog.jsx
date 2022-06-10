@@ -30,7 +30,7 @@ export const LogoDialog = React.memo((props) => {
     onOpenUpload,
     onCancel,
   } = props;
-  const step = 30;
+  const step = 40;
   const [tabValue, setTabValue] = useState(0);
   const [search, setSearch] = useState("");
   const sortedLogos = useMemo(

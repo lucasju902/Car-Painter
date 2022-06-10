@@ -235,7 +235,7 @@ export const Header = React.memo((props) => {
           </Button>
         </Box>
 
-        <Box mr={1} height="100%" display="flex">
+        <Box mr={1} height="100%" display="flex" alignItems="center">
           <DownloadButton
             aria-controls="tga-options-menu"
             aria-haspopup="true"

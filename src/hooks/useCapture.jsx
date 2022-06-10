@@ -255,7 +255,7 @@ export const useCapture = (
           dispatch(setSaving(true));
           const { canvas, ctx, carMaskLayerImg } = await takeScreenshot();
           ctx.drawImage(carMaskLayerImg, 0, 0);
-          let dataURL = canvas.toDataURL("image/jpeg", 0.1);
+          let dataURL = canvas.toDataURL("image/jpeg", 0.5);
           if (uploadLater) dispatch(setSaving(false));
           await uploadThumbnail(dataURL);
           if (!uploadLater) dispatch(setSaving(false));

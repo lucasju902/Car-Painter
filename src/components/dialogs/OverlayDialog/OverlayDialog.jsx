@@ -24,7 +24,7 @@ import {
 } from "./OverlayDialog.style";
 
 export const OverlayDialog = React.memo((props) => {
-  const step = 30;
+  const step = 40;
   const [limit, setLimit] = useState(step);
   const [search, setSearch] = useState("");
   const { overlays, onCancel, open, onOpenOverlay } = props;
@@ -59,7 +59,7 @@ export const OverlayDialog = React.memo((props) => {
         <Box
           id="shape-dialog-content"
           overflow="auto"
-          height="calc(100vh - 300px)"
+          height="min(700px, calc(100vh - 300px))"
         >
           <CustomInfiniteScroll
             dataLength={limit} //This is important field to render the next data

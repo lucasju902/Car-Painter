@@ -80,7 +80,7 @@ const Scheme = React.memo((props) => {
 
   const user = useSelector((state) => state.authReducer.user);
   const blockedBy = useSelector((state) => state.authReducer.blockedBy);
-  const previousPath = useSelector((state) => state.boardReducer.previousPath);
+  const previousPath = useSelector((state) => state.authReducer.previousPath);
   const mouseMode = useSelector((state) => state.boardReducer.mouseMode);
   const pressedKey = useSelector((state) => state.boardReducer.pressedKey);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -125,7 +125,7 @@ const Scheme = React.memo((props) => {
   const handleGoBack = useCallback(async () => {
     await onUploadThumbnail(false);
 
-    history.push(`/${previousPath}`);
+    history.push(previousPath || "/");
   }, [history, onUploadThumbnail, previousPath]);
 
   const hideLegacyBanner = useCallback(() => {
@@ -256,7 +256,7 @@ const Scheme = React.memo((props) => {
           />
           <Box
             width="100%"
-            height="calc(100% - 60px)"
+            height="calc(100% - 70px)"
             display="flex"
             justifyContent="space-between"
           >

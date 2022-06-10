@@ -123,7 +123,7 @@ export const PartGroup = (props) => {
           action={
             <PartAction
               expanded={expanded}
-              actions={actions}
+              actions={!disabled ? actions : undefined}
               onExpandClick={handleExpandClick}
             />
           }

@@ -25,7 +25,7 @@ import { setMessage } from "redux/reducers/messageReducer";
 import SchemeService from "services/schemeService";
 
 export const UploadListContent = React.memo((props) => {
-  const step = 30;
+  const step = 40;
   const dispatch = useDispatch();
   const { uploads, search, setSearch, onOpenUpload } = props;
   const user = useSelector((state) => state.authReducer.user);
@@ -136,7 +136,7 @@ export const UploadListContent = React.memo((props) => {
       <Box
         id="upload-dialog-content"
         overflow="auto"
-        height="calc(100vh - 500px)"
+        height="min(700px, calc(100vh - 500px))"
         mt={1}
         position="relative"
       >

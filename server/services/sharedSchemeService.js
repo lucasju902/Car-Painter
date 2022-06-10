@@ -28,7 +28,14 @@ class SharedSchemeService {
 
   static async getByID(id) {
     const shared = await SharedScheme.where({ id }).fetch({
-      withRelated: ["user", "scheme", "scheme.carMake"],
+      withRelated: [
+        "user",
+        "scheme",
+        "scheme.carMake",
+        "scheme.user",
+        "scheme.sharedUsers",
+        "scheme.sharedUsers.user",
+      ],
     });
     return shared;
   }

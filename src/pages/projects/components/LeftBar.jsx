@@ -100,18 +100,6 @@ export const LeftBar = React.memo(({ tabValue, setTabValue }) => {
     const pathName = url.pathname.slice(1);
     const tab = tabURLs.findIndex((item) => item === pathName);
     if (tab !== -1) setTabValue(parseInt(tab));
-
-    const scrollPositionObjText = localStorage.getItem("scrollPosition");
-    if (scrollPositionObjText) {
-      const scrollPositionObj = JSON.parse(scrollPositionObjText);
-      if (
-        scrollPositionObj &&
-        scrollPositionObj.path === (pathName || "mine")
-      ) {
-        document.getElementById("scheme-list-content").scrollTop =
-          scrollPositionObj.position;
-      }
-    }
   }, [history, setTabValue]);
 
   return (
