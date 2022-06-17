@@ -23,6 +23,7 @@ const initialState = {
   loading: false,
   loaded: false,
   saving: false,
+  submittingShowroom: false,
 };
 
 export const slice = createSlice({
@@ -35,6 +36,9 @@ export const slice = createSlice({
     },
     setSaving: (state, action) => {
       state.saving = action.payload;
+    },
+    setSubmittingShowroom: (state, action) => {
+      state.submittingShowroom = action.payload;
     },
     setLoaded: (state, action) => {
       state.loaded = action.payload;
@@ -196,6 +200,7 @@ const {
 } = slice.actions;
 export const {
   setSaving,
+  setSubmittingShowroom,
   setLoaded,
   setCurrent,
   setOwner,
@@ -256,7 +261,6 @@ export const deleteAndCreateNewCarMakeLayers = (schemeID) => async (
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }
-  dispatch(setLoading(false));
 };
 
 export const getScheme = (schemeID, callback, fallback) => async (dispatch) => {
@@ -490,6 +494,16 @@ export const createSharedUser = (payload, callback) => async (dispatch) => {
     let sharedUser = await SharedSchemeService.createSharedScheme(payload);
     dispatch(insertToSharedUsers(sharedUser));
     if (callback) callback();
+  } catch (err) {
+    dispatch(setMessage({ message: err.message }));
+  }
+};
+
+export const submitToShowroom = (schemeID, formData) => async (dispatch) => {
+  try {
+    dispatch(setSubmittingShowroom(true));
+    await SchemeService.uploadToShowroom(schemeID, formData);
+    dispatch(setSubmittingShowroom(false));
   } catch (err) {
     dispatch(setMessage({ message: err.message }));
   }

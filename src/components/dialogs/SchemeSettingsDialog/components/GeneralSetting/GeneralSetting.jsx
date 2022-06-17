@@ -51,6 +51,7 @@ export const GeneralSetting = React.memo((props) => {
 
   const [favoriteInPrgoress, setFavoriteInPrgoress] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
+  const [resetCarMakeMessage, setResetCarMakeMessage] = useState(false);
   const [name, setName] = useState(scheme.name);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
   const cars = useSelector((state) => state.carReducer.cars);
@@ -70,6 +71,10 @@ export const GeneralSetting = React.memo((props) => {
   );
 
   const hideDeleteMessage = useCallback(() => setDeleteMessage(null), []);
+  const hideResetCarMakeMessage = useCallback(
+    () => setResetCarMakeMessage(null),
+    []
+  );
 
   const handleToggleFavorite = useCallback(() => {
     setFavoriteInPrgoress(true);
@@ -199,7 +204,16 @@ export const GeneralSetting = React.memo((props) => {
             <CustomButton
               color="secondary"
               mr={2}
-              onClick={onRenewCarMakeLayers}
+              onClick={() =>
+                setResetCarMakeMessage(
+                  <>
+                    Are you sure you want to reset template layers?
+                    <br />
+                    This will update all Car Parts to the latest default
+                    settings available for this vehicle.
+                  </>
+                )
+              }
             >
               {`Reset ${currentCarMake.name} template layers`}
             </CustomButton>
@@ -245,6 +259,13 @@ export const GeneralSetting = React.memo((props) => {
         open={!!deleteMessage}
         onCancel={hideDeleteMessage}
         onConfirm={handleDelete}
+      />
+
+      <ConfirmDialog
+        text={resetCarMakeMessage}
+        open={!!resetCarMakeMessage}
+        onCancel={hideResetCarMakeMessage}
+        onConfirm={onRenewCarMakeLayers}
       />
     </>
   );

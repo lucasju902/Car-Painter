@@ -29,6 +29,7 @@ export const Shapes = React.memo((props) => {
     onDragEnd,
     onDblClick,
     onCloneMove,
+    onSetTransformingLayer,
   } = props;
 
   const filteredLayers = useMemo(
@@ -217,6 +218,7 @@ export const Shapes = React.memo((props) => {
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             onCloneMove={onCloneMove}
+            onSetTransformingLayer={onSetTransformingLayer}
           />
         );
       })}

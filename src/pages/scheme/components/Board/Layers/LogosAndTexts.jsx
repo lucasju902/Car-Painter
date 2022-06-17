@@ -32,6 +32,7 @@ export const LogosAndTexts = React.memo((props) => {
     onDragStart,
     onDragEnd,
     onCloneMove,
+    onSetTransformingLayer,
   } = props;
   const filteredLayers = useMemo(
     () =>
@@ -160,6 +161,7 @@ export const LogosAndTexts = React.memo((props) => {
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
               onCloneMove={onCloneMove}
+              onSetTransformingLayer={onSetTransformingLayer}
             />
           );
         }
@@ -246,6 +248,7 @@ export const LogosAndTexts = React.memo((props) => {
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             onCloneMove={onCloneMove}
+            onSetTransformingLayer={onSetTransformingLayer}
           />
         );
       })}

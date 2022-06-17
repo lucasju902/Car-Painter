@@ -29,6 +29,7 @@ export const Overlays = React.memo((props) => {
     onDragEnd,
     onDblClick,
     onCloneMove,
+    onSetTransformingLayer,
   } = props;
 
   const filteredLayers = useMemo(
@@ -142,6 +143,7 @@ export const Overlays = React.memo((props) => {
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             onCloneMove={onCloneMove}
+            onSetTransformingLayer={onSetTransformingLayer}
           />
         );
       })}

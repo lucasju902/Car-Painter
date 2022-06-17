@@ -83,7 +83,16 @@ class SchemeController {
       });
       scheme = scheme.toJSON();
       await SchemeService.createCarmakeLayers(scheme, scheme.carMake);
+      const schemeUpdatePayload = {
+        date_modified: Math.round(new Date().getTime() / 1000),
+        last_modified_by: req.user.id,
+      };
+      await SchemeService.updateById(schemeID, schemeUpdatePayload);
       scheme = await SchemeService.getById(scheme.id);
+      global.io.sockets.in(schemeID).emit("client-renew-carmake-layers");
+      global.io.sockets
+        .in("general")
+        .emit("client-update-scheme", { data: scheme }); // General Room
       res.json(scheme);
     } catch (err) {
       logger.log("error", err.stack);

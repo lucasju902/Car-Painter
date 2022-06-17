@@ -54,6 +54,10 @@ export const useBoardSocket = () => {
       dispatch(setCurrentScheme(response.data));
     });
 
+    SocketClient.on("client-renew-carmake-layers", () => {
+      document.location.reload(true);
+    });
+
     SocketClient.on("client-delete-scheme", () => {
       dispatch(setMessage({ message: "The Project has been deleted!" }));
       history.push("/");

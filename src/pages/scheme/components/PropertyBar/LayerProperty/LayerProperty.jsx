@@ -11,7 +11,7 @@ import { colorValidator, focusBoardQuickly } from "helper";
 import { InnerForm } from "./InnerForm";
 
 export const LayerProperty = React.memo((props) => {
-  const { editable, stageRef, onClone, onDelete } = props;
+  const { editable, stageRef, transformingLayer, onClone, onDelete } = props;
   const dispatch = useDispatch();
 
   const currentLayer = useSelector((state) => state.layerReducer.current);
@@ -47,6 +47,15 @@ export const LayerProperty = React.memo((props) => {
       ),
     [AllowedLayerTypes]
   );
+  const layerData = useMemo(
+    () =>
+      transformingLayer
+        ? transformingLayer.layer_data
+        : currentLayer
+        ? currentLayer.layer_data
+        : {},
+    [currentLayer, transformingLayer]
+  );
   const initialValues = useMemo(
     () =>
       currentLayer
@@ -55,11 +64,11 @@ export const LayerProperty = React.memo((props) => {
             ...currentLayer,
             layer_data: {
               ...defaultValues.layer_data,
-              ...currentLayer.layer_data,
+              ...layerData,
             },
           }
         : { ...defaultValues },
-    [defaultValues, currentLayer]
+    [currentLayer, defaultValues, layerData]
   );
   const handleClone = useCallback(() => {
     if (currentLayer) onClone(currentLayer);

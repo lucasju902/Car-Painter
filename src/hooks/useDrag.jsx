@@ -19,6 +19,7 @@ export const useDrag = ({
   onDragStart,
   onDragEnd,
   onCloneMove,
+  onSetTransformingLayer,
 }) => {
   const GUIDELINE_ID = "snapping-guide-line";
   const [dragging, setDragging] = useState(false);
@@ -277,15 +278,35 @@ export const useDrag = ({
       // } else {
       //   e.target.opacity(opacity);
       // }
+
+      const left = mathRound2(
+        e.target.x() - (offsetsFromStroke ? offsetsFromStroke.x : 0)
+      );
+      const top = mathRound2(
+        e.target.y() - (offsetsFromStroke ? offsetsFromStroke.y : 0)
+      );
+      if (onSetTransformingLayer) {
+        onSetTransformingLayer({
+          ...layerRef.current,
+          layer_data: {
+            ...layerRef.current.layer_data,
+            left,
+            top,
+          },
+        });
+      }
     },
     [
       paintingGuides,
       guideData,
       stageRef,
+      layerRef,
       getLineGuideStops,
       getObjectSnappingEdges,
       getGuides,
       drawGuides,
+      onSetTransformingLayer,
+      offsetsFromStroke,
       // getShapeClientRect,
       // frameSize,
       // opacity,
@@ -295,6 +316,9 @@ export const useDrag = ({
   const handleDragStart = (e) => {
     setDragging(true);
     if (onDragStart) onDragStart(layerRef.current);
+    if (onSetTransformingLayer) {
+      onSetTransformingLayer(layerRef.current);
+    }
   };
 
   const handleDragEnd = (e) => {
@@ -330,6 +354,9 @@ export const useDrag = ({
       onChange({ left, top });
     }
     if (onDragEnd) onDragEnd();
+    if (onSetTransformingLayer) {
+      onSetTransformingLayer(null);
+    }
   };
 
   return [dragging, handleDragStart, handleDragMove, handleDragEnd];

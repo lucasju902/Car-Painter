@@ -43,4 +43,15 @@ export default class SchemeService extends BaseAPIService {
       "multipart/form-data"
     );
   };
+
+  static uploadToShowroom = async (schemeID, payload) => {
+    return this.directRequestWithAuth(
+      // `https://beta:cort@beta.tradingpaints.com/showroom/upload/${schemeID}`,
+      `https://beta.tradingpaints.com/showroom/upload/${schemeID}`,
+      "POST",
+      payload,
+      0,
+      "multipart/form-data"
+    );
+  };
 }

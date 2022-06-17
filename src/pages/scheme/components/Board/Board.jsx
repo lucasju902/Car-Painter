@@ -52,6 +52,7 @@ export const Board = React.memo(
     carMaskLayerRef,
     activeTransformerRef,
     hoveredTransformerRef,
+    setTransformingLayer,
   }) => {
     const scaleBy = 1.2;
     const [
@@ -357,6 +358,7 @@ export const Board = React.memo(
                 onDragEnd={onLayerDragEnd}
                 onCloneMove={handleCloneMoveLayer}
                 onDblClick={handleDblClickLayer}
+                onSetTransformingLayer={setTransformingLayer}
               />
               <Shapes
                 stageRef={stageRef}
@@ -381,6 +383,7 @@ export const Board = React.memo(
                 onDragEnd={onLayerDragEnd}
                 onDblClick={handleDblClickLayer}
                 onCloneMove={handleCloneMoveLayer}
+                onSetTransformingLayer={setTransformingLayer}
               />
               <LogosAndTexts
                 stageRef={stageRef}
@@ -407,6 +410,7 @@ export const Board = React.memo(
                 onDragEnd={onLayerDragEnd}
                 onDblClick={handleDblClickLayer}
                 onCloneMove={handleCloneMoveLayer}
+                onSetTransformingLayer={setTransformingLayer}
               />
               {currentScheme.guide_data.show_carparts_on_top ? (
                 <CarParts

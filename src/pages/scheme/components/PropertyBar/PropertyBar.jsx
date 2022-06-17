@@ -6,7 +6,13 @@ import { SchemeProperty } from "./SchemeProperty";
 import { Box } from "components/MaterialUI";
 
 export const PropertyBar = React.memo((props) => {
-  const { editable, stageRef, onCloneLayer, onDeleteLayer } = props;
+  const {
+    editable,
+    stageRef,
+    transformingLayer,
+    onCloneLayer,
+    onDeleteLayer,
+  } = props;
 
   const currentLayer = useSelector((state) => state.layerReducer.current);
   const currentScheme = useSelector((state) => state.schemeReducer.current);
@@ -36,6 +42,7 @@ export const PropertyBar = React.memo((props) => {
             <LayerProperty
               editable={editable}
               stageRef={stageRef}
+              transformingLayer={transformingLayer}
               onClone={onCloneLayer}
               onDelete={onDeleteLayer}
             />

@@ -10,6 +10,7 @@ export { DropDownIcon, ShareIcon };
 
 export const CustomButtonGroup = styled(ButtonGroup)`
   height: 30px;
+  margin: 0 8px;
 `;
 
 export const DownloadButton = styled(Button)`

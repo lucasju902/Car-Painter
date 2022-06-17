@@ -54,6 +54,7 @@ export const Shape = React.memo(
     onDragEnd,
     onLoadLayer,
     onCloneMove,
+    onSetTransformingLayer,
     ...props
   }) => {
     const shapeRef = useRef();
@@ -73,6 +74,7 @@ export const Shape = React.memo(
       onDragStart,
       onDragEnd,
       onCloneMove,
+      onSetTransformingLayer,
     });
 
     const [
@@ -88,6 +90,7 @@ export const Shape = React.memo(
       onChange,
       onDragStart,
       onDragEnd,
+      onSetTransformingLayer,
     });
 
     useEffect(() => {

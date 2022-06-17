@@ -60,6 +60,7 @@ const Scheme = React.memo((props) => {
   const [, , , onZoomFit] = useZoom(stageRef);
 
   const [hoveredJSON, setHoveredJSON] = useState({});
+  const [transformingLayer, setTransformingLayer] = useState(null);
 
   const activeTransformerRef = useRef(null);
   const hoveredTransformerRef = useRef(null);
@@ -70,6 +71,7 @@ const Scheme = React.memo((props) => {
     onDownloadSpecTGA,
     retrieveTGAPNGDataUrl,
     retrieveTGABlobURL,
+    retrievePNGDataUrl,
   ] = useCapture(
     stageRef,
     baseLayerRef,
@@ -253,6 +255,7 @@ const Scheme = React.memo((props) => {
             onDownloadTGA={onDownloadTGA}
             onDownloadSpecTGA={onDownloadSpecTGA}
             retrieveTGAPNGDataUrl={retrieveTGAPNGDataUrl}
+            retrievePNGDataUrl={retrievePNGDataUrl}
           />
           <Box
             width="100%"
@@ -285,6 +288,7 @@ const Scheme = React.memo((props) => {
                 carMaskLayerRef={carMaskLayerRef}
                 activeTransformerRef={activeTransformerRef}
                 hoveredTransformerRef={hoveredTransformerRef}
+                setTransformingLayer={setTransformingLayer}
               />
               <BoardGuide />
               <LegacyBanner
@@ -301,6 +305,7 @@ const Scheme = React.memo((props) => {
             <PropertyBar
               stageRef={stageRef}
               editable={editable}
+              transformingLayer={transformingLayer}
               onCloneLayer={onCloneLayer}
               onDeleteLayer={onDeleteLayer}
             />

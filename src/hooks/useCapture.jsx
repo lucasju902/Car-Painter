@@ -276,6 +276,24 @@ export const useCapture = (
     ]
   );
 
+  const retrievePNGDataUrl = useCallback(async () => {
+    if (stageRef.current && currentSchemeRef.current) {
+      try {
+        console.log("Getting Thumbnail");
+        dispatch(setSaving(true));
+        const { canvas, ctx, carMaskLayerImg } = await takeScreenshot();
+        ctx.drawImage(carMaskLayerImg, 0, 0);
+        let dataURL = canvas.toDataURL("image/jpeg", 0.5);
+        dispatch(setSaving(false));
+        return dataURL;
+      } catch (err) {
+        console.log(err);
+        dispatch(setMessage({ message: err.message }));
+        return null;
+      }
+    }
+  }, [dispatch, currentSchemeRef, stageRef, takeScreenshot]);
+
   const retrieveTGAPNGDataUrl = useCallback(async () => {
     if (stageRef.current && currentSchemeRef.current) {
       try {
@@ -420,5 +438,6 @@ export const useCapture = (
     handleDownloadSpecTGA,
     retrieveTGAPNGDataUrl,
     retrieveTGABlobURL,
+    retrievePNGDataUrl,
   ];
 };

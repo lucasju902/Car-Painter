@@ -30,6 +30,7 @@ export const TextNode = React.memo(
     onDragStart,
     onDragEnd,
     onCloneMove,
+    onSetTransformingLayer,
     ...props
   }) => {
     const [loadedFontFamily, setLoadedFontFamily] = useState(null);
@@ -48,6 +49,7 @@ export const TextNode = React.memo(
       onDragStart,
       onDragEnd,
       onCloneMove,
+      onSetTransformingLayer,
     });
 
     const [
@@ -62,6 +64,7 @@ export const TextNode = React.memo(
       onChange,
       onDragStart,
       onDragEnd,
+      onSetTransformingLayer,
     });
 
     const loadFont = useCallback(() => {

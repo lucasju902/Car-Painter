@@ -208,19 +208,22 @@ export const ProjectItem = React.memo((props) => {
               variant="subtitle1"
               className="cursor-pointer"
               onClick={handleOpenScheme}
+              noWrap
             >
               {reduceString(scheme.name, 50)}
             </BreakableTypography>
           </Box>
           {scheme.user && scheme.user.id !== user.id ? (
-            <Typography variant="body2">
+            <Typography variant="body2" noWrap>
               Owner: {getUserName(scheme.user)}
             </Typography>
           ) : (
             <></>
           )}
-          <Typography variant="body2">{scheme.carMake.name}</Typography>
-          <Typography variant="body2">
+          <Typography variant="body2" noWrap>
+            {scheme.carMake.name}
+          </Typography>
+          <Typography variant="body2" noWrap>
             Edited {getDifferenceFromToday(scheme.date_modified)}
           </Typography>
           {scheme.sharedUsers && scheme.sharedUsers.length ? (

@@ -39,6 +39,7 @@ export const GroupedURLImage = React.memo(
     onDragStart,
     onDragEnd,
     onCloneMove,
+    onSetTransformingLayer,
     ...props
   }) => {
     const shapeRef = useRef();
@@ -93,6 +94,7 @@ export const GroupedURLImage = React.memo(
       onDragStart,
       onDragEnd,
       onCloneMove,
+      onSetTransformingLayer,
     });
     const [
       ,
@@ -107,6 +109,7 @@ export const GroupedURLImage = React.memo(
       onChange,
       onDragStart,
       onDragEnd,
+      onSetTransformingLayer,
       applyCaching,
     });
 

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DialogTypes } from "constant";
 
@@ -19,8 +19,9 @@ import { dataURItoBlob, focusBoardQuickly } from "helper";
 import { CircularProgress } from "components/MaterialUI";
 import { setMessage } from "redux/reducers/messageReducer";
 import RaceConfirmDialog from "components/dialogs/RaceConfirmDialog";
-import { updateScheme } from "redux/reducers/schemeReducer";
+import { submitToShowroom, updateScheme } from "redux/reducers/schemeReducer";
 import { SchemeSettingsDialog } from "components/dialogs";
+import SchemeService from "services/schemeService";
 
 export const Header = React.memo((props) => {
   const {
@@ -28,11 +29,15 @@ export const Header = React.memo((props) => {
     onDownloadTGA,
     onDownloadSpecTGA,
     retrieveTGAPNGDataUrl,
+    retrievePNGDataUrl,
   } = props;
   const [tgaAnchorEl, setTGAAnchorEl] = useState(null);
   const [raceAnchorEl, setRaceAnchorEl] = useState(null);
+  const [shareAnchorEl, setShareAnchorEl] = useState(null);
   const [dialog, setDialog] = useState(null);
+  const [showroomFile, setShowroomFile] = useState(null);
   const [applyingRace, setApplyingRace] = useState(false);
+  const showroomFormRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -199,6 +204,15 @@ export const Header = React.memo((props) => {
     handleTGAOptionsClose();
   };
 
+  const handleOpenShareOptions = (event) => {
+    setShareAnchorEl(event.currentTarget);
+  };
+
+  const handleShareOptionsClose = () => {
+    setShareAnchorEl(null);
+    focusBoardQuickly();
+  };
+
   const handleOpenRaceOptions = (event) => {
     setRaceAnchorEl(event.currentTarget);
   };
@@ -226,14 +240,55 @@ export const Header = React.memo((props) => {
     focusBoardQuickly();
   }, [currentScheme, handleApplyRace]);
 
+  const handleSubmitToShowroom = useCallback(async () => {
+    handleShareOptionsClose();
+
+    const dataURL = await retrievePNGDataUrl();
+    let blob = dataURItoBlob(dataURL);
+    var fileOfBlob = new File([blob], `car_file.png`, {
+      type: "image/png",
+    });
+    let formData = new FormData();
+    formData.append("car_file", fileOfBlob);
+    let response = await SchemeService.uploadToShowroom(
+      currentScheme.id,
+      formData
+    );
+    let uploadToShowroomWindow = window.open("", "Upload a paint");
+    uploadToShowroomWindow.document.write(response);
+    // setShowroomFile(fileOfBlob);
+    // showroomFormRef.current.submit();
+    // let formData = new FormData();
+    // formData.append("car_file", fileOfBlob);
+    // dispatch(submitToShowroom(currentScheme.id, formData));
+  }, [currentScheme.id, retrievePNGDataUrl]);
+
   return (
     <>
       <AppHeader>
-        <Box mr={1} height="100%" display="flex">
+        {/* <form
+          ref={showroomFormRef}
+          // style={{ display: "none" }}
+          action={`https://beta.tradingpaints.com/showroom/upload/${currentScheme.id}`}
+          method="post"
+          target="_blank"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" name="car_file" value={showroomFile} />
+        </form> */}
+        <CustomButtonGroup variant="outlined">
           <Button onClick={handleOpenShareDialog} startIcon={<ShareIcon />}>
             <Typography variant="subtitle2">Share</Typography>
           </Button>
-        </Box>
+          <Button
+            aria-controls="share-options-menu"
+            aria-haspopup="true"
+            size="small"
+            onClick={handleOpenShareOptions}
+          >
+            <DropDownIcon />
+          </Button>
+        </CustomButtonGroup>
 
         <Box mr={1} height="100%" display="flex" alignItems="center">
           <DownloadButton
@@ -288,6 +343,26 @@ export const Header = React.memo((props) => {
             <Typography variant="subtitle2">Race</Typography>
           </Button>
         )}
+
+        <Popover
+          open={Boolean(shareAnchorEl)}
+          anchorEl={shareAnchorEl}
+          onClose={handleShareOptionsClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          <Box py={1}>
+            <Button onClick={handleSubmitToShowroom}>
+              <Typography variant="subtitle2">Submit to Showroom</Typography>
+            </Button>
+          </Box>
+        </Popover>
 
         <Popover
           open={Boolean(raceAnchorEl)}
