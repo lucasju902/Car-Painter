@@ -71,7 +71,6 @@ const Scheme = React.memo((props) => {
     onDownloadSpecTGA,
     retrieveTGAPNGDataUrl,
     retrieveTGABlobURL,
-    retrievePNGDataUrl,
   ] = useCapture(
     stageRef,
     baseLayerRef,
@@ -255,7 +254,6 @@ const Scheme = React.memo((props) => {
             onDownloadTGA={onDownloadTGA}
             onDownloadSpecTGA={onDownloadSpecTGA}
             retrieveTGAPNGDataUrl={retrieveTGAPNGDataUrl}
-            retrievePNGDataUrl={retrievePNGDataUrl}
           />
           <Box
             width="100%"

@@ -29,7 +29,6 @@ export const Header = React.memo((props) => {
     onDownloadTGA,
     onDownloadSpecTGA,
     retrieveTGAPNGDataUrl,
-    retrievePNGDataUrl,
   } = props;
   const [tgaAnchorEl, setTGAAnchorEl] = useState(null);
   const [raceAnchorEl, setRaceAnchorEl] = useState(null);
@@ -243,7 +242,7 @@ export const Header = React.memo((props) => {
   const handleSubmitToShowroom = useCallback(async () => {
     handleShareOptionsClose();
 
-    const dataURL = await retrievePNGDataUrl();
+    const dataURL = await retrieveTGAPNGDataUrl();
     let blob = dataURItoBlob(dataURL);
     var fileOfBlob = new File([blob], `car_file.png`, {
       type: "image/png",
@@ -261,7 +260,7 @@ export const Header = React.memo((props) => {
     // let formData = new FormData();
     // formData.append("car_file", fileOfBlob);
     // dispatch(submitToShowroom(currentScheme.id, formData));
-  }, [currentScheme.id, retrievePNGDataUrl]);
+  }, [currentScheme.id, retrieveTGAPNGDataUrl]);
 
   return (
     <>
